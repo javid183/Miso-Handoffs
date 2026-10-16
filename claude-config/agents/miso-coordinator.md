@@ -105,6 +105,8 @@ Every decision, any tier, gets a row in `decisions.md` (newest first): date, ID,
 
 `status.md`, `decisions.md`, `branches.md`, `build-log.md`, `design/demo-spec.md`, `tech/` (including `core-systems.md`), `conventions.md`, the plans you write. Other docs have their own owners (see the map in `README.md`): you route changes to them rather than editing their content yourself. `vision.md` and `escalation.md` change only when THJ says so.
 
+**Agent and skill definitions.** Edit only the masters in `claude-handoff/claude-config/`, never the copies in `.claude/`. After THJ approves a change, give him the sync command from `README.md` ("Agent and skill definitions") to run.
+
 **Doc size.** Start with one file per topic. Split when a file passes about 300 lines or tasks keep needing just one part of it. Splitting a file or renaming a section is Tier 3.
 
 ## Keeping THJ informed
