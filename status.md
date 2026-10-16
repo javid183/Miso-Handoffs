@@ -15,14 +15,13 @@ Owner: coordinator. Every item has a scope: `all` or a branch. Started 2026-10-1
 | --- | --- | --- | --- | --- |
 | Agent workflow setup (pass 3) | all | M | THJ + setup session | In progress |
 | Pilot 1: AP and points model (`ap-points-model`) | all | L | `miso-game-designer` + critic | Design decided 2026-10-16 (D-034 to D-042, plan revision 4); docs synced. Code is **parked for `main`** (D-042): not built on `thj/home-test`; needs THJ on `main`, which adapts to FTP. Next: tech plan for `main` (check if the existing cooldown covers Mark's 1 charge). D-040 (Fireside) waits on the merge |
-| Pilot 2: Home report-card context images (`report-card-images`) | thj/home-test | M | Explore → coordinator tech plan → `miso-implementer` → reviewer → verifier | Framing 2026-10-16 (Explore mapping the card code); the verifier run also confirms `tech/editor-checks.md` (D-031) |
+| Pilot 2: Home report-card context images (`report-card-images`) | thj/home-test | M | Explore → coordinator tech plan → `miso-implementer` → verifier | Built, compiled, tests green (known red excepted), Play-checked by THJ. Waiting on THJ's yes to commit the code (2 commits proposed) |
 
 ## Next: pilots
 
 | Item | Scope | Size | Path | Notes |
 | --- | --- | --- | --- | --- |
-| AP and points model: Fixed vs Shared AP; FTP vs ATB vs no resource at all for passives | all | L | Design | Tests the game designer, critics and Tier 3 format. Inputs: playtest findings in `design/` and the combat notes |
-| Home report cards show an image tied to their context when one is assigned (e.g. a finished Workshop item's report card on the dining table shows the equipment's icon) | thj/home-test | M | Code | THJ's words, given as a plain statement on purpose. Its verifier run also confirms each line of `tech/editor-checks.md` on THJ's machine and reports corrections (D-031) |
+(Both pilots are in "Now" above.)
 
 ## Waiting on THJ
 

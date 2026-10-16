@@ -1623,3 +1623,30 @@ Run A done except 0(j), the diamond hover outline, Kevin's walk and the rack tra
 ### Status
 
 Built; EditMode green (THJ); Play-checked except the FP gain replay. Committed by THJ: `849c318ab` (prefab), `2f828e662` (code and tests).
+
+## Report-card context images (2026-10-16, pilot 2)
+
+Plan `plans/2026-10-16-report-card-images.md`; reports `reports/report-card-images.md` and `reports/report-card-images-verify.md`. Decision D-043.
+
+### Built
+
+- The Dusk headline card shows a context image (60 pt, beside the speaker portrait) for Weapon, Upgrade, Recipe, Mission and Thread cut. The sprite is resolved at display time from `refId` (`FindWorkshopItem(refId)?.icon`, or `Cycle.Find<T>(refId)?.icon`); no image when there is no icon. No save-format change.
+- New: `Runtime/Simulation/HomeHeadlineContext.cs` (pure kind-to-source mapping), `Editor/HomeSimulationTests.HeadlineIcons.cs` (4 tests). Edited: `Runtime/UI/HomeDayHUD.Headlines.cs` (+19 lines).
+
+### Verified
+
+- Compile clean; EditMode 447 run, 446 passed, 1 failed (the known red `AIRegressionTest.Baseline_MatchesCurrentAI`), via the command-line route (63 s).
+- Play-checked by THJ: "it worked".
+
+### Not verified
+
+- The verifier did not drive the editor (it was closed). The null-icon card and per-kind detail were not reported separately by THJ.
+
+### Findings
+
+- `tech/editor-checks.md` corrected (editor-open check, command-line timing).
+- Workflow: subagents' Write of report files was refused; the coordinator saved the reports. The auto-mode classifier skipped several writes until the permission mode was switched.
+
+### Status
+
+Built and checked; code not yet committed (proposed: helper plus tests, then card rendering).

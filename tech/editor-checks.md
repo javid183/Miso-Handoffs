@@ -4,12 +4,12 @@ Owner: coordinator. How a session checks a change in THJ's Unity editor: compile
 
 ## Is the editor open?
 
-- If `miso\Temp\` exists, assume the editor is open. A crash can leave it behind; if unsure, ask THJ.
+- If `miso\Temp\` exists, assume the editor is open. A crash can leave it behind; if unsure, ask THJ. Also check `tasklist | grep -i unity` and the end of the Editor.log (a clean shutdown line means it is closed). Seen on 2026-10-16: `Temp\` was present, then absent at the next run, with no Unity process.
 - The command-line test run can't start while the editor has the project open.
 
 ## Compile
 
-- **Trigger:** in the editor, Ctrl+R (Assets > Refresh). A compile and domain reload takes about 60–80 s on this project (Playtest Plan). Stop Play mode first.
+- **Trigger:** in the editor, Ctrl+R (Assets > Refresh). A compile and domain reload takes about 60–80 s on this project (Playtest Plan). Stop Play mode first. The command-line route (editor closed) took 63 s for the whole EditMode suite of 447 tests including about 16 s of compile (confirmed 2026-10-16; `CompileScripts:` and `error CS` patterns in the log worked).
 - Whether Auto Refresh is on (Preferences > Asset Pipeline) isn't stored in the project, so don't count on saves compiling by themselves *(unconfirmed)*.
 - A session without computer use can't press Ctrl+R itself: ask THJ to, then read the log.
 

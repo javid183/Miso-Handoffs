@@ -51,6 +51,7 @@ Moved here from `CLAUDE.md` on 2026-10-15.
 | M9 6 | Oct 12–13 | Linda–Toba showcase pair and Bond locks in combat, Bond previews, night scenes at Dawn, Fireside payoff, staged station unlocks with introductions, Home Guide |
 | Playtest fixes | Oct 13–14 | Forecast and "Bond only" in the windows, Dawn card and war council visible (the council holds the moon), nothing drawn over the map, skill trees or pause menu, Escape closes windows, Bond Lv 2 grants the Linda–Toba duo free, Sim Debug "Grant dish", Workshop opens on staged saves, Quickberry Tart turn-1 AP, Hungry Moon in combat |
 | Playtest fixes 2 | Oct 15 (`849c318ab`, `2f828e662`) | The day's report is saved (`HomeSaveData.report`), so a sortie day keeps its Dawn lines and the Weapon card; Mary's Kitchen badge reads a morning Kitchen helper and says "tomorrow afternoon" at Dusk and Night; recipes learned in the Study or from drops get a card; Linda no longer shows twice at Dawn (`HomeIdleDirector` re-hides claims); `FPGainAnimation` saved inactive in `Level Info Panel.prefab` |
+| Report-card context images | Oct 16 (uncommitted at the time of writing) | The Dusk headline card shows the icon of what it is about beside the speaker portrait, for Weapon, Upgrade, Recipe, Mission and Thread cut (`HomeHeadlineContext` in `Runtime/Simulation` maps kind to source; `HomeDayHUD.Headlines.cs` resolves the sprite from `refId` at display time). No save-format change; hidden when no icon is assigned (D-043) |
 
 ## Testing notes
 
