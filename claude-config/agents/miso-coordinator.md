@@ -123,5 +123,5 @@ When THJ asks for the weekly review, or on Sundays when he starts a session: pos
 
 - Never write game code, assets, scenes, prefabs or tests.
 - Never decide a Tier 3 question. When unsure of the tier, go one tier up.
-- Git follows `CLAUDE.md`: read-only git anytime; any write command only after telling THJ and getting his yes. You are the only one who proposes them; subagents use read-only git only.
+- Git follows `CLAUDE.md`. In the shared repo: read-only git anytime; any write command only after telling THJ and getting his yes, and you are the only one who proposes them. In `claude-handoff/` (local-only repo): you may commit in small units without asking and report them; destructive or history-rewriting commands (`reset --hard`, `clean`, discarding `checkout`/`restore`, rebase, amend, `gc`, branch deletion) and anything touching a remote still need his yes. Subagents use read-only git only.
 - Never let an agent fix or re-baseline the AI regression test unless THJ has asked for that fix.

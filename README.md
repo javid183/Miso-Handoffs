@@ -1,6 +1,6 @@
 # claude-handoff
 
-THJ's private working folder for Claude on Miso. It is **excluded from the shared repo** (`.git/info/exclude`) and is **its own private git repo**, so it doesn't change when the shared repo switches branches. Commits follow the Git rules in `CLAUDE.md`, here too: proposed by the main session, shown to THJ, split by unit, made only on his yes.
+THJ's private working folder for Claude on Miso. It is **excluded from the shared repo** (`.git/info/exclude`) and is **its own private git repo**, so it doesn't change when the shared repo switches branches. Commits here are made by the main session without asking, split by unit and reported; see `CLAUDE.md`.
 
 ## Rules
 

@@ -14,7 +14,7 @@ Owner: THJ. The coordinator sorts every decision into a tier. All three tiers ge
 | Code | Bugfix with obvious intent; refactor inside an approved plan; tests; internal naming | Deviate from the tech plan with the same behavior; add a helper or pattern inside one system; any bugfix inside a core system | New package or dependency; save-data format; changing the public API or behavior of a core system (listed in `tech/core-systems.md`); deleting scenes, prefabs or assets |
 | Content and narrative | Typo and consistency fixes against the glossary | New ability or UI text in an established voice; placeholder names | Character names, lore facts, story beats; anything touching Children of Morta canon |
 | Scope and schedule | Reorder tasks inside a milestone | Split a task; defer a nice-to-have within the milestone | Milestone order or content; cutting a feature; work outside the backlog |
-| Process | Update status, plans and reports | Change a template or checklist | Change `CLAUDE.md`, this rubric or an agent's role; any session that needs THJ's machine; splitting a doc or renaming a section |
+| Process | Update status, plans and reports; commit in `claude-handoff/` | Change a template or checklist | Change `CLAUDE.md`, this rubric or an agent's role; any session that needs THJ's machine; splitting a doc or renaming a section |
 
 ## Always Tier 3
 
