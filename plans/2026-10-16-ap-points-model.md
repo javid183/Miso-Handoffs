@@ -1,312 +1,415 @@
-# AP and points model: Fixed vs Shared AP; FTP vs ATB vs no resource for passives
+# AP and points model: Fixed vs Shared AP; how Family Roles and Duos are paid and limited
 
 Size: L    Tier: 3    Assigned to: miso-game-designer
-Branch: all (the answer decides what both `main` and `thj/home-test` run; today `main` = ATB, `thj/home-test` = FTP, both PerUnit AP)
-Status: waiting on THJ
+Branch: all (decided once for both branches; built on `thj/home-test` first. Today `thj/home-test` = FTP, `main` = ATB; both PerUnit AP)
+Status: waiting on THJ (revision 4).
+- Decided: Q1 roles free, limits only (D-036); Q3 Fixed AP (D-037); Q4 simple press now, graded QTE next (D-034); Q5 Bergson Time deferred (D-038); Q6 duo costs 2 FTP, checked properly (D-035).
+- Open: Q2 (Linda) and Q7 (Fireside).
+
+## Revision notes
+
+**Revision 4 (2026-10-16).** THJ decided Q1 (D-036), Q3 (D-037) and Q5 (D-038). On Q2 he **rejected excluding pushes**: pushes and forced movement are the combos players feel they authored. He also said:
+- the real cause is the rook-like trigger (her whole row and column, not blocked by units in the way);
+- if any range limit applies, exclude the tiles next to her, so enemies coming to attack her aren't the target;
+- without a solid alternative, cap her at a number with the same condition.
+
+What changed:
+- Covering Fire is withdrawn; its threat condition and push exclusion are gone.
+- Five Linda options were evaluated concretely: excluding adjacent tiles, blocked lanes, shorter range, a plain cap, and combinations.
+- **The recommendation is now "Watch Shots"**, a cap: her trigger is unchanged (pushes count), with 2 shots per round, each enemy at most once per round, and at most 1 of the 2 spent during your own turn.
+- A brief critic pass on the Linda options ran (systems; creative and UX together).
+- Q7 is re-confirmed for free, limited roles.
+
+**Revision 3 (2026-10-16).** THJ's answers:
+- Q4 decided: the role QTE stays a simple press now; the graded QTE comes next (**D-034**).
+- Q6 decided: a duo costs 2 FTP, checked properly (**D-035**).
+- Q1 open: "leaning towards 1". This is ambiguous: it can mean option (a) from revision 2 (roles free with charges) or "a role costs 1 FTP". Q1 below asks him to confirm.
+- Q2 open: give every role a limit (a very high one for John is the same as none), but tests show only Linda over-triggering, and he thinks her trigger condition is the cause.
+
+What changed:
+- **Two concrete role designs compared**, plus a hybrid: **A** FTP pays 1 per role with a limit; **B** roles free with per-role limits, with Linda fixed through her trigger condition; **C** = B plus paid extra uses.
+- **New section: why Linda fires so often**, from the code.
+- **Recommendation is now B** ("Covering Fire"). Linda's fix moves from a quiver count to her trigger condition, and every role gets a real per-round limit field. **C is a lever** to measure after B, not part of the first build.
+- A third critic pass ran (systems; creative and UX together).
+
+**Revision 2 (2026-10-16).**
+- ATB dropped as a leading option: playtesters found it confusing.
+- Roles stop paying FTP; duos keep FTP.
+- Bergson Time deferred.
+- The decision moved to positioning, John's HP and duo spending.
+- Second critic pass.
+
+**Revision 1 (2026-10-16).** "A+": FTP pays roles, a once-per-round cap, Bergson Time on FTP. Dropped in revision 2 because a cost on roles adds counting, not choice, when the QTE makes everyone press.
 
 ## Why
 
-The two branches run different combat resources (`branches.md`), the Home demo is written against FTP with an "if ATB wins, swap Swift/Spirited" clause (`design/demo-spec.md`, Scope and assumptions), and the merge question "does FTP or ATB win?" is open in `status.md`. Pilot 1 (`status.md`, Next: pilots).
+The two branches run different combat resources (`branches.md`). The Home demo is written against FTP (`design/demo-spec.md`). The merge question "FTP or ATB?" is open (`status.md`). Pilot 1.
 
 ## Goal
 
-One AP model and one passive resource that both branches can run after the merge, chosen on what it does to the four USPs, the QTE pillar and the "too easy" finding.
+One AP model and one rule for paying and limiting Family Roles and Duos. It should:
+- be simple enough for players who found ATB confusing;
+- fix Linda's dominance;
+- give real decisions;
+- keep the QTE everyone likes.
 
 ## Acceptance criteria
 
-- [ ] THJ picks an AP model and a passive resource (or sends this back).
-- [ ] The pick is logged as a `D-NNN` row with scope `all`.
-- [ ] The docs in "Docs to update" are changed to match.
-- [ ] The follow-up tech plan (by the coordinator) and the playtest check below exist before any code changes.
+- [ ] THJ answers the open questions (Q1, Q2, Q3, Q5, Q7).
+- [ ] Each answer is a `D-NNN` row, scope `all` (D-034 and D-035 already logged).
+- [ ] The docs in "Docs to update" are changed.
+- [ ] A coordinator tech plan exists before any code change.
 
 ## Scope
 
-In: the rules of AP, the passive resource, how Family Roles and Duos are paid and capped, Bergson Time, what Home effects feed.
-Out: per-ability damage numbers, enemy balance, Sisters' Rivalry's own tuning (touched only where it interacts), code.
+In: AP rule; role payment and limits; Linda's trigger; the role QTE's job (decided: simple press); Bergson Time; what the Home feeds.
+Out: per-ability damage numbers, enemy balance, Sisters' Rivalry's cap (a follow-up), code.
 
 ## Touches
 
-Systems: `APConsumer` / `ActionPoints` / `FamilyActionPoints` (core), `PointConsumer` / `FamilyTimePoints` / `ATBGauge` (core), `FactionRoleHandlerBase` (core), `UnitsCooperationHandler` (core), `PlayerController` Reactive Interrupt (core), `GlobalSettings.asset` (core), Home `HomeSendOffApplier` / `HomeFiresidePayoff` / `HomeCampfirePanel`.
+Systems:
+- core: `FactionRoleHandlerBase`, `UnitsCooperationHandler`, `PointConsumer` / `FamilyTimePoints`, the `PlayerController` role prompt, `GlobalSettings.asset`;
+- the four `*FactionRoleHandler`s (Linda's trigger);
+- Home `HomeFiresidePayoff`.
+
 USPs: Family Roles, Synergies, Duos, Home.
-Docs: `design/demo-spec.md`, `glossary.md`, `branches.md`, `design/combat-balance.md`, `design/player-skill-trees.md`, `tech/mechanics-brief.md`.
+Docs: `design/demo-spec.md`, `glossary.md`, `branches.md`, `design/combat-balance.md`, `design/player-skill-trees.md`.
 
 ---
 
 ## Problem and evidence
 
-**THJ's framing:** choose (a) Fixed vs Shared AP and (b) FTP vs ATB vs no resource for passives.
+**Root problem.** Family Roles create no decision: the prompt invites a press, a press always helps, and ignoring it is free, so roles are effectively automatic. Two needs are mixed together:
+1. **Limiting how much roles do.** Only Linda is a problem in tests.
+2. **Giving the player decisions about the family protecting itself.**
 
-**Root problem (my restatement):** the passive resource does not currently create a decision. Family Roles fire on their own (behind a QTE prompt), cost 1, and have no per-phase cap, so whichever resource pays for them is either "always enough" (ATB refills in real time) or "spent by whatever triggers first" (FTP drains on auto-triggers and doesn't come back between levels). Neither version asks the player "when do I want my family to act for each other?", and that question is what the Family Roles USP and the QTE pillar both want. The FTP-vs-ATB split is the symptom; the missing decision (and the missing cap) is the cause. AP is a separate, smaller question.
+A resource on roles tried to do both and did neither well.
 
-### Verified in code (2026-10-16, `thj/home-test`)
+### Why Linda fires so often (verified in code, 2026-10-16)
 
-- `GlobalSettings.asset`: `pointConsumptionMode: 0` (FTP), `aPConsumptionMode: 1` (PerUnit), `aPAvailabilityBasedOnUnitCount` = 2 / 5 / 6 / 8 (Shared pool by squad size 1–4), `aPConsumptionEscalationFactors` = [1,1,2,4].
-- `PointConsumer` is a plain switch: FTP spends the faction's `FamilyTimePoints`; ATB spends the unit's own `ATBGauge`. A unit without a gauge falls back to FTP.
-- Family Roles: `requiredFTP` 1 and `oncePerPhase: 0` on John, Linda, Lucy and Mark (`Unit_*.prefab`). Toba has no role. AI factions skip payment (`FactionControllerBase.ActivateFactionRoleIfFeasible`).
-- **The role QTE is already an opt-in.** `PlayerController.ActivateFactionRole` shows the prompt; only a successful QTE runs the role and pays for it (`base.ActivateFactionRole` → `PointConsumer.TryConsume`). Ignoring it silences the role for those targets and costs nothing. So the player already chooses *whether* each role fires; what's missing is a reason to say no.
-- **`oncePerPhase` is really "once per faction turn".** `FactionRoleHandlerBase` clears `ActivatedAtThisPhase` on every `turnEnded`, which fires for each faction. With Neutral or Stranger factions acting between enemy turns, a capped role could still fire 2–3 times a round.
-- **A Home max bonus is lost on the first death.** `FamilyTimePoints.UpdateCap` sets the practical max to the sum of the living heroes' FP, so Soul Flower Tea's +2 (and the Fireside +2) disappear when any hero falls.
-- **Duo cost, finding:** every `CooperationEntry` has `fPCost` 1 and `allConsumeAP: 0` (only the activator spends AP). `Available` checks that *each* partner can pay 1; `ExecuteIE` then calls `TryConsume(1)` *for each partner*. In FTP mode both calls hit the same family pool, so **a duo costs 2 FTP**, and with exactly 1 FTP left the duo is offered, the first spend succeeds and the second fails silently (the duo runs for 1). In ATB mode it costs 1 step from each partner's gauge. Whether 2 is intended is a question below.
-- FTP pool: max = sum of the squad's FP attributes (`FamilyTimePoints` constructor; `UnitBase.prefab` FP attribute is backed by `Stat_FP`). The Demo Spec gives the resulting scale as 3 × (heroes − 1), so 6 for a 3-hero sortie and 9 for the 4-hero dungeon (not re-derived from the data here). At each new level (not a restart) the pool gains `FPGain × max` (`FactionTracker.OnLevelLoad`). Producers: pass-by tags (`Bergsons_Ability_TagATBFill_Effect_FunctionCaller`, whose name is swapped with its ATB sibling), abilities with `fpFill` (John's Dash and Shield, Lucy's Teleport and Cyclone, Linda's Harmonic Slam, Toba's Heal/Swap/Taunt/Barrier), the FP potion, Family Dedication, Home rations, `LevelStartFPFiller`.
-- ATB: per-unit gauge; fills in real time while enemies act and while allies animate (`CombatLevelRunHandler.HandleATBFill`). Unspent AP converts 1:1 into steps at the end of the player turn (`GUnit.ConvertUnusedApToAtbSteps`, PerUnit only; the Shared version `ConvertSharedFamilyApToAtbSteps` is an empty stub). A unit at 0 AP on its own turn with a full gauge gets +1 AP.
-- Bergson Time (Reactive Interrupt, key L): `HandleReactiveInterrupt` returns at once in FTP mode, and `CanAffordFactionRole` reads the ATB gauge only. Porting it to FTP means changing that check to `PointConsumer` and removing the early return; the rest (time scale, pause, unit selection) doesn't depend on the resource.
-- Shared AP: one family pool, per-unit escalating cost, and `Closure` consumption is a no-op, so "an attack ends that hero's turn" does not hold in Shared mode. AP→ATB conversion is not implemented there.
-- Home on FTP: `HomeSendOffApplier` calls `FamilyTimePoints.AddMaxBonus` (Soul Flower Tea +2, Soul Gourd Pie +1); `HomeFiresidePayoff` makes the first duo or first role free, or adds +2 FP cap; the campfire ration `ftpGain` calls `ProduceFTP`; Dining Table T2 is `Stat_FP` level 1. In ATB mode all of these do nothing or close to nothing (`build-log.md` M6 Step C: "FTP does little in ATB mode"). `LevelStartFPFiller` already has an ATB-fill field, so the Demo Spec's "swap to ATB pre-fill" has a hook.
+| Condition | Linda | John, Mark, Lucy |
+| --- | --- | --- |
+| Trigger event | `OnUnitEndMoving` (`triggerEvents: 64`): **any enemy that ends any move** in her area | John: an action starts (`1`); Mark and Lucy: an action completes (`4`) |
+| What must happen | Nothing else: the enemy doesn't have to threaten anyone | **An enemy attacks or hits an ally** (John, Mark), or **an ally acts on an enemy** (Lucy) |
+| Area | Her straight lines (row and column), radius **4 × `Stat_RANGE`** (`Linda_Ability_FactionRole`, `straightDirectionCellsOnly: 1`, `allowRangedReach: 1`); Longshot adds range | Small radii around the unit |
+| Phases | `activationPhase: -1` = player, ally and enemy phases | John, Lucy -1; Mark 4 (enemy only) |
+| Forced moves | `AEffectPusher` raises `unitEndMoving`, so **pushes count** (e.g. enemies pushed into her lines on your own turn) | Not relevant |
+| Cap | None (`oncePerPhase: 0`) | None |
+
+So Linda's chances scale with *every enemy movement on the map*. Each enemy moves most turns, and her cross is up to 16+ tiles. The others scale with *enemy attacks on the family*, about one per enemy attack. That explains the 3 shots per enemy phase and her 46–72 % damage share, and why tests show only her over-triggering.
+
+### Other code facts
+
+- The role QTE is an opt-in: only a successful press runs the role and pays for it; ignoring is free (`PlayerController.ActivateFactionRole`). All role QTEs are `TimedPress`.
+- `oncePerPhase` is a single bool. It resets on every faction's `turnEnded`, so it means "once per faction turn", not per round, and it can't count to 2 or track targets.
+- Paying for roles:
+  - The cost is paid *after* the role runs (`FactionControllerBase.ActivateFactionRole`).
+  - `TryPlayFactionRole` doesn't check affordability.
+  - `requiredFTP` is 1 on all four heroes today.
+  - Only matters for designs that charge FTP (A, C).
+- The duo cost bug (2 charged, checked as 1 per partner) is fixed by D-035.
+- FTP:
+  - Pool about 6 (3 heroes) / 9 (4 heroes). Starts full; small gain per new level.
+  - Fed by pass-by tags, `fpFill` abilities, potions and Home dishes.
+  - `UpdateCap` drops Home max bonuses on a death.
+- Shared AP: `Closure` is a no-op; the AP→ATB conversion is a stub.
+- Bergson Time: ATB-only.
 
 ### Playtests and notes
 
-- `vision.md`: QTEs were fun everywhere, not only in the enemy phase; passive synergies were liked (Linda into Lucy's cyclone; Sisters' Rivalry, though it played as overpowered).
-- `design/combat-balance.md`, playtest 2026-10-08 (ATB era, on `main`-equivalent data): still easy; Linda does 46–72 % of the damage, partly because her role fired 3× in one enemy phase; Sisters' Rivalry chained 4 kills in one turn; the Mark–Lucy duo is 0 AP and hits 11–16 × 3. "If > 50 %, her uncapped family role is the lever."
-- Home playtests (Oct 13–15, FTP): the Fireside payoffs work ("first Family Role free once, the second costs FP"); the Quickberry Tart +1 AP pip works. No playtest has compared FTP and ATB head to head, and none has tried Shared AP with the current escalation.
-- `design/player-skill-trees.md`: Family Time and Family Lookout were removed from the family tree "because main runs ATB", so the skill tree has already been bent by the resource choice once.
-
-What we don't know: how often players pressed L in ATB runs, whether FTP ran dry in the 4-level dungeon, and how long players spent per turn. The playtest at the end asks for these.
+- THJ, 2026-10-16:
+  - ATB too confusing for recent testers.
+  - Everyone loves the QTE (the shift toward faster, action-like play), and nobody declines it.
+  - L untested.
+  - Only Linda over-triggers.
+- `design/combat-balance.md`, 2026-10-08:
+  - Still easy.
+  - Linda 46–72 % of the damage; 3 role shots in one enemy phase.
+  - Sisters' Rivalry chains.
 
 ## Options compared
 
 ### (a) AP
 
-| | Fixed AP (PerUnit, 2 each) | Shared AP (pool 2/5/6/8, escalation [1,1,2,4]) |
-| --- | --- | --- |
-| Player experience | Every hero acts each turn; positioning per hero; "who goes first" matters through synergies | Family-wide budget; a hero can act 3–4 times at rising cost; "family" as an economy |
-| Rules complexity | Low; genre-standard (XCOM) | Medium-high: the price of an action depends on how many that hero already took |
-| Implementation | Running today on both branches | Built but not played; `Closure` no-op breaks "attacks end turn"; no AP→ATB conversion; HUD must show per-hero next cost |
-| Risk | Low. AP-giving synergies (Sisters' Rivalry, John's AP Transfer, Mark–Linda race) stay readable as gifts | Hero-ball: the 3-hero pool of 5 vs 6 fixed means fewer actions, and the best hero takes 3 (cost 1+1+2 = 4) while others idle; AP gifts become pool top-ups and lose their "from sister to sister" meaning |
-| USP effect | Synergies that grant AP stay personal (good for Synergies, Duos) | Thematically "family", but it erases *who* helped whom, which is the point of Family Roles and Synergies |
+Fixed (2 each) vs Shared (pool 2/5/6/8, escalation [1,1,2,4]). Shared is unplayed:
+- attacks don't end a hero's turn;
+- no conversion;
+- harder to read.
 
-### (b) Passive resource
+THJ's earlier leaning and every critic pass favour **Fixed**. Q3 asks him to confirm.
 
-| | A: FTP as is | B: ATB as is | C: No resource | D: Hybrid "family points with turn income" (pre-critic leaning; see A+ below) |
+### (b) Role designs
+
+| | **A: FTP pays 1 per role use, plus a per-role limit** | **B: roles free, per-role limits, Linda fixed by trigger ("Covering Fire")** (recommended) | **C: hybrid, B + paid extra uses** (lever after B) |
+| --- | --- | --- | --- |
+| Rule | Each role use costs 1 from the family pool; each role also has a uses-per-round number | No FTP on roles. Every role gets a uses-per-round field. Linda's trigger is narrowed (below) | As B. Once a role's free uses for the round are spent, a further trigger still prompts, costs 1 FP, and looks different (kitchen icon, other colour, hold to confirm) |
+| Fixes Linda | Only by the cap and by draining FTP; her trigger stays as wide | At the source: she fires only when the family is threatened | As B |
+| Decision | Weak: players press while they can pay; roles and duos compete through reflex | Positioning on your turn (who covers whom); John's HP; duo spending | B's decisions, plus one real priced decision at the moment roles run out: an extra use now or a duo later |
+| Feel (creative) | Protection becomes a purchase ("a father shielding his daughter is a transaction") | Linda becomes "a mother watching over her children", not a turret | Strongest Home link if the prompt carries family flavour ("from Mary's kitchen") |
+| Readability (UX) | Two things to count; a missing prompt reads as "out of FTP" | Pips per role; John shows none | Free and paid prompts must look clearly different, or players drain the duo budget by reflex |
+| Home | Spirited dishes (Tea, Pie) pay roles and duos; Fireside works | Spirited dishes pay duos; Fireside "first Family Role free" needs a replacement | Spirited dishes pay duos and extra uses; Fireside works again (first extra use free) |
+| Build | Data (`requiredFTP` already 1) + a real per-round counter + pay-before-effect fix + affordability check in `TryPlayFactionRole` | `requiredFTP` 0; a per-round counter per role (replaces the `oncePerPhase` bool); Linda's trigger change in `LindaFactionRoleHandler` (+ a per-target set); pips; prompt text | B + the FTP fixes from A + a distinct paid prompt |
+| Critics (round 3) | Don't ship (all) | Ship with changes (all) | Ship only after B is measured, priced against a duo, with a distinct hold-to-confirm prompt |
+
+### Linda, revision 4: options evaluated (replaces Covering Fire below)
+
+Facts that matter here (verified):
+- `LindaFactionRoleHandler.GetCellsInRange` takes every grid cell within footprint distance radius (4 × `Stat_RANGE`) on her row or column, **with no occupancy check**. So her lanes go straight through units (THJ's "rook covering the board with penetration"). A 1×1 Linda watches up to 16 cells.
+- Pushes raise `unitEndMoving` and count; per THJ they must keep counting.
+- The base condition already skips her when the last action targeted her. So an enemy that attacks her doesn't trigger her (systems critic; consistent with `FactionRoleHandlerBase.CheckTriggerConditions`).
+- `ApplyFactionRolesIfPossible` gives the event to the first feasible "Immediately" role. Linda uses `WaitForProcessesToComplete`, so this pre-emption is minor for her.
+
+| Option | What it does to her triggers | Fiction | Readability | Verdict |
 | --- | --- | --- | --- | --- |
-| Rule | One family pool, ~6/9, refilled by tags, abilities, items, Home | Per-hero 3-step gauge, real-time fill on enemy turns, unspent AP → steps, Bergson Time | Roles and duos free; roles once per enemy phase per hero; duos AP + cooldown | FTP pool kept; each hero ending the player turn with ≥ 1 unspent AP adds +1 FTP (max +1 per hero per turn); roles once per enemy phase per hero; Bergson Time spends FTP; duo cost stated once (2 from the pool) |
-| Player experience | Family budget across a mission; drains on auto-triggers; no enemy-turn agency besides QTE | Strong enemy-turn agency (L); "hold AP for the enemy phase" choice; personal, not family | Passives always on, readable; no budget decisions | "Act now or keep a hand free for the family" each turn; family budget; enemy-turn agency (L) |
-| Rules complexity | Low | Medium; real-time fill is opaque (depends on animation length and game speed) | Lowest | Medium-low: one bar, one income rule, one cap |
-| Implementation | None (today on `thj/home-test`) | None (today on `main`); Home effects need the ATB swap | Data (oncePerPhase on), duo fPCost 0, Home FTP effects redesigned | Data (oncePerPhase on, duo cost) + three small core changes: income at `EndTurn` (next to the existing AP→ATB call), `CanAffordFactionRole` via `PointConsumer`, remove the FTP early return in `HandleReactiveInterrupt` |
-| Risk | Hoarding or early dumping; roles fire on low-value triggers and drain the family | Turn-based game with a real-time economy; Home effects become ~dead; the family has no shared stake | Linda's role 1×/phase still strong; loses the Home's best planning goal (Soul Flower Tea) | Income could flood the pool (see systems lens); Bergson Time on a shared pool could let one hero spend it all |
-| QTE / reaction pillar | QTE yes, interrupt no | Both | QTE yes, interrupt no (could be ported, but there's nothing to spend) | Both |
-| Family Roles | Shared budget = family stake; uncapped | Per-hero = personal; uncapped | Always on, capped | Shared budget + cap + choice of when |
-| Synergies | Pass-by tag fills the family pool | Tag fills one gauge | Tag loses its reward (needs another) | Tag fills the family pool |
-| Duos | 2 FTP (accidental) | 1 step each | AP only | 2 FTP (stated) |
-| Home | Everything works | Tea / Pie / Fireside / Dining T2 / rations need a swap | Tea, Pie, Fireside cap, Dining T2, FTP rations all need replacing | Everything works as written |
+| **Exclude adjacent tiles** (distance 1) | Removes 4 of ~16 cells. Stops melee enemies that end next to her. Ranged enemies stopping 2–4 tiles away, and anything walking through her lanes, still trigger. It also blocks a push that lands an enemy next to her, the first combo players try | Fits ("too close to draw"; she relies on John and Mark up close) | One more invisible reason for "she didn't fire" | Small effect; conflicts with "pushes count". Optional add-on (Q2 option c), not the fix |
+| **Blocked lanes** (stop at the first unit) | Fewer triggers on crowded boards, none fewer on open ones. John and Mark standing in front of her block her own lanes | Archer-like | Players must trace lanes on every push preview; pushed enemies often land behind another unit, so combos silently break | Rejected by both critics |
+| **Shorter range** (3 × `Stat_RANGE`) | 16 → 12 cells; still uncapped, so 3+ shots per phase on busy boards. Devalues Longshot | Neutral | Simple | Shrinks the area, not the count. Rejected |
+| **Plain cap N per round, each enemy once** | Directly limits the count. N = 2 halves the observed 3+ per enemy phase; once per enemy stops one enemy shuffling, or being pushed twice, from eating both | Neutral (a watchful archer with two ready arrows) | Two pips on Linda | THJ's fallback; works |
+| **Cap 2 with at most 1 on your own turn** (recommended) | As the cap, but a push combo on your turn can use only 1 shot, so at least 1 is always left for the enemy phase | Watches over the family on the enemy turn *and* plays in your combos | Two pips; the second greys "for the enemy turn" during your turn | Systems critic's fix for the "burn both on your own turn" failure |
 
-**A+ (recommended after the critic pass):** A with D's cap, Bergson Time and duo fix, but **without the turn income**. The rule: one family FTP pool as today; each hero's role at most once per round (reset at the start of the player turn); Bergson Time spends FTP and counts as that hero's role for the round; a duo costs 2 from the pool, checked as 2; a Home max-FTP bonus survives a death. Turn income stays a lever, used only if playtests show the pool running dry. Same Home and USP column as D; less code (no income hook, no income HUD); keeps the across-the-mission scarcity the dungeon is built on.
+Why the split: with one shared pool, a shot on your own turn is certain and a shot saved for the enemy phase may never come. Players would spend both on push combos, and her watching role would vanish (systems critic). The creative critic raised the same tension from the other side: one shared pool makes players avoid the combo they authored. Splitting 1 + 1 keeps both.
 
-Option E, "ATB with a family flavour" (pool the gauges, keep real-time fill), was considered and dropped: it keeps B's opacity and still needs the Home swap. Option F, "Shared AP + FTP", is covered by the AP table.
+Known limitation (accepted): in the enemy phase the shots go to the first enemies that trigger her, not to the most dangerous one. The player can hold fire by ignoring the prompt, and the prompt shows "Watch Shot 1 of 2" so that's a visible choice. Choosing the most threatening target automatically would need deferred resolution, a bigger change, kept out.
 
-## Lens notes
+Implementation:
+- A per-round int and a per-enemy set on the role, cleared at the player turn start. **Not** the `oncePerPhase` bool, which resets on every faction's turn end.
+- A "player-turn shots used" count capped at 1.
+- If adjacent tiles are excluded (option c), use footprint distance, so a wider unit doesn't leak.
 
-The lens notes below were written for the pre-critic leaning (D). The critic pass removed D's turn income; the parts about income (ghost segment, income pips, flood risk) apply only if that lever is turned on. Everything else carries over to A+.
+Minimum HUD:
+- Two arrow pips on Linda's portrait and over her unit; the second shows "enemy turn" during your turn.
+- A "Linda fires" marker on the landing tile in the push preview, when a shot is available.
+- Her lane overlay on hover.
 
-### Creative
+Likeliest misread: "I pushed into her lane and she didn't fire". The cause is a used shot, the per-enemy rule, or the 1-per-own-turn rule; the pips and the push-preview marker answer it.
 
-Target experience (A+): *the family's bar is low and doesn't come back, so every role that fires is someone choosing to protect someone else. I let Lucy's follow-up prompt pass on a Claw that doesn't matter, because I know Linda will be exposed when the Masher moves, and when it lunges, John's shield is there.* The moment we design for: the enemy phase of the Warren's Level 3, family bar at 2, the Masher steps toward Lucy, and the player presses L to freeze time and send John in, knowing it leaves nothing for Linda's shot.
+### Linda's "Covering Fire" trigger (revision 3, withdrawn in revision 4)
 
-- A is warm (one family bar) but passive: the family protects itself on autopilot until the bar runs out, often on a trigger the player didn't care about.
-- B gives the best single moment (Bergson Time) but each hero has their own gauge. It reads as a JRPG ATB system, not as a family under pressure, and it isn't original.
-- C keeps the passives warm and constant, but nothing is at stake: protection is free, so it doesn't mean much.
-- D turns "I didn't use all my AP" into "I kept a hand free for my family", which is the Children of Morta feeling (everyone gives something so someone else is safe) expressed as a rule. I haven't seen this exact loop (unspent action feeding a shared reactive pool spent through a time-stop) in the inspirations: Midnight Suns' Heroism is a shared pool but is spent on your own turn; XCOM's Overwatch is per unit and has no shared stake; FFT's Charge Time is per unit.
+Start values; each line is its own lever:
+1. **Threat condition.** She fires only at an enemy that ends its move **next to a family member** (within 1 tile). This matches the other three roles: all four react to the family being threatened.
+2. **Each enemy at most once per round** (a per-target set, cleared at the start of the player turn).
+3. **Voluntary moves only.** Pushes and other forced moves don't trigger her. This stops "push enemies into her lane" farming, but it also removes any combo that relies on it (see Q2).
+4. **Free uses per round: 2.**
+5. **Phases: enemy phase only?** This is Q2's sub-option. With 1–3 in place her own-turn triggers mostly vanish anyway.
 
-### Systems
+Range stays 4 × `Stat_RANGE`, so Longshot keeps its value. If she stays above about 40 % of damage after 1–4, lower her role damage, not the trigger.
 
-D's rules, proposed starting values:
+Bait risk (systems critic): players can park John next to the enemy path so that Linda fires. That is positioning to protect the family, which is the decision we want, so it's acceptable as long as each enemy triggers her only once.
 
-| Lever | Start value | Why |
+### Per-role limits (B)
+
+One field on every role, "uses per round", refilled at the start of the player turn (a real round counter, not the per-faction-turn bool):
+
+| Role | Start value | Why |
 | --- | --- | --- |
-| Pool max | As today (≈ 6 for 3 heroes, 9 for 4) | Home bonuses are tuned against it |
-| Level-start gain (`FPGain`) | As today | Not changed by this plan |
-| Turn income | +1 FTP per hero who ends the player turn with ≥ 1 unspent AP; max +1 per hero | Costs a real action (half a hero's turn) for 1 FTP, so it is a trade, not free money |
-| Role cost | 1 | As today |
-| Role cap | Once per enemy phase per hero (`oncePerPhase: 1`) | Directly targets Linda's 3× per phase; also keeps one hero from draining the pool |
-| Bergson Time | Spends the role's cost from the pool; counts as that hero's role for the phase; 0.5 s re-entry cooldown as today | No extra cost: the time-stop is a way to aim the role, not a new power |
-| Duo cost | 2 total from the pool, checked as 2 (fix the "1 left" case) | Makes today's actual behavior the rule; the Fireside "first duo free" keeps meaning something |
-| Tag (pass-by) | +1 FTP once per pair per turn, as today | Keeps Synergies paying the family |
+| Linda | 2 per round, each enemy once, at most 1 on your own turn; trigger unchanged (revision 4) | The only one over-triggering |
+| Lucy | 2 | Tests don't show over-triggering; the field exists to tune later |
+| Mark | 2 | Same |
+| John | Unlimited (no pips shown); his cost is his HP | THJ: a very high limit "would be the same as nothing". The prompt shows his HP cost; a guard stops it from downing him |
 
-Interactions and failure cases:
+## Where the decision comes from (B)
 
-- **Income flood.** A 4-hero squad that ends every turn with 1 AP each gets +4 per turn on a 9 pool. That is the main risk; the cap is the safety, and the lever is the income per hero (try +1 per two unspent AP if the bar sits full).
-- **"Pass the turn" degenerate play.** Ending with a full 2 AP gives the same +1 as ending with 1, so skipping a whole hero's turn gains nothing extra. Good: the cheapest legal trade is "move but don't attack".
-- **AP gifts.** Sisters' Rivalry and John's AP Transfer give AP that, if unspent, turns into FTP. That's acceptable (it's still a family gift), but Sisters' Rivalry's chain (4 kills in a turn) is its own problem and not fixed here.
-- **Masher counter.** Enemy roles don't pay (AI skips payment) and aren't affected.
-- **ATB-only content.** The Mark–Linda race gives the winner +1 ATB (`UnitsCooperationHandler`) and the "Mark Turn ATB Fill Floor" run upgrade sets a gauge floor; both need an FTP equivalent (+1 FTP; "start each turn with ≥ 1 FTP") or are dropped. Family Time / Family Lookout (removed skill-tree nodes) could come back.
-- **Fixed AP + D.** Shared AP and D don't combine well: unspent shared AP is one number, so "which hero kept a hand free" disappears. That is one more reason to keep Fixed AP.
+1. **Positioning on your turn.** Where each Bergson ends the turn decides who covers whom. Under Covering Fire this matters for Linda too: her shots go where the family stands. This is the main decision. A later step adds coverage tiles to the move preview.
+2. **John pays with his HP.** "John takes 4: 9 → 5 HP" on the prompt; declining at low HP is a real choice.
+3. **Duos.** The family bar is a mission-long budget spent on your turn, with full information.
+4. **C, if added:** the only enemy-turn prompt that needs thought is the paid one.
+5. **The graded QTE (D-034, next)** adds skill, not choice.
 
-### UX
+## Lens notes (revision 3)
 
-What's shown when (D):
+**Creative.**
+- Target: *on my turn I place the family to cover each other, and on the enemy turn it pays off. Linda's arrow lands the moment a Claw steps up to Lucy, because Linda was watching her.*
+- All four roles now share one fiction: when the family is threatened, someone answers.
+- C's priced extra ("Mary's kitchen lets Linda loose one more") is the strongest Home-to-battle link, but only with that flavour.
 
-- **Player turn:** the family bar shows the current FTP and a ghost segment for the income it will get if the turn ended now ("+2 at turn end"). Each hero portrait with unspent AP shows a small family-point pip, so "ending here gives +1" is visible before clicking End Turn.
-- **End Turn:** the income lands as one animated gain with the source heroes' portraits flashing (reuse the FP gain VFX).
-- **Enemy phase:** each hero's portrait shows "role ready" or "role used this phase". When the family can afford a role, an "L: Bergson Time" hint shows near the bar; it greys out at 0 FTP or when every hero's role is used.
-- **Duo button:** "2" on the family-point icon, red if the bar is below 2.
+**Systems.**
+- The essential B work is a real round counter per role, a per-target set for Linda, and excluding forced moves.
+- C prices a small per-hit effect in mission-long currency against duos at 2. Data first: if players always buy, the pool is gone by Level 3; if never, it's dead. Price it or drop it.
 
-Likeliest misread: the player thinks unspent AP is lost (genre habit) or that it carries over as AP. The pip on the portrait and the ghost segment are there for that. Second: "my role didn't fire": once-per-phase needs a visible "used" state, or players will read it as a bug.
-
-Where the lenses disagree: creative wants Bergson Time to cost more (so it feels like a sacrifice); systems wants it free (it's an aiming tool, and a surcharge makes the QTE pillar a tax). I lean free, and would revisit only if playtests show L pressed every phase.
+**UX.**
+- Minimum HUD for B:
+  - pips under each portrait for free uses left, none for John;
+  - the prompt names the role and its stakes;
+  - a small ring on an enemy Linda already shot this round;
+  - the family bar labelled as paying duos, with the duo cost marked.
+- Likeliest misread under B: an enemy steps into her lane far from the family, no prompt appears, and the player thinks she's broken. The prompt text and the Home Guide line "Linda covers family members within reach" address that.
+- Under C: a reflex press on a paid prompt, so it needs hold-to-confirm and a distinct look.
 
 ## USP check
 
-- **Family Roles:** strengthened. A per-phase cap plus a shared budget makes each role a choice; Bergson Time lets the player decide which family member to protect.
-- **Synergies:** neutral to slightly strengthened. The pass-by tag keeps feeding the family pool; AP-giving synergies now have a second value (unspent AP turns into family points).
-- **Duos:** neutral. Cost made explicit (2); the Fireside "first duo free" still matters.
-- **Managing the Home as a Family:** strengthened against B and C. Every FTP effect in the Demo Spec keeps working, and Soul Flower Tea stays the dungeon's planning goal. No Swift/Spirited swap is needed.
+- **Family Roles:** strengthened. All four roles are now reactions to a threatened family member, with in-character limits.
+- **Synergies:** neutral. Pass-by still feeds the bar. Push-into-Linda combos keep working (revision 4), limited to 1 shot on your own turn.
+- **Duos:** strengthened. They're the main thing the family bar buys (D-035).
+- **Home:** neutral under B (Spirited dishes pay duos; Fireside needs a new payoff). Strengthened under C (the kitchen pays for extra protection).
 
-Fixed AP: neutral on purpose. Shared AP would be "family" in name but weakens Synergies' and Family Roles' sense of who helps whom.
+## Dropping ATB, and the Home demo
 
-## Effect on the Home demo
+- **Lost:**
+  - Bergson Time as built;
+  - the "hold AP for the gauge" choice;
+  - per-hero gauges;
+  - the Mark–Linda race's +1 ATB (becomes +1 FTP);
+  - the Mark ATB-floor run upgrade (retire or rework).
+  - On `main`, Family Time / Family Lookout could return.
+- **Home:**
+  - Swift (Quickberry Tart +1 AP turn 1) unchanged under Fixed AP.
+  - Spirited (Tea +2 max FTP, Pie +1, FTP rations) unchanged in rules.
+  - The Demo Spec's "if ATB wins, swap" assumption goes.
+  - Fireside: Q7.
+  - Home max-FTP bonuses should survive deaths (`UpdateCap` fix).
 
-- **A / D:** nothing changes. Quickberry Tart (+1 AP on turn 1) still works under Fixed AP. Under D an unspent Tart AP also turns into +1 FTP, which is fine.
-- **B:** Spirited dishes (Tea, Pie) and rations swap to ATB pre-fill through `LevelStartFPFiller`'s ATB field or a new `DishEffect` field; Fireside "FP cap +2" needs an ATB meaning (+1 step on every gauge?); Dining Table T2 (`Stat_FP`) needs a new stat. Roughly one implementer session plus a Demo Spec pass.
-- **C:** Tea, Pie, Fireside cap, Dining T2 and FTP rations all need new effects; "first role free" means nothing. The Demo Spec's clearest planning goal is gone. Largest Home cost.
-- **Shared AP:** Quickberry Tart becomes +1 to the family pool on turn 1 (works through the redirect in `APConsumer.Produce`); Hungry Moon is enemy-side and unaffected.
+## The QTE pillar
 
-## Effect on the QTE and reaction-timing pillar
+- Decided (D-034): simple press now, graded QTE next (a press always fires; in the window gives a bonus, start ×1.25).
+- A harder press as a gate was rejected by every critic pass: a miss reads as a family member failing to protect another.
+- Bergson Time: defer (Q5).
 
-Every option keeps the role QTE prompts (they're independent of the resource). Only B and D keep Bergson Time. Under D the time-stop is more legible than under B, because the player can see the family bar instead of four real-time gauges whose fill depends on how long the enemy's animations last.
+## Implementation (B)
 
-## Implementation cost and risk
+1. **Data:**
+   - `requiredFTP` 0 on the four role prefabs;
+   - uses-per-round values;
+   - the Fireside replacement.
+2. **Core:**
+   - a per-role round counter refilled at the player turn start (replaces the `oncePerPhase` bool);
+   - Linda's Covering Fire in `LindaFactionRoleHandler` (threat check, per-target set, voluntary moves only);
+   - John guard;
+   - duo check (D-035);
+   - `UpdateCap` keeps Home bonuses.
+3. **UX:** pips, prompt text, Linda's shot ring, bar label.
+4. **Later:**
+   - C (after B is measured);
+   - the graded QTE;
+   - coverage tiles in the move preview;
+   - race reward → FTP.
 
-| Option | Work | Core systems touched | Risk |
-| --- | --- | --- | --- |
-| Fixed AP | None | None | None |
-| Shared AP | Fix `Closure`, write the Shared conversion, HUD next-cost per hero, re-tune pool | APConsumer, PlayerController | Medium-high; also changes the AI regression catalogs if enemy AP paths move |
-| A | Duo cost fix only | UnitsCooperationHandler | Low |
-| B | Home swap (above), skill-tree nodes stay removed | Home only (not core) | Low-medium |
-| C | Data (oncePerPhase, fPCost 0), tag reward replacement, Home redesign | Data + Home | Medium (design work) |
-| D | Data (oncePerPhase 1 on four prefabs, duo cost); turn income in `PlayerController.EndTurn`; `CanAffordFactionRole` via `PointConsumer`; remove the FTP return in `HandleReactiveInterrupt`; HUD: income ghost, role-used state, L hint; replace two ATB-only rewards | PlayerController, UnitsCooperationHandler, GlobalSettings (all core, Tier 3) | Medium: a few small core edits; the HUD work is the larger part |
-
-D can be split so each step is playtestable on its own: (1) data only: role cap and the duo cost made explicit; (2) turn income; (3) Bergson Time on FTP; (4) HUD.
+Steps 1–2 alone test the Linda fix. Risk medium-low; all Tier 3.
 
 ## Critics
 
-Three critics ran in parallel, one lens each, all given the leaning **Fixed AP + D**. The `miso-design-critic` agent type wasn't registered in this session, so they ran as read-only agents with the critic definition's instructions and output format (`claude-config/agents/miso-design-critic.md`).
+**Round 1** (revision 1, turn income):
+- Income dropped (creative, systems).
+- Cap leak, duo bug and Home-bonus loss verified (systems).
+- "No opt-out" rejected; the QTE is the opt-in.
+- Pips and stake labels needed (UX).
 
-| Critic | Strongest point | What I did with it |
+**Round 2** (revision 2, P1–P4):
+- P1 (FTP on roles) and P3 (hard gate) rejected by all.
+- P2 shipped with changes: John's decline, pips, one rhythm, bar label, FTP-surplus levers.
+- A quiver choice is a guess without enemy move order.
+
+**Round 3** (this revision; read-only agents with the `miso-design-critic` instructions):
+
+| Critic | Strongest point | What I did |
 | --- | --- | --- |
-| Creative | Turn income dissolves the pressure the dungeon is built on ("one point left on Level 3: John's shield or Linda's shot") and rewards idling. Under Fixed AP the only way to earn it is a hero who didn't attack, which is banking, not a family moment. | **Accepted.** The income is dropped from the recommendation (A+). It stays as a lever if the pool runs dry. |
-| Systems | D's income (≤ 1 per hero) equals what the cap lets roles spend (≤ 1 per hero), and the pool starts full with other income on top, so banking is either worthless or a fixed tax. | **Accepted**, same change. |
-| Systems | `oncePerPhase` resets on every faction's turn end, so the cap leaks with Neutral/Stranger factions. Duo check must compare the summed cost. `UpdateCap` loses Home bonuses on a death. | **Accepted, verified in code.** The cap is now "once per round" (reset at the player turn start); the duo is checked as 2; Home bonuses survive deaths. All three are in A+. |
-| Systems | "Roles auto-pay first come, first served; let the player arm or skip roles." | **Rejected on the facts:** the role QTE already is the opt-in, and payment happens only on success (verified). Kept the underlying point for UX: the prompt must show the cost and the "uses this hero's role" consequence, so saying no is a decision and not a missed QTE. |
-| Systems / creative | D does nothing about Sisters' Rivalry chains (5 attacks, 4 kills in a turn), and Fixed AP leans on it as the family's AP-layer identity. | **Agreed it's real, kept out of scope.** It's a separate balance item (a once-per-turn cap is the obvious candidate), listed under Docs/follow-ups. |
-| UX | The worst misread is Bergson Time: L on John early in the enemy phase silently costs his shield later in the round, while the bar still shows FTP. Needs per-hero "role ready / used" pips, an "uses John's role this round" label on the interrupt, and a visible "L: Bergson Time" hint only when it can be used. | **Accepted.** These become required HUD for A+ (below). |
-| UX | A duo can spend the reserve the player meant for the enemy phase; the bar's carry-over between levels is unexplained. | **Accepted:** duo hover greys the 2 segments it takes; the level-start banner says where the FTP came from. |
-| Creative | Play Shared AP before locking Fixed: it's the only option where the family shows in the AP rules. | **Not taken as the recommendation.** Systems and UX both said don't ship Shared (half-built, hero-ball, unreadable cost, and it breaks "per hero" rules). Offered to THJ as an optional experiment in Q2. |
-| Creative | Bergson Time capped and counted as the role "becomes a numbers choice". | **Partly.** Kept "counts as the role" (otherwise L doubles role uses and undoes the cap) but kept it free of surcharge, so the time-stop is about *aiming* the family's help. Q4 asks THJ. |
+| Systems | No design makes the free press a choice; a cap of N means "fires N times". Only C's paid extra adds a real decision. **The behaviour-changing lever is B's trigger**, not caps or FTP | Accepted. B leads with the trigger; caps are a tuning field; C is the decision lever after measurement |
+| Systems | `oncePerPhase` can't do "2 per round"; it resets per faction turn and Linda is active in every phase | Accepted: a real round counter and a per-target set are in B |
+| Systems | FTP is paid after the effect and `TryPlayFactionRole` skips the check | Recorded: only needed if A or C ships |
+| Systems | Covering Fire can be farmed with pushes and bait | Accepted for pushes (excluded); bait accepted as intended positioning |
+| Systems | C's price doesn't compare with a duo; it will be always or never | Accepted: C waits for data and must be priced against a duo |
+| Creative | A turns protection into a purchase | Accepted: A not recommended |
+| Creative | Covering Fire is the right fiction; keep it whatever else is decided | Kept |
+| UX | Under C, free and paid prompts look alike, so players drain the duo budget by reflex | Accepted: hold-to-confirm, distinct look, kitchen icon |
+| UX | John's cap is noise | Accepted: no pips for John |
 
-What changed my mind: both the creative and systems critics, independently, hit the turn income from opposite sides (feeling and numbers). That's enough to drop it. What didn't: the "no opt-out" claim, which the code contradicts.
+**Round 4** (Linda options only; read-only agents with the critic instructions):
+
+| Critic | Strongest point | What I did |
+| --- | --- | --- |
+| Systems | Excluding adjacent tiles removes only 4 cells; the cap is what cuts output. One shared pool makes players burn both shots on certain own-turn combos, so her watch disappears. Suggested N = 2, at most 1 on the player's turn, with a separate per-round int and per-enemy set | **Accepted**: this is the recommendation |
+| Systems | Adjacent exclusion blocks a push landing next to her, contradicting "pushes count"; it must use footprint distance | Accepted: adjacency becomes an optional add-on (Q2 c) |
+| Systems / UX | Blocked lanes make John and Mark block her and silently break push combos | Accepted: rejected |
+| Systems / UX | Shorter range without a cap still gives 3+ shots per phase | Accepted: rejected |
+| Creative | First-come shots go to whoever moves first, not to the enemy closing on Lucy, so it's an ammo counter, not a protector | Partly: accepted as a limitation; holding fire (ignoring the prompt with "1 of 2" shown) is the player's tool. Threat priority needs deferred resolution, kept out |
+| UX | "I pushed into her lane and she didn't fire" will read as a bug | Accepted: pips over Linda and a "Linda fires" marker in the push preview |
+
+What I kept against a critic: the creative critic says no design makes declining meaningful without enemy intent shown. I accept that for the enemy-turn press and place the decisions elsewhere (positioning, John, duos). Showing enemy intent (Into the Breach style) is a bigger feature, outside this plan.
 
 ## Recommendation
 
-**Fixed AP + A+ ("Family Points, capped, with Bergson Time")**, scope `all`. On merge, `main` moves from ATB to FTP.
+**Fixed AP (D-037) + roles free with limits (D-036) + Linda's "Watch Shots"**, scope `all`; on merge, `main` moves from ATB to FTP. In short:
+- roles cost no FTP;
+- every role has a uses-per-round field (Linda 2, Lucy 2, Mark 2, John unlimited and paid with HP);
+- Linda keeps her trigger (pushes count), with 2 shots per round, each enemy at most once per round, and at most 1 on your own turn;
+- duos cost 2 FTP (D-035);
+- the simple-press QTE stays, with a prompt that names the stakes (D-034);
+- Bergson Time deferred;
+- C (paid extra uses) is measured after B.
 
-Rules and starting values:
-
-| Rule | Start value | Data / code |
-| --- | --- | --- |
-| AP | Fixed, 2 per hero, as today | No change |
-| Family pool | As today (≈ 6 for 3 heroes, 9 for 4), starts full, level-start `FPGain`, no refill otherwise except tags, abilities, items, Home | No change |
-| Role cost | 1 | No change |
-| Role cap | Once per round per hero, reset at the start of the player turn | `oncePerPhase: 1` on the four role prefabs, plus the reset moved from "any `turnEnded`" to the player faction's turn start (core, `FactionRoleHandlerBase`) |
-| Declining a role | Ignore the QTE: no cost, role stays available for the next trigger this round | Already how it works; the prompt must show cost and consequence |
-| Bergson Time | Available in FTP mode; spends the role's cost; counts as that hero's role this round; no surcharge | `HandleReactiveInterrupt` early return removed, `CanAffordFactionRole` via `PointConsumer` and the role cap, `ConsumeActionCost` override checked (core, `PlayerController`) |
-| Duo cost | 2 from the pool, checked as 2 | `CooperationEntry.Available` and `ExecuteIE` (core); Fireside "first duo free" keeps working |
-| Home max bonus | Survives deaths | `FamilyTimePoints.UpdateCap` keeps `AddMaxBonus` amounts (core) |
-| ATB-only rewards | Mark–Linda race winner: +1 FTP instead of +1 ATB. "Mark Turn ATB Fill Floor" run upgrade: retire, or "start each round with ≥ 1 FTP" | `UnitsCooperationHandler` (core), `RU_MarkTurnATBFillFloor` |
-| Turn income (lever, off) | +1 FTP per hero ending the turn with ≥ 1 unspent AP | Only if the playtest shows the pool empty by the Warren's Level 3 with Soul Flower Tea eaten |
-
-Required HUD (from the UX pass):
-
-- Each hero portrait: role ready / used this round.
-- Role QTE prompt: "1 FP" and the hero's name; on Bergson Time selection: "uses John's role this round".
-- "L: Bergson Time" hint near the bar, only while some hero can afford an unused role.
-- Duo hover: the 2 segments it will take shown on the bar, red if short.
-- Level start: the "From Home" banner (or bar tooltip) says where the opening FTP came from (carried, level start, dish).
-- Bar shows its max, including Home bonuses.
-
-Why A+ over the others: it is the only option that gives Family Roles a cap (the Linda finding), keeps a family-wide stake (Family Roles USP), keeps both halves of the reaction pillar (QTE plus Bergson Time), and leaves every Home effect in the Demo Spec working (Home USP), for a handful of small core edits plus HUD. B keeps the time-stop but makes the Home's food and Fireside rewards near-dead and the economy real-time. C is the cleanest read but removes the "who do I protect" stake and the Home's best planning goal. Shared AP is half-built and hides who helped whom.
-
-Rollout, each step playtestable alone:
-
-1. **Data:** role cap on (`oncePerPhase: 1`). With the faction-turn leak this is approximate, but it's free and shows the Linda effect at once.
-2. **Core fixes:** cap reset per round, duo checked as 2, Home bonus survives deaths.
-3. **Bergson Time on FTP.**
-4. **HUD** list above.
-5. Swap the two ATB-only rewards.
-
-**Playtest signal** (one Home sortie plus the Warren, THJ or Part B participant):
-
-- **Worked:** Linda's damage share under 50 % in a full squad; at least one role QTE declined on purpose per level (combat log: QTE ignored with FTP ≥ 1); Bergson Time used at least once per level; FTP at the start of Warren Level 4 is 1–3 without Soul Flower Tea and visibly more with it; the player can say before the enemy phase which heroes' roles are live.
-- **Failed:** FTP sits at max most rounds (pool too big: shrink it, or drop the level-start gain), or is 0 from Level 2 on (turn on the income lever); Bergson Time never pressed (discoverability) or pressed every round (too cheap); players call the role cap a bug.
-
-The combat log doesn't record FTP/AP changes or QTE results yet (`tech/combat-log.md`); adding "FP spent/gained" and "role QTE ignored" lines is part of the follow-up so the signal can be read.
+**Playtest signal** (a Home sortie plus the Warren):
+- **Worked:**
+  - Linda 30–40 % of damage;
+  - the four roles fire at similar rates;
+  - testers position to protect, out loud;
+  - John is declined at least once at low HP;
+  - FTP at fight end is 0–3;
+  - the QTE is still enjoyed.
+- **Failed:**
+  - "Linda's role is broken" (she fires too rarely: widen the threat to 2 tiles);
+  - Linda still above 40 % (lower her damage);
+  - a duo every turn with FTP above 4 (consider C, or remove the level-start gain).
+- Add combat-log lines: role fired / declined, uses left, FP spent/gained.
 
 ## Questions for THJ
 
-**Q1. Which passive resource do both branches use?**
+Decided:
+- Q1: roles free, limits only (D-036).
+- Q3: Fixed AP (D-037).
+- Q4: simple press now, graded QTE next (D-034).
+- Q5: Bergson Time deferred (D-038).
+- Q6: duo costs 2 FTP, checked properly (D-035).
 
-- Context: `main` runs ATB, `thj/home-test` runs FTP; the Home demo is written against FTP; playtests found the uncapped roles too strong. Touches Family Roles, Duos, Home, the QTE pillar.
+**Q2. How is Linda limited?**
+- Context:
+  - Her trigger is any enemy ending any move (pushes included) in her row or column up to 4 × `Stat_RANGE`, through units, in every phase, uncapped.
+  - That's why only she over-triggers (46–72 % of damage).
+  - Pushes keep counting (your call).
+  - Every option uses a real per-round counter and a per-enemy set, cleared at your turn start.
 - Options:
-  - A+, capped FTP with Bergson Time (recommended): a few core edits plus HUD; Home unchanged.
-  - B, ATB: no core edits, but a Home swap pass and still uncapped roles.
-  - C, no resource: data edits plus a Home redesign; loses the budget.
-  - D, A+ with turn income: more code; the critics found it flattens scarcity.
-- Recommendation: A+. It's the only option that caps roles, keeps the family stake and Bergson Time, and leaves the Home spec intact.
-- Blocked meanwhile: the merge resource question in `branches.md`, the Demo Spec AP/FTP assumption, any FTP/ATB balance work. Not blocked: Home presentation work and the report-card pilot.
+  - **(a)** 2 shots per round, each enemy once, at most 1 of them on your own turn, so 1 is always left for the enemy phase; trigger unchanged (recommended).
+  - **(b)** 2 shots per round, each enemy once, one shared pool (your plain cap). Simplest, but players will likely spend both on certain own-turn push combos and her enemy-turn watch disappears.
+  - **(c)** (a) plus no shots at enemies on the 4 tiles next to her ("too close to draw"). Small effect (4 of about 16 cells); also blocks pushes that land an enemy next to her.
+  - **(d)** 3 shots per round, each enemy once, at most 1 on your turn. A looser cap if 2 makes her feel weak.
+- Recommendation: (a). The cap cuts her count where it matters. The split keeps both her push combos and her watching role. The trigger stays as players know it. Blocked lanes and a shorter range were evaluated and rejected: blocked lanes make John and Mark block her own shots and silently break push combos; a shorter range without a cap still gives 3+ shots on busy boards.
+- Blocked meanwhile: the Linda build step and the other roles' limit values. Not blocked: the role cost change (D-036), the duo fix (D-035), Home presentation.
 
-**Q2. Fixed or Shared AP?**
-
-- Context: both branches run Fixed (2 each). Shared (pool 2/5/6/8, escalation [1,1,2,4]) exists but is unplayed, its `Closure` no-op means attacks don't end a hero's turn, and its ATB conversion is a stub.
+**Q7. What replaces the Fireside "first Family Role free" payoff?**
+- Context: roles are now free (D-036), so "first role free" does nothing. It is one of the three Fireside payoffs a pair can earn for the next sortie. The Home → roles link is the one players feel most.
 - Options:
-  - Fixed (recommended): no work.
-  - Shared: fix `Closure`, add the HUD next-cost, re-tune; medium cost and risk of hero-ball.
-  - Fixed now plus a one-session Shared experiment later, on a scratch branch, after its two gaps are fixed.
-- Recommendation: Fixed. Family AP sharing already comes through Sisters' Rivalry, John's AP Transfer and the Mark–Linda race, which keep "who helped whom" visible.
-- Blocked meanwhile: nothing; Fixed is what runs.
-
-**Q3. Is a duo meant to cost 2 FTP (1 per partner) or 1?**
-
-- Context: data says `fPCost` 1, but in FTP mode each partner pays it from the same pool, so a duo costs 2, and with 1 left it runs for 1.
-- Options:
-  - 2, checked properly (recommended): matches what players have been playing.
-  - 1 total: duos become cheap next to capped roles.
-- Recommendation: 2. A duo is two family members giving at once, and "first duo free" stays a real payoff.
-- Blocked meanwhile: the duo fix in rollout step 2.
-
-**Q4. What does Bergson Time cost?**
-
-- Context: under A+ it spends FTP. If it doesn't count as the hero's role for the round, it doubles role uses and undoes the cap.
-- Options:
-  - The role's cost, counts as the role (recommended).
-  - The role's cost +1, counts as the role: more weight, but taxes the QTE pillar.
-  - The role's cost, does not count as the role: more agency, cap leaks.
-- Recommendation: the first. The time-stop is a way to *aim* the family's help, not extra help.
-- Blocked meanwhile: rollout step 3.
-
-**Q5. When does this apply to `main`?**
-
-- Context: the decision is scoped `all`, but `main` has no Home and runs ATB; `branches.md` asks how and when `thj/home-test` merges.
-- Options:
-  - Build A+ on `thj/home-test` now, and `main` picks it up at merge (recommended).
-  - Switch `main` to FTP now too (one setting), with the cap data, before the merge.
-  - Wait for the merge and build once on `main`.
-- Recommendation: build on `thj/home-test` now. The Home demo is where FTP is exercised and playtested; the merge carries it over, and the switch on `main` is one setting plus this data.
-- Blocked meanwhile: `main` keeps ATB until then; its skill-tree nodes Family Time / Family Lookout (removed "because main runs ATB") stay removed until you say whether they come back.
+  - **(a)** Each of the pair gets +1 role use in the sortie's first round (Linda a third watch shot), and John's first redirect takes no damage, since his uses are unlimited (recommended). Data plus a small hook on the new per-round counter.
+  - **(b)** Their first duo together is free. It already exists as a payoff, so the pair's three options would shrink to two.
+  - **(c)** Drop it, keeping two payoffs: first duo free, FP cap +2. No work; less variety.
+- Recommendation: (a). It keeps the Home feeding the roles, uses the new limit field, and gives John something meaningful.
+- Blocked meanwhile: the Home data step (`HomeFiresidePayoff`) and the Demo Spec's Fireside line.
 
 ## Docs to update if approved
 
-- `design/demo-spec.md` (coordinator): replace the "If ATB wins, Swift and Spirited swap" assumption with the chosen model; the "FTP scale" open question gets the pool values; note that Home max-FTP bonuses survive deaths.
-- `glossary.md` (narrative): ATB and Bergson Time entries (Bergson Time no longer "ATB mode only"); "once per round" for Family Roles; duo cost 2.
-- `branches.md` (coordinator): the combat-resource line for both branches; close the "FTP or ATB on merge" question.
-- `design/combat-balance.md` (me): role cost and cap line; the Linda lever marked as applied.
-- `design/player-skill-trees.md` (me): note whether Family Time / Family Lookout return.
-- `tech/mechanics-brief.md` / `tech/combat-architecture.md` (coordinator): after the build, the points section.
-- `decisions.md` (coordinator): a `D-NNN` row per answered question.
-- Follow-ups for `status.md` (coordinator): Sisters' Rivalry chain cap (balance, Tier 3); combat-log lines for FP spent/gained and role QTE ignored; `ATBGaugeView.RefreshMarkers` writes the point count into `nameLabel` (UX critic's finding, not verified here; only matters if B wins).
+- `design/demo-spec.md` (coordinator):
+  - remove "if ATB wins";
+  - FTP pays duos (and extra uses if C);
+  - Fireside list;
+  - Home bonuses survive deaths.
+- `glossary.md` (narrative):
+  - Family Role (free, uses per round, the "family threatened" trigger);
+  - FTP (pays Duos);
+  - a name for Linda's Covering Fire;
+  - Bergson Time deferred.
+- `branches.md`: the resource line; close the merge question.
+- `design/combat-balance.md` (me): role limits; Linda's trigger; the Linda lever applied.
+- `design/player-skill-trees.md` (me): Longshot still extends her cover; Family Time / Lookout.
+- `decisions.md`: D-034 and D-035 already logged; one row per answer.
+- Follow-ups for `status.md`:
+  - Sisters' Rivalry cap;
+  - combat-log lines;
+  - the role silently skipped when another QTE is active;
+  - the race reward and the ATB-floor upgrade;
+  - showing enemy intent (a larger feature, for later).
 
 ## Risks
 
-- Choosing on design reasoning without a head-to-head playtest. Handled by the staged rollout and the playtest signal.
-- Core-system edits (Tier 3) before the merge, so `main` and `thj/home-test` diverge further. Handled by scoping the decision `all` and building it once, after the merge question is answered.
+- No head-to-head playtest yet: staged rollout plus the signal above.
+- Tier 3 core edits before the merge: build once on `thj/home-test` and carry it over.
 
 ## Gates
 
-Compile / tests / review: in the follow-up tech plan, not here. Play check: yes (THJ's time, one sortie plus the Warren). Docs: listed above.
+Compile / tests / review: in the tech plan. Play check: yes (THJ's time). Docs: as listed above.
