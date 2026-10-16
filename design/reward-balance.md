@@ -3,7 +3,7 @@
 Last updated 2026-10-07 (branch `main`). Values applied on that date, not yet verified in play.
 Design doc (tables, reasoning, decisions): "Miso Reward Balance M1–M7",
 https://claude.ai/code/artifact/22659269-7bac-4508-b45d-4f966ca8e5e5
-This file is the "where is everything" companion. `claude-handoff/` is git-excluded; never stage it.
+This file is the "where is everything" companion. `claude-handoff/` is excluded from the shared repo (it is its own private repo); never stage it there.
 
 All paths below are relative to `miso/Assets/_Project/` unless they start with `claude-handoff/`.
 
@@ -70,7 +70,7 @@ Fields: `completionXPReward`, `completionGoldReward`, `resourceCollectionCount`,
 Old values: Claw/Black Claw/Worm/Shaman 9, Archer 12, Masher/Deev 30, Queen 120 XP. Gold min defaults to 0 when only max is overridden.
 
 ### Sinks (what rewards are spent on)
-- Skill trees: SP only, authored on the unit prefabs `Features/Player/<John|Lucy|Linda|Mark>/Prefabs/Unit_*.prefab`, `Features/Player/Dom/Prefabs/Unit_Toba.prefab` (`skillTree` field). 6 nodes, 8 pips, tiers at 0/1/2/3 SP spent. See `claude-handoff/player-skill-trees.md`.
+- Skill trees: SP only, authored on the unit prefabs `Features/Player/<John|Lucy|Linda|Mark>/Prefabs/Unit_*.prefab`, `Features/Player/Dom/Prefabs/Unit_Toba.prefab` (`skillTree` field). 6 nodes, 8 pips, tiers at 0/1/2/3 SP spent. See `claude-handoff/design/player-skill-trees.md`.
 - Family stats: `Resources/Factions/BergsonsFaction.asset` `statAttributes.attributeEntries[].upgradeLevels[]` (`factor`, `resourceRequirements`). 11 upgradable stats, 905 gold to max all. Values as of 2026-10-06 (THJ raised prices, HP L1 to x1.15):
   | Stat | L1 / L2 / L3 factor | Cost L1 / L2 / L3 (gold) |
   |---|---|---|

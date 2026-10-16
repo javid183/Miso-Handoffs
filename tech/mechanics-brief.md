@@ -4,7 +4,7 @@
 
 ## 0. Changes Since 04ed2b5f (2026-09-28 → `59a4f5cde`, 2026-10-03)
 
-*139 commits (129 non-merge) on branch `thj/home-test`, including the merge of `origin/main` (`0ba4bc80d`) into it. Compiled from `git diff` plus current file contents; nothing was run in Unity. The Home System work (`Core/Systems/HomeSystem/`, ~23k lines) is documented in `home-system-handoff.md` and the Build Log, not here. Sections 1–12 below are the 09-28 baseline; stale statements in them were corrected in place and marked **(updated 10-03)**.*
+*139 commits (129 non-merge) on branch `thj/home-test`, including the merge of `origin/main` (`0ba4bc80d`) into it. Compiled from `git diff` plus current file contents; nothing was run in Unity. The Home System work (`Core/Systems/HomeSystem/`, ~23k lines) is documented in `tech/home-system.md` and `build-log.md`, not here. Sections 1–12 below are the 09-28 baseline; stale statements in them were corrected in place and marked **(updated 10-03)**.*
 
 **Settings and branch differences**
 

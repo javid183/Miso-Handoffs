@@ -1,6 +1,6 @@
 # Player Skill Trees — Demo Redesign (on `main`, committed and merged 2026-10-04)
 
-> **Status: not verified by play.** Only the logic smoke test passed. THJ suspects some values or nodes are wrong. Example: this doc says Sidewinders is +1/+2, but the game already shows +3. Every value below must be checked in play; see `home-system-handoff.md`, item 2(n). Treat the numbers here as the design intent, not confirmed behaviour.
+> **Status: not verified by play.** Only the logic smoke test passed. THJ suspects some values or nodes are wrong. Example: this doc says Sidewinders is +1/+2, but the game already shows +3. Every value below must be checked in play; see `playtests/playtest-plan.md`, item (n). Treat the numbers here as the design intent, not confirmed behaviour.
 
 ## Rules
 - Every unit tree: **6 nodes, 8 pips, 4 tiers** at unit level (SP spent) 0/1/2/3, **2 prerequisite edges** (A→C, B→F).
@@ -46,7 +46,7 @@ Family Time and Family Lookout were removed, because main runs ATB.
 - Unity compile: 0 errors.
 - `Tools/Skill Trees/Run Smoke Test (Play Mode)` (editor-only `Core/Editor/SkillTreeSmokeTest.cs`): ALL PASSED. It checks tiers, edges, caps, locks, 15 FSP, auras, Watchers radius and race cooldown. It reads runtime values and does not play combat.
 - The Upgrades panel was checked visually: John, Linda, Lucy, Mark and the family tab. Toba was locked in that save.
-- **Not done:** a combat playtest of any node. Tracked in `home-system-handoff.md` 2(n).
+- **Not done:** a combat playtest of any node. Tracked in `playtests/playtest-plan.md`, item (n).
 
 ## Deferred by THJ
 - Rune overlaps: buying Sundering Strikes, Lingering Embers, Stunning Vault, Sapping Order or Diminishing Blow removes the matching rune from the altar pool, and maxed range nodes block their range runes.

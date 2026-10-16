@@ -8,7 +8,7 @@ Branch `thj/combat-logs` (from `main`), written 2026-10-07. **Status: code writt
 
 **Update 2026-10-10:** dev cheats are logged (§4.5). Their effects sit under a `CHEAT` line and are left out of all totals, and levels or missions that used one are tagged `CHEATED`. Not compiled yet.
 
-All paths are relative to `miso/Assets/_Project/` unless noted otherwise. `claude-handoff/` is git-excluded; never stage this file.
+All paths are relative to `miso/Assets/_Project/` unless noted otherwise. `claude-handoff/` is excluded from the shared repo (it is its own private repo); never stage this file there.
 
 ## 1. Purpose
 

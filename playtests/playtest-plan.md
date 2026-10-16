@@ -1,6 +1,6 @@
 # Home Playtest Plan
 
-Updated 2026-10-15 (the Oct 14 run and the Oct 14–15 fixes folded in; details in `Build-Log_additions.md`). Replaces `M9-Playtest-Plan.md` and `Batch-Playtest-Run-Plan.md`. Design: the M9 Readability Pass tab (local copy `Miso-Home-System_M9-Readability.md`). Current state and known issues: `home-system-handoff.md`.
+Updated 2026-10-15 (the Oct 14 run and the Oct 14–15 fixes folded in; details in `build-log.md`). Replaces `M9-Playtest-Plan.md` and `Batch-Playtest-Run-Plan.md`. Design: `design/m9-readability.md`. Current state and known issues: `status.md`.
 
 Three parts:
 
@@ -21,12 +21,12 @@ Three parts:
 | A, step 6 | Done |
 | B | Not run yet (needs a new participant) |
 
-Open bugs are in the Build Log and `home-system-handoff.md`. Fixed Oct 15 (`849c318ab`, `2f828e662`): Dawn lines and the Weapon card lost on sortie days, the Kitchen forecast ignoring a morning batch, no card for recipes learned in the Study, Linda shown twice at Dawn, the FP gain effect playing at level load.
+Open bugs are in `status.md` (Backlog) and `build-log.md`. Fixed Oct 15 (`849c318ab`, `2f828e662`): Dawn lines and the Weapon card lost on sortie days, the Kitchen forecast ignoring a morning batch, no card for recipes learned in the Study, Linda shown twice at Dawn, the FP gain effect playing at level load.
 
 ## Setup and rules (all parts)
 
 - Unity 6000.3.4f1 with the project open. Play from `Scenes/PreloadScreen.unity` (playing the Home scene directly leaves `GameHandler` unloaded and some panels throw).
-- Ask THJ before resetting the game save. To restart a run, use "Start a new moon cycle" on the end screen or New Cycle in Sim Debug.
+- Resetting the game save is fine when a check needs it; say so in the results (D-025). To restart a run without one, use "Start a new moon cycle" on the end screen or New Cycle in Sim Debug.
 - Stop Play before any script edit. After a compile (Ctrl+R, about 60–80 s), check the Console; read the Editor log on disk for full stack traces.
 - Run once before Part A, Play off: `Tools/Home/Build Demo Content`, `Tools/Home/Add Combat Tags`, `Tools/Home/Build House Traces`, `Tools/Home/Add Bond Locks`; then enter Play (the unlockable registry reloads).
 - **Fast route to Day 7:** `Tools/Home/Sim Debug` → Skip prologue → Unlock the Picnic (test) → Run to next Dawn ×6 → Day 7: pick four, "Choose Goblin Queen's Warren with 4/4", Advance (Depart), "Win" in the Sortie section (or play the levels). Playing the tutorials from PreloadScreen does not reset the Home save.
@@ -34,7 +34,7 @@ Open bugs are in the Build Log and `home-system-handoff.md`. Fixed Oct 15 (`849c
 - If the Claude desktop window takes keyboard focus, click the Unity toolbar before pressing keys. The edge of the Game view scrolls the Home camera (leave the cursor mid-screen after clicking a top-edge button).
 - The Claude desktop window can sit over the top-right corner of the Game view: clicks there (a window's X, "Stand up") never reach Unity. Move the window before judging a button dead.
 - **Sim Debug test tools:** "+5 (test)" per Bond pair, "Grant +5" materials, "Grant study item", "Grant dish (test)" (one portion of any recipe into the pantry), "Unlock the Picnic (test)".
-- **Record results** as a section in `claude-handoff/Build-Log_additions.md` titled "Playtest: <part, step or session>", with Verified / Not verified / Findings. Give each finding a severity:
+- **Record results** as a dated section in `claude-handoff/build-log.md` titled "YYYY-MM-DD Playtest: <part, step or session>", with Verified / Not verified / Findings. Give each finding a severity:
   - **Blocker:** the player can't continue or can't understand the goal.
   - **Major:** the player misreads state or wastes a slot.
   - **Minor:** cosmetic.
@@ -69,7 +69,7 @@ Cheapest first, one Unity session each.
 | (m) FP gain VFX on the HUD | Fixed Oct 15: `FPGainAnimation` saved inactive (it played at level load). Replay on a gain not seen: FP was at its cap |
 | (n) Skill trees | Panel text and purchase work; the Bond Lv 2 duo is granted free and saved; purchases survive a Play restart (Oct 14); Hide and Seek 1 = 3 decoys (Oct 15). Other node combat effects still to check |
 
-**(n) Skill trees in full.** Spec: `player-skill-trees.md`. Open the panel from the toolbar "Skill Trees (n SP)" button (or `Tools/Skill Trees/Open Upgrades Panel`). For every node:
+**(n) Skill trees in full.** Spec: `design/player-skill-trees.md`. Open the panel from the toolbar "Skill Trees (n SP)" button (or `Tools/Skill Trees/Open Upgrades Panel`). For every node:
 
 - The panel shows the right title, description, cost and pip count, the tier gate (unit level 0/1/2/3) and the prerequisite lock (A→C, B→F).
 - The effect changes in combat by the stated amount: Shield Dash range, Blink cooldown 1→0, Sidewinder count, Cyclone, Explosive and Fist Blitz damage, Heal, Shell, Taunt and Swap radius, Nature's Rhythm +1 AP, Atman Body.
@@ -198,4 +198,4 @@ The pass works if they answer at least 4 of 5 correctly without looking around.
 
 ### Reporting
 
-A section "Playtest: cold playtest N" in `Build-Log_additions.md` with the participant profile, the score on the five core questions, the per-day counts, and findings by severity. Map each finding to a section letter of the M9 design (A–I). Open questions for THJ at the end.
+A dated section "Playtest: cold playtest N" in `build-log.md` with the participant profile, the score on the five core questions, the per-day counts, and findings by severity. Map each finding to a section letter of the M9 design (A–I). Open questions for THJ at the end.

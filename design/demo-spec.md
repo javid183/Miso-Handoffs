@@ -2,7 +2,7 @@
 
 This tab turns the Home design into a buildable demo: fixed content, numbers, data structures and a build order. Every number here is a first-pass value to tune in playtests, not a final balance.
 
-**How to use this tab.** It describes what the demo should do, as currently intended. If a build changes a rule or a number, edit it here, where that rule lives. Build details (code locations, verification, test counts, bugs, commit status) go in the Build Log tab.
+**How to use this doc.** It describes what the demo should do, as currently intended. If a build changes a rule or a number, edit it here, where that rule lives. Build details (code locations, verification, test counts, bugs, commit status) go in `build-log.md`.
 
 ## Scope and assumptions
 
@@ -433,7 +433,7 @@ The order gets a playable Home-to-combat loop running as early as possible, then
 | M7: Prologue (done) | Tutorial missions wired to Home, guided Home beats, station unlock flags, Great Moon rise | A new game plays the 3 tutorials and their Home beats, then starts Day 1 with the starting state produced by the prologue |
 | M8: Presentation (in progress) | Clickable rooms, station window prefab, character bubbles, both moons, time-lapse, Send-off scene; personal room props as a stretch | The demo plays with no debug UI |
 
-Build details, verification and commit status for each milestone are in the Build Log tab.
+Build details, verification and commit status for each milestone are in `build-log.md`.
 
 M0 is worth doing first even though it shows nothing: a deterministic, Editor-runnable sim lets balance numbers be tuned before any art exists.
 

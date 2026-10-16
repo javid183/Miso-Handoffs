@@ -1,6 +1,6 @@
 # M9 Readability Pass
 
-2026-10-04 · Status: **final, approved by THJ for implementation as M9.** Written from THJ's first playtest notes on Home and the comment round on this tab (all threads resolved). The rule changes in "Demo Spec changes" go into the Demo Spec as each build step lands; everything else is presentation and goes in the Build Log. Repo copies for Claude Code: `claude-handoff/Miso-Home-System_M9-Readability.md` (this tab) and `claude-handoff/Playtest-Plan.md` (playtests).
+2026-10-04 · Status: **final, approved by THJ for implementation as M9.** Written from THJ's first playtest notes on Home and the comment round on this tab (all threads resolved). The rule changes in "Demo Spec changes" go into the Demo Spec as each build step lands; everything else is presentation and goes in the Build Log. Repo files: `claude-handoff/design/m9-readability.md` (this design) and `claude-handoff/playtests/playtest-plan.md` (playtests).
 
 ## Why this pass
 
@@ -155,7 +155,7 @@ Apply each to the Demo Spec when the step that builds it lands:
 
 Before M9: the batched Play pass from the handoff (items a–n) as planned. The 24 placeholder lines wait for step 4, where barks and scenes are written together.
 
-**Status (Oct 14).** All six steps are built and committed (1a to 6d-2, the Home Guide last), each with its Demo Spec edits applied; details per step are in the Build Log. EditMode on Oct 13: 437 run, 436 pass (the AI baseline red). Part A of the playtest was run on Oct 13 and its fixes are committed; the open checks and the Part B cold playtest are in `claude-handoff/Playtest-Plan.md`.
+**Status (Oct 14).** All six steps are built and committed (1a to 6d-2, the Home Guide last), each with its Demo Spec edits applied; details per step are in the Build Log. EditMode on Oct 13: 437 run, 436 pass (the AI baseline red). Part A of the playtest was run on Oct 13 and its fixes are committed; the open checks and the Part B cold playtest are in `claude-handoff/playtests/playtest-plan.md`.
 
 1. **Forecast and no dead seats.** Sim dry-run and seat forecasts; disabled seats with reasons (the table in D); Dawn release of invalid carry-overs; Care as a patient visit; the late-order warning. Done when every row of the D table has an edit-mode test and a forecast matches the real resolve for a full test day.
 2. **Goal and calendar.** Queen's Might, the moon-strip event row and hover, the "N nights remain" card, the Dawn tick, the Little Moon arc, the moon tint, the Warren's fixed node and card, "why go" mission cards with their haul, the war council beat. Done when a new player can answer "why not the Warren yet?" from the screen alone.

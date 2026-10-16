@@ -1,5 +1,5 @@
 # Usage: python3 mods.py <prefab> ...  Lists reward-related prefab overrides (lethal XP, drops) per nested prefab instance.
-# Any line under a level prefab = a per-level override (should be none; see reward-balance.md).
+# Any line under a level prefab = a per-level override (should be none; see claude-handoff/design/reward-balance.md).
 import json,re,os,sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from _paths import load_map
