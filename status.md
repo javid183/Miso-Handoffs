@@ -14,7 +14,7 @@ Owner: coordinator. Every item has a scope: `all` or a branch. Started 2026-10-1
 | Item | Scope | Size | Owner | State |
 | --- | --- | --- | --- | --- |
 | Agent workflow setup (pass 3) | all | M | THJ + setup session | In progress |
-| Pilot 1: AP and points model (`ap-points-model`) | all | L | `miso-game-designer` + critic | Design decided 2026-10-16 (D-034 to D-040, plan revision 4). Next: confirm Lucy/Mark limits, then coordinator tech plan (Tier 3 core edits), then docs sync (Demo Spec, glossary, branches) |
+| Pilot 1: AP and points model (`ap-points-model`) | all | L | `miso-game-designer` + critic | Design decided 2026-10-16 (D-034 to D-042, plan revision 4). Code is **parked for `main`** (D-042): not built on `thj/home-test`; needs THJ on `main`, which adapts to FTP. Next: docs sync (Demo Spec, glossary, branches), tech plan for `main` (check if the existing cooldown covers Mark's 1 charge). D-040 (Fireside) waits on the merge |
 
 ## Next: pilots
 
