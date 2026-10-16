@@ -1,0 +1,42 @@
+# Editor checks
+
+Owner: coordinator. How a session checks a change in THJ's Unity editor: compiles, logs, tests, play checks. The verifier works from this file. Written 2026-10-16 by the setup session from what was on disk and past Build Log runs; **lines marked *(unconfirmed)* get checked on the first real verifier run (Pilot 2) and fixed here.** House rules (stop Play before editing scripts, test paths) are in `CLAUDE.md`.
+
+## Is the editor open?
+
+- If `miso\Temp\` exists, assume the editor is open. A crash can leave it behind; if unsure, ask THJ.
+- The command-line test run can't start while the editor has the project open.
+
+## Compile
+
+- **Trigger:** in the editor, Ctrl+R (Assets > Refresh). A compile and domain reload takes about 60–80 s on this project (Playtest Plan). Stop Play mode first.
+- Whether Auto Refresh is on (Preferences > Asset Pipeline) isn't stored in the project, so don't count on saves compiling by themselves *(unconfirmed)*.
+- A session without computer use can't press Ctrl+R itself: ask THJ to, then read the log.
+
+## Logs
+
+| Log | Where | What to look for |
+| --- | --- | --- |
+| Editor log | `C:\Users\javid\AppData\Local\Unity\Editor\Editor.log` (the previous editor session: `Editor-prev.log`) | Compile errors are `error CS####` lines; a finished compile and reload writes `CompileScripts: <ms>` and `Domain Reload Profiling: <ms>`. Runtime exceptions and the Home sim's `[Home …]` lines land here too, with full stack traces |
+| Command-line run | the `-logFile` you pass (put it in the scratchpad) | Same content as the Editor log, for that run only |
+| Combat logs | `C:\Users\javid\AppData\LocalLow\Dead Mage\miso\CombatLogs\` (`Application.persistentDataPath`); one `.log` and `.jsonl` per fight, named `<yyyyMMdd-HHmmss>_<Level>` | What happened in a fight; levels that used a cheat are tagged `CHEATED`. Format: `tech/combat-log.md` |
+
+Read the end of the Editor log after the time you triggered the compile; older errors from earlier in the session don't count.
+
+## EditMode tests
+
+- **Editor open:** Window > General > Test Runner > EditMode > Run All. The results show in the window; a session without computer use asks THJ for the pass/fail counts and the names of any failures *(unconfirmed: whether the run also leaves a results file on disk)*.
+- **Editor closed:** the command line in `CLAUDE.md` (Unity 6000.3.4f1 path, `-testResults` and `-logFile` in the scratchpad). The full EditMode run took about 53 s on Oct 4. Read the NUnit XML: totals on the root `test-run` element, failures as `test-case` elements with `result="Failed"`.
+- The only accepted failure is `AIRegressionTest.Baseline_MatchesCurrentAI`, until its dedicated fix lands.
+
+## How the editor is driven
+
+- **Quiet checks** (compile result, logs, command-line tests) need only files on disk. Any Claude Code session can do them.
+- **Clicks and keys in the editor** (Ctrl+R, Test Runner, Play mode, playing the game) need computer use. Past play checks (Oct 13 and 14) were driven by Claude with computer use from the Claude desktop app, reading the Console from the Editor log.
+- Practical rules from those runs (details in `playtests/playtest-plan.md`, "Setup and rules"): start Play from `Scenes/PreloadScreen.unity`; click the Unity toolbar before pressing keys if the Claude window has focus; the Claude desktop window can cover the top-right of the Game view, so clicks there never reach Unity; leave the cursor mid-screen in the Home scene (the screen edge scrolls the camera); hover a unit's feet for the K cheat.
+
+## Desktop-only limit for play checks
+
+- Play checks need computer use, which is available only in the **Claude desktop app**, not in a terminal Claude Code session *(unconfirmed for this account and version)*.
+- A verifier running from the terminal does quiet checks only. It marks every criterion that needs Play **"Not run: needs a play session (desktop app)"**, and the coordinator puts the play check under "Waiting on THJ" in `status.md`.
+- A play check also takes over THJ's editor: it runs only after he agrees to a time (see the verifier's rules).
