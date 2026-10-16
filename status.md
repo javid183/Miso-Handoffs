@@ -14,6 +14,7 @@ Owner: coordinator. Every item has a scope: `all` or a branch. Started 2026-10-1
 | Item | Scope | Size | Owner | State |
 | --- | --- | --- | --- | --- |
 | Agent workflow setup (pass 3) | all | M | THJ + setup session | In progress |
+| Pilot 1: AP and points model (`ap-points-model`) | all | L | `miso-game-designer` + critic | Dispatched 2026-10-16 to `plans/2026-10-16-ap-points-model.md`; Tier 3 (core mechanic rules), THJ decides |
 
 ## Next: pilots
 
