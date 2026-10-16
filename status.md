@@ -27,7 +27,7 @@ Owner: coordinator. Every item has a scope: `all` or a branch. Started 2026-10-1
 
 **Workflow**
 
-- How and when `thj/home-test` merges into `main`, and whether FTP or ATB wins (`branches.md`).
+- How and when `thj/home-test` merges into `main` (`branches.md`). FTP wins (D-036 to D-042).
 - Fill the "[THJ] To add" part of `vision.md`.
 
 **Home (from the handoff's open decisions)** — scope `thj/home-test`

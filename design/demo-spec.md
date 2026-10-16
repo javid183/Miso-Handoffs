@@ -12,7 +12,7 @@ Assumptions this spec makes (flagged in Open questions if they need your call):
 
 - **Roster:** John, Linda, Lucy, Toba and Mark are playable. Mary (Kitchen) and Uncle Ben (Workshop) are non-playable station owners. Toba's healing in combat scales with his Bond to the target.
 - **Squad size is set per mission** (3 seats for every side mission in the demo), shown on the map table. The dungeon takes 4. With 5 characters, 2 always stay home on sortie days.
-- **AP/FTP:** effects are written against FTP and AP. If ATB wins the playtests, Swift and Spirited effects swap to ATB pre-fill.
+- **AP/FTP:** effects are written against FTP and AP. Decided 2026-10-16 (D-036, D-037): AP is Fixed, FTP pays Duos only (2 each), and Family Roles cost no FTP but have per-round limits (Linda 2, Lucy 3, Mark 1, John unlimited; D-041, D-042). ATB is dropped, so Swift and Spirited effects stay as written. The role-limit code is built later on `main`, not on `thj/home-test` (D-042); until it merges, roles on this branch still cost 1 FTP as built.
 - **Existing combat content is reused:** current enemy types and levels; no new combat mechanics beyond Wounded.
 
 ## Day loop state machine
@@ -252,7 +252,7 @@ What Bond does in the demo (each lock opens by its pair's Bond level and relocks
 - **L2 on Linda and Lucy** opens Sisters' Rivalry (a kill by one gives the other AP and a ready basic attack). **L2 on John and Mark** opens John's Command Shield Dash after Mark's Command.
 - **L1 on a pair** opens Pass-By for that pair. Every pair except Toba's starts at L1, so Toba's pairs earn it.
 - **Bond scenes** are written only for the showcase pair (at L2 and L3). Other pairs get a one-line Dining Table remark when they level.
-- **The Fireside payoff:** a pair that sits at the Fireside earns one small boost for the next mission, one of three picked per pair (stable per save): their first duo together is free; the first Family Role either of them uses is free; or the family FP cap is +2 for the mission. Only pairs with both members in the squad carry it; an unspent one ends with the sortie, and an interrupted sortie hands it back.
+- **The Fireside payoff:** a pair that sits at the Fireside earns one small boost for the next mission, one of three picked per pair (stable per save): their first duo together is free; the first Family Role either of them uses is free (**to be replaced** after the role-limit merge, D-040: each of the pair gets +1 role use in the sortie's first round, and John's first redirect takes no damage); or the family FP cap is +2 for the mission. Only pairs with both members in the squad carry it; an unspent one ends with the sortie, and an interrupted sortie hands it back.
 
 ### Family Event: the Picnic
 
@@ -440,7 +440,7 @@ M0 is worth doing first even though it shows nothing: a deterministic, Editor-ru
 ## Open questions for this spec
 
 - **Showcase duo:** decided 2026-10-12: the Linda–Toba pair, using the existing Linda_Toba_Duo (this replaces the Toba–Mark decision of 2026-09-29; the Toba–Mark duo is dropped). It differs from the duo taught in Tutorial 3.
-- **Fireside payoff, what else can be rewarded:** decide what else a pair can earn. Examples: a paired-ability efficiency bonus (Toba with someone: Toba heals that person more during the next sortie; John with someone: John takes less damage during his Family Role for that person), a stronger duo, an extra pass-by effect. Today only three exist: first duo free, first Family Role free, or FP cap +2.
+- **Fireside payoff, what else can be rewarded:** decide what else a pair can earn. Examples: a paired-ability efficiency bonus (Toba with someone: Toba heals that person more during the next sortie; John with someone: John takes less damage during his Family Role for that person), a stronger duo, an extra pass-by effect. Today only three exist: first duo free, first Family Role free (becomes "+1 role use", D-040), or FP cap +2.
 - **Dungeon squad:** take 4 of the 5 characters into the dungeon, or bring the whole family?
 - **FTP scale:** the +1/+2 FTP values assume a small FTP cap; they need the real cap to tune.
 - **Toba:** the same character as Dom, which was his old name. His affinities, Mending Lesson and Axe are all set.

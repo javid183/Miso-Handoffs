@@ -12,8 +12,8 @@ Owner: coordinator; THJ approves. `claude-handoff/` doesn't change when the shar
 
 ## `main`
 
-- Combat resource: **ATB** (`GlobalSettings.asset` `pointConsumptionMode: 1`).
-- AP: PerUnit (`aPConsumptionMode: 1`), escalation `[1,1,2,4]`.
+- Combat resource: **ATB** (`GlobalSettings.asset` `pointConsumptionMode: 1`). **Decided 2026-10-16 (D-036 to D-042): `main` adapts to FTP, with Family Roles free and limited per round and Duos paid 2 FTP.** The role-limit code is built on `main` later, not on `thj/home-test`.
+- AP: PerUnit (`aPConsumptionMode: 1`), escalation `[1,1,2,4]`. Fixed AP is the decision (D-037).
 - Has the Morta rebuild export (`miso/Assets/MortaStory/`) and the skill-tree redesign, combat log, enemy tiers, Lucy + John shield relay (merged into `thj/home-test` in Steps J, K, L).
 - No Home system.
 
@@ -26,4 +26,4 @@ Owner: coordinator; THJ approves. `claude-handoff/` doesn't change when the shar
 - Merges `origin/main` periodically through Claude Code; THJ commits. Merges so far: Step J `59a4f5cde` (Oct 3), Step K `182201e82` (Oct 4), Step L `5c8476822` (Oct 11).
 - Committed, not pushed. Last commit `2f828e662` (Oct 15, playtest fixes 2).
 - Home scene fallback after a merge: take `main`'s scene and re-run the builders (order in `CLAUDE.md`).
-- **[THJ]** How and when is this expected to merge into `main`? Does FTP or ATB win on merge?
+- FTP wins on merge (D-036 to D-042). **[THJ]** Still open: how and when is this expected to merge into `main`?
