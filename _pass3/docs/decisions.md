@@ -1,0 +1,37 @@
+# Decision log
+
+Owner: coordinator. One row per decision, newest first. A reversal is a new row citing the old ID; old rows are never edited. Scope is `all` or a branch.
+
+Rows D-001 to D-011 were carried over on 2026-10-15 from the Home handoff and project notes; dates are as recorded there.
+
+| Date | ID | Tier | Scope | Decided by | Decision | Why | Affects |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 2026-10-15 | D-029 | 3 | all | THJ | `claude-handoff/` (private repo) follows the same guided git rules as the shared repo | The old "never commit claude-handoff/" rule predates the private repo | `CLAUDE.md` |
+| 2026-10-15 | D-028 | 3 | all | THJ | `CLAUDE.md` slimmed: Home essentials moved to `tech/home-system.md`, combat architecture and cheats to `tech/combat-architecture.md` | It loads into every session and every agent | `CLAUDE.md`, `tech/` |
+| 2026-10-15 | D-027 | 3 | all | THJ | The existing "Miso Home System" Claude Doc stays as the mirror (shared by both accounts); no new doc | THJ uses both accounts | Mirrors |
+| 2026-10-15 | D-026 | 3 | all | THJ | Tests: Test Runner when the editor is open, command line when it's closed | | `CLAUDE.md`, verifier |
+| 2026-10-15 | D-025 | 3 | all | THJ | Resetting the game save is allowed without asking; say that it happened | Asking caused unnecessary questions; THJ keeps his own saves elsewhere | `CLAUDE.md`, agents |
+| 2026-10-15 | D-024 | 3 | all | THJ | Commits are split into independent units; core-system and risky changes get their own commit; one yes per commit | Easier to revert | `CLAUDE.md`, report template |
+| 2026-10-15 | D-023 | 3 | all | THJ | Guided git: read-only git anytime; write commands only after telling THJ, showing the diff, and his yes. Only the main session proposes them. Replaces the read-only-only rule in the early drafts | THJ's working setup | `CLAUDE.md`, settings, agents |
+| 2026-10-15 | D-022 | 3 | all | THJ | Start with the default model split: Opus for game designer, reviewer, narrative and core-system implementation; Sonnet for the rest | Quality where mistakes are costly; revisit if usage limits bite | Agent definitions |
+| 2026-10-15 | D-021 | 3 | all | THJ | Coordinator handles THJ's report-card task as a plain statement; it's the code pilot | Tests whether the coordinator fills gaps or asks well | Pilots |
+| 2026-10-15 | D-020 | 3 | all | THJ | One set of handoff docs; branch is a scope on tasks, decisions and design variants; agents never switch branches | `claude-handoff/` doesn't change with the shared repo's branch | `branches.md`, plans, decisions |
+| 2026-10-15 | D-019 | 3 | all | THJ | No worktrees for now; the verifier checks in THJ's open editor. Headless options (dotnet build, batchmode, Unity MCP) get tested separately first | One change at a time | Verifier, coordinator |
+| 2026-10-15 | D-018 | 3 | all | THJ | `.claude/agents` and `.claude/skills` are junctioned into `claude-handoff/claude-config/` | Agent edits get history and diffs in the private repo | Setup |
+| 2026-10-15 | D-017 | 3 | all | THJ | The AI regression test exception is temporary; a dedicated session will fix it, then no exceptions | It keeps getting carried forward | Gates, `CLAUDE.md` |
+| 2026-10-15 | D-016 | 3 | all | THJ | Weekly rubric review on Sundays | | `escalation.md` |
+| 2026-10-15 | D-015 | 3 | all | THJ | First list of THJ's areas (core mechanic rules, major design, game feel, dramatic moments, reusable systems, tools and tech, past calls); Tier 3 for two weeks | Control without being asked about every minor decision | `escalation.md` |
+| 2026-10-15 | D-014 | 3 | all | THJ | Demo Spec and Build Log move into the repo (`design/demo-spec.md`, `build-log.md`); the Claude Docs copy becomes a one-way mirror | Same pattern as the design docs | Docs |
+| 2026-10-15 | D-013 | 3 | all | THJ | Design docs move off Notion into `claude-handoff/design/` (canonical), with a Claude Docs mirror for sharing; the game designer helps migrate | Agents can read the repo without a connector | Design docs |
+| 2026-10-15 | D-012 | 3 | all | THJ | `claude-handoff/` stays excluded from the shared repo and becomes its own private git repo; personal `CLAUDE.md` and `.claude/` stay excluded too | The shared repo has other people; keep diffs and history privately | Setup |
+| 2026-10-14 | D-011 | 3 | thj/home-test | THJ | Hungry Moon (Day 7 Omen): the Goblin Queen gains +1 AP at the start of each of her turns while below 50% HP | | Warren, Omens |
+| 2026-10-13 | D-010 | 3 | thj/home-test | THJ | Bond Lv 2 grants the Linda–Toba duo free, no Family Skill Point. Other Bond locks: Sisters' Rivalry and Command Shield Dash at Lv 2; Pass-By at Lv 1 | | Bond, Duos, Synergies |
+| 2026-10-13 | D-009 | 3 | thj/home-test | THJ | The war council holds the moon until "To work" | | Home time flow |
+| 2026-10-12 | D-008 | 3 | thj/home-test | THJ | Showcase pair is Linda–Toba; the Toba–Mark duo is dropped | | Demo Spec, Duos, Bond |
+| before 2026-10-14 | D-007 | 3 | thj/home-test | THJ | Idle rule: the first two idle characters take the Porch seats for the idle Bond; everyone else stays at their own spot (no wandering) | | Home presentation |
+| before 2026-10-14 | D-006 | 3 | thj/home-test | THJ | Stations open on a schedule after the prologue (`stagedUnlocks` on the cycle turns it off) | | Home onboarding |
+| before 2026-10-14 | D-005 | 3 | thj/home-test | THJ | Picnic before the Win screen, with Skip. Loss at Dusk. "Returning home..." only on the two combat exits | | Home end states |
+| before 2026-10-14 | D-004 | 3 | thj/home-test | THJ | Roster of 5 fighters (John, Linda, Lucy, Mark, Toba) plus Kevin, home-only (chore seats, no Bond, no sortie) | | Roster, Home |
+| 2026-09-30 | D-003 | 3 | thj/home-test | THJ | Prologue: tutorials launch from the Map Table, no Play button; a beat ends when the next tutorial launches; Skip prologue is an always-visible header button with a two-click confirm; the last beat before the Great Moon keeps one Continue button | | Prologue |
+| Sept 2026 | D-002 | 3 | thj/home-test | THJ | Permanent Home Upgrades use the Bergsons faction shared stats, not food-style modifiers | Food modifiers are lost on returning home | Home, stat layers |
+| before 2026-10-14 | D-001 | 3 | thj/home-test | THJ | Merges of `main` go through Claude Code; THJ commits. Home scene fallback: take main's scene and re-run the builders | | Merges |
