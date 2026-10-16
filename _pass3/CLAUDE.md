@@ -39,8 +39,8 @@ The repo copies are the masters. The "Miso Home System" Claude Doc (https://clau
 - Never push. Never force anything. Never delete branches.
 - Keep each file's line endings and BOM (many files are CRLF; the Home files are LF; `CameraHandler.cs` and `CheatHandler.cs` have a BOM).
 - Close Unity before a merge (or tell me to); after it, open Unity, recompile (Ctrl+R), run the tests.
-- `CLAUDE.md`, `.claude/` and `claude-handoff/` are in `.git/info/exclude` on purpose. Never stage them in the shared repo.
-- `claude-handoff/` is its own private git repo (it also holds the agent definitions, which `.claude/agents` and `.claude/skills` point to). The same rules apply there: tell me first, show the diff, split commits by unit, wait for my yes.
+- `CLAUDE.md` and `claude-handoff/` are in `.git/info/exclude`, and `.claude/` is ignored by the shared `.gitignore`, on purpose. Never stage them in the shared repo.
+- `claude-handoff/` is its own private git repo (it also holds the masters of the agent and skill definitions; `.claude/agents` and `.claude/skills` are copies of them, synced as `claude-handoff/README.md` describes). The same rules apply there: tell me first, show the diff, split commits by unit, wait for my yes.
 
 ## Hard rules
 
