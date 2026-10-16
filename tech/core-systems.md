@@ -71,8 +71,7 @@ There is no damage-info type: a hit is a modifier on the target's HP attribute.
 
 | System | Main files | Why it's core |
 | --- | --- | --- |
-| AI | `Core/Systems/AISystem/Runtime/AIFactionBrain.cs`, `AIUnitBrain.cs`, `AIBlackboard.cs`, `AIWorker.cs` | Runs on a worker thread; golden-master tested |
-| AI regression test | `Core/Systems/AISystem/Editor/AIRegressionTest.cs` | Baked catalogs; known red until its fix |
+| AI | `Core/Systems/AISystem/Runtime/AIFactionBrain.cs`, `AIUnitBrain.cs`, `AIBlackboard.cs`, `AIWorker.cs` | Runs on a worker thread; golden-master tested (`AIRegressionTest`) |
 
 ## Infrastructure
 
@@ -84,7 +83,6 @@ There is no damage-info type: a hit is a modifier on the target's HP attribute.
 | Play-mode reset | `Core/Managers/PlayModeStaticReset.cs` | Domain reload is off |
 | Save | `Core/Managers/SaveLoadManager.cs` (+ `ISavable` types) | Save compatibility |
 | Missions | `Core/Managers/MissionTracker.cs`, `Core/Levels/Runtime/Mission.cs`, `MissionRouteProgress.cs` | Level graph and progress |
-| Run upgrades | `Core/Systems/RunUpgrades/Runtime/RunUpgradeTracker.cs`, `RunUpgradeSO.cs` | In-mission upgrades; the tracker lives on `FactionTracker` and re-applies grants each level in `PrepareLevel` (used in 7 files) |
 | Entity messages *(added in setup)* | `Core/Utilities/GameEntityMessage.cs` | String-based calls used by `AEffectBase` feasibility checks and function callers; the AI-thread-safe replacement for `SendMessage` |
 | Delayed execution *(added in setup)* | `Core/Utilities/ExecutionUtils.cs` | Delay and coroutine runner used by `Die` and 13 files |
 | Camera *(added in setup)* | `Core/Camera/Runtime/CameraHandler.cs` | 46 calls in 18 files (14 in `PlayerController`). Has a BOM |
@@ -92,8 +90,4 @@ There is no damage-info type: a hit is a modifier on the target's HP attribute.
 
 **Checked, not core:** `Core/Systems/CombatLogging/` (`CombatLog` partials, `CombatLogBook`, `CombatLogEntry`, `CombatLogFileSink`, `CombatLogFormat`) only listens: it subscribes to 16 bus events and is called from three places (`MissionTracker` owns it, `CombatLevelRunHandler` calls `HookLevelEvents()`, `AudioSettingsPanel` calls `CombatLogFileSink.DeleteAll()`). Nothing in combat depends on it. Renaming or removing a bus event it listens to breaks it, so check it when the bus changes. Design notes: `tech/combat-log.md`.
 
-## Home (scope `thj/home-test`)
-
-| System | Main files | Why it's core |
-| --- | --- | --- |
-| Home simulation | `Core/Systems/HomeSystem/Runtime/Simulation/HomeSimulation.cs` (+ 11 partials), `Runtime/HomeDayRunner.cs`; the combat bridge `Runtime/Combat/HomeSortieBridge.cs` | USP: Managing the Home; feeds combat through the Home stat layer and `FactionTracker.PrepareLevel` |
+**Removed by THJ on 2026-10-16 (D-032):** the AI regression test (a test, not a system; its rule is in `CLAUDE.md` and the gates), run upgrades (feature-level; they reach combat through `FactionTracker.PrepareLevel`, covered by Factions) and the Home simulation (a branch feature; the Home is already Tier 3 in `escalation.md`). Changes to them follow the normal tiers.

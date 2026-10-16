@@ -2,7 +2,7 @@
 
 Proposal written 2026-10-06 on `main` (`f531b4d4b`). Applied 2026-10-07 on `thj/enemy_variations`; THJ committed it as `f55fa95ef` (enemy tiers), `89bfb13c6` (save reset), `ff48490fd` (health rounding + preview), with `4f27914d0` on top. **Review follow-ups (2026-10-07, below) are uncommitted in the working tree.** THJ playtested M1, M2, M5 and both M3s on 2026-10-08 (see "Playtest 2026-10-08").
 Design doc: "Miso Combat Balance M1–M7", https://claude.ai/code/artifact/3ebcf248-26be-45a3-8f5b-b4df479ba411
-Master: this file (`claude-handoff/design/combat-balance.md`). The claude.ai project "Miso" holds a copy (`claude/combat-balance.md`), refreshed from here. `claude-handoff/` is excluded from the shared repo; never stage this file there.
+Master: this file (`claude-handoff/design/combat-balance.md`). The claude.ai project "Miso" holds a copy (`design/combat-balance.md`), refreshed from here. `claude-handoff/` is excluded from the shared repo; never stage this file there.
 v2 (2026-10-06): after THJ review. v1 cut enemy damage; that was wrong because it ignored Family Roles, duos and synergies. Playtests say the game is already too easy (back when Claw damage was halved).
 v2.1: THJ confirmed Harmonic Slam is deliberately damage-free (cripple + reposition; Explosive Crescendo is Linda's AoE). The Masher's area attack hits enemies too.
 

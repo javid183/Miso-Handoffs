@@ -6,6 +6,7 @@ Rows D-001 to D-011 were carried over on 2026-10-15 from the Home handoff and pr
 
 | Date | ID | Tier | Scope | Decided by | Decision | Why | Affects |
 | --- | --- | --- | --- | --- | --- | --- | --- |
+| 2026-10-16 | D-032 | 3 | all | THJ | Removed from `tech/core-systems.md`: the AI regression test, run upgrades, the Home simulation | A test, not a system; run upgrades are feature-level and reach combat through Factions; the Home is already Tier 3 in `escalation.md` | `tech/core-systems.md` |
 | 2026-10-16 | D-031 | 3 | all | THJ | How the editor is checked lives in `tech/editor-checks.md` (coordinator-owned); the verifier follows it instead of `CLAUDE.md`, and the first real verifier run (Pilot 2) confirms each line and reports corrections | `CLAUDE.md` didn't cover compiles, logs or driving the editor, which the verifier relied on | `tech/editor-checks.md`, verifier, Pilot 2 |
 | 2026-10-15 | D-030 | 3 | all | THJ | `.claude/agents` and `.claude/skills` are plain copies of `claude-handoff/claude-config/` (the master), synced with `robocopy /MIR` after each change (command in `README.md`). Reverses D-018 | The `E:` drive is exFAT: no junctions or symlinks | Setup, `README.md`, coordinator |
 | 2026-10-15 | D-029 | 3 | all | THJ | `claude-handoff/` (private repo) follows the same guided git rules as the shared repo | The old "never commit claude-handoff/" rule predates the private repo | `CLAUDE.md` |

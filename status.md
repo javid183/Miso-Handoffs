@@ -26,8 +26,6 @@ Owner: coordinator. Every item has a scope: `all` or a branch. Started 2026-10-1
 
 **Workflow**
 
-- Mirror syncs to the "Miso Home System" Claude Doc: the Claude Docs connector on THJ's personal account was refused access to its content on 2026-10-15 (the page itself opens). Run syncs from the company account, or share the doc's content with the personal account.
-- Refresh the Claude project "Miso" docs from the new folder layout once setup is done.
 - How and when `thj/home-test` merges into `main`, and whether FTP or ATB wins (`branches.md`).
 - Fill the "[THJ] To add" part of `vision.md`.
 
@@ -130,6 +128,8 @@ Known issues carried over from the Oct 13 runs unless dated otherwise. All scope
 
 ## Done recently
 
+- 2026-10-16: Mirror sync to the "Miso Home System" Claude Doc works again from THJ's personal account (ddgsignin): headers of the three tabs and two new Build Log sections synced.
+- 2026-10-16: Claude project "Miso" docs refreshed to the new folder layout (same 8 docs, paths now match `claude-handoff/`; `tech/home-system.md` replaces the Home handoff).
 - 2026-10-15: Agent workflow foundations and agents/loop design (Foundations and Pass 2 docs).
 - 2026-10-15: Home playtest fixes 2 (`849c318ab`, `2f828e662`): day report saved, Kitchen forecast, recipe cards, Linda no longer shown twice at Dawn, FP gain animation. See `build-log.md`.
 - 2026-10-14: Open-checks playtest run (Claude, Days 1–5, two sorties). See `build-log.md`.
