@@ -6,22 +6,19 @@ Master: this file (`claude-handoff/design/combat-balance.md`). The claude.ai pro
 v2 (2026-10-06): after THJ review. v1 cut enemy damage; that was wrong because it ignored Family Roles, duos and synergies. Playtests say the game is already too easy (back when Claw damage was halved).
 v2.1: THJ confirmed Harmonic Slam is deliberately damage-free (cripple + reposition; Explosive Crescendo is Linda's AoE). The Masher's area attack hits enemies too.
 
-## How the numbers work (read from code/data)
-- Damage = effect `baseFactor` × Stat_DMG, folded Faction → Equipment (flat add) → Unit → Ability (`StatResolver.Resolve`). Health changes are rounded per hit (RoundToInt, halves to even); integer attributes (health) also start and clamp on whole numbers.
+**Current values live in the GDD** (D-047): [Combat rules](gdd/combat-rules.md), [Family systems](gdd/family-systems.md), [Enemies](gdd/enemies.md) and the [character sheets](gdd/characters/README.md), read from `main` @ `92853a5a9` on 2026-10-16. This file keeps the proposal's reasoning, what was applied and when, the playtest and the review history. Each dated section records the values of its day.
+
+## How the numbers work
+The rules are in the GDD: damage, rounding, crit and evasion [CR-19 to CR-21](gdd/combat-rules.md#attacks-and-damage); AP [CR-5, CR-6](gdd/combat-rules.md#action-points-ap); FTP [CR-10 to CR-13](gdd/combat-rules.md#family-time-points-ftp); enemy tiers [CR-32](gdd/combat-rules.md#enemy-tiers); each Family Role's trigger, effect and cost in the [Family Roles](gdd/family-systems.md#family-roles) table; Sisters' Rivalry in [Synergies](gdd/family-systems.md#synergies). Notes the GDD doesn't carry:
 - HP = `attributeSet` entry 1 (Specs_Health) `defaultSbValue.baseFactor` × Stat_HP. (The legacy `defaultValue` / `bounds.max` overrides on enemy prefabs are unused leftovers and already disagree with the real values.)
-- AP: 2 per unit. Enemy attacks are `Closure` (end turn). Player attacks cost 1 AP.
-- Family Roles (`Features/Player/<Unit>/Scripts/*FactionRoleHandler.cs`): each costs 1 ATB step (`requiredFTP` 1), `oncePerPhase: 0` on all four (no per-turn limit). ATB gauge: 3 steps (`atbSteps` 3 × Stat_ATBS), fill 0.2 × Stat_ATBFR (unit 2 × faction 0.5) steps per real second during enemy turns / ally actions; unspent AP converts 1:1 into steps at end of turn (PerUnit mode). `pointConsumptionMode: 1` (ATB) on main.
-  - Linda: shoots (6× bow effect) any enemy that moves into her straight lines within range.
-  - Lucy: after an ally attack, hits a target in range with the sidewinder effect (3× per orb).
-  - John: takes the ally's hit himself with DR modifier 0.2 (`JFR_DR`); ally takes nothing.
-  - Mark: counter-attacks (Fist Blitz 8×) the enemy that hit an ally, in range. Plus continuous attack / Atman Focus passives.
-- Sister's Rivalry = `UnitKillAbilityPointProvider`: a basic-attack kill by one sister gives the other +1 AP and resets her basic attack cooldown; only limit is a 2 s real-time timer.
 - Faction relations (`LevelBase.prefab` LevelFactionRelations; `FactionsRelationType` Ally = 1, Enemy = 2): Bergsons–Enemy 2, Bergsons–Neutral 1, Bergsons–Stranger 1 by default; the M1–M3 tiered levels keep those. So in tiered levels only the Enemy faction is hostile; Neutral and Stranger are only cleared.
+- When this proposal was written (2026-10-06), `main` ran ATB (`pointConsumptionMode: 1`): each Family Role cost 1 ATB step, the gauge held 3 steps (`atbSteps` 3 × Stat_ATBS), filled 0.2 × Stat_ATBFR (unit 2 × faction 0.5) steps per real second during enemy turns and ally actions, and unspent AP turned 1:1 into steps at the end of the turn. John's role then took the hit with DR modifier 0.2 (`JFR_DR`). `main` switched to FTP in `92853a5a9` (D-036).
 
 ## Model (rough, in the doc)
 Family damage per round ≈ own attacks (1.5 per hero) + 2 reactions per hero (assumption) + damage duo (~10) + Papa's Shelter (~3). John–Linda–Lucy ≈ 71/round vs ≈32 from basic attacks alone. Before the change, M4–M7 regular fights cleared in 1.1–1.8 rounds; target 1.6–2.6.
 
 ## What was applied
+Values as applied on 2026-10-07. Today's: [Enemies](gdd/enemies.md#roster) (HP), [CR-32](gdd/combat-rules.md#enemy-tiers) (tiers), [Missions and structure](gdd/missions-structure.md#missions) (each level's tier), [MI-25](gdd/missions-structure.md#bosses-and-special-fights) (Toba's duel).
 - Heroes: unchanged (John 32, Linda 20, Lucy 15, Mark 15, Toba 24). Harmonic Slam stays damage-free.
 - Enemy prefab HP (`defaultSbValue.baseFactor` + `sBBounds.maxV.baseFactor`): Dark Claw 10→16, Black Claw 25→40, Archer 20→24, Worm 20→28, Shaman 35→50, Masher 50→80, Goblin Queen 200→320. Mountain Deev untouched (not in M1–M7). These also apply to M8+ levels.
 - Archer damage 5→6 (`ArcherGoblin_Ability_Attack_Effect_AttrMod`).
@@ -78,6 +75,7 @@ Noteworthy issues (not fixed):
 Watch in M4/M6: first M4 fight (damage 4→6, 8 enemies); first Masher counter loop; Linda's damage share in a full squad (if > 50%, her uncapped family role is the lever); whether level-ups make M6 easier than M4 (then add the Late tier).
 
 ## THJ design changes 2026-10-08 (John; not reviewed in code)
+As built (read 2026-10-16), some values differ from these notes: Wrath gives +35% per stack, not +40% ([JO-1](gdd/characters/john.md#passives), John Q1), and the Shield role's factor is ×0.5 ([Family Roles](gdd/family-systems.md#family-roles)). Current values: [John](gdd/characters/john.md).
 - **Wrath:** John gains a stack when he takes damage under Shield Up or through his Shield role; stacks add damage to his next attack (0.4 per stack, cap 3). HUD box with tooltip.
 - **Blood Debt:** the last enemy to hurt a family member other than John carries the tag; John deals x1.3 to it until it is replaced or the debtor dies.
 - **Shield role:** John now takes 0.4 of the redirected hit (was 0.2).
@@ -95,5 +93,5 @@ Watch in M4/M6: first M4 fight (damage 4→6, 8 enemies); first Masher counter l
 
 ## Gotchas found
 - `Linda_Ability_FactionRole_Effect_AttrMod` (7×), `Lucy_Ability_FactionRole_Effect_AttrMod` (5×) and `Linda_Ability_HarmonicSlam_Effect_AttrMod` (7.5×) are unused assets.
-- Masher counter fires on every non-lethal hit, reactions included, and its area hits both sides.
+- Masher counter fires on every non-lethal hit, reactions included, and its area hits both sides (now [EN-2](gdd/enemies.md#special-rules); its limit is Enemies Q2).
 - Throwaway tools used: `tier_levels.py` (level override edit) and the YAML readers lived in the device session home, not in the repo.

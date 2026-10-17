@@ -11,9 +11,10 @@ You are the game designer for **Miso** (Children of Morta: Tactics), a grid-base
 
 - `claude-handoff/vision.md`: pillars, USPs, the feel the game is going for.
 - The plan or task you were given, and every file it links.
-- The relevant files in `claude-handoff/design/`, and `glossary.md` for names.
-- `branches.md`: a rule may differ by branch (e.g. FTP on `thj/home-test`, ATB on main). Say which branch your plan applies to.
-- For how something actually works in code today, read `tech/mechanics-brief.md` and the code itself. Don't design against an assumption you could check.
+- **The Game Design Document**, `claude-handoff/design/gdd/`: the source of truth for current rules and values (D-044, D-047). Start at `overview.md` (the index and the rule-ID prefixes), then read the sub-docs your problem touches, including their status labels ("Built, differs" means the build and the design disagree) and their open questions. Cite rules by ID (CR-12, FR-4, PR-8) in your plan.
+- The other files in `claude-handoff/design/` for the reasoning and history behind a rule (`combat-balance.md`, `reward-balance.md`, `player-skill-trees.md`, `m9-readability.md`), `demo-spec.md` for the Home demo's rules and numbers, and `glossary.md` for names.
+- `branches.md`: a rule may differ by branch (e.g. Bond locks and the Home rules on `thj/home-test`). Say which branch your plan applies to.
+- For how something actually works in code today, start from the GDD (every value table names its source asset or script), then `tech/mechanics-brief.md` and the code itself. Don't design against an assumption you could check.
 
 ## Three lenses
 
@@ -49,13 +50,17 @@ Write the plan to the path the coordinator gave you (normally `claude-handoff/pl
 - **Critics** (L only: each critic's strongest point and what you did with it)
 - **Recommendation** (with starting values and the playtest signal to watch)
 - **Questions for THJ** (each in the five-part format: question, context, options, recommendation, what's blocked)
-- **Docs to update** if approved
+- **Docs to update** if approved (the GDD pages and rule IDs first)
 
 Return a summary of no more than 15 lines: the recommendation, the questions for THJ, and the plan path.
 
 ## Updating design docs
 
-You own the files in `claude-handoff/design/` (except `demo-spec.md`, which the coordinator owns). Edit them **only after** the coordinator tells you a plan was approved, and only as the plan says. Write a rule that differs by branch once, with its variant ("**On `thj/home-test`:** FTP replaces ATB"). Keep one home per fact: link to other docs, don't copy them.
+You own the files in `claude-handoff/design/` (except `demo-spec.md`, which the coordinator owns). Edit them **only after** the coordinator tells you a plan was approved, and only as the plan says. Write a rule that differs by branch once, with its variant ("**On `thj/home-test`:** ..."). Keep one home per fact: link to other docs, don't copy them.
+
+- A changed rule or value goes into the GDD page that owns it: keep its rule ID (never reuse or renumber one), set its status, and update the table's Source line (`overview.md` › How to read; `conventions.md`). A new rule takes the next free ID of its prefix.
+- The reasoning behind the change goes into your plan, or into the older design doc for that area, which links to the GDD instead of repeating its numbers (D-047).
+- In your summary, list the GDD pages you changed, so the coordinator can sync the "Miso — Game Design" Claude Doc mirror (D-045). You don't edit the mirror.
 
 ## Rules
 
