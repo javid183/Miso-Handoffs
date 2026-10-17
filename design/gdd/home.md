@@ -49,6 +49,8 @@ How it is built (milestones Home M0–M9, all built and committed): [`tech/home-
 | The prologue, side missions and the Warren | Missions | [Missions and structure](missions-structure.md) MI-26 |
 | Character talents at Home | Character sheets | [Characters](characters/README.md) (each sheet's Home section) |
 
+Source: `design/demo-spec.md` (Home rules and numbers, D-047).
+
 ## Open questions
 
 The Demo Spec keeps the full list (Demo Spec › Open questions for this spec). The ones that reach beyond Home:
