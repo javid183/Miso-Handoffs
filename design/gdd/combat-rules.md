@@ -31,7 +31,7 @@ A global cap of 3 also applies: an AP gain that would take a unit above 3 is ref
 ## Family Time Points (FTP)
 
 - **CR-10.** FTP is one pool the family shares. It is created when a mission starts, from the mission's roster (not from who a level deploys), and it starts full. Its maximum is the sum of each roster member's FP value: their base (table below) plus the family's `Stat_FP` level, each rounded (halves to even). When a member dies, the maximum stays, but until the next level the pool is capped at the FP of the roster members still alive in that level (so in a level that doesn't place the whole roster, the first death also drops the absent members' share); points above the new cap are lost. *Built* (Q2, Q9)
-- **CR-11.** FTP fills during the fight: +1 for each unit in a Pass-by (+2 when two of John, Linda, Lucy and Mark pass each other, +1 when Toba is one of the pair), +1 when John uses Shield Up, Linda Harmonic Slam, Lucy Blink or Toba Provoking Presence, and +5 from the Family Trinket. Some levels also add 3 or 5 FTP when they load ([Missions and structure](missions-structure.md#missions)). It does not refill each turn. *Built (Pass-by and Trinket to check in play, Q7)*
+- **CR-11.** FTP fills during the fight: +1 for each unit in a Pass-by (+2 when two of John, Linda, Lucy and Mark pass each other, +1 when Toba is one of the pair), +1 when John uses Shield Up, Linda Harmonic Slam, Lucy Blink or Toba Provoking Presence, and +5 from the Family Trinket. Some levels also add 3 or 5 FTP when they load ([Missions and structure](missions-structure.md#missions)). It does not refill each turn. *Built* (Pass-by and Trinket to check in play, Q7)
 - **CR-12.** Between levels of the same mission, FTP carries over and grows by `Stat_FPG` × the maximum (0 until upgraded). The first level gets no growth. Restarting the mission's first level refills the pool; restarting a later level keeps the FTP of the failed attempt. It is cleared when the mission ends. *Built*
 - **CR-13.** FTP pays for Duos (2 each; the check before use tests only 1 per partner). Today it also pays for Family Roles (1 each, free by design) and Mark's Continuous Attack (1, then +1 per use in the same turn). See [Family systems](family-systems.md). *Built, differs*
 - **CR-14.** Family Super Time: every living member with a Family Role runs a special action at once. It costs no FTP. On `main` the player can't trigger it: the only ability that does (1 AP, needs a full pool) is carried by the enemy Toba of the duel, and the game fires it once when the Goblin Queen dies in M4. *Built, differs* (Q4)
@@ -70,7 +70,7 @@ Source: `Core/Systems/StatsResourcesSystem/Runtime/StatEvaluation.cs` (`StatReso
 
 - **CR-23.** A unit at 0 HP dies and leaves the board. *Built*
 - **CR-24.** HP carries over between levels of a mission. At the next level, a family member starts at their saved HP, at least 20% of max, plus `Stat_HPG` × max (0 until upgraded). The floor also brings back members who fell in a won level, at 20%. *Built*
-- **CR-25.** When a family member dies, each other living member takes Revenge after a short beat: for 2 turns, ×1.5 damage, +20% crit chance, +1 AP and +1 to the AP cap, plus a ready basic attack (which adds nothing on `main`: basic attacks have no cooldown). The values are the same for John, Linda, Lucy and Mark; Toba neither gives nor takes Revenge. *Built (Q5)*
+- **CR-25.** When a family member dies, each other living member takes Revenge after a short beat: for 2 turns, ×1.5 damage, +20% crit chance, +1 AP and +1 to the AP cap, plus a ready basic attack (which adds nothing on `main`: basic attacks have no cooldown). The values are the same for John, Linda, Lucy and Mark; Toba neither gives nor takes Revenge. *Built* (Q5)
 - **CR-26.** **On `thj/home-test`:** the first member downed in a sortie comes home Wounded ([Home](home.md)). *Demo*
 
 Source: `Core/Units/Runtime/GUnit.cs`, `Core/Units/Runtime/Factions/FactionTracker.cs`, `Core/Interactions/Runtime/PlayerController.cs` (revenge), `Resources/GlobalSettings.asset` (`persistHealthsThroughMission` on).
@@ -83,8 +83,8 @@ Source: `Core/Units/Runtime/GUnit.cs`, `Core/Units/Runtime/Factions/FactionTrack
 | Weak | Weak | Deals 40% less damage (`Stat_DMG` ×0.6) for 2 turns | Built |
 | Burnt | Burnt | Loses 3 HP at the start of its turn, twice (6 in all); not scaled by damage, can't crit | Built |
 | Crippled | Crippled | Can't walk for 1 turn; takes 4 × the mover's damage for each cell it is pushed or pulled. Applied by Linda's Harmonic Slam | Built |
-| Stunned | Stunned | Skips its next turn (enemies). Applied by Mark's Vault with Stunning Vault | Built (Q6) |
-| Taunted | Taunted | Must target the taunter, through its next turn | Built (no ability read so far applies it; to check) |
+| Stunned | Stunned | Skips its next turn (enemies). Applied by Mark's Vault with Stunning Vault (Q6) | Built |
+| Taunted | Taunted | Must target the taunter, through its next turn. No ability read so far applies it (to check) | Built |
 | Sheltered | Sheltered by John | Lucy next to John: her Fire Embers gain one ember (Papa's Shelter) | Built |
 | Shield Up | (hidden) | John's Shield Up is active | Built |
 | Blood Debt | Blood Debt | Marked by John (the last enemy to hurt the family) | Built |
@@ -134,13 +134,13 @@ Source: `Core/Managers/CombatLevelRunHandler.cs`, `Core/Managers/GameHandler.cs`
 
 ## Deferred and dropped
 
-| Item | State | Decision |
-| --- | --- | --- |
-| Bergson Time (Reactive Interrupt, key L) | Deferred; works only with ATB, so it is off with FTP | D-038 |
-| ATB gauge | Dropped as the direction. The gauge still fills during enemy turns and takes leftover AP, but nothing spends it with FTP | D-036 |
-| Shared AP | Dropped; half-built code remains | D-037 |
-| Action reversion (undo an action for FTP) | Off (`enableActionReversion` 0, cost 0) | — |
-| Several AP for one long move (distance ÷ range, rounded up) | Built; no unit turns it on (`allowMultiActivation`) | — |
+| Item | State | Decision | Notes |
+| --- | --- | --- | --- |
+| Bergson Time (Reactive Interrupt, key L) | Deferred | D-038 | Works only with ATB, so it is off with FTP |
+| ATB gauge | Dropped | D-036 | Dropped as the direction. The gauge still fills during enemy turns and takes leftover AP, but nothing spends it with FTP |
+| Shared AP | Dropped | D-037 | Half-built code remains |
+| Action reversion (undo an action for FTP) | Off (`enableActionReversion` 0, cost 0) | — | |
+| Several AP for one long move (distance ÷ range, rounded up) | Built | — | No unit turns it on (`allowMultiActivation`) |
 
 ## Branch differences
 

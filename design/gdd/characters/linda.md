@@ -10,7 +10,7 @@ Linda is the archer: ranged damage that pierces lines of enemies, and a watchful
 | AP per turn | 2 (family default) | Built |
 | FP value (adds to the FTP maximum) | 2 | Built |
 | Joins | From the start | Built |
-| Family Role | Watch: shoots enemies that end a move in her row or column ([Family systems](../family-systems.md#family-roles)) | Built, differs (no limit yet) |
+| Family Role | Watch: shoots enemies that end a move in her row or column ([Family systems](../family-systems.md#family-roles)); no limit yet | Built, differs |
 | Duos | John–Linda, Linda–Lucy, Linda–Toba, Mark–Linda | Built |
 | Synergies | Sisters' Rivalry, Tempest Bloom (with Lucy), Catch & Return (with Mark) | Built |
 

@@ -20,12 +20,12 @@ The family fights as a family through four systems. Family Roles react on their 
 - **FR-5.** Linda's two uses come from one pool, and the same enemy can trigger her more than once (D-041). *Planned*
 - **FR-6.** The uses left this round are shown as **Watch** ("Watch 2/2"; Linda's are Watch Shots). *Proposed*
 
-| Character | Trigger | Effect | Limit per round (design) | Status |
-| --- | --- | --- | --- | --- |
-| John | An enemy starts an action that targets a family member within 2 cells of John | The hit moves to John, who takes it × 0.5 (a fixed factor); the ally takes nothing | Unlimited, paid with his HP | Built (Q8) |
-| Linda | An enemy *ends* a move in her row or column within her arrow's range (4 cells, up to 6 with Longshot); units in between don't block the lane; pushes and Command moves count (D-039) | She shoots it with her basic arrow (6 × damage, piercing) | 2, one pool | Built, differs (no limit yet) |
-| Lucy | A family member finishes an action (not Lucy, not the Linda–Lucy Duo) | She fires 2 sidewinder embers (3 × damage each) at one enemy within 3 cells that the action targeted or hit near, skipping an enemy she hit last | 3 | Built, differs (no limit yet) |
-| Mark | An enemy's action hits a family member | He strikes back with Fist Blitz (8 × damage) if the attacker is within 2 cells | 1 | Built, differs (no limit yet; check whether the cooldown already gives 1, D-042) |
+| Character | Trigger | Effect | Limit per round (design) | Status | Notes |
+| --- | --- | --- | --- | --- | --- |
+| John | An enemy starts an action that targets a family member within 2 cells of John | The hit moves to John, who takes it × 0.5 (a fixed factor); the ally takes nothing | Unlimited, paid with his HP | Built | Q8 |
+| Linda | An enemy *ends* a move in her row or column within her arrow's range (4 cells, up to 6 with Longshot); units in between don't block the lane; pushes and Command moves count (D-039) | She shoots it with her basic arrow (6 × damage, piercing) | 2, one pool | Built, differs | No limit yet |
+| Lucy | A family member finishes an action (not Lucy, not the Linda–Lucy Duo) | She fires 2 sidewinder embers (3 × damage each) at one enemy within 3 cells that the action targeted or hit near, skipping an enemy she hit last | 3 | Built, differs | No limit yet |
+| Mark | An enemy's action hits a family member | He strikes back with Fist Blitz (8 × damage) if the attacker is within 2 cells | 1 | Built, differs | No limit yet; check whether the cooldown already gives 1 (D-042) |
 
 Source: `Features/Player/<Name>/Scripts/<Name>FactionRoleHandler.cs`, `Core/Interactions/Runtime/PlayerController.cs` (prompt, pause, charge on success); the role component on `Features/Player/<Name>/Prefabs/Unit_<Name>.prefab` (cost, limit, QTE, John's `receivedDamageModifier`, Lucy's blacklist). Role presets under `Resources/UnitSpecific/Player/`: `John/FactionRole/John_Ability_FR_Shield.asset` (radius 2, held to 1–2 whatever its upgrade rows say), `Linda/Faction Role/Linda_Ability_FactionRole.asset`, `Lucy/FactionRole/Lucy_Ability_FactionRole.asset`; Mark's role uses his Fist Blitz preset. Linda's trigger is `OnUnitEndMoving` (`LindaFactionRoleHandler`).
 
@@ -53,14 +53,14 @@ Source: `Content/Controllers/PlayerController.prefab` (`UnitsCooperationHandler`
 
 - **SY-1.** A Synergy is automatic and conditional, and costs nothing. *Built*
 
-| Synergy | Between | When | Effect | Unlock | Status |
-| --- | --- | --- | --- | --- | --- |
-| Sisters' Rivalry | Linda, Lucy | One sister kills an enemy with a basic attack | The other gets +1 AP and her basic attack is ready again, at most once every 2 s (the reset adds nothing on `main`, Q11) | **On `thj/home-test`:** Bond L2 (D-010) | Built |
-| Tempest Bloom | Linda, Lucy | Linda's basic arrow (also her role arrow) or the Linda–Lucy Duo arrow enters Lucy's Cyclone | The arrow splits into copies toward each neighbouring cell except back the way it came; each copy keeps the damage | Family tree; also a run upgrade (`LindaLucyCycloneSpreadUnlock`) | Built |
-| Papa's Shelter | John, Lucy | Lucy stands next to John | Lucy is Sheltered and her basic attack gains a level (one more ember) | Open | Built |
-| Shield Flare | John, Lucy | Lucy's fireball reaches John while his Shield Up is on | John absorbs it and launches copies along the four diagonals; each hits the first enemy within 2 cells | Open | Built |
-| Command Shield Dash | John, Mark | A unit finishes a move made by Mark's Command | Press QTE on John ("Shield Dash"): a free Shield Dash | **On `thj/home-test`:** Bond L2 (D-010) | Built |
-| Catch & Return | Mark, Linda | Linda's basic arrow reaches Mark from 2 or more cells away | Mark catches it and bounces it back | Family tree (`_MarkLindaSynergy`) | Built (Q9) |
+| Synergy | Between | When | Effect | Unlock | Status | Notes |
+| --- | --- | --- | --- | --- | --- | --- |
+| Sisters' Rivalry | Linda, Lucy | One sister kills an enemy with a basic attack | The other gets +1 AP and her basic attack is ready again, at most once every 2 s (the reset adds nothing on `main`, Q11) | **On `thj/home-test`:** Bond L2 (D-010) | Built | |
+| Tempest Bloom | Linda, Lucy | Linda's basic arrow (also her role arrow) or the Linda–Lucy Duo arrow enters Lucy's Cyclone | The arrow splits into copies toward each neighbouring cell except back the way it came; each copy keeps the damage | Family tree; also a run upgrade (`LindaLucyCycloneSpreadUnlock`) | Built | |
+| Papa's Shelter | John, Lucy | Lucy stands next to John | Lucy is Sheltered and her basic attack gains a level (one more ember) | Open | Built | |
+| Shield Flare | John, Lucy | Lucy's fireball reaches John while his Shield Up is on | John absorbs it and launches copies along the four diagonals; each hits the first enemy within 2 cells | Open | Built | |
+| Command Shield Dash | John, Mark | A unit finishes a move made by Mark's Command | Press QTE on John ("Shield Dash"): a free Shield Dash | **On `thj/home-test`:** Bond L2 (D-010) | Built | |
+| Catch & Return | Mark, Linda | Linda's basic arrow reaches Mark from 2 or more cells away | Mark catches it and bounces it back | Family tree (`_MarkLindaSynergy`) | Built | Q9 |
 
 Source: `Features/Player/Linda/Scripts/UnitKillAbilityPointProvider.cs` (on Linda and Lucy), `Features/Player/Lucy/Scripts/LucyPassiveAbility_PapasShelter.cs`, `Features/Player/John/Scripts/JohnShieldRelay.cs` (pattern Diagonal, range 2), `Features/Player/John/Scripts/JohnPassiveAbility_CommandShieldDash.cs`, `Features/Player/Mark/Scripts/ProjectileCatchAndReturn.cs` (`returnMode` BounceBack), `Features/Player/Lucy/Scripts/LucyCycloneProjectileScatter.cs` (on `Cyclone.prefab`) and their components on the `Unit_*` prefabs.
 
@@ -69,7 +69,7 @@ Character passives that touch the family but belong to one character (Wrath, Blo
 ## Pass-by
 
 - **PB-1.** When a Bergson moves through another Bergson's cell, the pass-by ability fires for that pair, once per pair per turn. Both units get it (`applyMode` Both). *Built*
-- **PB-2.** Each unit in a pass-by adds 1 FTP, so a pair of John, Linda, Lucy or Mark adds 2. They share one pass-by ability; Toba has no entry (Q1), so a pair with Toba adds 1. Each unit also gives the other 0.3 ATB, which nothing spends with FTP. *Built (to check in play: [Combat rules](combat-rules.md) Q7)*
+- **PB-2.** Each unit in a pass-by adds 1 FTP, so a pair of John, Linda, Lucy or Mark adds 2. They share one pass-by ability; Toba has no entry (Q1), so a pair with Toba adds 1. Each unit also gives the other 0.3 ATB, which nothing spends with FTP. *Built* (to check in play: [Combat rules](combat-rules.md) Q7)
 - **PB-3.** The player can cycle alternative move paths to route through allies. *Built*
 - **PB-4.** **On `thj/home-test`:** a pair needs Bond L1 for its pass-by. Every pair starts at L1 except Toba's pairs other than Linda–Toba, so only those earn it (D-010). *Demo*
 
@@ -77,12 +77,12 @@ Source: `Content/Controllers/PlayerController.prefab` (`UnitsPassByHandler`: 4 e
 
 ## Deferred and dropped
 
-| Item | State | Why | Decision |
-| --- | --- | --- | --- |
-| Bergson Time (pause the enemy turn and act) | Deferred; ATB-only code remains (key L) | Untested, adds complexity | D-038 |
-| ATB as the role resource | Dropped; `main` switched to FTP in `92853a5a9` | Playtesters found it confusing | D-036 |
-| Shared AP | Dropped; half-built code remains | Fixed AP already runs | D-037 |
-| Toba–Mark Duo | Dropped | Linda–Toba became the showcase pair | D-008 |
+| Item | State | Why | Decision | Notes |
+| --- | --- | --- | --- | --- |
+| Bergson Time (pause the enemy turn and act) | Deferred | Untested, adds complexity | D-038 | ATB-only code remains (key L) |
+| ATB as the role resource | Dropped | Playtesters found it confusing | D-036 | `main` switched to FTP in `92853a5a9` |
+| Shared AP | Dropped | Fixed AP already runs | D-037 | Half-built code remains |
+| Toba–Mark Duo | Dropped | Linda–Toba became the showcase pair | D-008 | |
 
 ## Branch differences
 

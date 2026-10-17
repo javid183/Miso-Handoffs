@@ -6,17 +6,17 @@ The Corruption's forces are goblins, beasts and two bosses. Each type asks for a
 
 ## Roster
 
-| Enemy | Role | HP | Size | Kill XP | Gold on kill | Status |
-| --- | --- | --- | --- | --- | --- | --- |
-| Dark Claw | Pack melee | 16 | 1 cell | 3 | 0–1 | Built |
-| Black Claw | Pack leader | 40 | 1 cell | 5 | 0–2 | Built |
-| Archer Goblin | Ranged | 24 | 1 cell | 4 | 0–1 | Built |
-| Dark Shaman | Caster, summoner | 50 | 1 cell | 4 | 1–2 | Built |
-| Dark Worm | Minor; splits | 28 | 1 cell | 3 | none | Built (Q3) |
-| Masher Goblin | Heavy; counter-attacks | 80 | 2 × 2 | 10 | 1–3 | Built |
-| Goblin Queen | Boss | 320 (150 in M10) | 1 × 2 | 30 | 5 | Built (Q1) |
-| Mountain Deev | Boss; static | 100 | 3 × 2 | 10 | 1–3 | Built |
-| Deevoted | The Deev's tentacles | about 1 | 1 cell | 0 | none | Built, unused on `main` (Q5) |
+| Enemy | Role | HP | Size | Kill XP | Gold on kill | Status | Notes |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| Dark Claw | Pack melee | 16 | 1 cell | 3 | 0–1 | Built | |
+| Black Claw | Pack leader | 40 | 1 cell | 5 | 0–2 | Built | |
+| Archer Goblin | Ranged | 24 | 1 cell | 4 | 0–1 | Built | |
+| Dark Shaman | Caster, summoner | 50 | 1 cell | 4 | 1–2 | Built | |
+| Dark Worm | Minor; splits | 28 | 1 cell | 3 | none | Built | Q3 |
+| Masher Goblin | Heavy; counter-attacks | 80 | 2 × 2 | 10 | 1–3 | Built | |
+| Goblin Queen | Boss | 320 (150 in M10) | 1 × 2 | 30 | 5 | Built | Q1 |
+| Mountain Deev | Boss; static | 100 | 3 × 2 | 10 | 1–3 | Built | |
+| Deevoted | The Deev's tentacles | about 1 | 1 cell | 0 | none | Built | Unused on `main` (Q5) |
 
 HP is at the Standard tier; Tutorial ×0.6 and Late ×1.2 ([Combat rules](combat-rules.md) CR-32). Every enemy has 2 AP per turn. Kill XP and gold are paid only when an ability lands the killing blow.
 
@@ -31,7 +31,7 @@ Source: `Features/Enemy/<Name>/Prefab(s)/Unit_<Name>.prefab` (`Specs_Health`, `p
 - **EN-5. Summon (Dark Shaman).** The Shaman calls 1 Dark Claw onto a random empty cell within 2 of itself (1 AP, cooldown 3). There is no cap, and summoned Claws stay when the Shaman dies. *Built*
 - **EN-6. Goblin Queen.** A boss with a strike, a jump and a telegraphed charge. Her strike deals 7.5 × damage to each family member within 1 cell of the struck cell. She jumps (no damage) to one of four charge spots, marks the longest straight lane from there (wider than one cell; cooldown 4), and on her next turn charges to its far end: every family member next to a cell she passes takes 10 × damage and is pushed 1 cell. She has no phases. In M4, her death triggers the family's Family Super Time ([Missions and structure](missions-structure.md) MI-23). She is fought again in M10 with 150 HP. *Built.* **On `thj/home-test`:** under the Hungry Moon Omen, she gains +1 AP each turn while below 50% HP (D-011).
 - **EN-7. Mountain Deev.** A static boss. In its level (M12) it has three actions: a wind-up that marks 10 random cells; poison pools dropped on those cells on its next action, which deal 6 × damage to a family member on the cell each tick and last 3 turns; and, if it was hit since its last turn, a wave that pushes every family member within 9 cells 2 cells away (no damage). The level removes its Summon, which would spawn 3 Deevoted and make the Deev take no damage until any other enemy dies. So in M12 the Deev can be hit from the first turn. The design says its Deevoted must be destroyed before it can be hit. *Built, differs* (Q5)
-- **EN-8. Deevoted.** The Deev's tentacles: no abilities, no rewards, ignored by objectives. They would die at 0 HP (about 1) or when their Inactive status is removed, which nothing does. Only the removed Summon spawns them, so they never appear on `main`. *Built, unused* (Q5)
+- **EN-8. Deevoted.** The Deev's tentacles: no abilities, no rewards, ignored by objectives. They would die at 0 HP (about 1) or when their Inactive status is removed, which nothing does. Only the removed Summon spawns them, so they never appear on `main`. *Built* (unused; Q5)
 
 Source: `MemorableAttackMemoryShare` on `Unit_DarkClaw` and `Unit_BlackClaw`; `Features/Enemy/Masher Goblin/Scripts/MasherGoblinFactionRoleHandler.cs`; `DarkWormPassive` on its prefab (script not read); `Core/Entities/Runtime/Boss/BossGoblinQueen.cs`, `BossMountainDeev.cs` and their prefabs; presets in `Resources/UnitSpecific/Enemy/` (`DarkShaman/Summon/`, `GoblinQueen/`, `MountainDeev/`); `Content/Levels/Generic Levels/Medium/MountainDeev/LevelMountainDeev.prefab` (ability list override); `Resources/Tags/GTagSet.asset`.
 

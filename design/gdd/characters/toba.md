@@ -10,7 +10,7 @@ Toba is the healer and nature lover, and the family's newcomer: he was not in Ch
 | AP per turn | 2 (family default) | Built |
 | FP value (adds to the FTP maximum) | 1 | Built |
 | Joins | After M4 "Into the Rootwell" (`unlockedAfterMission`) | Built |
-| Family Role | None | Open ([Family systems](../family-systems.md#open-questions) Q1) |
+| Family Role | None ([Family systems](../family-systems.md#open-questions) Q1) | Open |
 | Duos | Linda–Toba | Built |
 | Synergies | None | Built |
 

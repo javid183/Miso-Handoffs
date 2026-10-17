@@ -10,7 +10,7 @@ Mark is the monk and Zen master: a fast melee fighter who chains kills, builds F
 | AP per turn | 2 (family default) | Built |
 | FP value (adds to the FTP maximum) | 3 | Built |
 | Joins | After M3 "No More Waiting" (`unlockedAfterMission`) | Built |
-| Family Role | Counter: strikes back at an enemy that hit family ([Family systems](../family-systems.md#family-roles)) | Built, differs (no limit yet) |
+| Family Role | Counter: strikes back at an enemy that hit family ([Family systems](../family-systems.md#family-roles)); no limit yet | Built, differs |
 | Duos | Mark–Lucy, Mark–Linda, Mark–John | Built |
 | Synergies | Catch & Return (with Linda), Command Shield Dash (with John) | Built |
 

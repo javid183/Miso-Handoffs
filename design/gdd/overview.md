@@ -87,7 +87,7 @@ Where each part is designed: [Missions and structure](missions-structure.md) · 
 | Playable family | John, Linda, Lucy, Mark, Toba. Mark joins after M3 "No More Waiting". Kevin works at Home only (`thj/home-test`) | Built |
 | Squad size | Set per mission: 2 to 4 | Built |
 | AP | Fixed, per unit (D-037) | Built |
-| FTP | A family pool; pays Duos only, 2 each (D-035, D-036) | Built, differs (see [Family systems](family-systems.md)) |
+| FTP | A family pool; pays Duos only, 2 each (D-035, D-036); see [Family systems](family-systems.md) | Built, differs |
 | Family Roles | Free, with a limit per round: Linda 2, Lucy 3, Mark 1, John unlimited (D-036, D-042) | Planned |
 | Campaign | 16 mission assets: M1–M14 (two M3s) and MX | Built |
 | Character levels | 10 XP thresholds, one skill point each | Built |
@@ -97,16 +97,16 @@ Source: `Resources/Game Data.asset`, `Resources/GlobalSettings.asset`, `Content/
 
 ## Areas and their state
 
-| Area | Sub-doc | Design state | Branch | Checked |
-| --- | --- | --- | --- | --- |
-| Combat rules | [combat-rules](combat-rules.md) | Built | both | `main` @ `92853a5a9` (presets read) |
-| Family systems | [family-systems](family-systems.md) | Built, differs (role limits planned) | both | `main` @ `92853a5a9` (presets read) |
-| Characters | [john](characters/john.md) · [linda](characters/linda.md) · [lucy](characters/lucy.md) · [mark](characters/mark.md) · [toba](characters/toba.md) | Built | both | `main` @ `92853a5a9` (presets read) |
-| Enemies | [enemies](enemies.md) | Built | both | `main` @ `92853a5a9` (presets read) |
-| Progression and economy | [progression-economy](progression-economy.md) | Built (skill-tree values not play-checked) | both | `main` @ `92853a5a9` (presets read) |
-| Missions and structure | [missions-structure](missions-structure.md) | Built (M8–M14 unreachable, not rebalanced) | both | `main` @ `92853a5a9` (level prefabs read) |
-| Home | [home](home.md) → [Demo Spec](../demo-spec.md) | Built | `thj/home-test` | Demo Spec, 2026-10-16 (branch code not read) |
-| Narrative and world | [narrative-world](narrative-world.md) | Proposed | all | `main` @ `92853a5a9` (briefings only) |
+| Area | Sub-doc | Design state | Branch | Checked | Notes |
+| --- | --- | --- | --- | --- | --- |
+| Combat rules | [combat-rules](combat-rules.md) | Built | both | `main` @ `92853a5a9` (presets read) | |
+| Family systems | [family-systems](family-systems.md) | Built, differs | both | `main` @ `92853a5a9` (presets read) | Role limits planned |
+| Characters | [john](characters/john.md) · [linda](characters/linda.md) · [lucy](characters/lucy.md) · [mark](characters/mark.md) · [toba](characters/toba.md) | Built | both | `main` @ `92853a5a9` (presets read) | |
+| Enemies | [enemies](enemies.md) | Built | both | `main` @ `92853a5a9` (presets read) | |
+| Progression and economy | [progression-economy](progression-economy.md) | Built | both | `main` @ `92853a5a9` (presets read) | Skill-tree values not play-checked |
+| Missions and structure | [missions-structure](missions-structure.md) | Built | both | `main` @ `92853a5a9` (level prefabs read) | M8–M14 unreachable, not rebalanced |
+| Home | [home](home.md) → [Demo Spec](../demo-spec.md) | Built | `thj/home-test` | Demo Spec, 2026-10-16 (branch code not read) | |
+| Narrative and world | [narrative-world](narrative-world.md) | Proposed | all | `main` @ `92853a5a9` (briefings only) | |
 
 ## Open design questions
 

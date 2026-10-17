@@ -152,12 +152,12 @@ Source: `Features/Home - Imported/___Khashayar/HomeManager.cs`; `Home - Scene.un
 
 ## Deferred and dropped
 
-| Item | State | Where decided |
-| --- | --- | --- |
-| Rune overlaps: a bought node removes its run upgrade from the altar | Deferred by THJ, but already built for unlocks and level-ups. Runes built from stat modifiers (Extensive Dash, Power-Piercing Arrows, Critical Bergsons) are never removed | [`player-skill-trees.md`](../player-skill-trees.md) |
-| Relic as a run-upgrade kind | Code only; no assets | — |
-| Family Time and Family Lookout family nodes | Dropped (main ran ATB then) | [`player-skill-trees.md`](../player-skill-trees.md) |
-| Material-only picks and new rewards for M8–M14 and MX | Pending | [`reward-balance.md`](../reward-balance.md) §5 |
+| Item | State | Where decided | Notes |
+| --- | --- | --- | --- |
+| Rune overlaps: a bought node removes its run upgrade from the altar | Deferred | [`player-skill-trees.md`](../player-skill-trees.md) | Deferred by THJ, but already built for unlocks and level-ups. Runes built from stat modifiers (Extensive Dash, Power-Piercing Arrows, Critical Bergsons) are never removed |
+| Relic as a run-upgrade kind | Code only; no assets | — | |
+| Family Time and Family Lookout family nodes | Dropped | [`player-skill-trees.md`](../player-skill-trees.md) | `main` ran ATB then |
+| Material-only picks and new rewards for M8–M14 and MX | Pending | [`reward-balance.md`](../reward-balance.md) §5 | |
 
 ## Branch differences
 

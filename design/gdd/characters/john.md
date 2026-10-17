@@ -10,7 +10,7 @@ John is the father and the family's shield: a sword-and-shield tank who takes hi
 | AP per turn | 2 (family default) | Built |
 | FP value (adds to the FTP maximum) | 5 | Built |
 | Joins | From the start | Built |
-| Family Role | Shield: takes an ally's hit ([Family systems](../family-systems.md#family-roles)) | Built, differs (costs 1 FTP) |
+| Family Role | Shield: takes an ally's hit ([Family systems](../family-systems.md#family-roles)); costs 1 FTP | Built, differs |
 | Duos | John–Linda, John–Lucy, Mark–John | Built |
 | Synergies | Papa's Shelter, Shield Flare (with Lucy), Command Shield Dash (with Mark) | Built |
 

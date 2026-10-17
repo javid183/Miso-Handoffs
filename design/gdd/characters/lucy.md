@@ -10,7 +10,7 @@ Lucy is the daughter and the family's fire mage: a fragile skirmisher whose embe
 | AP per turn | 2 (family default) | Built |
 | FP value (adds to the FTP maximum) | 3 | Built |
 | Joins | From the start | Built |
-| Family Role | Follow-up: hits an enemy right after a family member's action ([Family systems](../family-systems.md#family-roles)) | Built, differs (no limit yet) |
+| Family Role | Follow-up: hits an enemy right after a family member's action ([Family systems](../family-systems.md#family-roles)); no limit yet | Built, differs |
 | Duos | John–Lucy, Linda–Lucy, Mark–Lucy | Built |
 | Synergies | Sisters' Rivalry, Tempest Bloom (with Linda), Papa's Shelter, Shield Flare (with John) | Built |
 

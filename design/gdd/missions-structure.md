@@ -9,7 +9,7 @@ The campaign is a graph of missions. Each mission is one or more combat levels p
 - **MI-1.** At the start only M1 is open. A mission opens when every mission before it in the graph is complete (all gates are AND gates). *Built*
 - **MI-2.** Completed missions stay open and can be replayed for full rewards ([Progression and economy](progression-economy.md) PR-23). The order of completion is saved. *Built*
 - **MI-3.** Two characters join through missions: Mark after "No More Waiting", Toba after "Into the Rootwell". John, Linda and Lucy are there from the start. A mission's fixed members, and characters a level places itself, play even before they have joined (Mark in his intro; Toba in M9 and in every level of "Into the Rootwell" after his duel). *Built*
-- **MI-4.** The design's loop: each chapter sets a main dungeon (a multi-level mission done in one run) and a deadline; side missions are optional preparation ([`vision.md`](../../vision.md)). *Planned on `main`* (no chapters or deadlines there). **On `thj/home-test`:** built as the moon cycle and the Warren ([Home](home.md)). *Demo*
+- **MI-4.** The design's loop: each chapter sets a main dungeon (a multi-level mission done in one run) and a deadline; side missions are optional preparation ([`vision.md`](../../vision.md)). *Planned* (on `main`; no chapters or deadlines there). **On `thj/home-test`:** built as the moon cycle and the Warren ([Home](home.md)). *Demo*
 - **MI-5.** M8 to M14 are unreachable on `main`: the unlock check never passes a gate with no input, so M8, M9 and M11 never open, and M10 and M12–M14 need M9. MX is not in the graph at all. *Built, differs* (Q1)
 
 ```
@@ -98,7 +98,7 @@ Source: `Core/Levels/Runtime/MissionRouteProgress.cs`, `MissionTracker.cs` (`Sho
 - **MI-17.** By default a level is won by defeating every enemy and lost when every family member is down. A level can replace these objectives. *Built*
 - **MI-18.** Objectives are built from the conditions below. They can be grouped (all, any, or a number of them) and queued as stages, each stage starting when the previous one is done. The win is checked before the loss. Tiles that a visible win objective needs are highlighted on the grid. *Built*
 - **MI-19.** A level can keep a random subset of its enemies or objects (variant groups); the draw holds for the whole attempt. *Built* (only M6's last fight uses it)
-- **MI-20.** A level can open with a choice between sets of objectives, with a preview. *Built, unused*
+- **MI-20.** A level can open with a choice between sets of objectives, with a preview. *Built* (unused)
 - **MI-21.** Between levels of a mission, HP carries over (CR-24), and members who fell come back at 20% of max HP. FTP (CR-12), item counts (a restart rewinds them, CR-31), run upgrades and relics (PR-26, PR-31) also carry over. Statuses, AP and cooldowns reset. *Built*
 
 | Condition | Met when |
