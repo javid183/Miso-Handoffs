@@ -10,7 +10,7 @@ Toba is the healer and nature lover, and the family's newcomer: he was not in Ch
 | AP per turn | 2 (family default) | Built |
 | FP value (adds to the FTP maximum) | 1 | Built |
 | Joins | After M4 "Into the Rootwell" (`unlockedAfterMission`) | Built |
-| Family Role | None ([Family systems](../family-systems.md#open-questions) Q1) | Open |
+| Family Role | None yet: he gains one when he officially becomes family later in the game, not designed yet ([Family systems](../family-systems.md#family-roles) FR-7, D-048) | Planned |
 | Duos | Linda–Toba | Built |
 | Synergies | None | Built |
 
@@ -35,7 +35,7 @@ Source: `abilityOrchestrator` on `Unit_Toba.prefab`; presets in `Resources/UnitS
 
 ## Passives
 
-- **TO-1.** Toba has no passive components, no Family Role, no Pass-by entry, no Revenge and no ATB gauge. Whether each is deliberate for the newcomer is open (Q1). *Built*
+- **TO-1.** Toba has no passive components, no Family Role, no Pass-by entry, no Revenge and no ATB gauge. *Built.* The missing Family Role and Pass-by entry are deliberate: he isn't officially part of the family yet, and gains them when he becomes family later in the game (D-048). Whether the rest is deliberate is open (Q1).
 - **TO-2.** His healing scales with his Bond to the target (glossary, Demo Spec). Not on `main`: his heals (Healing Wind, the Linda–Toba Duo) read only `Stat_WIS`, and `main` has no Bond. `thj/home-test` was not read. *Planned* (Q3)
 
 ## Skill tree
@@ -82,7 +82,7 @@ Source: `Resources/RunUpgrades/TobaShellRadius/RU_TobaShellRadius.asset`.
 
 ## Open questions
 
-1. **Q1.** Toba has no Family Role, no Pass-by, no Revenge, no ATB gauge, and carries one item where the others carry two. Deliberate for the newcomer, or missing?
+1. **Q1.** Toba has no Revenge and no ATB gauge, and carries one item where the others carry two. Deliberate for the same reason as his missing Family Role and Pass-by (not family yet, D-048), or missing?
 2. **Q2.** The Stone Axe and Tribal Necklace descriptions still say "Dom". Rename to Toba?
 3. **Q3.** Where should Bond-scaled healing live (TO-2)?
 4. **Q4.** Nature's Rhythm only raises his AP cap. Should it give him a third action every turn?

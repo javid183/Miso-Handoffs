@@ -18,7 +18,7 @@ Owner: narrative agent (THJ approves) · Scope: `all` · Checked against assets:
 | Linda | Archer | From the start ([sheet](characters/linda.md)) | Keeps a secret from Lucy with John (M3 "A Wolf's Blood") |
 | Lucy | Daughter; fire mage | From the start ([sheet](characters/lucy.md)) | Her bond with Ryker |
 | Mark | Monk, Zen master | After "No More Waiting" ([sheet](characters/mark.md)) | How he rejoins the family |
-| Toba | Healer, nature lover | After "Into the Rootwell" ([sheet](characters/toba.md)) | New to Miso (formerly Dom); how a stranger becomes family after the duel |
+| Toba | Healer, nature lover; fights with the family but isn't officially part of it yet (D-048) | After "Into the Rootwell" ([sheet](characters/toba.md)) | New to Miso (formerly Dom); when and how he becomes family (Q3) |
 | Mary | Mother; cooks at Home | Home only (`thj/home-test`) | |
 | Uncle Ben | Runs the Workshop | Home only | |
 | Kevin | Chores at Home | Home only; no Bond, no sortie | |
@@ -64,12 +64,13 @@ Several names come from Persian myth and history (Deev, Anahita, Mithra, Hegmata
 | Home barks and scenes | 24 placeholder lines wait for the Home writing step ([`m9-readability.md`](../m9-readability.md)) |
 | Goblin Queen's ritual frame | Adapt to the existing script (Demo Spec open question) |
 | Mission briefings for M12–M14 | Copied from other missions (Q4) |
+| Duo names | Placeholders, some on the assets (Mark–Lucy: Chained Assault). A pass toward family-themed names ([Family systems](family-systems.md#open-questions) Q2) |
 
 ## Open questions
 
 1. **Q1.** Canon: the family's relationships, Margaret, Adam (John's father?), Ryker (who or what is she?), the masked man, Waya, the Pathmother and Anai-Mera. Which are Children of Morta canon, and which are new to Miso?
 2. **Q2.** Is the Persian thread (Deev, Anahita, Mithra, Hegmataneh) intended as a world theme, and does it fit Children of Morta's lore?
-3. **Q3.** Toba is new to the family: how does his arc (the duel, then joining) fit the canon family?
+3. **Q3.** Toba isn't officially part of the family yet (D-048). When and how does he become family later in the game, and how does his arc (the duel, joining the fights, then the family) fit the canon family? His Family Role comes with it ([Family systems](family-systems.md#family-roles) FR-7).
 4. **Q4.** Briefing slips: M9's says "Dom"; M11's reads "why Ryker called as Waya"; M12–M14 reuse other briefings; M2's file says "Ryler" ([Missions and structure](missions-structure.md#open-questions) Q7).
 5. **Q5.** Who writes the enemy introductions and Home lines (the narrative agent, THJ, or a writer)?
 

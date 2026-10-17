@@ -91,7 +91,7 @@ Source: `Resources/RunUpgrades/Mark*/RU_*.asset`.
 2. **Q2.** Catch & Return's node says it refunds his attack; the data only bounces the arrow back ([Family systems](../family-systems.md#open-questions) Q9).
 3. **Q3.** The Wrist Wrap of Power uses a weapon slot Mark doesn't have, so it can't be equipped on `main`. The Demo Spec lists it as his Workshop weapon.
 4. **Q4.** Data copied from Lucy: his role and Continuous Attack QTEs use Lucy's input binding (`LucyQTE`), his hit sound is Lucy's, and his revenge line ("Noooo!") is hers. Fix?
-5. **Q5.** The Duo node is named "Chained Assault"; the skill-tree notes say "Sidewinder Blitz" and the glossary says "Fist Blitz" ([Family systems](../family-systems.md#open-questions) Q2).
+5. **Q5.** The Mark–Lucy Duo and its node are Chained Assault for now (THJ); the skill-tree notes say "Sidewinder Blitz" and the glossary says "Fist Blitz". Not final: Duo names wait for a narrative pass ([Family systems](../family-systems.md#open-questions) Q2).
 
 ## Related
 

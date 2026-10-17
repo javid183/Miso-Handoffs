@@ -13,12 +13,13 @@ The family fights as a family through four systems. Family Roles react on their 
 
 ## Family Roles
 
-- **FR-1.** John, Linda, Lucy and Mark each have one Family Role: a reactive passive that protects or supports the family. Toba has none (Q1). *Built*
+- **FR-1.** John, Linda, Lucy and Mark each have one Family Role: a reactive passive that protects or supports the family. Toba has none: he isn't officially part of the family yet (FR-7). *Built*
 - **FR-2.** A trigger shows a QTE prompt, "Activate Passive": a simple press within 1 s. Pressing fires the role and pays for it; a missed press skips the role and costs nothing (D-034). The game pauses during John's prompt; the others run in real time. Only one QTE can be up at a time. *Built.* A graded QTE (a small bonus for pressing inside the window) is the next experiment. *Planned*
 - **FR-3.** Roles cost no FTP (D-036). *Planned.* Built today: 1 FTP per use on all four roles (`requiredFTP` 1).
 - **FR-4.** Each role has a limit per round, refilled at the start of the player turn: Linda 2, Lucy 3, Mark 1, John unlimited (D-042). *Planned.* Built today: no limit (`oncePerPhase` 0).
 - **FR-5.** Linda's two uses come from one pool, and the same enemy can trigger her more than once (D-041). *Planned*
 - **FR-6.** The uses left this round are shown as **Watch** ("Watch 2/2"; Linda's are Watch Shots). *Proposed*
+- **FR-7.** Toba gains a Family Role, and his own pass-by entry, when he officially becomes part of the family later in the game (D-048). *Planned* (neither that moment nor his role is designed yet)
 
 | Character | Trigger | Effect | Limit per round (design) | Status | Notes |
 | --- | --- | --- | --- | --- | --- |
@@ -69,7 +70,7 @@ Character passives that touch the family but belong to one character (Wrath, Blo
 ## Pass-by
 
 - **PB-1.** When a Bergson moves through another Bergson's cell, the pass-by ability fires for that pair, once per pair per turn. Both units get it (`applyMode` Both). *Built*
-- **PB-2.** Each unit in a pass-by adds 1 FTP, so a pair of John, Linda, Lucy or Mark adds 2. They share one pass-by ability; Toba has no entry (Q1), so a pair with Toba adds 1. Each unit also gives the other 0.3 ATB, which nothing spends with FTP. *Built* (to check in play: [Combat rules](combat-rules.md) Q7)
+- **PB-2.** Each unit in a pass-by adds 1 FTP, so a pair of John, Linda, Lucy or Mark adds 2. They share one pass-by ability; Toba has no entry until he becomes family (FR-7), so a pair with Toba adds 1. Each unit also gives the other 0.3 ATB, which nothing spends with FTP. *Built* (to check in play: [Combat rules](combat-rules.md) Q7)
 - **PB-3.** The player can cycle alternative move paths to route through allies. *Built*
 - **PB-4.** **On `thj/home-test`:** a pair needs Bond L1 for its pass-by. Every pair starts at L1 except Toba's pairs other than Linda–Toba, so only those earn it (D-010). *Demo*
 
@@ -91,8 +92,8 @@ Source: `Content/Controllers/PlayerController.prefab` (`UnitsPassByHandler`: 4 e
 
 ## Open questions
 
-1. **Q1.** Toba has no Family Role and no pass-by entry. Is that intended for the newcomer, or missing?
-2. **Q2.** The Mark–Lucy Duo's name: Fist Blitz (glossary) or Chained Assault (combat balance notes)? The other Duos need player-facing names too.
+1. **Q1.** Answered by THJ (D-048): Toba has no Family Role and no pass-by entry on purpose. He isn't officially part of the family yet, and gains both when he becomes family later in the game (FR-7). Not designed yet.
+2. **Q2.** Duo names. THJ: the Mark–Lucy Duo is Chained Assault for now (the glossary's "Fist Blitz" is out of date). No Duo name is final: some have names on their assets, and all need a narrative pass toward a family theme; for Mark–Lucy, a name that reflects the two of them. Open to suggestions.
 3. **Q3.** Linda's trigger. Answered from the data: an enemy that *ends* its move in her lane (the glossary's rule), pushes and Command moves included. Close, or did the balance notes' "any move into it" mean a change?
 4. **Q4.** Are Papa's Shelter and Shield Flare Synergies, or character passives?
 5. **Q5.** Revenge (on an ally's death) and Family Super Time exist in code. Do they belong here?
@@ -105,7 +106,7 @@ Source: `Content/Controllers/PlayerController.prefab` (`UnitsPassByHandler`: 4 e
 
 ## Related
 
-- Decisions: D-008, D-010, D-034 to D-042
+- Decisions: D-008, D-010, D-034 to D-042, D-048
 - Plan: [`plans/2026-10-16-ap-points-model.md`](../../plans/2026-10-16-ap-points-model.md)
 - Detail: [`combat-balance.md`](../combat-balance.md) (Linda's damage share), [`player-skill-trees.md`](../player-skill-trees.md) (family tree), [Demo Spec](../demo-spec.md) (Bond)
 - Characters: [John](characters/john.md) · [Linda](characters/linda.md) · [Lucy](characters/lucy.md) · [Mark](characters/mark.md) · [Toba](characters/toba.md)

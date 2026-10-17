@@ -112,7 +112,8 @@ Source: `Resources/Game Data.asset`, `Resources/GlobalSettings.asset`, `Content/
 
 The questions live in each sub-doc's "Open questions"; this list only points to them.
 
-- Toba has no Family Role → [Family systems](family-systems.md#open-questions)
+- When Toba becomes family, and the Family Role he gains then → [Narrative and world](narrative-world.md#open-questions)
+- Player-facing Duo names with a family theme → [Family systems](family-systems.md#open-questions)
 - The on-screen name for FTP → [Combat rules](combat-rules.md#open-questions)
 - Whether Trio is a system of its own → [Family systems](family-systems.md#open-questions)
 - How Family level and Family Skill Points are earned → [Progression and economy](progression-economy.md#open-questions)
