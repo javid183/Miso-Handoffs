@@ -15,6 +15,7 @@ Owner: coordinator. Every item has a scope: `all` or a branch. Started 2026-10-1
 | --- | --- | --- | --- | --- |
 | Agent workflow setup (pass 3) | all | M | THJ + setup session | In progress |
 | Pilot 1: AP and points model (`ap-points-model`) | all | L | `miso-game-designer` + critic | Design decided 2026-10-16 (D-034 to D-042, plan revision 4); docs synced. Code is **parked for `main`** (D-042): not built on `thj/home-test`; needs THJ on `main`, which adapts to FTP. Next: tech plan for `main` (check if the existing cooldown covers Mark's 1 charge). D-040 (Fireside) waits on the merge |
+| Game Design Document (`gdd`) | all | L | main session | First full draft 2026-10-16 (D-044 to D-047): 14 pages in `design/gdd/`, mirrored to the "Miso — Game Design" Claude Doc. Values checked against `main` @ `92853a5a9`, then re-checked by an independent pass (17 fixes applied). Still "(to check)": ability presets, the skill-tree code and most level prefabs after M1 (too deep for the device bridge). Each page lists its open questions for THJ. The claude-handoff git commits wait: the device shell can't reach the folder |
 | Pilot 2: Home report-card context images (`report-card-images`) | thj/home-test | M | Explore → coordinator tech plan → `miso-implementer` → verifier | Built, compiled, tests green (known red excepted), Play-checked by THJ. Waiting on THJ's yes to commit the code (2 commits proposed) |
 
 ## Next: pilots

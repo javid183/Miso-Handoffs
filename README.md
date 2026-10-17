@@ -23,6 +23,7 @@ THJ's private working folder for Claude on Miso. It is **excluded from the share
 | Build log | `build-log.md` | Coordinator | A milestone or step closes |
 | Glossary and lore canon | `glossary.md` | Narrative agent | A name, term or lore fact is approved |
 | Naming and code conventions | `conventions.md` | Coordinator; THJ approves | A new prefix, folder or pattern is introduced |
+| Game Design Document (GDD): the design source of truth | `design/gdd/` (`overview.md` is the index) | Game designer; coordinator syncs the mirror | A decision changes a rule or value, or the assets change (D-044) |
 | Design docs | `design/` | Game designer | A design plan is approved |
 | Demo Spec | `design/demo-spec.md` | Coordinator | A build changes a rule |
 | Combat code map, dev cheats | `tech/combat-architecture.md` | Coordinator | The architecture changes |
@@ -40,6 +41,7 @@ THJ's private working folder for Claude on Miso. It is **excluded from the share
 
 ## Mirrors (one way, from here)
 
+- **Claude Docs, the GDD:** "Miso — Game Design" (https://claude.ai/artifact/3KSS3o9ZPhGK2yqTAntKgh) mirrors `design/gdd/` (one tab per file; the characters as sub-tabs of Characters) and `glossary.md` (last tab). One way, after each approved change; doc comments come back as input (D-045). Each tab names the file it mirrors. Repo links become tab links in the doc; links to files outside the GDD show as paths.
 - **Claude Docs:** the "Miso Home System" doc (https://claude.ai/artifact/9Fi2AJKcLbf1e7evrkMxXN) mirrors `design/demo-spec.md`, `design/m9-readability.md` and `build-log.md`; other design docs can join it as tabs. Sync runs one way, from this folder to the doc, after each approved change; comments made on the doc come back as input, never as direct edits. The sync runs from a Claude chat with the Claude Docs connector on an account that can open the doc's content (the company account, as of 2026-10-15).
 - **Claude project "Miso":** a subset of these files is uploaded as project docs for chats. Refresh them from here when they change.
 
@@ -63,7 +65,7 @@ claude-handoff/
 ├── README.md  vision.md  escalation.md  status.md  branches.md
 ├── decisions.md  build-log.md  glossary.md  conventions.md
 ├── templates/        plan.md, report.md
-├── design/           demo-spec.md and the design notes
+├── design/           gdd/ (the GDD), demo-spec.md and the design notes
 ├── tech/             core-systems.md, combat-architecture.md, home-system.md, mechanics-brief.md, ...
 ├── plans/  reports/  playtests/
 ├── claude-config/    agents/, skills/ (masters; copied to .claude/)

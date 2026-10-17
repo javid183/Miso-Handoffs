@@ -39,6 +39,7 @@ Checked against the assets on 2026-10-15 (setup session). Follow these for new d
 ## `claude-handoff/` files
 
 - Lowercase, hyphenated file names.
+- GDD: `design/gdd/<area>.md`, character sheets in `design/gdd/characters/<name>.md`. Rule IDs (`FR-3`), their prefixes and the status labels are defined once, in `design/gdd/overview.md` › How to read. An ID is never reused or renumbered; a dropped rule keeps its ID with the status Dropped.
 - Plans: `plans/YYYY-MM-DD-<slug>.md`. Reports: `reports/<slug>.md`; the verifier's: `reports/<slug>-verify.md`.
 - Playtest notes: `playtests/YYYY-MM-DD.md` (raw notes at the top).
 - Decision IDs: `D-NNN`, increasing.
