@@ -28,6 +28,7 @@ Owner: coordinator. Every item has a scope: `all` or a branch. Started 2026-10-1
 
 **Workflow**
 
+- GDD scope (raised 2026-10-17): THJ wants the GDD to describe the game as it is now, not future features (Planned/Proposed/Deferred/Dropped items). Options: move them to a `not-built.md`, delete them, or keep. THJ answers the GDD pages' open questions first, then decides. Amends D-044/D-047.
 - How and when `thj/home-test` merges into `main` (`branches.md`). FTP wins (D-036 to D-042).
 - Fill the "[THJ] To add" part of `vision.md`.
 
