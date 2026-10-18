@@ -20,7 +20,7 @@ Fix the five role bugs and add a UI-only clarity pass (zones, cover icons, badge
 - [ ] F1: `FactionRoleHandlerBase` no longer throws when `SilencedTargets` is null (null guard at the `Targets.Except(SilencedTargets)` site, :116).
 - [ ] F2: Mark's role prompt uses Mark's own QTE key and icon, not `LucyQTE`. If Mark has no QTE input binding yet, stop and report (a new input binding is a separate decision).
 - [ ] F3: when a role's QTE can't start because another QTE is active (`PlayerController.cs:1556-1561`), the role is skipped **without** silencing its targets (the same enemy can trigger it on a later event). A real ignored/declined prompt still silences as today. No queue is added.
-- [ ] F4: Mark measures the attacker's range from its whole footprint (multi-tile enemies), like Linda and Lucy, not from the anchor cell.
+- [ ] F4 (PULLED OUT, D-065: moves to the Family Role chunk together with a footprint-aware `AEffectDashAttack`): Mark measures the attacker's range from its whole footprint (multi-tile enemies), like Linda and Lucy, not from the anchor cell.
 - [ ] F5: Lucy considers every hostile faction, not only the first; within that she keeps today's choice rule (first match in list order). No "nearest" rule (not approved).
 
 **Phase 1 (UI, no change to firing rules)**
