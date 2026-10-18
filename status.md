@@ -16,6 +16,7 @@ Owner: coordinator. Every item has a scope: `all` or a branch. Started 2026-10-1
 | Agent workflow setup (pass 3) | all | M | THJ + setup session | In progress |
 | Pilot 1: AP and points model (`ap-points-model`) | all | L | `miso-game-designer` + critic | Design decided 2026-10-16 (D-034 to D-042, plan revision 4); docs synced. Code is **parked for `main`** (D-042): not built on `thj/home-test`; needs THJ on `main`, which adapts to FTP. Next: tech plan for `main` (check if the existing cooldown covers Mark's 1 charge). D-040 (Fireside) waits on the merge |
 | Game Design Document (`gdd`) | all | L | main session | First full draft 2026-10-16 (D-044 to D-047): 14 pages in `design/gdd/`, mirrored to the "Miso — Game Design" Claude Doc. Values checked against `main` @ `92853a5a9`; once `_Project` was connected, every preset, level and core script it depends on was read too. Two independent checks found 27 errors, all fixed. Left to check in play: Pass-by and Family Trinket FTP (a float sent to an int method), Mark's Vault push on Immovable units, a wipe in M4's Level2-C2, and the Taunted status. Each page lists its open questions for THJ. Committed by THJ. 2026-10-17: `combat-balance.md`, `reward-balance.md` and `player-skill-trees.md` now link to the GDD instead of repeating its values (D-047), and `miso-game-designer` reads the GDD first |
+| Oct 2026 playtest tasks (`playtest-tasks-oct`) | all (code on `main`) | L | Coordinator triage → designer / tech plans | Filed 2026-10-18 in `playtests/2026-10-playtest-tasks.md` (4 batches, 10 blockers). Not triaged into plans yet. Two conflicts with earlier decisions wait on THJ (below) |
 | Pilot 2: Home report-card context images (`report-card-images`) | thj/home-test | M | Explore → coordinator tech plan → `miso-implementer` → verifier | Built, compiled, tests green (known red excepted), Play-checked by THJ. Waiting on THJ's yes to commit the code (2 commits proposed) |
 
 ## Next: pilots
@@ -28,6 +29,8 @@ Owner: coordinator. Every item has a scope: `all` or a branch. Started 2026-10-1
 
 **Workflow**
 
+- Playtest task list vs earlier decisions: (1) it says "Family Roles cost FTP for now", but D-036/D-042 make them free with a per-round limit; (2) it says the Mark–Linda duo replaces Toba–Mark as showcase, but D-008 set Linda–Toba as the showcase pair (Toba–Mark was dropped already). Which stands?
+- GDD open questions are asked on demand (D-050); THJ answers in `design/gdd-open-questions.md` when he likes.
 - GDD scope (raised 2026-10-17): THJ wants the GDD to describe the game as it is now, not future features (Planned/Proposed/Deferred/Dropped items). Options: move them to a `not-built.md`, delete them, or keep. THJ answers the GDD pages' open questions first, then decides. Amends D-044/D-047.
 - How and when `thj/home-test` merges into `main` (`branches.md`). FTP wins (D-036 to D-042).
 - Fill the "[THJ] To add" part of `vision.md`.

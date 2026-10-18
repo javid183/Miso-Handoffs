@@ -31,6 +31,8 @@ THJ's private working folder for Claude on Miso. It is **excluded from the share
 | Editor checks (compile, logs, tests, play checks) | `tech/editor-checks.md` | Coordinator; the verifier reports corrections | A check turns out wrong, or the setup changes |
 | Core systems list | `tech/core-systems.md` | Coordinator; THJ approves additions and removals | A class becomes something combat relies on, or stops being one |
 | Technical notes | `tech/` | Coordinator | A system is added or its contract changes |
+| Playtest task lists (structured feedback, effort and owners) | `playtests/2026-10-playtest-tasks.md` | THJ writes; coordinator tracks items in `status.md` | After each playtest round |
+| GDD open-question answer sheet (temporary) | `design/gdd-open-questions.md` | THJ answers; game designer folds answers into the GDD | Until all are answered |
 | Plan and report templates | `templates/` | Coordinator | The format changes |
 | Task plans | `plans/YYYY-MM-DD-<slug>.md` | The agent that plans | Once per task, revised on review |
 | Task reports | `reports/<slug>.md`, `reports/<slug>-verify.md` | The agent that did the work | Once per task |
