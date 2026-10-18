@@ -62,3 +62,76 @@ Notes for the implementer:
 - **Daryani's Shop**: dungeon safe room, pick one of three run upgrades (`LevelRunUpgradeRoom`, tag `P1.Rune`).
 - **Anahita's Ashiyan**: dungeon safe room, heals the squad once at the statue (`LevelHealingRoom`, tag `P0.HealngRoom`; the tag id's misspelling is code-only, leave it).
 - **Mithra's Gift**: dungeon safe room, Divine Relic (`LevelDivineRelicRoom`, tag `P0.RewardRoom` / `P1.DivineRelic`).
+
+---
+
+## Round 2 (2026-10-18, after THJ's answers)
+
+State on disk when this was written: the Round 1 main lines are already in the prefabs. `LevelRunUpgradeRoom.prefab` l.1860 reads "Choose one of Daryani's wares, then reach the exit." and `LevelHealingRoom.prefab` l.1908 reads "Approach the glowing statue to heal, then reach the exit." Both Mithra's Gift prefabs still say "Exit the refuge."
+
+### R2.1 · Typo "went far ther"
+
+| Location | Current text | Proposed text | Tier | Note |
+| --- | --- | --- | --- | --- |
+| `miso/Assets/_Project/Resources/Sequences/Mission 5/Home_Mission5_Selected_ExitHome_DialogNodeSequence.asset`, `sequenceNodes[1].Text` (l.33), Lucy's line (`characterEnum: 3`) | `We finally know he went farther. I keep wondering what he found.` | No change: the asset is already correct | 1 | This is the line THJ describes: a Home mission-selection dialogue, played once (`PlayJustOnce: 1`) when Mission 5 is selected and the family leaves Home. The text on disk is plain ASCII "farther": an exact search for `went farther\.` matches it, and a search for any non-ASCII or invisible character between "far" and "ther" (soft hyphen, zero-width space or joiner, no-break space, BOM) finds nothing |
+
+So the typo was in the playtest build but is not on this branch. Most likely it was fixed after that build (for example by a dialogue pass through the Dialogue Excel import). **To confirm:** the coordinator can run read-only `git log -S "far ther" -- "miso/Assets/_Project/Resources/Sequences"` to find the fixing commit, and QA should look at the line in play once.
+
+What I searched, case-insensitive:
+- Patterns: `went\s+far`, `know\s+he\s+went`, `finally\s+know`, `far\s*\n\s*ther`, `far ther`, `far("|<tag>|\n| -|- )`, `f\s?a\s?r\s?t\s?h\s?e\s?r`, `fa rther`, `fart her`, `far[non-ASCII]+ther`, and the invisible characters listed above.
+- Where: all of `miso/` except `Library`, `Temp`, `Logs` and `obj`. That covers YAML sequences and dialogue assets, prefabs, scenes, CSV, JSON, txt and .cs.
+- There are no .xlsx, .xls or .ods workbooks anywhere in the repo.
+- The only "went far…" hits in the project are this line and "He went farther." in `Mission 1/Level1C2/Level1C2_End_DialogNodeSequence.asset` l.34, which is also correct.
+
+### R2.2 · Mithra's Gift objective
+
+| Location | Current text | Proposed text | Tier | Note |
+| --- | --- | --- | --- | --- |
+| `LevelDivineRelicRoom.prefab`, `lObjectives.winObjectiveGroups.Array.data[0].objectives.Array.data[0].displayTextTemplate` (l.2005) | `Exit the refuge.` | **Main:** `Take the Divine Relic from the altar, then reach the exit.` | 2 | Same shape as the other two rooms. "Divine Relic" is capitalised, as in the Mark intro objective ("Pick up the Divine Relic and activate the altar.") and the code's kind name. 57 chars |
+| `LevelDivineRelicRoom 1.prefab`, same key (l.1979) | `Exit the refuge.` | the same string as the line above | 2 | Keep the two prefabs identical |
+| (alternative, both prefabs) | `Exit the refuge.` | **Alt:** `Claim Mithra's gift at the altar, then reach the exit.` | 2 | Echoes the room name and hides the mechanic. Less clear for a new player; I prefer the main line |
+
+### R2.3 · Glossary
+
+Added to `claude-handoff/glossary.md` (THJ's answer is the approval):
+- A new "Dungeon safe rooms" section with the three room names, their code names and tags, what each room does, and where each part of the name comes from (Daryani, Anahita and Mithra are Children of Morta canon; "Ashiyan" and "Shop" are Miso's).
+- A canon table that records only that the names are canon; their canon roles are not asserted.
+
+### R2.4 · Room name for Daryani's room, and the group term
+
+**Where a room name appears on screen.** All three places read `LevelBase.levelName`:
+1. Mission map node title (`MissionMapNodeUI.cs` l.63)
+2. Map mission info panel title (`MapMissionInfoPanelUI.cs` l.122)
+3. Combat HUD level info panel (`CombatLevelUIManager.cs` l.89 → `LevelInfoPanelUI.SetLevelName`)
+
+The data is the `levelName` override in each room prefab: `LevelRunUpgradeRoom.prefab` l.1772, `LevelHealingRoom.prefab` l.1820, `LevelDivineRelicRoom.prefab` l.1917, `LevelDivineRelicRoom 1.prefab` l.1891.
+
+Separately, the **mission map legend** (`MissionMapUI.PopulateLegend` → `MissionMapLegendRow`) labels each room-type icon with the spec tag's `displayName`, and it ignores `showInGame`. The labels live in both `Resources/Tags/LevelSpecTags.asset` and `Resources/Tags/GTagRegistry.asset`:
+- `P0.HealngRoom` → "Anahita's Ashiyan" (LevelSpecTags l.36, GTagRegistry l.173)
+- `P0.RewardRoom` → "Mithra's Gift" (LevelSpecTags l.43, GTagRegistry l.180)
+
+**Tech warning (for the TD, not text):** `LevelName` is also an identity key, not just a label. The code uses it for:
+- `GameHandler.LoadLevel`, `Mission.FirstOrDefault(l => l.LevelName == …)` and `MissionTracker` completed-level progress;
+- the bark "Level Name" condition;
+- the route seed, `Animator.StringToHash(LevelName)` in `CombatLevel.cs` l.146.
+
+Renaming a room can break saved mission progress and changes that room's random seed. The Validation Dashboard's `LevelNameUniquenessCheck` also requires distinct names, yet both Mithra's Gift prefabs share one, worth a look. A rename should go through the TD.
+
+**Daryani's room name: Tier 3, THJ picks.**
+
+| Option | Feel |
+| --- | --- |
+| **Keep "Daryani's Shop"** (my recommendation if gold or prices are planned for this room) | Honest once it charges. The objective already fits it |
+| **"Daryani's Wares"** (main rename if it stays free) | Keeps the merchant flavour without promising a sale. Matches the objective ("Choose one of Daryani's wares…"), so the objective needs no change |
+| "Daryani's Cache" (alternative) | A stash found in the dark, free to take. More dungeon, less merchant. The objective would then read `Take one find from Daryani's cache, then reach the exit.` |
+
+Question for THJ: is Daryani a merchant in Children of Morta canon? If not, "Shop" and "Wares" lose their footing, and "Cache" is the safer pick.
+
+**Group term: "refuge".**
+- After the Mithra's Gift line changes, "refuge" appears nowhere on screen (the only hits were the four "Exit the refuge." objectives).
+- My recommendation: no player-facing group term for now. Each room shows its own name. Keep "safe room" as the internal and docs term (it matches the folder `DungeonSafeRooms`). No strings change for this.
+- One related legend issue (Tier 2): `P0.RewardRoom` is labelled "Mithra's Gift" but is also Daryani's room's tag, so the map legend calls the shop "Mithra's Gift". Two fixes, either works:
+  - (a) Give Daryani's room its own P0 tag. That's a TD and data change.
+  - (b) Relabel `P0.RewardRoom` with a type word in the style of its neighbours ("Hostile", "Boss Lair"): **main** `Reward`, **alt** `Altar`. Change `displayName: Mithra's Gift` in LevelSpecTags l.43 and GTagRegistry l.180.
+  
+  THJ to choose (a) or (b). Also unchecked: if `P1.Rune` or `P1.DivineRelic` icons appear in the legend, their empty `displayName` falls back to the raw ids "Rune" and "DivineRelic" (no space). The fix would be `displayName: Divine Relic` for `P1.DivineRelic` (LevelSpecTags l.64), a Tier 1 fix. It needs a look at the map legend in play first.

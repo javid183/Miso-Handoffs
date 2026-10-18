@@ -60,6 +60,24 @@ Rules and numbers: `design/demo-spec.md`.
 | Omens | Night events; e.g. **Hungry Moon** (Day 7): the Queen gains +1 AP per turn below 50% HP |
 | War council, Send-off, Picnic, Fireside Talk, Porch Break | Named Home moments; see the Demo Spec |
 
+## Dungeon safe rooms
+
+Rooms with no fight, in `Content/Levels/DungeonSafeRooms/`. The room name is the level's `levelName`, shown on the mission map node, in the map mission panel and in the combat HUD. Approved by THJ 2026-10-18 (B7).
+
+| Room name | Code | What it does | Source |
+| --- | --- | --- | --- |
+| Daryani's Shop | `LevelRunUpgradeRoom`, tags `P0.RewardRoom` + `P1.Rune` | An altar drops three run upgrades; take one and the rest vanish. Costs nothing. Then reach the exit | **Daryani**: Children of Morta canon. "Shop": Miso; may be renamed because nothing is sold (see `reports/b7-text-fixes.md`) |
+| Anahita's Ashiyan | `LevelHealingRoom`, tag `P0.HealngRoom` (the misspelled id is code-only; leave it) | Stepping in front of the glowing statue heals the whole squad once; the light goes out. Then reach the exit | **Anahita**: Children of Morta canon. **Ashiyan**: Miso invention, not canon |
+| Mithra's Gift | `LevelDivineRelicRoom`, `LevelDivineRelicRoom 1`, tags `P0.RewardRoom` + `P1.DivineRelic` | Take the Divine Relic from the altar, then reach the exit | **Mithra**: Children of Morta canon |
+
+"Refuge" was the old objective word for these rooms ("Exit the refuge."). It's being retired from the screen; not a player-facing term.
+
 ## Children of Morta canon
 
 To fill with THJ. Until then, propose; don't assert.
+
+| Name | Confirmed | Used in Miso as |
+| --- | --- | --- |
+| Daryani | Name is canon (THJ, 2026-10-18). Canon role not recorded here yet | Daryani's Shop |
+| Anahita | Name is canon (THJ, 2026-10-18). Canon role not recorded here yet | Anahita's Ashiyan |
+| Mithra | Name is canon (THJ, 2026-10-18). Canon role not recorded here yet | Mithra's Gift |
