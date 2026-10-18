@@ -1650,3 +1650,34 @@ Plan `plans/2026-10-16-report-card-images.md`; reports `reports/report-card-imag
 ### Status
 
 Built and checked; code not yet committed (proposed: helper plus tests, then card rendering).
+
+## 2026-10-18 · Playtest Batch 1 fixes (B1, B3, B6, B8, B5 diagnostic) · `thj/oct-build-fixes`
+
+Plan `plans/2026-10-18-playtest-batch1-bugfixes.md` (commit hashes in its log); reports `playtest-b1-cleanse-state`, `playtest-b1-safety-net`, `playtest-b3-hp-display`, `playtest-b6-map-panel`, `playtest-b8-tutorial-input-lock`, `playtest-b5-workshop-diagnostic`, `playtest-batch1-verify`, `playtest-batch1-verify-play`. Decisions D-052 to D-056.
+
+### Built
+
+- B1: placeholder `SoulSacrifice` state in Mark's animator (John's clip) plus a safety net: an ability whose animation state is missing logs one error and activates at once (`RuntimeAbility`, core; reviewer APPROVE).
+- B3: HP bar text shows at least 1 while the unit is alive (`FillBarTextFormatter`); HP rounding untouched (D-054).
+- B6: mission info panel anchored to the right edge (`LevelInfoPanel.prefab`, `WorldMapPanel.prefab` override).
+- B8: owner-keyed input lock on `PlayerInputController` (core, approved by THJ), taken by `CombatLevelUIManager.ShowTutorial`.
+- B5: `HomeInteractables.RefreshLock()` plus temporary `[B5-DIAG]` logs; cause unconfirmed.
+
+### Verified
+
+- Compile clean; EditMode 79 run, 78 passed, 1 failed (the known red). 79 is the full suite on this branch (the 447 of Oct 16 included the Home tests).
+- Played by Claude (desktop, computer use, fresh save): Mark's and John's Cleanse resolve with no freeze and no console error; Mark and an enemy archer read 1 HP, not 0; the mission panel is fully on screen at 16:9, 16:10, 4:3 on the world map; with a tutorial open, clicks, right click, Tab, WASD, Shift and Escape do nothing, and input is back after closing (also with an enemy introduction in the same level).
+
+### Not verified
+
+- A corrupted tile clearing; the safety-net error line; a fractional HP below 0.5; the damage preview; the mission map (MissionMap prefab) at any ratio; a tutorial at a turn change or mid turn; 21:9; the B5 repro.
+
+### Findings
+
+- Play-check run deleted the game save (Clear Save Data) to replay tutorials; THJ allowed it.
+- 4:3 world map: the panel hides mission marker 4 and the compass while a mission is selected.
+- Open follow-ups: `abilityActivationFrame` at or past the clip end freezes an ability; a second `ShowTutorial` leaves `timeScale` 0; 21:9 world-map panel overshoots ~46 px; hover panel keeps old HP after cheat damage until the cursor moves; DOTween noise on opening the world map from Home (not traced).
+
+### Status
+
+Committed (6 commits). B1 (freeze), B8 (lock and restore) and B6 (world map) seen in play; B3 seen at whole-number HP only; B5 waits for THJ's repro.

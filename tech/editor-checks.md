@@ -47,3 +47,10 @@ Read the end of the Editor log after the time you triggered the compile; older e
 - `manage_editor` has no read action; read Play state from `mcpforunity://editor/state`.
 - Suite size depends on the branch: on `thj/oct-build-fixes` (= `main`) the EditMode suite is 79 tests (counted from the `[Test]` attributes on 2026-10-18); the 447 seen on 2026-10-16 included the Home tests of `thj/home-test`.
 - Clicks and keys in the Game view still need computer use (desktop app). The 2026-10-18 verifier run had none, so every in-game criterion was "Not run".
+
+## Play-check notes (2026-10-18, desktop session)
+
+- The toolbar level picker (Tools row: dropdown plus the ▶ button) loads a level straight from PreloadScreen and shows an "Assign Placeholders" dialog (choose the squad). *In My Father's Arms* is `LevelE3-C1`.
+- `Tools > Save Data > Clear Save Data` resets the save so play-once tutorials replay (the save is `...\AppData\LocalLow\Dead Mage\miso\SaveData.json`).
+- Cheats seen working: `[` (-1 HP) and Shift+`[` (-10) on the hovered unit, K wins the fight. F11 and F12 didn't react. The hover panel doesn't refresh after cheat damage until the cursor leaves and returns.
+- Maximize the Game view (double-click its tab) to read small numbers; a custom "4:3 Aspect" entry was left in the Game view size list.

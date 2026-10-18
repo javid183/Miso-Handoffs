@@ -134,3 +134,13 @@ All playtest builds were from the main branch, so hub feedback is about the old 
 - **L9 · John zone-of-control / Linda pinning** (was in S3). A big design decision, for later.
 
 Dropped: S2 (decided), L2, L3.
+
+## Status (coordinator, 2026-10-18)
+
+- **B1** fix built and committed; Cleanse seen resolving with no freeze (tile clearing not seen, no corruption on that board yet).
+- **B3** display fix committed; seen at whole-number HP only.
+- **B5** diagnostic committed; waiting on THJ's repro.
+- **B6** world map fix committed and seen at 16:9, 16:10, 4:3; mission map not seen.
+- **B8** fix committed and seen in play (lock and restore); turn-change and mid-turn cases covered by unit tests only.
+- **B9** held for S3 (D-053). **Q21** bundled with S10 (D-055).
+- Not started: B2, B4, B7, B10 and Batches 3 and 4.
