@@ -71,5 +71,6 @@ Shared repo, branch `thj/oct-build-fixes`, committed by the coordinator after TH
 | C4 | `cabdb63a6` | fix: world map mission panel anchored to the right edge |
 | C5 | `01e561ad2` | fix: lock player input while a tutorial panel is open (B8) |
 | C6 | `47cee8ad9` | chore: Workshop lock refresh and temporary B5 diagnostic logs |
+| B7 | `3c02126b8` | fix: safe room objectives name both steps (B7) |
 
 C1 to C4 carry a Co-Authored-By line (THJ: fine to keep). Later commits don't.

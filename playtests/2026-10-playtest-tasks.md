@@ -144,3 +144,4 @@ Dropped: S2 (decided), L2, L3.
 - **B8** fix committed and seen in play (lock and restore); turn-change and mid-turn cases covered by unit tests only.
 - **B9** held for S3 (D-053). **Q21** bundled with S10 (D-055).
 - Not started: B2, B4, B7, B10 and Batches 3 and 4.
+- **B7** objective text for Daryani's Shop and Anahita's Ashiyan committed (`3c02126b8`, D-057); waiting on THJ: "far ther" screen, Mithra's Gift, canon names, "Shop"/"refuge".
