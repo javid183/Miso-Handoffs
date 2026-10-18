@@ -58,3 +58,18 @@ Order: C1, C2, C3, C4, C5, C6. If C5 turns out to need a public API change on `P
 ## Gates
 
 Compile (verifier, via Unity MCP) / EditMode tests (all green except `AIRegressionTest.Baseline_MatchesCurrentAI`) / reviewer on C2 and C5 (core) / play check: yes, B1 (cast Cleanse in *In My Father's Arms*), B8 (tutorial in Level 1), B6 (open the world map) — needs THJ's time, so the verifier asks for a slot / docs: `build-log.md`, task-list marks.
+
+## Commit log (option 1, THJ 2026-10-18: no Co-Authored-By line; hashes recorded here)
+
+Shared repo, branch `thj/oct-build-fixes`, committed by the coordinator after THJ's yes on each.
+
+| Chunk | Hash | Message |
+| --- | --- | --- |
+| C1 | `7f85fbbf7` | fix: add placeholder SoulSacrifice (Cleanse) state to Mark's animator |
+| C2 | `952ab9d5a` | fix: ability fires immediately when its animation state is missing, instead of freezing combat |
+| C3 | `66481e4e1` | fix: HP bar text never shows 0 while the unit is alive |
+| C4 | `cabdb63a6` | fix: world map mission panel anchored to the right edge |
+| C5 | `01e561ad2` | fix: lock player input while a tutorial panel is open (B8) |
+| C6 | not committed (built, waiting on THJ's yes) | |
+
+C1 to C4 carry a Co-Authored-By line (THJ: fine to keep). Later commits don't.
