@@ -73,5 +73,6 @@ Shared repo, branch `thj/oct-build-fixes`, committed by the coordinator after TH
 | C6 | `47cee8ad9` | chore: Workshop lock refresh and temporary B5 diagnostic logs |
 | B7 | `3c02126b8` | fix: safe room objectives name both steps (B7) |
 | B7 r2 | `7550ea164` | fix: Divine Relic room objective names both steps (B7) |
+| B7 r3 | `32a15267f` | fix: rename Daryani's Shop to Daryani's Wares |
 
 C1 to C4 carry a Co-Authored-By line (THJ: fine to keep). Later commits don't.
