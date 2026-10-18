@@ -40,3 +40,10 @@ Read the end of the Editor log after the time you triggered the compile; older e
 - Play checks need computer use, which is available only in the **Claude desktop app**, not in a terminal Claude Code session *(unconfirmed for this account and version)*.
 - A verifier running from the terminal does quiet checks only. It marks every criterion that needs Play **"Not run: needs a play session (desktop app)"**, and the coordinator puts the play check under "Waiting on THJ" in `status.md`.
 - A play check also takes over THJ's editor: it runs only after he agrees to a time (see the verifier's rules).
+
+## Unity MCP (confirmed 2026-10-18)
+
+- The `unity` MCP server (`.mcp.json`, `http://127.0.0.1:8080/mcp`) reaches subagents (implementer, verifier); the coordinator session did not list the tools. Quiet checks work without computer use: `read_console` (pass `types` as a JSON list, e.g. `["error","warning"]`), `manage_scene` (`get_active`), `refresh_unity`, `run_tests` then `get_test_job` (about 10 s for the whole EditMode suite), `execute_code` (scratch checks such as instantiating prefabs without saving). Failed-test output from `get_test_job` is huge and is saved to a file: read it with a script.
+- `manage_editor` has no read action; read Play state from `mcpforunity://editor/state`.
+- Suite size depends on the branch: on `thj/oct-build-fixes` (= `main`) the EditMode suite is 79 tests (counted from the `[Test]` attributes on 2026-10-18); the 447 seen on 2026-10-16 included the Home tests of `thj/home-test`.
+- Clicks and keys in the Game view still need computer use (desktop app). The 2026-10-18 verifier run had none, so every in-game criterion was "Not run".
