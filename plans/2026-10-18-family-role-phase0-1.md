@@ -26,6 +26,8 @@ Fix the five role bugs and add a UI-only clarity pass (zones, cover icons, badge
 **Phase 1 (UI, no change to firing rules)**
 - [ ] A: the selected unit's role zone is drawn on the grid (not hover-only): John and Mark as a diamond with the four diagonal neighbours inside, Linda as lines along her row and column to her radius, Lucy as a ring of radius 3. Each role handler has a serialized bool `showRoleZone`, true by default; off hides it for that unit.
 - [ ] B: in the move preview, the hovered destination tile shows a shield icon if it lies inside John's zone and a fist icon if inside Mark's; when the unit being moved is John or Mark, their zone follows the preview. Same `showRoleZone` bool turns it off per unit. Separate overlay layer so Q20/S9 can change the preview later.
+- [ ] C (D-064): holding Shift also draws every living Bergson's zone as an outline in the character's colour on the new zone layer; hovering one Bergson with Shift held shows only that zone. Shift's existing behaviour (info panels) is unchanged; if the hover move/attack preview (`ShowStatsHoverPreview.cs` L28, inverted `WaitUntil`) is confirmed dead, fix it as a Tier 2 bug in the same chunk.
+- [ ] R1+ (D-064): Mark's Continuous Attack passive (`Unit_Mark.prefab` ~l.2914) uses `MarkQTE` too.
 - [ ] D: the unit panel shows a role badge: ready, or no FTP (stun waits for the stun rule).
 - [ ] F: a short tether line from John to the ally he is covering while his paused prompt is up.
 - [ ] E: prompt and execute barks play for John, Linda, Lucy, Mark through the existing `FactionRoleVisual.ShowWithDialogue` path, using the prefab fields; when the QTE ends without a press, a neutral decline bark plays ("Not now"-style, wording from `miso-narrative`, `reports/b4-role-barks.md`); a serialized bool (true by default) turns decline barks off entirely. No "too slow" or failure wording anywhere. Rate limit: at most one decline bark per role per turn.
@@ -33,8 +35,8 @@ Fix the five role bugs and add a UI-only clarity pass (zones, cover icons, badge
 
 ## Scope
 
-In: F1 to F5, A, B, D, F, E.
-Out: G (miss logging; THJ: only real misses are logged and none exist); C (Alt "Family watch", asked of the designer first); the reason-code event, queue, Mark-also-hit rule, teleports for Linda, miss-silence scope, stun rule, Watch wording, Fireside pip (all in the Family Role chunk); per-round limits (Pilot 1); the mini-HP-bar pip (Q6).
+In: F1 to F5, A, B, C (Shift view, D-064), D, F, E.
+Out: G (miss logging; THJ: only real misses are logged and none exist); the reason-code event, queue, Mark-also-hit rule, teleports for Linda, miss-silence scope, stun rule, Watch wording, Fireside pip (all in the Family Role chunk); per-round limits (Pilot 1); the mini-HP-bar pip (Q6).
 
 ## Touches
 
@@ -46,7 +48,7 @@ Docs: `tech/combat-architecture.md` (overlay and bool names), `design/gdd/family
 
 1. **R1 · F2 Mark's QTE key** (sonnet, data). Check which QTE binding/input action Mark has or can reuse; if none exists, stop and report.
 2. **R2 · Phase 0 bugs F1, F3, F4, F5** (opus, core). Put decision logic in small pure helpers so EditMode tests can cover them (null-safe Except, footprint-distance selection, faction iteration, "skip without silencing"). Reviewer: yes.
-3. **R3 · A and B zones and cover icons** (opus). First read the Explore facts on the cell highlight system (`reports/b4-lshift-roleicon-facts.md`) so the overlay does not clash with attack/move range highlights. `showRoleZone` bool lives on `FactionRoleHandlerBase`, so every unit's role handler has it (additive serialized field on a core class: approved by THJ in D-063).
+3. **R3 · A, B and C zones, cover icons and the Shift view** (opus). First read the Explore facts on the cell highlight system (`reports/b4-lshift-roleicon-facts.md`) so the overlay does not clash with attack/move range highlights. `showRoleZone` bool lives on `FactionRoleHandlerBase`, so every unit's role handler has it (additive serialized field on a core class: approved by THJ in D-063).
 4. **R4 · D role badge** (sonnet). Read-only getters for ready/FTP; no handler logic changes.
 5. **R5 · F John's tether line** (sonnet). Drawn during the prompt only.
 6. **R6 · E barks** (sonnet). Waits for `reports/b4-role-barks.md`. Decline bark toggle bool and a rate limit; detect "QTE ended with no press" from the public events (assumption from the design, to be checked and reported; if unreliable, stop and report).
