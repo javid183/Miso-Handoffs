@@ -29,7 +29,6 @@ Owner: coordinator. Every item has a scope: `all` or a branch. Started 2026-10-1
 
 **Workflow**
 
-- Playtest task list vs earlier decisions: (1) it says "Family Roles cost FTP for now", but D-036/D-042 make them free with a per-round limit; (2) it says the Mark–Linda duo replaces Toba–Mark as showcase, but D-008 set Linda–Toba as the showcase pair (Toba–Mark was dropped already). Which stands?
 - GDD open questions are asked on demand (D-050); THJ answers in `design/gdd-open-questions.md` when he likes.
 - GDD scope (raised 2026-10-17): THJ wants the GDD to describe the game as it is now, not future features (Planned/Proposed/Deferred/Dropped items). Options: move them to a `not-built.md`, delete them, or keep. THJ answers the GDD pages' open questions first, then decides. Amends D-044/D-047.
 - How and when `thj/home-test` merges into `main` (`branches.md`). FTP wins (D-036 to D-042).

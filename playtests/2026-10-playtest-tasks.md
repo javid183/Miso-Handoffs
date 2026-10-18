@@ -13,9 +13,9 @@ All playtest builds were from the main branch, so hub feedback is about the old 
 ## Decided
 
 - **Fixed AP + FTP is final.** Shared AP and ATB are dropped (S2 closed).
-- **Family Roles cost FTP for now.** Parked question: should they eventually be free?
+- **Family Roles use FTP today** (`main` runs FTP); D-036/D-042 make them free with a per-round limit once built (confirmed by THJ 2026-10-18, D-051).
 - **Attack cooldowns are already cut.**
-- **The Mark–Linda duo replaces Toba–Mark** as the showcase duo.
+- **The Linda–Toba duo is the showcase duo** (D-008; the earlier "Mark–Linda replaces Toba–Mark" line was a mistake, corrected by THJ 2026-10-18).
 
 ---
 
@@ -115,7 +115,7 @@ All playtest builds were from the main branch, so hub feedback is about the old 
   - *GD+TD · M–L · A, S, U, J, T*
 - **S5 · Sister's Rivalry.** Keep it, cap it. Feedback is handled by Q18, the story by S8. *GD · S · U, Y, J*
 - **S6 · Objective variety and environment tiles.** Non-elimination objectives; hazard tiles with a risk-and-reward choice. *GD · M · Al, U, J*
-- **S7 · Mark–Linda duo** (replaces Toba–Mark as the showcase). *GD · M · T*
+- **S7 · Showcase duo** (void as written: the showcase is Linda–Toba, D-008). Nothing to do unless THJ reopens it. *GD · M · T*
 - **S9 · Selection and default-action flow.**
   - Selecting a unit auto-arms Move, and one click moves. Players don't understand the preview when switching quickly: the camera doesn't move and the first slot is always highlighted, so the HUD cue doesn't register.
   - Try Q19 (undo-move) and Q20 (coloured previews) first.
