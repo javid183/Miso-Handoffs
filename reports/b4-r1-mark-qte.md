@@ -25,7 +25,7 @@ no
 
 ## Decisions I made
 
-- Left `Unit_Mark.prefab:2914` (`MarkPassiveAbility_ContinuousAttack`, "Continuous Attack" qteProfile) on `LucyQTE`: it is a different ability, not the Family Role, and the task said to change only the role binding.
+- Also Continuous Attack: `Unit_Mark.prefab:2914` (`MarkPassiveAbility_ContinuousAttack`) switched `LucyQTE` -> `MarkQTE` (THJ approved, D-064). Prefab now shows 2 insertions, 2 deletions.
 
 ## Needs THJ
 
@@ -37,12 +37,12 @@ none (optional: see risks, line 2914).
 
 ## Risks and loose ends
 
-- `Unit_Mark.prefab:2914` Continuous Attack also uses `LucyQTE`. Same key either way (left mouse), so no gameplay change expected; it could be switched to `MarkQTE` for consistency if THJ wants.
+- Line 2914 resolved by D-064 (see Decisions).
 - No behavior change in key; only the action object differs. Rebinding a Mark action later now affects the role prompt too.
 
 ## Proposed commits
 
-1. fix: Mark Family Role QTE uses MarkQTE binding: `miso/Assets/_Project/Features/Player/Mark/Prefabs/Unit_Mark.prefab` (plain, prefab data only)
+1. fix: Mark QTE prompts use MarkQTE binding (Family Role line 2786 and Continuous Attack line 2914): `miso/Assets/_Project/Features/Player/Mark/Prefabs/Unit_Mark.prefab` (plain, prefab data only)
 
 ## Other branches
 

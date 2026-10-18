@@ -70,3 +70,7 @@ Compile / EditMode tests (all green except the known red) / reviewer on R2 and R
 ## Commit log
 
 (Hashes recorded here as chunks are committed; no Co-Authored-By.)
+
+| Chunk | Hash | Message |
+| --- | --- | --- |
+| R1 | `90b3019ea` | fix: Mark's Family Role and Continuous Attack use the MarkQTE binding |
