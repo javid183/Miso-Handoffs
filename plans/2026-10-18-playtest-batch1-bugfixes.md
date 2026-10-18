@@ -70,6 +70,6 @@ Shared repo, branch `thj/oct-build-fixes`, committed by the coordinator after TH
 | C3 | `66481e4e1` | fix: HP bar text never shows 0 while the unit is alive |
 | C4 | `cabdb63a6` | fix: world map mission panel anchored to the right edge |
 | C5 | `01e561ad2` | fix: lock player input while a tutorial panel is open (B8) |
-| C6 | not committed (built, waiting on THJ's yes) | |
+| C6 | `47cee8ad9` | chore: Workshop lock refresh and temporary B5 diagnostic logs |
 
 C1 to C4 carry a Co-Authored-By line (THJ: fine to keep). Later commits don't.
