@@ -135,3 +135,27 @@ Question for THJ: is Daryani a merchant in Children of Morta canon? If not, "Sho
   - (b) Relabel `P0.RewardRoom` with a type word in the style of its neighbours ("Hostile", "Boss Lair"): **main** `Reward`, **alt** `Altar`. Change `displayName: Mithra's Gift` in LevelSpecTags l.43 and GTagRegistry l.180.
   
   THJ to choose (a) or (b). Also unchecked: if `P1.Rune` or `P1.DivineRelic` icons appear in the legend, their empty `displayName` falls back to the raw ids "Rune" and "DivineRelic" (no space). The fix would be `displayName: Divine Relic` for `P1.DivineRelic` (LevelSpecTags l.64), a Tier 1 fix. It needs a look at the map legend in play first.
+
+---
+
+## Round 3 (2026-10-18): a name for Daryani's room
+
+THJ confirmed that Daryani is Children of Morta's merchant and that "Shop" is not a Morta word. The room: an altar drops three run upgrades, the player takes one for free, the rest vanish, then the player reaches the exit.
+
+**What I know of Daryani in canon: low confidence.** I can't recall her role or any lines from Children of Morta well enough to cite them. Everything below rests only on THJ's word that she is the merchant. Nothing here quotes or assumes other canon.
+
+| Option | Feel | Tier |
+| --- | --- | --- |
+| **Main: `Daryani's Wares`** | Still the merchant, but promises goods rather than a sale, so free doesn't jar. Matches the objective already in the prefab ("Choose one of Daryani's wares…"), so only the name changes | 3 (name; THJ picks) |
+| **Alt: `Daryani's Cache`** | Goods she left in the dark for the family: free to take, more dungeon and less market. The objective would need to change too | 3 |
+
+**Exact strings that would change**
+
+| Location | Current | Main (Wares) | Alt (Cache) |
+| --- | --- | --- | --- |
+| `miso/Assets/_Project/Content/Levels/DungeonSafeRooms/LevelRunUpgradeRoom.prefab`, `levelName` override (l.1772) | `Daryani's Shop` | `Daryani's Wares` | `Daryani's Cache` |
+| same prefab, `lObjectives.winObjectiveGroups.Array.data[0].objectives.Array.data[0].displayTextTemplate` (l.1860) | `Choose one of Daryani's wares, then reach the exit.` | no change | `Take one find from Daryani's cache, then reach the exit.` |
+
+- `levelName` is the only place the room name lives, and it is what the mission map node, the map mission panel and the combat HUD show.
+- No tag, bark, sequence, CSV or .cs references "Daryani's Shop" (searched all of `miso/`, excluding `Library`, `Temp`, `Logs` and `obj`). The legend label for this room comes from `P0.RewardRoom` ("Mithra's Gift"); see R2.4 (a)/(b). Renaming the room doesn't change it.
+- **TD check before the rename:** `LevelName` is also the level's identity key (it's used to load the level, for saved mission progress and for the route seed; see R2.4). A save made with "Daryani's Shop" mid-mission may no longer match. I'll update the glossary once THJ confirms the pick.

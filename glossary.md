@@ -66,7 +66,7 @@ Rooms with no fight, in `Content/Levels/DungeonSafeRooms/`. The room name is the
 
 | Room name | Code | What it does | Source |
 | --- | --- | --- | --- |
-| Daryani's Shop | `LevelRunUpgradeRoom`, tags `P0.RewardRoom` + `P1.Rune` | An altar drops three run upgrades; take one and the rest vanish. Costs nothing. Then reach the exit | **Daryani**: Children of Morta canon. "Shop": Miso; may be renamed because nothing is sold (see `reports/b7-text-fixes.md`) |
+| Daryani's Wares | `LevelRunUpgradeRoom`, tags `P0.RewardRoom` + `P1.Rune` | An altar drops three run upgrades; take one and the rest vanish. Costs nothing. Then reach the exit | **Daryani**: Children of Morta canon, the merchant (THJ). "Wares": Miso (D-060). **Formerly "Daryani's Shop"** (playtest builds; the prefab's `levelName` may still say it until the rename lands) |
 | Anahita's Ashiyan | `LevelHealingRoom`, tag `P0.HealngRoom` (the misspelled id is code-only; leave it) | Stepping in front of the glowing statue heals the whole squad once; the light goes out. Then reach the exit | **Anahita**: Children of Morta canon. **Ashiyan**: Miso invention, not canon |
 | Mithra's Gift | `LevelDivineRelicRoom`, `LevelDivineRelicRoom 1`, tags `P0.RewardRoom` + `P1.DivineRelic` | Take the Divine Relic from the altar, then reach the exit | **Mithra**: Children of Morta canon |
 
@@ -78,6 +78,6 @@ To fill with THJ. Until then, propose; don't assert.
 
 | Name | Confirmed | Used in Miso as |
 | --- | --- | --- |
-| Daryani | Name is canon (THJ, 2026-10-18). Canon role not recorded here yet | Daryani's Shop |
+| Daryani | Canon: the merchant (THJ, 2026-10-18) | Daryani's Wares (formerly Daryani's Shop) |
 | Anahita | Name is canon (THJ, 2026-10-18). Canon role not recorded here yet | Anahita's Ashiyan |
 | Mithra | Name is canon (THJ, 2026-10-18). Canon role not recorded here yet | Mithra's Gift |
