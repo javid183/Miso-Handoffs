@@ -79,3 +79,7 @@ Compile / EditMode tests (all green except the known red) / reviewer on R2 and R
 | R3a (b) | `e7850f406` | feat(roles): showRoleZone toggle and role-zone colour on Family Role handlers (B4 R3a, D-063) |
 | R3a (c) | `f620c96de` | feat(ui): draw the selected unit's role zone and every family zone while Shift is held (B4 R3a, D-064) |
 | R3a data | `07af236cc` | data: role zone colours on John and Lucy, Lucy's role no longer answers the Mark-Lucy Duo or Mark's Command (D-066) |
+| R3b (1) | `e8783d0f3` | feat(roles): John and Mark role zone from a given cell, for the move preview (B4 R3b) |
+| R3b (2) | `b6da8869a` | feat(grid): cover-icon overlay layer on GridCell (B4 R3b) |
+| R3b (3) | `0d00cf36c` | feat(ui): shield and fist cover icons and the following role zone in the move preview (B4 R3b, D-063, D-067 strict fist) |
+| R4 | `8bf2d5314` | feat(ui): role badge (ready / no FTP) next to the Family Role icon on the unit panel (B4 R4) |
