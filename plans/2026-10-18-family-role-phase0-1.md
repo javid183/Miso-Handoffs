@@ -83,3 +83,5 @@ Compile / EditMode tests (all green except the known red) / reviewer on R2 and R
 | R3b (2) | `b6da8869a` | feat(grid): cover-icon overlay layer on GridCell (B4 R3b) |
 | R3b (3) | `0d00cf36c` | feat(ui): shield and fist cover icons and the following role zone in the move preview (B4 R3b, D-063, D-067 strict fist) |
 | R4 | `8bf2d5314` | feat(ui): role badge (ready / no FTP) next to the Family Role icon on the unit panel (B4 R4) |
+| R5 (1) | `1cc3d93a0` | feat(roles): onFamilyRolePrompt event raised when a role's QTE prompt starts (B4 R5, D-068) |
+| R5 (2) | `0bc7fb380` | feat(ui): tether line from John to the allies he would cover while his prompt is up (B4 R5) |
