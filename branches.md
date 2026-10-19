@@ -28,3 +28,10 @@ Owner: coordinator; THJ approves. `claude-handoff/` doesn't change when the shar
 - Committed, not pushed. Last commit `2f828e662` (Oct 15, playtest fixes 2).
 - Home scene fallback after a merge: take `main`'s scene and re-run the builders (order in `CLAUDE.md`).
 - FTP wins on merge (D-036 to D-042). **[THJ]** Still open: how and when is this expected to merge into `main`?
+
+## `thj/fr-readability`
+
+- **Purpose:** Family Role readability (B4, Q7 part) and the Oct 2026 playtest fixes made from `thj/oct-build-fixes`. Plans: `plans/2026-10-18-family-role-phase0-1.md`, `plans/2026-10-18-playtest-batch1-bugfixes.md`.
+- Branched from the work on `thj/oct-build-fixes` (= `main` @ `97538642c` plus the Batch 1 fixes and the B4 commits); 0 commits behind `main`. THJ switched to it on 2026-10-18.
+- Combat resource and AP: same as `main` (FTP, PerUnit).
+- Differences from `main`: Mark's Cleanse placeholder state and the ability animation safety net (D-052), HP bar text fix (D-054), map panel anchor, tutorial input lock (`PlayerInputController` lock), safe-room objective text and the Wares rename (D-057, D-060), Family Role bug fixes F1/F3/F5 (D-062/D-065), Mark's `MarkQTE` binding, role-zone layer and Shift view (D-063/D-064). Commit hashes: the plans' commit logs.
