@@ -101,6 +101,15 @@ All playtest builds were from the main branch, so hub feedback is about the old 
   - *TD · S · S9*
 - **Q20 · Test character-coloured move previews.** Tint move tiles in each character's signature colour. To avoid a rainbow, use outline-only, the path ghost, or muted tones. *TD · S · S9*
 - **Q21 · Cyclone deals damage at the start of its turn** (priority fix). *TD · S · Y*
+- **Q22 · Improve level objective readability** The level's active objectives are not visible except at the beginning of the level. *TD · S · Y*
+- **Q23 · Improve and quicken the phase switch visual display** The visual panel indicating phase change ("Enemy's Turn") should transition more quickly and take less time. It can run in parallel with the phase switch instead of blocking it. It should display on the side of the screen instead of the center. *TD · S · Y*
+-  **Q24 · Low HP feedback** When a unit's health is low, the game should communicate it clearly. Should be designed. Initial ideas are:
+    - HUD overlay on avatar.
+    - Constant beating screen overlay (already displays in a red flash when being hit).
+    - Proper SFX.
+    - HUD health bar warning glow.
+    - Item pouch animation
+    - *TD · S · Y*
 
 ## Batch 4 — Design items (need sign-off)
 

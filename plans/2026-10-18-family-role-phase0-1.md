@@ -75,3 +75,6 @@ Compile / EditMode tests (all green except the known red) / reviewer on R2 and R
 | --- | --- | --- |
 | R1 | `90b3019ea` | fix: Mark's Family Role and Continuous Attack use the MarkQTE binding |
 | R2 | `5b401cc80` | fix: Family Role null guard, no muting when a QTE can't start, Lucy searches all hostile factions (F1, F3, F5; F4 pulled, D-065) |
+| R3a (a) | `e5c649cb6` | feat(grid): per-owner role-zone layer on GridCell (B4 R3a) |
+| R3a (b) | `e7850f406` | feat(roles): showRoleZone toggle and role-zone colour on Family Role handlers (B4 R3a, D-063) |
+| R3a (c) | `f620c96de` | feat(ui): draw the selected unit's role zone and every family zone while Shift is held (B4 R3a, D-064) |
