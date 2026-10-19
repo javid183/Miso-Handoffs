@@ -1681,3 +1681,30 @@ Plan `plans/2026-10-18-playtest-batch1-bugfixes.md` (commit hashes in its log); 
 ### Status
 
 Committed (6 commits). B1 (freeze), B8 (lock and restore) and B6 (world map) seen in play; B3 seen at whole-number HP only; B5 waits for THJ's repro.
+
+## 2026-10-19 · B5 Workshop click fix · `thj/fr-readability`
+
+Plan `plans/2026-10-18-playtest-batch1-bugfixes.md` (B5; hashes in its commit log); reports `b5-click-diag`, `b5-diag-removal`, `b5-diag-removal-verify`. Decisions D-073, D-074.
+
+### Built
+
+- Root cause: `Home.prefab`'s `Workshop Cabinet` has a leftover script-less BoxCollider2D (4.32 x 5.28) that fully covers `Equipments Cabinet`'s collider. Neither has a renderer on the collider's object and both sit at z 0, so the Physics2D raycast tie falls to an arbitrary order (likely reshuffled when M3's HomeState spawns the `BenJoeyGrind` actors); when Workshop Cabinet wins, the click has no handler.
+- Fix (THJ's edit): a scene override in `Home - Scene.unity` sets that collider's `m_Enabled: 0`. All `[B5-DIAG]` code removed from `HomeInteractables.cs`; the C6 `RefreshLock()` hardening stays.
+
+### Verified
+
+- Compile clean; EditMode 175 run, 174 passed, 1 failed (the known red). Override present in the scene file.
+
+### Not verified
+
+- In Play: after winning M3 - Mark Intro, the Workshop opens and highlights on every click.
+
+### Findings
+
+- The unused MortaStory actor `Equipments Cabinet.prefab` (id 203) has the same oversized collider (backlog).
+- `thj/oct-build-fixes` still carries the C6 diagnostics.
+- Console: "Internal error - unexpected guid mismatch" and 7x "Objects are trying to be loaded during a domain backup" (not new, not traced).
+
+### Status
+
+Committed: `da54e4ec2` (scene override), `b3e4c030e` (diagnostics removed). Play check pending.

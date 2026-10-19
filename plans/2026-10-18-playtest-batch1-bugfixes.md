@@ -74,5 +74,7 @@ Shared repo, branch `thj/oct-build-fixes`, committed by the coordinator after TH
 | B7 | `3c02126b8` | fix: safe room objectives name both steps (B7) |
 | B7 r2 | `7550ea164` | fix: Divine Relic room objective names both steps (B7) |
 | B7 r3 | `32a15267f` | fix: rename Daryani's Shop to Daryani's Wares |
+| B5 fix | `da54e4ec2` | fix(home): turn off the leftover Workshop Cabinet collider that stole the Workshop click (B5, D-074) |
+| B5 cleanup | `b3e4c030e` | chore(home): remove temporary B5 diagnostics from HomeInteractables (B5, D-074) |
 
 C1 to C4 carry a Co-Authored-By line (THJ: fine to keep). Later commits don't.
