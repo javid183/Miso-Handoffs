@@ -4,7 +4,7 @@ Owner: coordinator. Every item has a scope: `all` or a branch. Started 2026-10-1
 
 ## Current state
 
-- Working branch: `thj/home-test`. Last commits `849c318ab` (FP gain animation) and `2f828e662` (Oct 15: day report saved, Kitchen forecast, recipe cards, Linda shown once at Dawn), committed, not pushed.
+- Working branch: `thj/fr-readability` (since 2026-10-18). Last commit `6cb36d45a` (Mark's role zone colour). `thj/home-test` last commits `849c318ab` and `2f828e662` (Oct 15), committed, not pushed.
 - Home system M0–M9 and the Oct 13–15 playtest fixes are built and committed (details: `tech/home-system.md`, history: `build-log.md`).
 - EditMode tests (Oct 15, THJ): all green except the known red `AIRegressionTest.Baseline_MatchesCurrentAI`. They now include 6 `ReportPersistence` tests. The `HomeIdleDirector` fix landed after that run; it compiles and was Play-checked.
 - Play checks: Part A of `playtests/playtest-plan.md` ran on Oct 13 (Runs 1–3 and a fresh-save run to the Queen), and the open checks on Oct 14 (Claude, Days 1–5 with two sorties). The Oct 15 fixes were checked in Play. What's still open is in the playtest plan. Part B (cold playtest with a new player) has not run.
@@ -48,6 +48,8 @@ Owner: coordinator. Every item has a scope: `all` or a branch. Started 2026-10-1
 ## Inbox
 
 (New requests land here before triage.)
+
+- 2026-10-19 `b5-workshop-click` (all; bug, S/M, Tier 2): THJ's repro log. Lock is correct (`Equipments Cabinet` isLocked=False on Awake/OnEnable after M3 - Mark Intro), but no `OnPointerEnter`/`OnPointerDown` fired on any `HomeInteractables` after `@Mission3MarkIntro_End_DialogNodeSequence`. So pointer events never reach the colliders: a raycast blocker or disabled input, not the lock. Explore running on what blocks them.
 
 ## Backlog
 
