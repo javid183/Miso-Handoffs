@@ -2,7 +2,7 @@
 
 Size: M    Tier: 3 (decided, D-052 to D-056)    Assigned to: miso-implementer (one chunk per run)
 Branch: thj/oct-build-fixes (= `main`); the same code is wanted on `main`, so no other branch needs it first
-Status: approved
+Status: in progress. B1 DONE (THJ tested the corrupted tile being cleansed by Mark in play, 2026-10-19, and replaced the placeholder animation); B3, B6, B8, B7 built and committed; B5 diagnostic waiting on THJ's repro
 
 ## Why
 
