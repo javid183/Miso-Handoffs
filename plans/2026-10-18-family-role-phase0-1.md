@@ -1,7 +1,7 @@
 # Family Role readability: Phase 0 bug fixes and Phase 1 UI pass (B4, part of Q7)
 
 Size: M    Tier: 3 (approved, D-062, D-063)    Assigned to: miso-implementer (one chunk per run)
-Branch: thj/oct-build-fixes (= `main`, FTP)
+Branch: thj/fr-readability (from `thj/oct-build-fixes` = `main`, FTP)
 Status: approved by THJ 2026-10-18; chunks R1 to R6 below (R3 and R6 wait on inputs)
 
 Design: [`plans/2026-10-18-family-role-readability-design.md`](2026-10-18-family-role-readability-design.md). Facts: [`reports/b4-family-role-facts.md`](../reports/b4-family-role-facts.md). Everything else in that design (reason-code event, rule changes, queue, Watch wording, Alt view if needed) is batched into the later Family Role chunk (D-062).
