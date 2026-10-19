@@ -78,3 +78,4 @@ Compile / EditMode tests (all green except the known red) / reviewer on R2 and R
 | R3a (a) | `e5c649cb6` | feat(grid): per-owner role-zone layer on GridCell (B4 R3a) |
 | R3a (b) | `e7850f406` | feat(roles): showRoleZone toggle and role-zone colour on Family Role handlers (B4 R3a, D-063) |
 | R3a (c) | `f620c96de` | feat(ui): draw the selected unit's role zone and every family zone while Shift is held (B4 R3a, D-064) |
+| R3a data | `07af236cc` | data: role zone colours on John and Lucy, Lucy's role no longer answers the Mark-Lucy Duo or Mark's Command (D-066) |
