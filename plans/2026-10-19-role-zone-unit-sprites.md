@@ -2,7 +2,7 @@
 
 Size: M    Tier: 3 (Family Roles UI; additive changes to two core files)    Assigned to: miso-implementer
 Branch: thj/fr-readability
-Status: waiting on THJ (go-ahead for the core changes)
+Status: approved 2026-10-19 (THJ: go for C1 and C2); in progress
 
 ## Why
 
