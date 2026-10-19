@@ -74,3 +74,4 @@ Compile / EditMode tests (all green except the known red) / reviewer on R2 and R
 | Chunk | Hash | Message |
 | --- | --- | --- |
 | R1 | `90b3019ea` | fix: Mark's Family Role and Continuous Attack use the MarkQTE binding |
+| R2 | `5b401cc80` | fix: Family Role null guard, no muting when a QTE can't start, Lucy searches all hostile factions (F1, F3, F5; F4 pulled, D-065) |
