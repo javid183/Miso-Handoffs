@@ -8,6 +8,7 @@ Owner: coordinator; THJ approves changes. Code and file naming for Miso. **Start
 - Namespaces: `MISO.*`, following folders (e.g. `MISO.Core.Systems.AbilitySystem.Effects`). Legacy: the ATB gauge views use `JRPGCombat`.
 - New systems go under `Core/Systems/<SystemName>/{Runtime,Editor}`; per-character content under `Features/Player/<Name>/`.
 - Inspector buttons use Alchemy's `[Button]`.
+- Commit messages (shared repo) are for the whole team: `type(area): what changed`, in plain words. No private tracking tags (playtest item IDs like `B5`, decision IDs like `D-074`, chunk names like `R3a`) and no `Co-Authored-By` line. The link between a commit and its task goes the other way: the hash is logged in the plan's commit log and the `build-log.md` section (THJ, 2026-10-19).
 
 ## Code rules
 

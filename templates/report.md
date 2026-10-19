@@ -36,7 +36,7 @@ Outcome: done | partial | blocked
 
 1. <message>: <files> (core / risky / plain)
 
-<One commit per independent unit, in dependency order. Core-system and risky changes on their own. `.meta` files with their assets.>
+<One commit per independent unit, in dependency order. Core-system and risky changes on their own. `.meta` files with their assets. Messages follow `conventions.md`: plain `type(area): what changed`, no B/D/chunk tags.>
 
 ## Other branches
 
