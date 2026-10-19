@@ -1711,7 +1711,7 @@ Committed: `da54e4ec2` (scene override), `b3e4c030e` (diagnostics removed). Play
 
 ## 2026-10-19 · Role zones: each unit's own icon in its own quadrant · `thj/fr-readability`
 
-Plan `plans/2026-10-19-role-zone-unit-sprites.md` (hashes in its commit log once committed); reports `role-zone-unit-sprites-c1`, `-c2`, `-c1-review`, `-verify`. Decision D-075.
+Plan `plans/2026-10-19-role-zone-unit-sprites.md` (hashes in its commit log); reports `role-zone-unit-sprites-c1`, `-c2`, `-c1-review`, `-verify`. Decision D-075.
 
 ### Built
 
@@ -1734,4 +1734,4 @@ Plan `plans/2026-10-19-role-zone-unit-sprites.md` (hashes in its commit log once
 
 ### Status
 
-Built and gated except play; commits proposed.
+Committed `f2de13678`, `4d2f8c1a4`, `a7e28f0f4`. Play check pending.

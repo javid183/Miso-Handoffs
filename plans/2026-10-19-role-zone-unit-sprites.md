@@ -2,7 +2,7 @@
 
 Size: M    Tier: 3 (Family Roles UI; additive changes to two core files)    Assigned to: miso-implementer
 Branch: thj/fr-readability
-Status: approved 2026-10-19 (THJ: go for C1 and C2); in progress
+Status: built and committed 2026-10-19; play check pending
 
 ## Why
 
@@ -63,3 +63,11 @@ Docs: `tech/combat-architecture.md` (role-zone layer note), `plans/2026-10-18-fa
 ## Gates
 
 Compile clean / EditMode suite (known red only) / reviewer (core files) / play check: yes, needs THJ's time (Shift view with all four Bergsons, overlapping zones, Mark's footprint, a big enemy's footprint, the move-preview follow zone) / docs: as listed above.
+
+## Commit log
+
+| Chunk | Hash | Message |
+| --- | --- | --- |
+| C1 (a) | `f2de13678` | feat(roles): role-zone icon and quadrant fields on Family Role handlers |
+| C1 (b) | `4d2f8c1a4` | feat(grid): draw each role zone as its unit's own icon in its own quadrant |
+| C2 | `a7e28f0f4` | data: role-zone icons and quadrants for John, Mark, Linda and Lucy |
