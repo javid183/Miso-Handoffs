@@ -1708,3 +1708,30 @@ Plan `plans/2026-10-18-playtest-batch1-bugfixes.md` (B5; hashes in its commit lo
 ### Status
 
 Committed: `da54e4ec2` (scene override), `b3e4c030e` (diagnostics removed). Play check pending.
+
+## 2026-10-19 · Role zones: each unit's own icon in its own quadrant · `thj/fr-readability`
+
+Plan `plans/2026-10-19-role-zone-unit-sprites.md` (hashes in its commit log once committed); reports `role-zone-unit-sprites-c1`, `-c2`, `-c1-review`, `-verify`. Decision D-075.
+
+### Built
+
+- C1 (code): `FactionRoleHandlerBase` gains `roleZoneSprite` and `roleZoneSlot` (Inspector, UI only). `GridCell.SetRoleZone` takes a sprite and a slot and draws each entry as a Simple sprite, aspect kept, in its quadrant of the cell or footprint box (`RoleZoneSlotLayout.Fit`), instead of nested outlines. An empty sprite falls back to `RoleZoneOutline` with a warning once per handler. Both presenters pass the handler's sprite and slot.
+- C2 (data): John ShieldOutline TopLeft, Mark PunchOutline TopRight, Linda Arrow BottomLeft, Lucy Fireball BottomRight. The four PNGs are added with their metas.
+
+### Verified
+
+- Compile clean. EditMode 191 run, 190 passed, the known red failed. The prefabs resolve to the right sprite and slot. The four fitted rects don't overlap. Reviewer APPROVE.
+
+### Not verified
+
+- In Play: Shift view with all four, overlapping zones, Mark's and a big enemy's footprint, the follow zone, downscaled icons (jagged or shimmering?), whether a lone corner icon reads.
+
+### Findings
+
+- The pivot is assumed to be the centre (true for all five sprites). Reviewer's optional fix noted.
+- 13 "Serialization depth limit 10" console messages, apparently pre-existing (they start at `FactionRoleHandlerBase.ability`), not compared against a build without the change.
+- `BowArrow.png` is untracked and unused.
+
+### Status
+
+Built and gated except play; commits proposed.

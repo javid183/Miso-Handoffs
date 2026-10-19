@@ -57,7 +57,7 @@ Docs: `tech/combat-architecture.md` (role-zone layer note), `plans/2026-10-18-fa
 - **Prefabs:** small YAML edits with the editor open. Unity picks them up on refresh; the verifier refreshes first. Don't touch any other part of the prefabs (D-066's Lucy blacklist is in the same file).
 - **Downscaling:** the icons are 550–1046 px drawn at about a quarter of a cell, with no mipmaps and point filtering. They may shimmer or look jagged. That's a play-check item; the fix is an import setting (Max Size 128/256, or mipmaps) and THJ's call, not part of this plan.
 - **Readability:** a lone zone is now a small corner icon, not a full outline. THJ chose that (D-075); the play check confirms it reads.
-- **Follow zone** on the same cell as the same unit's own zone: both draw in the same quadrant, the opaque one on top (later owner id, as today). This is acceptable; note it in the report if it looks wrong.
+- **Follow zone** on the same cell as the same unit's own zone: both draw in the same quadrant, draw order not guaranteed (the follow zone's owner id `int.MinValue` sorts first; both at sorting order −10). Reviewer: same sprite, slot and RGB, so either order looks the same; no fix (corrected 2026-10-19).
 - **AI:** not touched. **Save:** no change. **Other branches:** none (B4 lives on this branch).
 
 ## Gates
