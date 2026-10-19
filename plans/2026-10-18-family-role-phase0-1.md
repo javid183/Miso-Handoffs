@@ -90,3 +90,6 @@ Compile / EditMode tests (all green except the known red) / reviewer on R2 and R
 | R6 (3) | `7b57c3d3c` | feat(fx): opt-in unscaled time for floating text popups (B4 R6) |
 | R6 (4) | `a636b1eb8` | feat(ui): Family Role prompt, execute and decline barks over the role unit (B4 R6, D-070) |
 | R6 (5) | `04066a5d0` | data: Family Role prompt, execute and decline lines for John, Linda, Lucy and Mark (B4 R6) |
+| Shift (1) | `c67719fe5` | feat(grid): own layer for the Shift hover preview (B4, D-071, D-072) |
+| Shift (2) | `94dbe8f24` | fix(interactions): revive the Shift hover preview and draw it on its own layer (B4, D-064, D-071) |
+| Mark colour | `6cb36d45a` | data: Mark's role zone colour (B4) |
