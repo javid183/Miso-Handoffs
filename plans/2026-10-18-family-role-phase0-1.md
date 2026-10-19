@@ -85,3 +85,8 @@ Compile / EditMode tests (all green except the known red) / reviewer on R2 and R
 | R4 | `8bf2d5314` | feat(ui): role badge (ready / no FTP) next to the Family Role icon on the unit panel (B4 R4) |
 | R5 (1) | `1cc3d93a0` | feat(roles): onFamilyRolePrompt event raised when a role's QTE prompt starts (B4 R5, D-068) |
 | R5 (2) | `0bc7fb380` | feat(ui): tether line from John to the allies he would cover while his prompt is up (B4 R5) |
+| R6 (1) | `be492ce1d` | feat(bus): onFamilyRoleOutcome event (B4 R6, D-069) |
+| R6 (2) | `c31166182` | feat(roles): decline bark lines and playDeclineBark toggle on Family Role handlers (B4 R6, D-063) |
+| R6 (3) | `7b57c3d3c` | feat(fx): opt-in unscaled time for floating text popups (B4 R6) |
+| R6 (4) | `a636b1eb8` | feat(ui): Family Role prompt, execute and decline barks over the role unit (B4 R6, D-070) |
+| R6 (5) | `04066a5d0` | data: Family Role prompt, execute and decline lines for John, Linda, Lucy and Mark (B4 R6) |
