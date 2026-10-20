@@ -1,7 +1,15 @@
 # Report: Grid preview pass, C5 Shift model and tints (P7, G3)
 
 Plan: plans/2026-10-19-preview-pass-tech.md (chunk C5)    Agent: miso-implementer    Branch: thj/preview-improvements
-Outcome: done. The in-game look is left for the C9 play check. The enemy danger-zone timing is over the 2 ms target on the heavier synthetic cases (see Needs THJ / coordinator).
+Outcome: done, with the review fix (D-086) applied (see "Review fix" below). The in-game look is left for the C9 play check. The enemy danger-zone timing is over the 2 ms target on the heavier synthetic cases (see Needs THJ / coordinator).
+
+## Review fix (D-086, from `reports/preview-pass-c5-review.md`)
+
+- `ShowStatsHoverPreview.cs`: `IsPlayerUnit` is replaced by `IsHostileToPlayer`. A unit gets the enemy model only when `CombatLevel.Instance.GetFactionRelationToPlayer(unit.Faction) == FactionsRelationType.Enemy` (null-guarded on the unit, its faction, the level and the player faction). Every other unit gets the Bergson model: Bergsons, the allied Toba, Deer. The player faction always counts as its own ally (`LevelFactionRelations.Initialize` adds each faction to its own allies list), so Bergsons are never "hostile".
+- `ShiftPreviewRules.PlanFor(isHostileToPlayer, isSelectedUnit)`: the parameter is renamed and the branch inverted. The class summary now says that hostile units get the danger zone and everyone else the Bergson model.
+- `ShiftPreviewRulesTests.cs`: updated to the new parameter. New test `NonHostileUnselectedAlly_GetsBergsonModel` (Move / Attack / BasicAttackFromCurrentCell). Should-fix 2 is done: `DangerZone_CountsNextTurnCooldowns_WithoutSplash` is renamed `DangerZoneConstants_NextTurnCooldowns_NoSplash`, with a comment that it guards the D-085 constants. Should-fix 1 (dedupe) skipped as instructed.
+- Re-checked: compile clean (no console errors after a forced refresh). Full EditMode suite through the Unity MCP: **247 tests, 246 passed, 1 failed = the known red `AIRegressionTest.Baseline_MatchesCurrentAI`**. The total includes C6's tests now in the tree. BOM and LF kept.
+- Not touched: C6's uncommitted RoleZone and UnitPanelUI files, and `GridCell.ShiftPreview.cs` (committed as `ce104f51e`).
 
 ## What changed
 
@@ -31,7 +39,7 @@ no
 
 ## Decisions I made
 
-- **"Bergson" means `unit.Faction == CombatLevel.Instance.PlayerFaction`**, the same test as `GUnit.isPlayerUnit`, but null-safe. Every other unit, including any non-player ally faction, gets the enemy model and tints. The plan names only these two cases.
+- ~~"Bergson" means the player faction~~, superseded by D-086: the enemy model applies only to units hostile to the player. Allies outside the player faction use the Bergson model.
 - **Selected unit** = `PlayerController.CurrentlySelectedUnit`, read only once the controller's `Faction` is set (its `PhaseData` is created in the same `Initialize` call), so the read can't throw before init. The preview is still skipped during target selection, as before.
 - **Enemy split as two flag values, not a bool parameter.** They reuse the same renderers, so a cell never draws two frames. Clearing passes the exact flags that were set.
 - **Kept the tint blend (0.35 toward the tint) and the alpha (0.55).** The design values replace the tint constants that feed the blend, so on screen the colours are the real visual's colour pushed 35% toward these tints, as before. If THJ wants the pure tints, raise `ShiftPreviewTintBlend` (one lever, affects all four).
@@ -52,14 +60,16 @@ None for THJ. **For the coordinator:** the enemy danger zone measured 2.7 ms (12
 ## Risks and loose ends
 
 - The timings are geometry only. Real calls add `GetReachableCells` (one BFS) and stat evaluation for `Parameters.radius`. C9 should profile Shift over a multi-attack enemy on the densest level.
-- Non-player ally factions (if any level has them) now show a red danger zone under Shift. Check in C9 whether any such unit exists (Toba as ally?) and whether that reads wrong.
+- Allied non-player units (Toba, Deer) use the Bergson model and tints (D-086). In C9, check that an allied Toba under Shift shows its tile's reach and teal move frames.
 - The tints are blended and alpha'd, so the enemy red is softer than (1, 0.25, 0.2) on screen. Tune `ShiftPreviewTintBlend` if it isn't distinct enough from the real attack icons.
 - `FactionControllerBase.CurrentlySelectedUnit` dereferences `PhaseData` without a null check (core, not changed). The preview guards it from outside.
 
 ## Proposed commits
 
 1. `feat(grid): split Shift preview tints into Bergson and enemy kinds`: `miso/Assets/_Project/Core/Systems/GridSystem/Runtime/GridCell.ShiftPreview.cs` (**core**, additive enum values + tint values). It stands alone: it compiles with the current caller, and on its own it re-tints the existing Shift move and attack layers to the Bergson colours.
-2. `feat(preview): Shift shows current-tile reach for Bergsons and a danger zone for enemies`: `miso/Assets/_Project/Core/Interactions/Runtime/ShiftPreviewRules.cs`, `ShiftPreviewRules.cs.meta`, `miso/Assets/_Project/Core/Interactions/Runtime/ShowStatsHoverPreview.cs`, `miso/Assets/_Project/Core/Interactions/Editor/ShiftPreviewRulesTests.cs`, `ShiftPreviewRulesTests.cs.meta` (plain; depends on 1, whose new enum values it uses)
+1 is already committed as `ce104f51e`.
+
+2. `feat(preview): Shift shows current-tile reach for Bergsons and allies and a danger zone for enemies`: `miso/Assets/_Project/Core/Interactions/Runtime/ShiftPreviewRules.cs`, `ShiftPreviewRules.cs.meta`, `miso/Assets/_Project/Core/Interactions/Runtime/ShowStatsHoverPreview.cs`, `miso/Assets/_Project/Core/Interactions/Editor/ShiftPreviewRulesTests.cs`, `ShiftPreviewRulesTests.cs.meta` (plain; depends on 1, whose new enum values it uses)
 
 The tests can be split out of commit 2 as `test(preview): edit-mode tests for Shift preview rules` if preferred; they need commit 1's pickers and commit 2's rules.
 
@@ -73,4 +83,5 @@ none (the work merges to `main` later with the branch)
 2. Select John. Hold Shift and hover John: no move frames, and warm-white sword icons only where his basic attack reaches from his tile.
 3. Still holding Shift, hover another Bergson (for example Linda): grey-teal move frames plus warm-white icons from her tile only (no longer most of the map).
 4. Hold Shift and hover an enemy: red-brown move frames and a strong-red danger zone wherever it could attack after moving. An ability with one turn of cooldown left counts; area splash doesn't.
-5. Release Shift: everything clears, and the selected unit's real move range is untouched.
+5. If the level has an allied Toba (or a Deer), hold Shift and hover it: teal move frames and warm-white icons from its tile, no red.
+6. Release Shift: everything clears, and the selected unit's real move range is untouched.

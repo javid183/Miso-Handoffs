@@ -108,3 +108,4 @@ Compile / tests / review (C2, C3, C4, C6) / play check: yes, needs THJ's time (C
 | C4 (a) | `16b33cfac` | feat(events): role badge hover event on the global event bus |
 | C4 (b) | `744cd8fc8` | feat(ui): role badge hover shows the unit's role zone instead of sword icons |
 | C5 (a) | `ce104f51e` | feat(grid): split Shift preview tints into Bergson and enemy kinds |
+| C5 (b) | `3167473b4` | feat(preview): Shift shows current-tile reach for Bergsons and allies and a danger zone for enemies |

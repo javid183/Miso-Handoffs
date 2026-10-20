@@ -8,3 +8,4 @@ Must fix:
 Should fix (optional): dedupe ready attacks with identical reach specs (no gain on the measured case; only if C9 shows it); `DangerZone_CountsNextTurnCooldowns_WithoutSplash` only guards constants.
 
 Notes: danger zone matches D-085; the selected-unit guard is safe; cleanup on release, exit and Rebind is correct (selection change mid-hold doesn't recompute: acceptable); D-071 mechanics unchanged; the core partial is additive and compiles alone (committed first); no mutable statics; encoding kept; AI untouched. Performance 1.3–3.9 ms one-off per press or hover accepted, profile in C9. C9: Shift-hover Toba in Level1-C3 and a Deer in a Level2 map.
+- 2026-10-20: Must fix done by the implementer (relation check, renamed parameter, new ally test); checked by the coordinator; committed 3167473b4.
