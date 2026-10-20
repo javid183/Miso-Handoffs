@@ -15,3 +15,13 @@ Owner: coordinator. The short map of the combat code; moved here from `CLAUDE.md
 ## Dev cheats in combat
 
 `Core/_Dev_/Runtime/CheatHandler.cs`: K kills the hovered unit, F11 on a hovered enemy kills its whole faction, F12 completes the objective, H heal, J ATB, L +99 family points, `[` −1 HP (Shift −10), `]` +1 AP.
+
+## Grid previews (2026-10-20, `thj/preview-improvements`)
+
+Design and inventory of all 23 previews: `plans/2026-10-19-preview-pass-design.md`. Tech plan and commit hashes: `plans/2026-10-19-preview-pass-tech.md`.
+
+- **Attack reach from a tile:** one helper, `UnitThreatAnalysis.AttackReachFrom` / `BasicAttackReachFrom` (`Core/Interactions/Runtime`). It is used by the ghost sword icons, the approach preview, Shift, the enemy threat arcs and the role-zone equality checks. Any new attack-geometry flag must go through it.
+- **Hover gate:** `GridManager.HoverGate.cs` stops grid hover over screen-space HUD canvases. World-space panels don't block.
+- **Role-zone layer:** `GridCell.RoleZone.cs` holds one entry per owner (sprite, quadrant, colour, scale). It is fed by `RoleZonePresenter` (selected unit, Shift, badge hover via `GlobalEventBus.onFamilyRoleBadgeHover`, focus, the D-080 hide) and by `MovePreviewCoverPresenter` (follow zones from the ghost tile for all four Bergsons, and the cover markers). The two presenters sit on one GameObject added by `ShowStatsHoverPreview`. All four role handlers have `GetCellsInRange(GridCell origin)`.
+- **Shift preview layer:** `GridCell.ShiftPreview.cs`, with Bergson and enemy kinds. `ShiftPreviewRules` decides by relation: a unit hostile to the player gets the danger zone; any other unit gets current-tile reach.
+- **Arcs:** `Core/Utilities/ArcLine.cs` (a quadratic Bézier) draws John's tether. `GUnit.ShowThreatLineTo` still has its own copy (switching it is a later core commit).

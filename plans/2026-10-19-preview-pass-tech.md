@@ -2,7 +2,7 @@
 
 Size: L    Tier: 3 (Family Roles UI; three core files)    Assigned to: miso-implementer (one chunk per run)
 Branch: thj/preview-improvements
-Status: approved 2026-10-19 (D-082; C7 revised); in progress
+Status: C1–C8 built and committed 2026-10-20; C9 play check pending (`playtests/2026-10-20-preview-pass-play-check.md`)
 
 ## Why
 
@@ -117,3 +117,5 @@ Compile / tests / review (C2, C3, C4, C6) / play check: yes, needs THJ's time (C
 | C7 (a) | `a7ed7d588` | fix(roles): zone-matches-attack check only for player units and never for a footprint-only zone |
 | C7 (b) | `5ac017c0e` | feat(roles): ghost-tile role zone query for Linda and Lucy |
 | C7 (c) | `857b05eaa` | feat(roles): every Bergson's zone follows the move ghost; cover marker is the coverer's own icon |
+| C8 (a) | `3924ac2b5` | feat(utils): ArcLine helper for quadratic arc line renderers |
+| C8 (b) | `a2a19fb46` | feat(roles): John's tether is a thin translucent arc with a shield cap |

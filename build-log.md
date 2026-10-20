@@ -1735,3 +1735,35 @@ Plan `plans/2026-10-19-role-zone-unit-sprites.md` (hashes in its commit log); re
 ### Status
 
 Committed `f2de13678`, `4d2f8c1a4`, `a7e28f0f4`. Play check pending.
+
+## 2026-10-20 · Grid preview pass (C1–C8) · `thj/preview-improvements`
+
+Notes `playtests/2026-10-19-preview-notes.md`; design `plans/2026-10-19-preview-pass-design.md`; tech plan `plans/2026-10-19-preview-pass-tech.md` (17 commits, hashes in its log); reports `reports/preview-pass-c1.md` to `-c8.md`, with reviews for C2 to C7. Decisions D-076 to D-086.
+
+### Built
+
+- C1/C2: one attack-reach helper. John's dash is straight lines, ranged reach crosses gaps, and the ghost and approach previews match the real attack.
+- C3: grid hover gated over the screen-space HUD.
+- C4: the role badge drives the role-zone layer through a new additive bus event.
+- C5: Shift shows current-tile reach for Bergsons and allies, and a danger zone for hostile units, with new tints.
+- C6: under Shift all zones stay and the hovered one is enlarged. A selected unit's zone that equals its basic attack is hidden, with a tooltip line.
+- C7: every Bergson's zone follows the move ghost. The cover marker is the coverer's own icon.
+- C8: John's tether is a thin translucent arc with a shield cap.
+
+### Verified
+
+- Compile clean after each chunk. EditMode 267/268 (known red only), with 69 new tests across the chunks. Reviewer: APPROVE on C2, C3, C4, C6. FIX on C5 (allies got the enemy model) and C7 (commit split for core handlers), both fixed before commit.
+
+### Not verified
+
+- Everything in play. Checklist: `playtests/2026-10-20-preview-pass-play-check.md`. That includes P1's inferred cause, whether the Linda/Lucy hide fires, the commit flash, cover-icon draw order under Shift, and dense-board readability.
+
+### Findings
+
+- Enemy danger zone costs 1.3–3.9 ms per Shift hover (synthetic). Profile in play.
+- Multi-cell ghost reach may over-report for non-Unconstrained walkability (C2 review).
+- Narrative backlog: Linda's "(1 FP)" text and the dev tooltip titles.
+
+### Status
+
+Built and committed; play check pending (THJ).
