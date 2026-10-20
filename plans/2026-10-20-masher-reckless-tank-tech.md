@@ -2,7 +2,7 @@
 
 Size: L    Tier: 3 (core: Masher handler, AI controller, level run)    Assigned to: miso-implementer (opus for C1, C3, C4; sonnet for C2, C5)
 Branch: masher-tweak (THJ's branch from `main`; merges to `main` later)
-Status: approved 2026-10-20 (T1 to T4 all (a): D-101 to D-104); C1 done; C2 in progress
+Status: approved 2026-10-20 (T1 to T4 all (a): D-101 to D-104); C1, C2 done; C3 in progress
 
 ## Why
 
@@ -286,3 +286,4 @@ Accept: the preview criteria above, in play.
 
 - C1 (AI wait + D-106 recheck): `08ca1d819` (2026-10-20)
 - C1 (turn-switch hold + tests): `11f64c19f` (2026-10-20)
+- C2 (rules class + tests): `212638ad2` (2026-10-20)
