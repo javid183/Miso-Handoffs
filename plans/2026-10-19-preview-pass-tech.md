@@ -114,3 +114,6 @@ Compile / tests / review (C2, C3, C4, C6) / play check: yes, needs THJ's time (C
 | C6 (b) | `b162f50be` | feat(roles): Shift keeps every role zone and enlarges the hovered one; hide a zone that matches the basic attack |
 | C6 (c) | `1f7480caa` | feat(ui): role badge tooltip says when the zone matches the basic attack |
 | C6 (d) | `28fbdafd1` | chore(ui): remove unused usings from UnitPanelUI |
+| C7 (a) | `a7ed7d588` | fix(roles): zone-matches-attack check only for player units and never for a footprint-only zone |
+| C7 (b) | `5ac017c0e` | feat(roles): ghost-tile role zone query for Linda and Lucy |
+| C7 (c) | `857b05eaa` | feat(roles): every Bergson's zone follows the move ghost; cover marker is the coverer's own icon |
