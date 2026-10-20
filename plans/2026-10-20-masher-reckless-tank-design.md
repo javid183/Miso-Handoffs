@@ -2,214 +2,271 @@
 
 Size: M    Tier: 3 (Masher handler is a core system; changes an enemy rule)    Assigned to: miso-game-designer
 Branch: all (work on `main`)
-Status: waiting on THJ
+Status: waiting on THJ (open questions only; the rules are decided)
+
+> **Revision 2 (2026-10-20).** Revised to THJ's decisions D-092 to D-098 (`decisions.md`). Changes from revision 1:
+> - **Provokers:** Duos and Family Roles now provoke it. Roles and other reactions do so in any phase.
+> - **Out of reach:** it always steps toward the attacker; the edge pull is gone.
+> - **The blow:** the counter is a copy of the slam, plus area and friendly fire included, at 10 ×. The 7 × single-target counter is gone.
+> - **Aim:** one aim rule for both slams; it strikes only from next to its target's tile.
+> - **Roles:** a toggle sets whether its counter can provoke a Family Role. There is no limit per turn.
+> - **Kept from revision 1:** the answer comes after the acting member's whole action, Crippled means no step and Stunned means no answer, the preview fixes, and the Q2 component finding.
+> - **Questions:** the answered ones are removed. Two new open questions: a hidden safety stop, and when an enemy-turn answer happens.
 
 ## Why
 
-THJ wants the Masher to bring its own challenge to a level: hit it and it comes for you. Today its answer is the same area slam it uses on its own turn, so it hits bystanders and its own goblins, it answers from too far, it answers Family Roles (which can chain), and it shuffles toward attackers it can't reach. The root problem is that **the counter has no rule of its own**: it borrows the own-turn slam and the generic damage event, so who provokes it, whom it hits and how far it reaches are all side effects. The design below gives the counter its own small, readable rule set. Request: coordinator task of 2026-10-20 (THJ's four points, quoted under "Problem and evidence").
+THJ wants the Masher to bring its own challenge to a level: hit it and it comes for you. Today its answer borrows the own-turn slam and the generic damage event, so who provokes it, where it aims and how far it reaches are side effects of code written for other purposes. The fix is a rule set of its own, which THJ has now decided (D-092 to D-098). Request: coordinator task of 2026-10-20.
 
 ## Goal
 
-The Masher answers the family member who hurt it, one blow, only when it can reach them in a step, so the player can lure it, bait it with a sturdy member and stay out of its reach with the others.
+Every hit drags the Masher one step toward whoever struck it. When it ends next to them it brings its full slam down on their tile, and anyone standing around them is hit too, goblins included. The player lures it, chooses who stands where, and decides how far to let its answers chain into the family's reactions.
 
 ## Problem and evidence
 
-**THJ's four points:** (1) the counter is an area slam that can hit several targets; it should hit only its attacker. (2) It hurts other enemies; not wanted. (3) It should happen only on the player's turn. (4) It must be adjacent to the attacker to hit, and must not counter when it can't reach. Goal: "a really reckless tank, challenging, but one the player can strategize around: move it around (lure it) and avoid getting hit."
+**THJ's brief:** (1) the counter should hit only its attacker; (2) it hurts other enemies; (3) only on the player's turn; (4) it must be adjacent to the attacker to hit. Goal: "a really reckless tank, challenging, but one the player can strategize around: move it around (lure it) and avoid getting hit." THJ's decisions then refined these. Point 1 became "single target **aim**" with the plus area kept (D-095). Point 2 was reversed: friendly fire stays, as Reckless (D-095). Point 3 holds for chosen abilities and Duos but not for reactions (D-094).
 
 ### What is built today (verified in code and data unless marked)
 
 | Aspect | Today | Source |
 | --- | --- | --- |
-| Trigger | Any `onUnitDamageDone` on the Masher from an ability whose owner is alive and not downed, if the hit was not lethal and the Masher's own controller is not mid-action and it is not turn-skipped (Stunned) | `MasherGoblinFactionRoleHandler.cs:70-81` |
+| Trigger | Any `onUnitDamageDone` on the Masher from an ability whose owner is alive and not downed, if the hit was not lethal, the Masher's own controller is not mid-action and it is not turn-skipped (Stunned) | `MasherGoblinFactionRoleHandler.cs:70-81` |
 | What counts as a hit | `onUnitDamageDone` is raised only for abilities that complete, only when the owner's faction is hostile to the target, and only for HP loss | `CombatLevelRunHandler.cs:774-799` |
-| Which turn | Not gated by turn. During the enemy turn the AI controller is usually mid-action (`isActionInProgress`, `FactionControllerBase.cs:72`), which blocks most enemy-turn counters by accident, not by rule. Mark's role fires only on the enemy phase (`Unit_Mark.prefab` `activationPhase: 4`), so it is usually blocked too | `:77` |
-| Reactions provoke it | Yes. Lucy's embers (`OnActionComplete`, every phase), Linda's role arrow (`OnUnitEndMoving`, every phase) and Mark's Continuous Attack hits all count. Linda's arrow can loop: the counter step ends in her lane, she shoots, it counters again | role prefabs `triggerEvents`/`activationPhase`; GDD `combat-balance.md:96` |
+| Which turn | Not gated by turn. During the enemy turn the AI controller is usually mid-action (`isActionInProgress`, `FactionControllerBase.cs:72`), which blocks most enemy-turn counters by accident, not by rule | `:77` |
+| Reactions provoke it | Yes, when the timing allows: Lucy's embers (`OnActionComplete`, every phase) and Linda's role arrow (`OnUnitEndMoving`, every phase). Mark's role fires only on the enemy phase (`Unit_Mark.prefab` `activationPhase: 4`), where `:77` usually blocks it | role prefabs `triggerEvents`/`activationPhase` |
 | Duos provoke it | Probably not: duo partner abilities are silent and raise no bus events (`tech/combat-log.md:275`), so their damage likely never reaches `onUnitDamageDone`. *Assumed, to check in play* | |
-| Counter attack | The Masher's basic attack `MasherGoblin_Ability_Attack` (`Unit.DefaultOccupiedCellAbility`, `:57`): radius 1, Adjacent (4 directions), from every footprint tile. It spawns `AOE_Attack _MasherGoblin_Variant`, whose `MasherGoblin_Ability_CompoundEffect` hits the struck tile plus its 4 neighbours (`applyMode` Surrounding, radius 1, `includeCentralCell`), **any faction** (`targetFactionRelation: -1`), 10 × `Stat_DMG` (`..._Attack_Effect_AttrMod`) | presets in `Resources/UnitSpecific/Enemy/Masher Goblin/Attack/` |
-| Reach | It picks any tile in its attack range whose plus-shaped splash covers the attacker (`TryPickAttackCell`, `:181-201`), so it can hit an attacker 2 tiles from its footprint without moving, and 3 after a step | `:203-226` |
-| Movement budget | Its normal walk, `MasherGoblin_Ability_Walk`: radius = 1 × `Stat_SPD` (×1 for enemies) = **1 tile**, path-walkable, through allies (`ignoreRelationOnWalk: 1`), whole 2 × 2 footprint must fit | `Walk.asset:59-62, 99`; `:296-342` |
-| Unreachable | It still steps to the tile that brings it closest, then does nothing (`TryFindApproachCell` keeps a non-attacking cell that reduces distance, `:320-329`; `Activate` walks, then `Attack` finds no cell, `:139-146`) | |
-| Crippled | The walk preset is blocked by Crippled (`activationTagQuery` Status.Crippled), but the counter calls the walk directly and never checks it, so a Crippled Masher may still step. *To check in play* | `Walk.asset:23-28`; `:161` |
-| Cost | Free: no AP, no FTP (AI controllers don't pay, `FactionControllerBase.cs:199`); it resets both cooldowns after (`:131-134`) | |
-| Limit per turn | None. `oncePerPhase: 0` on the prefab, and the handler never reads it | `Unit_MasherGoblin.prefab:813` |
-| Two components (Q2) | The prefab has two handlers: one on the root (`-4332957646936667060`, `ability` empty) and one added to a child object (`8123456789123456791`, hand-made id, `ability` = Attack preset). Only the root's is ever started: the orchestrator calls `_owner.GetComponent<FactionRoleHandlerBase>()` on the unit root (`AbilityOrchestrator.cs:50, 63`), and the handler subscribes only in `Initialize`. So it **cannot** counter twice; the child is dead weight. The root's empty `ability` is why the "did not initialize its role ability" warning shows | `Unit_MasherGoblin.prefab:745-1017`; `FactionRoleHandlerBase.cs:80-82, 175-185` |
-| Own turn | AI uses the same slam (move 1, then slam; the attack costs all AP left) | `Attack.asset:57` (`Closure`) |
-| Preview | Hovering the Masher while aiming a non-move ability shows the ghost at its step tile, the step path, every tile of the splash, and the damage on the attacker; nothing if the hit is lethal. It measures from the attacker's **current** tile | `:367-426` |
-| Statuses | `EntityState.Unable to Swap`, `EntityState.Unmovable` (shown "Immovable"), `Status.Reckless` | `Unit_MasherGoblin.prefab:240-250` |
+| Counter attack | The Masher's basic attack `MasherGoblin_Ability_Attack` (`Unit.DefaultOccupiedCellAbility`, `:57`) has radius 1, Adjacent (4 directions), measured from every footprint tile, and target type Cell or Occupant (`targetType: 3`). It spawns `AOE_Attack _MasherGoblin_Variant`. That spawn's `MasherGoblin_Ability_CompoundEffect` hits the struck tile plus its 4 neighbours (`applyMode` Surrounding, radius 1, `includeCentralCell`), on **any faction** (`targetFactionRelation: -1`), for 10 × `Stat_DMG` (`..._Attack_Effect_AttrMod`) | `Resources/UnitSpecific/Enemy/Masher Goblin/Attack/` |
+| Aim | It picks any tile in its attack range whose splash covers the attacker (`TryPickAttackCell`, `:181-201`). So an attacker on a side or back tile of the cross, 2 tiles from its footprint, gets hit without the Masher moving. The AI on its own turn can also aim at an empty tile | `:203-226`; `targetType: 3` |
+| Movement budget | Its normal walk, `MasherGoblin_Ability_Walk`: radius = 1 × `Stat_SPD` (×1 for enemies) = **1 tile**. Path-walkable, through allies (`ignoreRelationOnWalk: 1`); the whole 2 × 2 footprint must fit | `Walk.asset:59-62, 99`; `:296-342` |
+| Unreachable | It steps to the tile that brings it closest, then does nothing (`:320-329`, `:139-146`). This already matches D-093 | |
+| Crippled | The walk preset is blocked by Crippled, but the counter calls the walk directly and never checks it, so a Crippled Masher may still step. *To check in play* | `Walk.asset:23-28`; `:161` |
+| Cost | Free: no AP, no FTP (`FactionControllerBase.cs:199`); it resets both cooldowns afterwards (`:131-134`) | |
+| Limit | None (`oncePerPhase: 0`, never read) | `Unit_MasherGoblin.prefab:813` |
+| Two components (Q2) | There is a handler on the root (`ability` empty) and one on a child object (hand-made id, `ability` = Attack preset). Only the root's is ever started: the orchestrator calls `GetComponent` on the unit root (`AbilityOrchestrator.cs:50, 63`). So it cannot counter twice, and the child is dead weight. The root's empty `ability` causes the "did not initialize its role ability" warning | `Unit_MasherGoblin.prefab:745-1017`; `FactionRoleHandlerBase.cs:80-82, 175-185` |
+| Preview | Hovering the Masher while aiming shows the step ghost, the path, every splash tile and the damage on the attacker. It is measured from the attacker's **current** tile, and hidden after the first answer in a turn (`ActivatedAtThisPhase`, set in `FactionRoleHandlerBase.cs:150`, read at `:369`) | `:367-426` |
+| Announced as | A Family Role: the base `Activate` raises `RaiseFamilyRoleActivated` | `FactionRoleHandlerBase.cs:151` |
 
-Evidence the current state is a problem: THJ's points; `combat-balance.md` lists "first Masher counter loop" to watch and "decide on the Masher counter limit" as open; Enemies Q2.
+## The rules (decided, with the designer's details marked)
 
-## Options compared
+- **Provokers (D-092, D-094):**
+  - On the family's turn: the ability the player chose for the acting member (its own hits and projectiles), and Duos.
+  - In any phase, the family's turn or the enemies': Family Roles and other reactions.
+  - Not provokers: burn, Pass-by, allied AI units (Toba as an ally, the Deer), and anything else on the enemies' turn.
+- **Which Duo partner (D-095):** the partner who struck it. If both did, the one it can reach. If it can reach both, the one who acted first.
+- **When (designer, from revision 1):** for a chosen ability or a Duo, the answer comes once the acting member's whole action is over (follow-ups included, e.g. Mark's Continuous Attack). It is measured from the tile the member ends on. A reaction is answered when that reaction completes. So one player action can draw two answers: one for the actor, then one for Lucy if her embers also hit it.
+- **Step (D-093):** every provoking hit makes it take its normal move (1 tile; the 2 × 2 must fit on a free path) toward the provoker, whatever the distance. If the path is blocked, it doesn't step. If it is already next to the provoker, it doesn't step.
+- **Aim (D-095), on the counter and on its own-turn slam:** it strikes only when it stands next to its target's tile (four directions, from any of its 4 tiles). The struck cell is the target's tile, so standing on a side or back tile of the cross no longer starts the attack. It never aims at an empty tile.
+- **The blow (D-095, D-096):** a copy of its main slam, with the same aim, area, damage and range: 10 × to everyone on the target's tile and the 4 around it, its own side included (Reckless).
+- **Statuses (designer, unchanged from revision 1):** a Crippled Masher can't step (it answers only if already next to the provoker), as its walk already says. A Stunned one doesn't answer (already true).
+- **Toggle (D-097):** `counterCanProvokeFamilyRoles` (working name) on the Masher, default **true**. When it is false, the Masher's answers start no Family Role (no John relay, no Mark punch, no Linda lane shot). There is no other loop guard.
+- **Limit (D-098):** none per turn, in either direction.
 
-All four options share the **base rules** that answer THJ's points directly:
-- **Who provokes:** on the family's turn only, damage from **the ability the player chose for the acting member** (its own hits and projectiles, e.g. Tempest Bloom copies of Linda's arrow). Not Family Roles, not Synergy hits owned by another member (Shield Flare copies are John's, so Lucy's fireball that sets them off is answered only for its own hit), not burn, not anything on the enemies' turn. (Duos: see Q2 for THJ.)
-- **When:** once, **after the acting member's whole action ends** (follow-ups included), measured from the tile the member ends on. One action, at most one answer.
-- **Whom it hits:** that member only, one blow, single tile. No splash; no goblin is hurt.
-- **Reach:** it may take one step (its normal move, 1 tile, the whole 2 × 2 must fit on a free path) to stand next to the member (four directions, from any of its tiles). If no such spot exists, no hit (whether it still steps is Q4).
-- **Crippled:** no step (answers only if already next to the member). **Stunned:** no answer.
+## Options compared (revision 1, for the record)
 
-| | A. Reckless (base rules, no limit) | B. Grudge (base + once per member per turn) | C. Winded (base + each answer costs it 1 AP next turn) | D. Lumber (base, but it steps toward you even when it can't reach) |
-| --- | --- | --- | --- | --- |
-| How it feels | It answers every time it can reach. Each poke from 2 tiles drags it a step: luring costs HP. Melee members pay for every swing | Each member pays once per turn, then swings freely. Reads as "it remembers who hit it", less reckless | Baiting it is rewarded: two answers and it stands winded on its turn. Strong lure economy, but the tank gets easier the more you poke it | Ranged members pull it from anywhere for free; the "safe ring" rule blurs |
-| How the player plays around it | Kill it from 3+ tiles (Linda, Lucy), use Duos, put John next to the melee striker so his role takes the answer at half, cripple it, pin it in a corridor where its 2 × 2 can't step | Same, plus "spread the first hits across members"; second swings are free, so Mark's Continuous Attack becomes the obvious answer | Poke it twice with John every turn and it never acts: a likely dominant strategy | Kite it with Linda forever; it never reaches anyone |
-| Rules complexity | Low: one rule, matches the Shift danger zone | Low-medium: a hidden per-member counter the player must track | Medium: a new status (Winded) and AP debt across turns | Low, but two outcomes for "out of reach" |
-| Build cost (rough) | M: handler gating and reach, new single-target counter preset, slam relation change, preview fixes, prefab cleanup, tests | A + small per-member set reset at turn start | A + AP debt on the enemy's next turn (touches AP, a core system) + status + UI | A minus the "no step" change (closest to today) |
-| Risk | Melee members may avoid it entirely if the answer hurts too much (lever: counter damage) | Hidden state is the likeliest misread ("why didn't it answer?") | Trivialises the Masher; core AP change | Unlimited range pulls let ranged members drag it anywhere (it gets *closer*, so more dangerous, not less, but the pull is free at any range). A bounded version is Q4 (c) |
-| USP effect | Roles: John's relay becomes the key answer; Linda's Harmonic Slam cripple matters. Duos: the safe way in (if THJ agrees) | Same as A, weaker | Neutral | Neutral |
-
-**Leaning: A.** It is THJ's four points as one rule, the identity ("reckless") is intact, and its reach equals what the Shift danger zone already draws. B is the lever if playtests show melee members simply won't touch it.
-
-### Cross-cutting choices inside A
-
-| Choice | Recommended | Alternative | Why |
-| --- | --- | --- | --- |
-| Step distance | Its normal move: 1 tile | A "charge" of 2 | With 1, the counter zone is exactly the Shift danger zone (move range + adjacent attack, no splash: CR-43), so no new preview is needed. 2 would put Lucy (range 3) in reach at her max range and leave only Linda safe |
-| Counter damage | **7 ×** `Stat_DMG` (7 on Standard, 5 on Early, 4 on Tutorial; 4 through John's relay) | 10 × (the slam's value) | With no limit, a member who swings twice eats two answers; at 10 that makes melee a pure tax (critic, accepted). 7 reads as a quick answer next to the 10 × slam |
-| Off-reach pull (Q4) | **Lumber at the edge:** an attacker exactly one tile outside its reach (3 tiles from its footprint) makes it step 1 toward them, no hit | No step at all | Gives the ranged members a free, readable lure (Lucy at her max range 3 pulls it into her own danger zone: a real choice); Linda at 4 stays out of it. Still no hit without reach (point 4) |
-| Own-turn slam | Keeps its plus-shaped splash, 10 ×, but hits the **family only** | Make it single-target too | THJ's point 2 is about goblins being hurt. The splash is the Masher's big telegraphed blow and punishes the family for bunching; the counter is the quick answer. Two blows, two jobs |
-| Family Roles provoke? | No | Yes | Roles fire without a choice. If Lucy's embers provoked it, it would walk to Lucy after the player swung with John (misread), and Linda's lane arrow would loop. "Roles chip it safely" is a USP plus |
-| Duos provoke? | No (THJ's call, Q2) | Yes, against the activator | Likely already true in code; "it can't answer the family acting together" is a clean Duo moment. Duos are capped by FTP and cooldown 2, so not a free kill |
-| Allied AI units (Toba as an ally, the Deer) | Don't provoke (not the family's turn) | | Follows point 3 |
-| Mark's Continuous Attack follow-ups | Part of Mark's action: the answer comes once, after the chain ends | Answer each follow-up | MA-2 swings again only after a kill and auto-targets the lowest-health enemy, so Mark doesn't choose the follow-up (critic, checked in `characters/mark.md`); answering mid-chain would also interleave with its QTE |
+Revision 1 compared four options: A "Reckless" (answer every hit it can reach), B once per member per turn, C "Winded" (each answer costs it 1 AP on its next turn), and D "Lumber" (it steps closer even when it can't reach). It recommended A with a 7 × single-target answer, an edge pull at 3 tiles, and Roles and Duos excluded. THJ chose the rules above: A's "no limit", D's "always step", and the slam kept whole. The comparison is in this file's revision 1 in `claude-handoff` history.
 
 ## Lens notes
 
-**Creative.** Target experience: the Masher is a wall of muscle that the family has to *handle*, not just hit. Every swing at it is a decision: who takes the answer, and where will it stand afterwards? The moment I'm designing for: Mark lands a blow, the Masher lumbers one step and raises its club, John's shield prompt flashes, John steps in and eats half of it; next turn the family has walked the brute one tile at a time into Linda's lane. That is family against brute force, warmth against dread. The genre default is "counter = free retaliation" (Fire Emblem's enemy phase counters, Into the Breach's predictable telegraphs); the twist here is that the answer *moves it*. No push, pull or Command can move it (Immovable), so provoking it is the player's only way to steer it; on its own turn it still walks wherever the AI likes.
+**Creative.** Target experience: the Masher is a wall of muscle the family has to *handle*. Every hit drags it a step, and when it lands next to someone it brings its whole slam down, on goblins too if they are in the way. The moments I'm designing for:
+- Mark lands a blow. The Masher lumbers a step and raises its club. John's shield prompt flashes, and John eats half of the blow.
+- Next turn the family has walked the brute, one tile at a time, into a knot of Dark Claws, and baits it into slamming them.
+
+With friendly fire kept, luring it into its own side is now a real tactic. That is original next to the genre-default counter (Fire Emblem's enemy-phase counters).
 
 **Systems.**
-- Rules: the base rules above.
-- Levers and start values: step 1 tile; answer 7 ×; lumber at the edge (3 tiles) on; no limit per turn; slam 10 ×, family only, on its own turn.
+- Levers: the step (1 tile), the counter preset's values (a copy of the slam's, so tuning is data only, D-096), and the toggle.
 - Interactions:
-  - **John's role** fires on an enemy action start in every phase (`Unit_John.prefab` `triggerEvents: 1`, `activationPhase: -1`), and the counter raises `abilityStarted` (`:148`), so John within 2 of the struck member can take the answer at × 0.5. *To check in play.* John striking it himself gets no relay (he's the target).
-  - **Mark's role** fires only on the enemy phase, so it never meets a counter. **Lucy's** and **Linda's** role hits no longer provoke it: no loop.
-  - **Linda's Harmonic Slam** cripples: a Crippled Masher can't step, so poking it from 2 tiles is safe for a turn. This needs the Crippled check the counter lacks today.
-  - **Mark's Vault with Stunning Vault**: a Stunned Masher doesn't answer at all (already true, `:77`).
-  - **Multi-tile 2 × 2**: adjacency is four-direction from any of its 4 tiles (8 tiles touch it). Its step needs a free 2 × 2 spot on a path: corridors, walls and its own goblins can deny it, which is a positioning tool, not a bug.
-  - **Immovable**: unchanged. John's Super Time pull ignores it (Combat rules Q8); out of scope.
-  - **Ranged attackers**: inside 2 tiles of its footprint, anyone is answered. At exactly 3 (Lucy's max range, or Linda) it lumbers 1 tile closer without hitting; at 4+ (only Linda) nothing happens.
-  - **Attacks that move the attacker** (CR-7 walk-then-attack, John's Dash, Mark's Vault): the answer is measured from where the attacker ends, after the whole action.
-  - **Burn, push damage, Pass-by**: no answer (burn ticks on its own turn; it can't be pushed; Pass-by deals no damage).
-  - **Several Mashers** (the Warren "Masher-heavy wave" on `thj/home-test`): each answers only its own attacker. Removing friendly fire makes that wave harder (they no longer slam each other).
-- Failure cases: (1) melee members refuse to engage (watch; lever: damage 7, or option B); (2) Linda and Duos kill it with no risk (fine if it takes several turns; watch turn count); (3) corridor maps make it inert (level design note: give it room); (4) the counter kills a member on a hit the player didn't expect (only if the preview is wrong, see UX).
+  - **John's role** (on action start, every phase) can take any answer aimed at an ally within 2 of him, at × 0.5. It costs 1 FTP each time. *To check in play.*
+  - **Mark's role** (enemy phase only): an answer during the enemy turn that hits an ally within his reach makes him punch. That punch is a reaction, so it provokes another answer. See the chains below.
+  - **Linda's role:** an answering step that ends in her lane makes her shoot, which provokes another step toward her.
+  - **Lucy's role:** her embers after a family action provoke an answer aimed at Lucy.
+  - **Linda's Harmonic Slam** (Crippled): no step, so its answers stop unless someone is already next to it.
+  - **Mark's Stunning Vault:** a Stunned Masher doesn't answer.
+  - **2 × 2 footprint:** 8 tiles touch it. Its step needs a free 2 × 2 spot, so corridors and its own goblins can deny it.
+  - **Immovable:** unchanged (Combat rules Q8 is out of scope).
+  - **Ranged attackers** (Linda 4, Lucy 3): every hit pulls it 1 tile closer. Each poke costs nothing now, but brings it closer to a strike.
+  - **Attacks that move the attacker** (CR-7, John's Dash, Mark's Vault): the answer is measured from the end tile.
+  - **Friendly fire:** a slam on a family member standing next to goblins hurts the goblins. Kills by friendly fire give no XP or gold (CR-22).
+  - **Several Mashers:** one Masher's slam can provoke nothing in another (they are allies, so `onUnitDamageDone` isn't raised, `CombatLevelRunHandler.cs:777`).
+- Failure cases:
+  1. A Role ↔ counter chain that runs long (see below).
+  2. The family pulls it around for free with ranged pokes. This is accepted by D-093; each pull brings it closer.
+  3. Corridor maps make it inert. Level note: give the Masher room.
+  4. Answers mid-enemy-turn confuse the AI's plan (open question O2).
+
+### How a Role ↔ counter chain ends (toggle true)
+
+Chains are possible in two places:
+
+**Mark (enemy turn only).**
+- The loop: an answer hits an ally within 2 of Mark, so Mark punches (Fist Blitz, 8 ×). The punch is a reaction, so the Masher answers again, steps if needed and slams. That hits Mark or an ally, so Mark punches again.
+- **This is the only true ping-pong.**
+
+**Linda (any turn).**
+- The loop: an answering step ends in her lane within range, so she shoots. The arrow provokes another step toward her.
+- **It ends by itself:** once the Masher stands next to her it no longer steps, so it no longer "ends a move" in her lane. At most about 4 to 6 links.
+
+**John** doesn't loop: his relay is a reaction to the answer, not a hit on the Masher. **Lucy** doesn't loop: her trigger is a *family* action finishing.
+
+What ends a chain today:
+
+1. **FTP.** Each role costs 1 FTP (`requiredFTP` 1, FR-3 "built today"). The pool is 14 to 24 for the full family. A chain stops when the pool can't pay. *Verified in the GDD; the cost per role is read from the data by the GDD.*
+2. **The QTE.** Each role needs a press within 1 s. A missed press skips the role, and the role's targets are silenced for `silenceTurnsOnIgnore` turns (0 on the roles read, so no silence). Declining ends the chain at once.
+3. **HP.** Each link deals 10 × (slam, × 0.5 through John) to the family and 8 × (Mark) or 6 × (Linda) to the Masher. With 80 HP, the Masher dies after about 10 of Mark's punches. Mark dies sooner unless John relays.
+4. **The role's own feasibility.** The base trigger check also needs `ability.CheckActivationFeasibility()` (`FactionRoleHandlerBase.cs:123`). If Fist Blitz has a cooldown, Mark's role fires once per cooldown and the Mark loop has length 1. *Not read; FR table, Mark row, already flags "check whether the cooldown already gives 1".*
+5. **Reach.** Mark's role needs the Masher within 2 of him, so a blocked step or a Crippled Masher ends it.
+
+So today the chain is bounded by FTP and the player's presses. **It becomes unbounded if roles stop costing FTP (FR-3, planned) before the per-round role limits (FR-4) exist:** then only HP and the QTE stop it. That is why a hidden safety stop is worth having (O1).
 
 **UX.**
-- *Before committing an attack:* hovering the Masher while aiming shows (existing preview, adjusted) its step ghost and path if it steps, **one** red tile (the attacker's), and the damage on the attacker. At the edge (3 tiles) it shows the ghost and path only, no red tile and no damage: "it comes closer, it doesn't hit". If it won't react at all (4+ tiles, Crippled and not adjacent, Stunned, the hit kills it, a Duo or other non-provoking action) nothing is shown.
-- *The preview must survive the first answer:* today it is hidden once the Masher has answered in a turn (`ActivatedAtThisPhase`, set in the base `Activate`, `FactionRoleHandlerBase.cs:150`, read at `:369` of the handler). Under "no limit" that would hide every later answer: the likeliest surprise hit. In scope.
-- *While moving:* the Shift danger zone and the enemy threat arcs already show exactly the counter zone (move 1 + adjacent attack, no splash), so "am I safe to swing from here?" is answered by the tools the player already uses.
-- *Changes needed:* (1) one tile instead of the splash; (2) a step without a hit only at the edge (today it shows a closest step at any range, `:399-407`); (3) measure from the attacker's **end** tile when the attack moves the attacker; (4) hide it for non-provoking actions (Duos, if THJ agrees); (5) keep it after the first answer in a turn. Nice to have: the Masher's role badge tooltip says what provokes it (text for the narrative agent).
-- *Likeliest misread:* expecting the own-turn splash on the counter, or the reverse. Mitigation: the counter preview marks one tile, the own-turn intent marks five; the role badge tooltip states "answers the one who hit it".
+- *Before committing an attack:* hovering the Masher while aiming shows:
+  - its step ghost and path when it would step;
+  - when it ends next to the attacker: the 5 tiles of the slam centred on the attacker's tile, and the damage on every unit inside, goblins included;
+  - when it can't reach: the step only, with no slam tiles.
+- *Duos:* the preview picks the partner by the D-095 rule.
+- *Roles:* they are automatic, so there is no preview. John's tether already shows his relay.
+- *Changes needed:*
+  1. Centre the slam on the attacker's tile (today it can be any cross tile that covers them).
+  2. Show the step at any range, without slam tiles when it can't reach (matches today's partial-step preview).
+  3. Measure from the attacker's **end** tile.
+  4. Keep showing it after the first answer in a turn.
+  5. Show damage on every unit in the cross, not only the attacker.
+  6. Add a Duo case.
+  - Nice to have: the role badge tooltip says what provokes it and that it hits its own side (narrative agent).
+- *While moving:* the Shift danger zone (CR-43: move 1 plus adjacent aim, without splash) is exactly where it can *aim*. Standing diagonally next to a target it can aim at is not shown as danger, because splash is excluded by design. This is accepted; the hover preview covers it.
+- *Likeliest misread:* a member standing *next to* the attacker is hit by the slam and the player didn't expect it. Mitigation: the preview shows damage on every unit in the cross (change 5).
+- *Second misread:* a long chain on the enemy turn feels like the game took control. Mitigation: the toggle, and the QTE (declining ends it).
 
 ## USP check
 
-- **Family Roles:** strengthens. John's relay becomes the natural way to absorb the answer; Linda's cripple and Mark's stun shut it down; roles chip it without provoking it.
-- **Synergies:** neutral on purpose. Synergy hits that belong to the acting member's own ability (Tempest Bloom copies of Linda's arrow) count as hers; others don't provoke.
-- **Duos:** strengthens if THJ accepts Q2 (Duos don't provoke): the family acting together is the safe way in.
-- **Home:** neutral. Omens that remove or buff the Masher (Red Veil at Goblin Camp) are unaffected.
-- **Pillars:** reaction timing (John's prompt during the player's own turn), family-driven combat (who takes the answer), emotional tone (brute force against a family that protects each other). No pillar weakened.
+- **Family Roles: strengthens, with a risk.** Roles become part of the Masher puzzle: John's relay absorbs answers, Linda's lane shots drag it toward her, and Mark's punches can start a duel. The risk is chains that feel automatic; the toggle and the QTE are the answer.
+- **Synergies: neutral on purpose.** Synergy hits count as the acting member's action or as reactions, by who owns them.
+- **Duos: neutral to slightly positive.** Duos carry the same risk as other attacks (D-092). The "which partner" rule makes the Duo partners' positions matter.
+- **Home: neutral.**
+- **Pillars:**
+  - Reaction timing: role prompts during its answers, on both turns. Stronger.
+  - Family combat: who stands next to whom matters more, because the slam hits them all.
 
-## Recommendation
+## Proposed GDD wording (not written yet)
 
-**Option A, "Reckless", amended after the critic pass.** Start values: the answer comes once after the acting member's whole action; step 1 tile (its normal move); answer 7 × `Stat_DMG` on that member only; an attacker exactly 3 tiles away makes it lumber 1 tile closer without hitting; no limit per turn; own-turn slam keeps its plus splash at 10 × but hits the family only.
+> **EN-2. Counter-attack (Masher Goblin).** When the Masher is hurt and survives, it answers whoever hurt it. Two kinds of hit provoke it: during the family's turn, the ability the player chose for a family member, or a Duo; on either turn, a Family Role or another reaction. For a chosen ability or a Duo, it answers once the member's action is over. For a reaction, it answers when that reaction is done. For a Duo, it answers the partner who struck it; if both did, the one it can reach; if it can reach both, the one who acted first. Each answer, it takes one step (its normal move, 1 tile) toward that member, however far away they are, unless it is already next to them. If it then stands next to them, it slams their tile (EN-11). It answers every such hit, with no limit per turn. A Crippled Masher can't step; a Stunned one doesn't answer. Hovering the Masher while aiming an attack shows the answer in advance: its step, and if it reaches, the slammed tiles and the damage. Whether its answers can set off Family Roles is a setting on the Masher (on by default). *Planned*
 
-**Playtest signals.**
-- Works: players say where they will swing *from* before swinging; at least once per fight a member lures it (a melee bait or Lucy's edge pull); John's relay fires on an answer; the Masher dies in 3–5 rounds in M7/M8.
-- Fails: melee members never attack it (→ answer 5 ×, or option B); it is dragged around without ever answering (→ turn off the edge pull); players are surprised by an answer (→ preview bug: the moved-attacker case or the preview hidden after the first answer).
+> **EN-3. Immovable (Masher Goblin, Mountain Deev).** Can't be pushed, pulled, swapped or moved by Mark's Command (except as [Combat rules](combat-rules.md) Q8 notes). The Masher is also Reckless: every hit drags it a step toward whoever struck it (EN-2), and its slam hurts its own side. *Built* (Reckless as in EN-2 and EN-11: *Planned*)
 
-### Proposed GDD wording (not written yet)
+> **EN-11. Slam (Masher Goblin).** The Masher's attack, on its own turn and when it answers (EN-2). It strikes only a unit whose tile is next to it, never an empty tile: 10 × damage to everyone on that tile and the four around it, goblins included. *Planned*
 
-> **EN-2. Counter-attack (Masher Goblin).** During the family's turn, when the ability the player chose for a family member hurts the Masher and it survives, the Masher answers that member, and only that member, once the member's action is over. If the member isn't next to it (four directions, from any of its four tiles), it first takes one step (its normal move, 1 tile) to a free spot next to them. The answer is one blow, 7 × damage, to that member alone: nobody else, family or goblin, is hurt. If no free spot next to the member is within its step, there is no blow; if the member is just one tile further (3 tiles from the Masher), it still lumbers 1 tile toward them. It answers every such action, with no limit per turn. Family Roles, Duos, burn and anything on the enemies' turn don't provoke it. A Crippled Masher can't step; a Stunned one doesn't answer. Hovering the Masher while aiming an attack shows the answer in advance: its step, the struck tile and the damage. *Planned*
+**Answer to Enemies Q2 (D-098):** no limit per turn, in either direction: it answers every provoking hit, and a Family Role can provoke it as often as the role fires. A toggle on the Masher (D-097) sets whether its answers can set off Family Roles. The second counter component (on a child object, with a hand-made id) is never started, because only the root's is initialized (`AbilityOrchestrator.cs:50, 63`), so it can't counter twice. Remove it in the build.
 
-> **EN-3. Immovable (Masher Goblin, Mountain Deev).** Can't be pushed, pulled, swapped or moved by Mark's Command (except as [Combat rules](combat-rules.md) Q8 notes). The Masher is also Reckless: it answers whoever hurts it (EN-2), so provoking it is the family's only way to steer it. *Built* (Reckless as in EN-2: *Planned*)
+## Open questions for THJ
 
-> **EN-11. Slam (Masher Goblin).** On its own turn the Masher slams a tile next to it: 10 × damage to every family member on that tile and the four around it. Goblins are not hurt. *Planned*
+**O1. A hidden safety stop for Role ↔ counter chains?**
+- *Question:* add a crash guard that cuts a chain of answers after a fixed number of links, never meant to be reached in play?
+- *Context:* with the toggle on (D-097) and no limit (D-098), the Mark loop is bounded only by FTP, QTE presses and HP. If roles become free (FR-3) before role limits exist (FR-4), only HP and presses remain. A bug (for example a zero-length animation, or a role firing without a QTE in Family Super Time) could recurse without end.
+- *Options:*
+  - (a) None. The design bounds hold today. The risk is a hang if they ever don't.
+  - (b) **Cap at 32 answers per chain.** A chain is everything started by one root action (a player action, or one enemy unit's action). Past the cap, the Masher ignores provoking hits until that root action has resolved, and a warning goes to the Console and the combat log. 32 is above any real chain: an FTP pool of 24 at most, and Linda's lane chain about 6 links.
+    - Where it lives: a private constant (or a serialized field marked "debug") in `MasherGoblinFactionRoleHandler`. The counter resets when the root action completes, and at `turnEnded` as a backstop.
+    - It is hidden: no UI, no GDD rule.
+  - (c) The same, but global: one chain counter shared by every reactive handler (roles and the Masher), in the turn flow. This is wider protection, but it touches core turn flow (`CombatLevelRunHandler`).
+- *Recommendation:* (b). It is local to the Masher, has no feel impact, and a few lines with a test. (c) is worth it later, if a second enemy gets a reaction.
+- *Blocked meanwhile:* nothing in design. The implementer needs the answer before closing the build.
 
-**Proposed answer to Enemies Q2:** no limit per turn. Only the ability the player chose provokes it, and it answers once after the whole action, so it answers at most once per action, and the loop through Family Roles is gone. The second counter component (on a child object, hand-made id) is never started, because only the root's is initialized (`AbilityOrchestrator.cs:50, 63`), so it can't counter twice; remove it in the build, and give the root component the new counter preset.
-
-## Questions for THJ
-
-**Q1. Limit per turn (Enemies Q2).**
-- Context: the counter fires on every provoking hit; with reactions excluded, the count is capped by the family's AP.
-- Options: (a) no limit, the most reckless; (b) once per family member per turn: melee members pay once, a hidden counter to track; (c) once per turn in total: the first striker is the sacrifice, everyone else swings free, the least threatening.
-- Recommendation: (a). It is the identity, and the reach rule already gives the player a way out. (b) is the fallback lever.
-- Blocked: the handler's trigger code. Data and preview work can start.
-
-**Q2. Do Duos provoke it?**
-- Context: Duo partner abilities seem to raise no damage event today (to check), so Duos probably don't provoke it now.
-- Options: (a) no: "it can't answer the family acting together"; (b) yes, against the activator; (c) yes, against the partner it can reach.
-- Recommendation: (a). It costs nothing to build, gives Duos a clear moment, and is limited by FTP and cooldowns.
-- Blocked: the provoking-hit filter and its preview gate.
-
-**Q3. Do Family Roles provoke it?**
-- Context: today Lucy's embers and Linda's role arrow provoke it, and Linda's arrow can loop with the counter step.
-- Options: (a) no; (b) yes, against the role's owner, with one answer per role per turn to stop loops.
-- Recommendation: (a). Roles fire without a choice, so answering them breaks "I decide who takes the hit", and (b) needs a loop guard.
-- Blocked: same as Q2.
-
-**Q4. When it can't reach the attacker, does it still step closer?**
-- Context: your point 4 says no counter when it can't reach; today it steps toward the attacker from any range. Your goal includes luring it, and under (a) only a member who takes the hit can lure it.
-- Options: (a) no step, no hit: the simplest read ("outside the red zone it stays put"), but ranged members can't lure; (b) it always steps closer without hitting: free pulls from any range; (c) **lumber at the edge**: only an attacker exactly 3 tiles away pulls it 1 tile, no hit; at 4+ nothing.
-- Recommendation: (c). It keeps "no hit without reach", gives Lucy (range 3) a lure that puts her in its zone next turn, and leaves Linda at 4 as the only fully safe poke. It costs one extra preview state (ghost, no red tile).
-- Blocked: the reach code.
-
-**Q5. Own-turn slam: keep the area?**
-- Context: your point 2 is about goblins being hurt; the counter becomes single-target either way.
-- Options: (a) keep the plus splash, family only; (b) single-target on its turn too; (c) keep the splash and friendly fire on its own turn only.
-- Recommendation: (a). It keeps a heavy, telegraphed blow that punishes bunching, distinct from the quick answer.
-- Blocked: one data value (`MasherGoblin_Ability_CompoundEffect.targetFactionRelation`).
-
-**Q6. Step distance and damage.**
-- Context: its normal move is 1 tile, so the hit zone equals the Shift danger zone. With no limit, a member who swings twice takes two answers.
-- Options: (a) 1 tile, 10 × (today's slam value); (b) 1 tile, 7 ×; (c) a 2-tile charge, 10 ×.
-- Recommendation: (b). A quick answer next to the 10 × slam, and melee members can still afford to engage; 5 × is the next lever down, 10 × the lever up.
-- Blocked: nothing; the start values can be changed later.
+**O2. When a Family Role provokes it during the enemies' turn, when does it answer?**
+- *Question:* does the answer interrupt the enemy turn at once, or wait until the current enemy unit's action ends?
+- *Context:* D-094 allows enemy-turn answers. Today the handler refuses while its own controller is mid-action (`:77`), and `TryPlayFactionRole` refuses too (`FactionControllerBase.cs:185`). The AI also plans the whole faction on a worker thread, so an answer step that moves the Masher mid-turn can leave its plan stale.
+- *Options:*
+  - (a) **Wait** until the current enemy unit's action completes, then answer. If the Masher hasn't acted yet this turn, the AI replans it from its new tile. Answers are free, and its own turn's AP is untouched.
+  - (b) Interrupt at once: the most dramatic, but it needs changes inside the AI controller's turn flow (core, Tier 3) and risks breaking AI plans.
+  - (c) Queue every enemy-turn answer to the end of the enemy turn: simplest, but answers come late and lose cause and effect.
+- *Recommendation:* (a). It keeps cause and effect (Mark punches, the Masher turns on him right after), and it fits how roles already wait (`WaitForProcessesToComplete`).
+- *Blocked meanwhile:* the enemy-turn part of the trigger code. The player-turn part can be built.
 
 ## Scope
 
-In: the Masher's counter rule, its counter preset, its slam's faction filter, its hover preview, prefab cleanup, GDD wording.
-Out: the Masher's AI on its own turn (targeting is unchanged); Immovable exceptions (Combat rules Q8); Family Role limits (FR-4); enemy introduction text.
+In:
+- the trigger (provokers, phases, Duo partner);
+- the step and aim rules;
+- the counter preset (a copy of the slam);
+- the aim rule on the own-turn slam;
+- the toggle and the safety stop (if O1 is approved);
+- the preview changes;
+- the prefab cleanup;
+- tests;
+- the GDD wording.
 
-## Touches
+Out:
+- the Masher's AI targeting on its own turn, beyond the aim rule;
+- Immovable exceptions (Combat rules Q8);
+- Family Role cost and limits (FR-3, FR-4);
+- enemy introduction text.
 
-Systems: Family Roles (core: `MasherGoblinFactionRoleHandler.cs` is listed in `tech/core-systems.md`), ability data (new preset assets; the core `AbilityPreset` code is not changed), damage preview (core, used as is, no change expected).
-USPs: Family Roles, Duos.
-Docs: see "Docs to update".
+## Build cost (rough, M to L)
+
+1. **Counter preset:** a copy of `MasherGoblin_Ability_Attack` (`MasherGoblin_Ability_Counter`, effect sub-assets copied or shared), made by a one-off editor script. It goes on the root handler's `ability` slot, **not** on the unit's ability list, so the AI never picks it. The handler then initializes its base `ability` (this also fixes the warning). Remove the dead child component.
+2. **Aim rule, data:** on both presets, target type Occupant only (`targetType` 3 → 2), so the struck cell is always a unit's tile.
+3. **Aim rule, code:** `TryPickAttackCell` accepts only the target's own tile.
+4. **Trigger:**
+   - phase gating: chosen ability or Duo on the player's turn; reactions in any phase;
+   - "after the whole action" timing;
+   - the Duo partner rule;
+   - Crippled check;
+   - getting Duo damage to the handler (Duo partner abilities seem silent, see Risks).
+5. **Enemy-turn answers** (O2 a): wait for the current enemy action, then answer, then let the AI replan the Masher.
+6. **Toggle:** `counterCanProvokeFamilyRoles` (bool, default true). When false, the answer must not start role triggers. The likely route is to activate it without `abilityStarted`/`abilityPerformed`, or tagged so role handlers skip it. Either way it must still raise the damage events that John's passives (Wrath, Blood Debt) listen to.
+7. **Safety stop** (O1 b): a counter with reset points, a warning, and a test.
+8. **Preview:** the six changes in UX.
+9. **Tests:** EditMode tests for the pure rules (aim cell, step choice, Duo partner pick, provoker filter by phase, chain cap).
 
 ## Core-system impact
 
-- **`MasherGoblinFactionRoleHandler.cs` is core** (Family Roles row). Changing its behavior is Tier 3, which this plan asks for. The changes are inside this handler: trigger gating (family turn, acting member, exclude role and Duo abilities), the reach rule, the Crippled check, a single-target counter ability, preview fixes.
-- **`FactionRoleHandlerBase.cs`**: no change expected. If the handler starts using the base `ability` slot, it should call the base initialization so the slot is ticked (and the warning goes); that is a use of the base, not a change to it.
-- **AP, damage preview, AI code**: no change.
-- **AI regression:** the slam's faction filter change (and a new preset, if added to the unit's ability list) can change how the AI scores the Masher's attack, so `AIRegressionTest.Baseline_MatchesCurrentAI` may shift if its scenarios include a Masher. That test is already red; don't re-baseline it. Keep the counter preset **off** the unit's ability list (role handler only) so the AI never picks it on its own turn.
+- **`MasherGoblinFactionRoleHandler.cs` is core** (Family Roles row in `tech/core-systems.md`). Every behaviour change here is Tier 3, now approved in principle by D-092 to D-098.
+- **`FactionRoleHandlerBase.cs`:** no change expected. The handler starts *using* the base `ability` slot and initialization.
+- **Turn flow and AI (`FactionControllerBase`, `AIController`, `AIFactionBrain`):** enemy-turn answers (D-094) need the Masher to act while its own faction's turn is in progress. Option O2 (a) aims to do this from the handler by waiting for the current action, then asking the AI to replan. If the controller's in-progress guard (`FactionControllerBase.cs:185`) or the AI's plan can't be handled from outside, this becomes a **core behaviour change (Tier 3)**. The tech plan must settle it.
+- **Duos (`UnitsCooperationHandler`, core):** if Duo damage never reaches `onUnitDamageDone`, making Duos provoke it may need Duos to report damage. That is a core change; the alternative is for the handler to listen to the Duo trigger's own events. Tech plan to check.
+- **Family Roles:** no change to the Bergson handlers. They already trigger in the needed phases.
+- **Ability data:** two `targetType` changes and a new preset. No change to `AbilityPreset` code.
+- **Damage preview:** used as is.
+- **AI regression:** the own-turn aim change (`targetType` 3 → 2) changes which cells the AI can aim at, so `AIRegressionTest.Baseline_MatchesCurrentAI` may shift if its scenarios include a Masher. It is already red; don't re-baseline it.
 
 ## Risks
 
-- **The answer is announced as a Family Role.** The base `Activate` raises `RaiseFamilyRoleActivated(this)` (`FactionRoleHandlerBase.cs:151`), so role UI, John's tether, role barks, the combat log and any future FR-4 limit counters see the Masher's answer as a role. Tech plan: audit those listeners (most already filter on Bergson handlers).
-- **Hits during an answer are dropped.** `:77` ignores damage while the Masher's controller is busy. If the player can act while an answer plays, a quick second swing gets no answer and no explanation. Tech plan: confirm input is locked during the answer, or queue the hit.
-- **Waiting for the end of the action** needs a clear "action over" signal for the acting member (after follow-ups such as Continuous Attack). Tech plan to name it.
-- The provoking-hit filter needs to know the player's acting unit and which ability is a Family Role or a Duo. If that can't be read cleanly from the handler, the fallback is "owner is a player-faction unit, on the player's turn, and the ability is not that unit's role ability", which still excludes Duos if they raise no damage event. Tech plan to confirm.
-- The preview must use the attacker's end tile; the moved-attacker case is the most likely surprise.
-- Corridor pinning: where its 2 × 2 can't step, melee hits are free. Accepted as a positioning tool; level note: give the Masher room.
+- **Announced as a Family Role** (`FactionRoleHandlerBase.cs:151`): role UI, John's tether, barks, the combat log and future FR-4 counters see the answer as a role. With enemy-turn answers this matters more. Audit the listeners.
+- **Hits during an answer are dropped** (`:77`). Under "no limit", a reaction landing mid-answer (Linda's shot on the step) must be queued, not dropped. Otherwise the chain rules above are wrong in practice.
+- **Duo damage may be invisible** to the handler (silent partner abilities).
+- **Toggle off must not mute John's passives:** the route chosen must still raise the damage events.
+- **The preview must use the attacker's end tile, and must survive the first answer.**
+- **Corridor pinning:** where its 2 × 2 can't step, melee hits are free unless the attacker is already adjacent. Accepted.
 
 ## Gates
 
-Compile / EditMode tests (pure reach, edge-pull and provoking-hit rules as testable helpers) / review / play check: yes (M7 or M8 with a Masher: melee bait, Lucy's edge pull, John relay, Crippled, corridor, Duo, two answers in one turn with the preview still shown) / docs to update.
+- Compile.
+- EditMode tests.
+- Review.
+- Play check: yes, in M7 or M8 with a Masher. Cover:
+  - melee bait;
+  - ranged pull;
+  - a slam hitting goblins;
+  - a John relay;
+  - Linda's lane chain;
+  - the Mark chain on the enemy turn, with the toggle on and off;
+  - a Duo with both partners striking;
+  - Crippled;
+  - two answers in one turn with the preview still shown.
+- Docs to update.
 
 ## Critics
 
-One critic pass (the `miso-design-critic` agent type was not available in this session, so a separate `miso-game-designer` instance ran read-only in the critic role). It kept Option A. Its points and what I did:
+Revision 1 had one critic pass. The `miso-design-critic` agent type was not available, so a separate `miso-game-designer` instance ran it read-only. These findings still apply in revision 2:
+- the preview is hidden after the first answer;
+- the answer is announced as a Family Role;
+- hits during an answer are dropped;
+- Mark's Continuous Attack swings again only after a kill, so the answer waits for the whole action.
 
-1. **Luring was the weakest part.** Under the first draft only a member who took the hit could lure it, and Option D's risk was stated backwards (stepping closer makes it more dangerous). *Accepted:* added "lumber at the edge" (Q4 c) and made it the recommendation; corrected D's risk; corrected "provoking it is the only way to move it" (it walks on its own turn).
-2. **10 × with no limit makes melee a pure tax.** *Accepted:* the answer starts at 7 ×, the slam stays at 10 ×.
-3. **Code facts missed:** the preview is hidden after the first answer in a turn (`ActivatedAtThisPhase`); the answer is announced as a Family Role; hits during an answer are dropped (`:77`). *Verified and accepted:* in UX and Risks; the preview fix is in scope.
-4. **Continuous Attack was misread:** MA-2 swings again only after a kill, on the lowest-health enemy. *Verified in `characters/mark.md` and accepted:* the answer now comes once, after the acting member's whole action, from their end tile. That one rule also covers moved attackers.
-5. **Trigger wording and Shield Flare.** *Accepted:* "the ability the player chose for the acting member"; Shield Flare copies (John's) don't provoke. The corridor note was added to Risks.
-
-Not changed: "no limit" (the critic agreed), excluding Duos and Family Roles (the critic agreed).
+Its other proposals (the 7 × single-target answer, the edge pull, excluding Roles and Duos) were overtaken by THJ's decisions. Revision 2 was not re-critiqued: it applies THJ's rules and adds no new design choice, apart from O1 and O2, which go to THJ.
 
 ## Docs to update if approved
 
-- `design/gdd/enemies.md`: EN-2, EN-3, new EN-11; Q2 answered; Roster note.
-- `design/gdd/combat-rules.md`: CR-22 (drop the Masher as the both-sides example); Statuses table, Reckless line.
-- `design/combat-balance.md`: the Masher lines at :7, :32, :90, :96.
-- `glossary.md` (narrative agent): Masher Goblin line ("answers whoever hurts it"); a name for the counter blow if it gets one.
-- `tech/combat-log.md:151` (the "Masher's area attack hits its own side" note), coordinator.
+- `design/gdd/enemies.md`: EN-2, EN-3, new EN-11; Q2 answered (D-098); the Roster note.
+- `design/gdd/combat-rules.md`: CR-22 keeps the Masher as the both-sides example; Statuses table, Reckless line ("every hit drags it toward the striker; its slam hits its own side").
+- `design/combat-balance.md`: the Masher lines at :32, :90, :96.
+- `design/gdd/family-systems.md`: a note in the role table (or Related) that roles provoke the Masher in any phase.
+- `glossary.md` (narrative agent): the Masher Goblin line.
