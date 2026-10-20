@@ -1767,3 +1767,21 @@ Notes `playtests/2026-10-19-preview-notes.md`; design `plans/2026-10-19-preview-
 ### Status
 
 Built and committed; play check pending (THJ).
+
+## 2026-10-20 · Preview pass play fixes · `thj/preview-improvements`
+
+Decisions D-087 (D-064 narrowing restored, reversing D-076), D-088 and D-089. Reports `preview-pass-fix1-explore.md`, `preview-pass-fix1.md`, `preview-pass-fix1-review.md`.
+
+### Built
+
+- Shift hover narrows to the hovered unit's zone again (`590f0a3c2`).
+- John's tether uses a plain material, 0.025 wide, alpha 0.85, drawn above its two units (`eddb34e7c`). It had been invisible because the borrowed `M_LineShine` turned the orange near-black and it sorted under the units.
+- Per-tile sword icons on multi-tile units, raised to `DynamicTop` on covered tiles, with the sorting refreshed on plug and unplug (`3cd8bba21`, core). A targeted multi-tile unit is marked on every tile (`f5d263743`, core).
+
+### Verified
+
+- EditMode 272/273 (known red). Reviewer APPROVE (core). **THJ confirmed all three in play on 2026-10-20.**
+
+### Status
+
+Done. The rest of the C9 checklist is not reported yet.

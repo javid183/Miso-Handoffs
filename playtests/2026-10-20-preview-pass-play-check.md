@@ -33,3 +33,7 @@ Write what you saw here or in chat. The coordinator files bugs and follow-ups.
 - P2/C8: John's tether arc is not visible at all.
 - P4/C6: the D-064 narrowing (hover under Shift shows only that unit's zone) was better: reverted by D-087.
 - Sword icons don't show on the tiles a multi-tile enemy stands on.
+
+## THJ's second results (2026-10-20)
+
+- Confirmed in play after the fixes (`590f0a3c2`, `eddb34e7c`, `3cd8bba21`, `f5d263743`): the Shift narrowing is back, John's tether arc is visible, and sword icons show on every tile of a multi-tile enemy.
