@@ -103,3 +103,4 @@ Compile / tests / review (C2, C3, C4, C6) / play check: yes, needs THJ's time (C
 | C1 | `b678aeecc` | fix(preview): share one attack-reach helper for Shift and enemy threat arcs |
 | C1 tests | `e48f2f58d` | test(preview): edit-mode tests for attack reach geometry |
 | C2 | `90a4908a3` | fix(preview): ghost and approach previews use the shared attack reach |
+| C3 | `663a2b1d4` | fix(grid): stop grid hover while the pointer is over the HUD |
