@@ -54,3 +54,4 @@ Read the end of the Editor log after the time you triggered the compile; older e
 - `Tools > Save Data > Clear Save Data` resets the save so play-once tutorials replay (the save is `...\AppData\LocalLow\Dead Mage\miso\SaveData.json`).
 - Cheats seen working: `[` (-1 HP) and Shift+`[` (-10) on the hovered unit, K wins the fight. F11 and F12 didn't react. The hover panel doesn't refresh after cheat damage until the cursor leaves and returns.
 - Maximize the Game view (double-click its tab) to read small numbers; a custom "4:3 Aspect" entry was left in the Game view size list.
+- Unity MCP tools are fixed when a Claude session starts: if the editor's MCP server (127.0.0.1:8080) was down at session start, its tools stay unavailable to that session and its subagents even after the server is back. Check it before launching the verifier; otherwise THJ runs the Test Runner (2026-10-19).

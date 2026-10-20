@@ -16,6 +16,7 @@ Owner: coordinator; THJ approves. `claude-handoff/` doesn't change when the shar
 - AP: PerUnit (`aPConsumptionMode: 1`), escalation `[1,1,2,4]`. Fixed AP is the decision (D-037).
 - Has the Morta rebuild export (`miso/Assets/MortaStory/`) and the skill-tree redesign, combat log, enemy tiers, Lucy + John shield relay (merged into `thj/home-test` in Steps J, K, L).
 - No Home system.
+- 2026-10-19: `thj/fr-readability` merged in (fast-forward), plus THJ's `bcf2b263a` and `5550286dd` (Linda's role-zone icon is now `BowArrow`). `main` @ `5550286dd` now has all of it: the Batch 1 fixes (D-052, D-054, D-057, D-060), the Family Role fixes F1/F3/F5, `MarkQTE`, role zones with per-unit icons in quadrants (D-063, D-064, D-075), cover icons (D-067), the Shift preview layer (D-071, D-072), John's tether, role barks and the two additive `GlobalEventBus` events (D-068 to D-070), and the B5 fix (D-074). Commit hashes: the plans' commit logs.
 - The GDD reads its values from here (`main` @ `92853a5a9`), and its Home values from `thj/home-test` (D-046).
 
 ## `thj/home-test`
@@ -30,6 +31,8 @@ Owner: coordinator; THJ approves. `claude-handoff/` doesn't change when the shar
 - FTP wins on merge (D-036 to D-042). **[THJ]** Still open: how and when is this expected to merge into `main`?
 
 ## `thj/fr-readability`
+
+**Merged into `main` on 2026-10-19 (fast-forward); kept for history, no new work.** Items scoped to it now count as `main`/`all`.
 
 - **Purpose:** Family Role readability (B4, Q7 part) and the Oct 2026 playtest fixes made from `thj/oct-build-fixes`. Plans: `plans/2026-10-18-family-role-phase0-1.md`, `plans/2026-10-18-playtest-batch1-bugfixes.md`.
 - Branched from the work on `thj/oct-build-fixes` (= `main` @ `97538642c` plus the Batch 1 fixes and the B4 commits); 0 commits behind `main`. THJ switched to it on 2026-10-18.
