@@ -121,6 +121,8 @@ Known issues carried over from the Oct 13 runs unless dated otherwise. All scope
 
 - 2026-10-19 (scope all): the unused MortaStory actor `Assets/MortaStory/Content/Story/Actors/Equipments Cabinet.prefab` (id 203, idle `Idle Cabinet Workshop`) has a 4.28 x 5.2 BoxCollider2D; if that idle is ever spawned it steals the Workshop click again (B5).
 
+- 2026-10-19 (scope all; narrative): Linda's role description still ends "(1 FP)" (old spelling, and roles are meant to be free, D-036 to D-042); the role badge tooltip titles are dev labels ("Linda's FactionRole", "Lucy's FR"). Renaming them is a Tier 3 naming pass.
+
 **Not built yet (by choice or waiting on art)**
 
 - Dawn tick camera glide and sting; the Warren's own icon and corruption overlay; haul icons; the Queen's Might crack animation.
