@@ -99,10 +99,24 @@ None for C1. One thing for the coordinator before C4 (see the first loose end).
 - The watchdog uses real time, so it also runs while the game is paused (`timeScale` 0), if the switch is waiting on holds alone at that moment. The pump's frame wait still advances when paused, so this should resolve on its own. Unverified.
 - I couldn't verify in the editor: the console compile, the Test Runner run, or any play behaviour. No hold is registered until C4, so there's nothing to see in play yet.
 
+## Revision: D-106 recheck
+
+Reviewer fix (`reports/masher-c1-review.md`, D-106, approved by THJ):
+
+- `AIController.HandleUnits`: right after `_factionBrain.ConsumeWorkerError();` and before `GetUnitAction`/`PerformAction`, added `if (PhaseData.IsInProgress) continue;` with a one-line comment. A Masher answer that started while the worker was planning now drops the stale plan before any phase state advances.
+- Checked by reading the code:
+  - `continue` re-enters the inner `while (true)`, so it goes back to the line-96 wait, which now also waits on `PhaseData.IsInProgress`. When the answer ends, the `unit.IsAlive` check runs, then the loop replans.
+  - Calling `PrepareUnitTurn` again is safe. It bumps `_jobId` (so a stale worker result can't land), clears `_pendingAction`, and resets `_unitTurnReady`/`_computing`. The loop already calls it again after every action, so this path adds nothing new. The skipped plan was never applied: `PerformAction` didn't run, so the phase states are untouched.
+  - No answer means the flag is false here, so the check is a no-op and nothing changes.
+- Line-ending note: the four `.cs` files are BOM + LF (per `.gitattributes eol=lf`; 0 CR bytes on disk, matches HEAD). An interim correction to CRLF was wrong (coordinator fix after the re-review).
+- Not run: compile in the editor, EditMode suite (editor open, no batch mode). The change is one guarded `continue` in an iterator. Next step: Ctrl+R, then Test Runner > EditMode > Run All.
+
 ## Proposed commits
 
 1. `fix(ai): AI turn loop waits for its own action in progress before planning the next action` (core). Files:
-   - `miso/Assets/_Project/Core/Interactions/Runtime/AIController.cs`: hunk `@@ -95,7 +95,8 @@`. The `WaitWhile` in `HandleUnits` gets `|| PhaseData.IsInProgress` (1 line changed, 1 added).
+   - `miso/Assets/_Project/Core/Interactions/Runtime/AIController.cs`: 2 hunks, +5 / −1 (D-101 and D-106 together):
+     - `@@ -95,7 +95,8 @@`: the `WaitWhile` in `HandleUnits` gets `|| PhaseData.IsInProgress`;
+     - `@@ -107,6 +108,9 @@`: after `_factionBrain.ConsumeWorkerError();`, a one-line comment and `if (PhaseData.IsInProgress) continue;`.
 2. `feat(turn-flow): add turn-switch holds so pending reactions finish before the turn switches` (core). Depends on nothing in commit 1. Files:
    - `miso/Assets/_Project/Core/Managers/CombatLevelRunHandler.cs`: 3 hunks, +4 / −2:
      - `@@ -70,7 +70,7 @@`: `class` → `partial class`;
@@ -113,7 +127,7 @@ None for C1. One thing for the coordinator before C4 (see the first loose end).
 
    The tests could be a third commit, but they only compile with commit 2, so I'd keep them together.
 
-All `.cs` files touched or added are UTF-8 with BOM and LF, matching the existing two files. Check `git status` after Unity imports: if Unity rewrites either new `.meta` (it shouldn't), stage its version.
+All four `.cs` files (the two edited, the two new) are UTF-8 with BOM and LF (per `.gitattributes eol=lf`), matching HEAD. The diff has no line-ending churn. Check `git status` after Unity imports: if Unity rewrites either new `.meta` (it shouldn't), stage its version.
 
 ## Other branches
 
