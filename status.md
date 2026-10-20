@@ -39,6 +39,10 @@ Owner: coordinator. Every item has a scope: `all` or a branch. Started 2026-10-1
 
 - Q2-1 reading (Lucy and John share the concern), masked man setup + mask reason + "Masked Stranger" plate, thief line, Grandma Margaret alive or dead, why they go home after A Wolf's Blood, forms of address, forest name, Q1 M1/M2 slice and its four S8 beats.
 
+**Feedback pass (Q5/Q6/Q24, 2026-10-20)** — scope all; Tier 3 (game feel); `plans/2026-10-20-feedback-pass-design.md`
+
+- Seven questions: hit-stop/shake owner (director recommended), mini bars always vs damaged only, low-HP threshold (30%), Bergson hit-stop, heartbeat cadence, skull with evasion, who supplies 3 SFX + skull sprite.
+
 **Home (from the handoff's open decisions)** — scope `thj/home-test`
 
 - Fireside payoff: what else a pair can earn (Demo Spec open questions).
