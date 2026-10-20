@@ -119,3 +119,7 @@ Compile / tests / review (C2, C3, C4, C6) / play check: yes, needs THJ's time (C
 | C7 (c) | `857b05eaa` | feat(roles): every Bergson's zone follows the move ghost; cover marker is the coverer's own icon |
 | C8 (a) | `3924ac2b5` | feat(utils): ArcLine helper for quadratic arc line renderers |
 | C8 (b) | `a2a19fb46` | feat(roles): John's tether is a thin translucent arc with a shield cap |
+| Fix1 | `590f0a3c2` | fix(roles): Shift hover shows only the hovered unit's role zone again |
+| Fix1 | `eddb34e7c` | fix(roles): John's tether uses a plain material and draws above its two units |
+| Fix1 | `3cd8bba21` | fix(grid): sword icons show on every tile a multi-tile unit covers |
+| Fix1 | `f5d263743` | fix(preview): a targeted multi-tile unit is marked on every tile it covers |
