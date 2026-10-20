@@ -41,7 +41,7 @@ Owner: coordinator. Every item has a scope: `all` or a branch. Started 2026-10-1
 
 **Feedback pass (Q5/Q6/Q24, 2026-10-20)** — scope all; Tier 3 (game feel); `plans/2026-10-20-feedback-pass-design.md`
 
-- Seven questions: hit-stop/shake owner (director recommended), mini bars always vs damaged only, low-HP threshold (30%), Bergson hit-stop, heartbeat cadence, skull with evasion, who supplies 3 SFX + skull sprite.
+- Answered 2026-10-20 (D-113): hit-stop postponed; bars on every unit; 25%; heartbeat once; skull always; placeholders. Open: kill flash + shake in or out. Then designer revises the plan.
 
 **Home (from the handoff's open decisions)** — scope `thj/home-test`
 
