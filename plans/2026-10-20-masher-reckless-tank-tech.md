@@ -1,8 +1,8 @@
 # Masher Goblin: reckless tank (tech plan)
 
 Size: L    Tier: 3 (core: Masher handler, AI controller, level run)    Assigned to: miso-implementer (opus for C1, C3, C4; sonnet for C2, C5)
-Branch: all (built on `main`)
-Status: waiting on THJ (T1 to T4 below)
+Branch: masher-tweak (THJ's branch from `main`; merges to `main` later)
+Status: approved 2026-10-20 (T1 to T4 all (a): D-101 to D-104); C1 in progress
 
 ## Why
 
