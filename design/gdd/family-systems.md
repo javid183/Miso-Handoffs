@@ -34,7 +34,7 @@ Source: `Features/Player/<Name>/Scripts/<Name>FactionRoleHandler.cs`, `Core/Inte
 
 A role zone is the set of tiles where a Bergson's Family Role can answer (each handler's own range). The zones are display only: nothing here changes when a role fires. "Built on the branch" means built on `thj/preview-improvements`, not yet merged to `main` ([Branch differences](#branch-differences)). Of those, THJ has confirmed in play only the items marked "play-checked" (the D-087 and D-088 fixes); the rest wait for the C9 play check ([`playtests/2026-10-20-preview-pass-play-check.md`](../../playtests/2026-10-20-preview-pass-play-check.md)).
 
-- **FR-8.** Each Bergson's zone is drawn with its own icon, tinted with its role colour, in a fixed quadrant of every tile in the zone (of the footprint box when a multi-tile unit stands there), so four zones on one tile never overlap (D-075). Icon, quadrant and colour are set per unit on its role handler (table below); `showRoleZone` off hides that unit's zone, its cover marker and its tether (D-063, D-067). *Built*
+- **FR-8.** Each Bergson's zone is drawn with its own icon, tinted with its role colour, in a fixed quadrant of every tile in the zone (of the footprint box when a multi-tile unit stands there), so four zones on one tile never overlap (D-075). Icon, quadrant and colour are set per unit on its role handler (table below). The colours are the ones set on the unit prefabs, THJ's own choice (D-091): John dark brown, Mark near-black, Lucy dark red, Linda at the code default. `showRoleZone` off hides that unit's zone, its cover marker and its tether (D-063, D-067). *Built*
 - **FR-9.** When a zone is shown (D-064, D-077, D-087):
   - the selected Bergson's zone, except as FR-10 says;
   - holding Shift: every living Bergson's zone;
@@ -50,7 +50,7 @@ A role zone is the set of tiles where a Bergson's Family Role can answer (each h
 | Bergson | Icon | Quadrant | Colour (RGBA) |
 | --- | --- | --- | --- |
 | John | `ShieldOutline` | Top left | 0.35, 0.24, 0.12, 0.75 |
-| Mark | `PunchOutline` | Top right | 0.09, 0.04, 0.01, 0.75 (Q12) |
+| Mark | `PunchOutline` | Top right | 0.09, 0.04, 0.01, 0.75 |
 | Linda | `BowArrow` | Bottom left | 0.34, 0.71, 0.91, 0.75 |
 | Lucy | `Fireball` | Bottom right | 0.70, 0.14, 0.14, 0.75 |
 
@@ -140,11 +140,11 @@ Source: `Content/Controllers/PlayerController.prefab` (`UnitsPassByHandler`: 4 e
 9. **Q9.** Catch & Return on `main` bounces the arrow back without the +1 AP refund (`returnMode` BounceBack). Intended?
 10. **Q10.** Duos cost the activator 0 AP, except Mark–Lucy (1), because the partner presets are free. Should every Duo cost the activator 1 AP as designed?
 11. **Q11.** Basic attacks have no cooldown on `main`, so rewards that make a basic attack "ready again" (Sisters' Rivalry, the Footrace, Father's Resolve, Revenge) add nothing. Give basic attacks a cooldown, or change the rewards?
-12. **Q12.** Role colours. The prefabs override the code defaults: John is a dark brown (0.35, 0.24, 0.12) rather than the orange the preview plans and the play check describe; Mark is nearly black (0.09, 0.04, 0.01) rather than green, although D-066 kept Mark's colour at the code default until THJ tested it; Lucy is a dark red rather than pink. Are these the intended colours? Mark's near-black icon may be hard to read on dark tiles.
+12. **Q12.** Answered by THJ (D-091): the prefab role colours are his own edits and stay (John dark brown, Mark near-black, Lucy dark red, Linda at the code default), superseding D-066's note on Mark's and Linda's colours (FR-8).
 
 ## Related
 
-- Decisions: D-008, D-010, D-034 to D-042, D-048; role zones D-063, D-064, D-066, D-067, D-075, D-077, D-080 to D-082, D-084, D-087 to D-089 (D-076 reversed by D-087)
+- Decisions: D-008, D-010, D-034 to D-042, D-048; role zones D-063, D-064, D-066, D-067, D-075, D-077, D-080 to D-082, D-084, D-087 to D-089, D-091 (D-076 reversed by D-087; D-066's colour note superseded by D-091)
 - Plans: [`plans/2026-10-16-ap-points-model.md`](../../plans/2026-10-16-ap-points-model.md); role zones [`plans/2026-10-18-family-role-phase0-1.md`](../../plans/2026-10-18-family-role-phase0-1.md), [`plans/2026-10-19-preview-pass-design.md`](../../plans/2026-10-19-preview-pass-design.md), [`plans/2026-10-19-preview-pass-tech.md`](../../plans/2026-10-19-preview-pass-tech.md)
 - Detail: [`combat-balance.md`](../combat-balance.md) (Linda's damage share), [`player-skill-trees.md`](../player-skill-trees.md) (family tree), [Demo Spec](../demo-spec.md) (Bond)
 - Characters: [John](characters/john.md) · [Linda](characters/linda.md) · [Lucy](characters/lucy.md) · [Mark](characters/mark.md) · [Toba](characters/toba.md)
