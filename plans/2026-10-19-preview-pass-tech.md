@@ -60,6 +60,7 @@ Each kind of grid information is drawn once, from one source, in one visual lang
 
 **C9 Play check and profile (G9).** Verifier with THJ's agreed time, or THJ himself.
 - [ ] Dense board (four Bergsons and enemies on overlapping zones): do the Move frames hide zone icons? If yes, raise the role-zone sorting to between frame and glow (design G9). That is a follow-up, not part of C9.
+- [ ] Multi-cell ghost sources: the helper unions reach over the whole footprint for every walkability mode (C2 review); check a multi-cell unit's ghost if one exists.
 - [ ] A gap map for Linda, John's dash under Shift, Shift on an enemy, the badge hover over and off the board, John's prompt tether, cancel and commit of a John or Mark move.
 
 **All chunks:** compile clean; EditMode suite passes except the known red; reviewer on C2, C3, C4 and C6 (core files); commit messages without private tags (conventions).
@@ -101,3 +102,4 @@ Compile / tests / review (C2, C3, C4, C6) / play check: yes, needs THJ's time (C
 | --- | --- | --- |
 | C1 | `b678aeecc` | fix(preview): share one attack-reach helper for Shift and enemy threat arcs |
 | C1 tests | `e48f2f58d` | test(preview): edit-mode tests for attack reach geometry |
+| C2 | `90a4908a3` | fix(preview): ghost and approach previews use the shared attack reach |
