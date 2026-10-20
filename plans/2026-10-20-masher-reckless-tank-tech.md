@@ -228,7 +228,10 @@ Keep it a partial-class split: `MasherGoblinFactionRoleHandler.Counter.cs` (queu
    - When it is false, skip `abilityStarted` for the answer. Keep `abilityActivationStarted` and `abilityPerformed`, which John's passives need.
    - Per T3(a), register the answer's ability and step in the suppression query, with a check added in Mark's and Linda's role triggers. That check is its own commit (core).
 7. **Announce.** `FactionRoleHandlerBase.Activate` still raises `onFamilyRoleActivated`. `JohnTetherPresenter` hides the tether on any handler (`:139,177`); filter it to Bergson handlers there. This is not core; it's a small fix in the same commit as C4.
-8. **Play-mode reset.** No statics, except the T3(a) suppression query if it's static. That one needs a `ResetPlayModeState()` hooked in `PlayModeStaticReset.Reset()`.
+8. **Base initialization** (C3 review): call `base.Initialize(orchestrator)` and `base.InitializePartially(orchestrator)` from the overrides so `_abilitiesInitialized` is set; this is what removes the "did not initialize its role ability" warning (moved here from C3's acceptance).
+9. **Classify doc comment** (C2 review): name every caller-side exclusion (Pass-by, allied AI units) and define `ownerIsPlayerFaction`.
+10. **Reviewer constraints from C1** (`reports/masher-c1-review.md`): retry when `TryPlayFactionRole` returns false; hold until the last answer's `onComplete`; frame-based or unscaled pump waits; Duo "reachable" uses the same rule as the step.
+11. **Play-mode reset.** No statics, except the T3(a) suppression query if it's static. That one needs a `ResetPlayModeState()` hooked in `PlayModeStaticReset.Reset()`.
 
 Accept: the trigger, timing, Duo, queue, toggle and cap criteria above (play check), and the suite stays green.
 
