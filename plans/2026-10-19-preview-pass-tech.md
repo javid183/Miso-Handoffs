@@ -123,3 +123,4 @@ Compile / tests / review (C2, C3, C4, C6) / play check: yes, needs THJ's time (C
 | Fix1 | `eddb34e7c` | fix(roles): John's tether uses a plain material and draws above its two units |
 | Fix1 | `3cd8bba21` | fix(grid): sword icons show on every tile a multi-tile unit covers |
 | Fix1 | `f5d263743` | fix(preview): a targeted multi-tile unit is marked on every tile it covers |
+| Fix2 | `d1254f7c8` | fix(preview): enemy threat arcs count attacks ready on the enemy's next turn |
