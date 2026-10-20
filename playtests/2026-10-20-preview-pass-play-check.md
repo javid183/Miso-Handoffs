@@ -27,3 +27,9 @@ Branch `thj/preview-improvements` (C1–C8 committed 2026-10-19/20; hashes in `p
 ## Report back
 
 Write what you saw here or in chat. The coordinator files bugs and follow-ups.
+
+## THJ's first results (2026-10-20)
+
+- P2/C8: John's tether arc is not visible at all.
+- P4/C6: the D-064 narrowing (hover under Shift shows only that unit's zone) was better: reverted by D-087.
+- Sword icons don't show on the tiles a multi-tile enemy stands on.
