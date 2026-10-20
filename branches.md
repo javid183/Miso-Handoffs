@@ -30,6 +30,12 @@ Owner: coordinator; THJ approves. `claude-handoff/` doesn't change when the shar
 - Home scene fallback after a merge: take `main`'s scene and re-run the builders (order in `CLAUDE.md`).
 - FTP wins on merge (D-036 to D-042). **[THJ]** Still open: how and when is this expected to merge into `main`?
 
+## `thj/preview-improvements`
+
+- **Purpose:** the grid preview pass (`preview-pass`; design `plans/2026-10-19-preview-pass-design.md`, tech plan `plans/2026-10-19-preview-pass-tech.md`).
+- Branched from `main` @ `5550286dd` on 2026-10-19 (0 ahead, 0 behind at creation). THJ's working branch.
+- Combat resource and AP: same as `main` (FTP, PerUnit).
+
 ## `thj/fr-readability`
 
 **Merged into `main` on 2026-10-19 (fast-forward); kept for history, no new work.** Items scoped to it now count as `main`/`all`.
