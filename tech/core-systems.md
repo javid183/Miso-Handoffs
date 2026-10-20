@@ -54,7 +54,7 @@ There is no damage-info type: a hit is a modifier on the target's HP attribute.
 
 | System | Main files | Why it's core |
 | --- | --- | --- |
-| Level run | `Core/Managers/CombatLevelRunHandler.cs` (incl. its nested `SessionLogs` / `ActionLogEntry`, used in 13 files), `LevelRunHandlerBase.cs` | Turn order, ATB fill, win/loss, end of level |
+| Level run | `Core/Managers/CombatLevelRunHandler.cs` (incl. its nested `SessionLogs` / `ActionLogEntry`, used in 13 files; partial since 2026-10-20 with `CombatLevelRunHandler.TurnSwitchHolds.cs`: public `RegisterTurnSwitchHold` / `ReleaseTurnSwitchHold` / `HasTurnSwitchHolds` and the public nested `TurnSwitchHoldSet`, a 5 s watchdog; `SwitchTurnIE` waits while any hold is registered, D-102), `LevelRunHandlerBase.cs` | Turn order, ATB fill, win/loss, end of level |
 | Combat level *(added in setup)* | `Core/Levels/Runtime/CombatLevel.cs`, `LevelBase.cs` | Singleton for faction relations, the player faction, objectives and the sequence player: 139 `.Instance` calls in 45 files |
 | Objectives and relations *(added in setup)* | `Core/Levels/Runtime/LevelObjectives.cs`, `LevelObjectiveConditions.cs`, `LevelFactionRelations.cs` | Win/lose conditions; ally/enemy checks (`FactionsRelationType` in 42 files) |
 | Faction controllers | `Core/Interactions/Runtime/FactionControllerBase.cs`, `FactionPhaseState.cs`, `PlayerController.cs`, `AIController.cs` | Per-unit turn FSM, AP spending, player input flow |
