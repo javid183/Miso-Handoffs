@@ -140,7 +140,7 @@ Known issues carried over from the Oct 13 runs unless dated otherwise. All scope
 
 ## Done recently
 
-- 2026-10-20: Grid preview pass (`preview-pass`): THJ's notes P1–P7 plus the designer's audit, built in C1–C8 and two rounds of play fixes (about 24 commits, hashes in `plans/2026-10-19-preview-pass-tech.md`; D-076 to D-091). All play-checked by THJ and merged into `main`. GDD FR-8 to FR-13 and CR-37 to CR-43 written; the mirror needs a re-sync for the post-merge status labels. Follow-ups: `GUnit.ShowThreatLineTo` could use `ArcLine` (core); `GridCell.CoverIcon.cs` and the `CoverFist`/`CoverShield` sprites are unused since C7 (delete = Tier 3).
+- 2026-10-20: Grid preview pass (`preview-pass`): THJ's notes P1–P7 plus the designer's audit, built in C1–C8 and two rounds of play fixes (about 24 commits, hashes in `plans/2026-10-19-preview-pass-tech.md`; D-076 to D-091). All play-checked by THJ and merged into `main`. GDD FR-8 to FR-13 and CR-37 to CR-43 written; the mirror needs a re-sync for the post-merge status labels. Follow-ups: `GUnit.ShowThreatLineTo` could use `ArcLine` (core); `GridCell.CoverIcon.cs` and the `CoverFist`/`CoverShield` sprites are unused since C7; THJ keeps them for now (2026-10-20).
 
 - 2026-10-16: Mirror sync to the "Miso Home System" Claude Doc works again from THJ's personal account (ddgsignin): headers of the three tabs and two new Build Log sections synced.
 - 2026-10-16: Claude project "Miso" docs refreshed to the new folder layout (same 8 docs, paths now match `claude-handoff/`; `tech/home-system.md` replaces the Home handoff).
