@@ -2,7 +2,7 @@
 
 Size: M (triage), the items S–M each    Tier: mixed (per item)    Assigned to: coordinator
 Branch: all (code lands on whatever branch THJ picks, see W4)
-Status: waiting on THJ (W1 to W4)
+Status: approved 2026-10-20 (W1 to W4 answered: D-107 to D-111). Queued after the Masher chunks, on a quick-wins branch THJ creates from `main`
 
 ## Why
 
