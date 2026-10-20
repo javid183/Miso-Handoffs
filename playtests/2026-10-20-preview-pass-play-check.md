@@ -37,3 +37,7 @@ Write what you saw here or in chat. The coordinator files bugs and follow-ups.
 ## THJ's second results (2026-10-20)
 
 - Confirmed in play after the fixes (`590f0a3c2`, `eddb34e7c`, `3cd8bba21`, `f5d263743`): the Shift narrowing is back, John's tether arc is visible, and sword icons show on every tile of a multi-tile enemy.
+
+## THJ's final results (2026-10-20)
+
+- THJ played the whole list: every item is confirmed. "On commit, does the old zone flash?": no flash seen, so no fix is needed. The preview pass is done, and THJ is merging `thj/preview-improvements` into `main`.

@@ -32,6 +32,8 @@ Owner: coordinator; THJ approves. `claude-handoff/` doesn't change when the shar
 
 ## `thj/preview-improvements`
 
+**Merged into `main` by THJ on 2026-10-20; kept for history, no new work.** Items scoped to it now count as `all`.
+
 - **Purpose:** the grid preview pass (`preview-pass`; design `plans/2026-10-19-preview-pass-design.md`, tech plan `plans/2026-10-19-preview-pass-tech.md`).
 - Branched from `main` @ `5550286dd` on 2026-10-19 (0 ahead, 0 behind at creation). THJ's working branch.
 - Combat resource and AP: same as `main` (FTP, PerUnit).

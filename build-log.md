@@ -1785,3 +1785,13 @@ Decisions D-087 (D-064 narrowing restored, reversing D-076), D-088 and D-089. Re
 ### Status
 
 Done. The rest of the C9 checklist is not reported yet.
+
+## 2026-10-20 · Grid preview pass closed · `main`
+
+### Verified
+
+- THJ played the whole C9 checklist (`playtests/2026-10-20-preview-pass-play-check.md`). Every item is confirmed; no flash on commit, so the follow-zone hold fix isn't needed. Earlier: threat arcs count next-turn attacks (`d1254f7c8`, D-090), and the role colours stay (D-091).
+
+### Status
+
+Done. THJ merged `thj/preview-improvements` into `main` on 2026-10-20. The GDD labels were updated after the merge; the "Miso — Game Design" mirror needs a re-sync of Family systems and Combat rules.
