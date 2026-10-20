@@ -44,6 +44,7 @@ Each kind of grid information is drawn once, from one source, in one visual lang
 **C6 Focus instead of narrowing (P4, D-076), and the P5 hide (D-080).**
 - [ ] `RoleZoneRules.OwnersToShow` keeps every zone under Shift and reports a focused owner (the hovered Bergson, or the badge-hovered unit). The focused entry draws at full alpha and scale 1.15 in its quadrant; the others are unchanged. This needs per-entry scale and alpha in `RoleZoneLayerSet`/`GridCell.RoleZone.cs` (core partial, additive). EditMode tests for the new rules output.
 - [ ] Selected-unit zone hidden when its cell set equals `AttackReachFrom(unit, basic attack, committed cell)` (computed from the committed cell only, never the ghost). Shift and badge hover still show it. EditMode test of the equality rule as a pure function over cell sets.
+- [ ] Also fold in the C4 review's should-fixes: remove the now-unused usings in `UnitPanelUI.cs`; fix or rename `RoleZoneBadgeHoverTests.AfterExit_BackToSelectedOnly_AndNoFocus` (its first call has no effect).
 - [ ] Role-badge tooltip gains one line when the zone is hidden for that reason. Wording proposed by `miso-narrative` before the build (an established-voice UI line, Tier 2). Placeholder until then: "Same tiles as her attack." (gendered: Linda and Lucy; make it per-unit or neutral per the narrative proposal).
 
 **C7 Follow zones for every Bergson, cover icon = the coverer's quadrant icon (G2 as revised by THJ, D-082; G4).**
@@ -104,3 +105,5 @@ Compile / tests / review (C2, C3, C4, C6) / play check: yes, needs THJ's time (C
 | C1 tests | `e48f2f58d` | test(preview): edit-mode tests for attack reach geometry |
 | C2 | `90a4908a3` | fix(preview): ghost and approach previews use the shared attack reach |
 | C3 | `663a2b1d4` | fix(grid): stop grid hover while the pointer is over the HUD |
+| C4 (a) | `16b33cfac` | feat(events): role badge hover event on the global event bus |
+| C4 (b) | `744cd8fc8` | feat(ui): role badge hover shows the unit's role zone instead of sword icons |
