@@ -2,7 +2,7 @@
 
 Size: L    Tier: 3 (Family Roles UI; three core files)    Assigned to: miso-implementer (one chunk per run)
 Branch: thj/preview-improvements
-Status: waiting on THJ (go-ahead)
+Status: approved 2026-10-19 (D-082; C7 revised); in progress
 
 ## Why
 
@@ -46,8 +46,10 @@ Each kind of grid information is drawn once, from one source, in one visual lang
 - [ ] Selected-unit zone hidden when its cell set equals `AttackReachFrom(unit, basic attack, committed cell)` (computed from the committed cell only, never the ghost). Shift and badge hover still show it. EditMode test of the equality rule as a pure function over cell sets.
 - [ ] Role-badge tooltip gains one line when the zone is hidden for that reason. Wording proposed by `miso-narrative` before the build (an established-voice UI line, Tier 2). Placeholder until then: "Same tiles as her attack." (gendered: Linda and Lucy; make it per-unit or neutral per the narrative proposal).
 
-**C7 Follow zone in ghost style, cover icon = the coverer's quadrant icon (G2, G4).**
-- [ ] During John's or Mark's move preview, the mover's committed zone is hidden and the follow zone draws at alpha 0.5. Restored on cancel, on commit (normal redraw), on death and on turn end.
+**C7 Follow zones for every Bergson, cover icon = the coverer's quadrant icon (G2 as revised by THJ, D-082; G4).**
+- [ ] During any Bergson's move preview (John, Mark, Linda, Lucy), the mover's committed zone is hidden entirely and its zone is drawn from the ghost tile (`GetCellsInRange(origin)`) in the normal zone style (same icon, quadrant, colour and alpha as a committed zone; no faint ghost style, no opaque override).
+- [ ] The D-080 equality rule applies to the follow zone: if it equals `AttackReachFrom(unit, basic attack, ghost cell)`, it is not drawn (the ghost's sword icons already show those tiles). Today that hides Linda's and Lucy's follow zone. Use the same pure equality function as C6.
+- [ ] Other Bergsons' zones are unaffected (shown only under Shift, as before). The mover's committed zone comes back on cancel, on commit (normal redraw), on death and on turn end.
 - [ ] For other movers, the cover indicator on the destination is the coverer's own zone icon in the coverer's quadrant at full alpha (John TL, Mark TR, via `SetRoleZone` with a cover owner id per coverer), replacing `SetCoverIcons`. D-067's strict fist rule is unchanged. `GridCell.CoverIcon.cs` falls out of use; leave the file and remove its calls (deleting it is a separate cleanup THJ can OK later).
 
 **C8 Tether arc (P2, D-081).**
