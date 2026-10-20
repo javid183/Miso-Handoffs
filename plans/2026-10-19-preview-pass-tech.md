@@ -50,6 +50,7 @@ Each kind of grid information is drawn once, from one source, in one visual lang
 **C7 Follow zones for every Bergson, cover icon = the coverer's quadrant icon (G2 as revised by THJ, D-082; G4).**
 - [ ] During any Bergson's move preview (John, Mark, Linda, Lucy), the mover's committed zone is hidden entirely and its zone is drawn from the ghost tile (`GetCellsInRange(origin)`) in the normal zone style (same icon, quadrant, colour and alpha as a committed zone; no faint ghost style, no opaque override).
 - [ ] The D-080 equality rule applies to the follow zone: if it equals `AttackReachFrom(unit, basic attack, ghost cell)`, it is not drawn (the ghost's sword icons already show those tiles). Today that hides Linda's and Lucy's follow zone. Use the same pure equality function as C6.
+- [ ] Fold in the C6 review's should-fixes as their own small commit: guard `RoleZoneAttackMatch.ZoneEqualsBasicAttack(GUnit)` to player-faction units (the tooltip must not fire for enemies such as the Masher Goblin); return false when the zone minus the footprint is empty.
 - [ ] Other Bergsons' zones are unaffected (shown only under Shift, as before). The mover's committed zone comes back on cancel, on commit (normal redraw), on death and on turn end.
 - [ ] For other movers, the cover indicator on the destination is the coverer's own zone icon in the coverer's quadrant at full alpha (John TL, Mark TR, via `SetRoleZone` with a cover owner id per coverer), replacing `SetCoverIcons`. D-067's strict fist rule is unchanged. `GridCell.CoverIcon.cs` falls out of use; leave the file and remove its calls (deleting it is a separate cleanup THJ can OK later).
 
@@ -109,3 +110,7 @@ Compile / tests / review (C2, C3, C4, C6) / play check: yes, needs THJ's time (C
 | C4 (b) | `744cd8fc8` | feat(ui): role badge hover shows the unit's role zone instead of sword icons |
 | C5 (a) | `ce104f51e` | feat(grid): split Shift preview tints into Bergson and enemy kinds |
 | C5 (b) | `3167473b4` | feat(preview): Shift shows current-tile reach for Bergsons and allies and a danger zone for enemies |
+| C6 (a) | `08740ac52` | feat(grid): per-entry scale for role-zone icons, kept inside their quadrant |
+| C6 (b) | `b162f50be` | feat(roles): Shift keeps every role zone and enlarges the hovered one; hide a zone that matches the basic attack |
+| C6 (c) | `1f7480caa` | feat(ui): role badge tooltip says when the zone matches the basic attack |
+| C6 (d) | `28fbdafd1` | chore(ui): remove unused usings from UnitPanelUI |
