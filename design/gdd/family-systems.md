@@ -1,6 +1,6 @@
 # Family systems
 
-Owner: game designer (THJ approves) · Scope: `all` · Checked against assets: `main` @ `92853a5a9`, 2026-10-16 (ability presets read from the live project) · Mirror: Claude Doc "Miso — Game Design", tab Family systems · Up: [Overview](overview.md)
+Owner: game designer (THJ approves) · Scope: `all` · Checked against assets: `main` @ `92853a5a9`, 2026-10-16 (ability presets read from the live project); [Role zones on the grid](#role-zones-on-the-grid) read from `thj/preview-improvements` @ `f5d263743`, 2026-10-20 · Mirror: Claude Doc "Miso — Game Design", tab Family systems · Up: [Overview](overview.md)
 
 The family fights as a family through four systems. Family Roles react on their own during anyone's turn. Duos are paired abilities the player chooses and pays FTP for. Synergies fire automatically when two members line up. Pass-by lets members tag each other while moving. On `thj/home-test`, Bond earned at Home unlocks some of them.
 
@@ -29,6 +29,42 @@ The family fights as a family through four systems. Family Roles react on their 
 | Mark | An enemy's action hits a family member | He strikes back with Fist Blitz (8 × damage) if the attacker is within 2 cells | 1 | Built, differs | No limit yet; check whether the cooldown already gives 1 (D-042) |
 
 Source: `Features/Player/<Name>/Scripts/<Name>FactionRoleHandler.cs`, `Core/Interactions/Runtime/PlayerController.cs` (prompt, pause, charge on success); the role component on `Features/Player/<Name>/Prefabs/Unit_<Name>.prefab` (cost, limit, QTE, John's `receivedDamageModifier`, Lucy's blacklist). Role presets under `Resources/UnitSpecific/Player/`: `John/FactionRole/John_Ability_FR_Shield.asset` (radius 2, held to 1–2 whatever its upgrade rows say), `Linda/Faction Role/Linda_Ability_FactionRole.asset`, `Lucy/FactionRole/Lucy_Ability_FactionRole.asset`; Mark's role uses his Fist Blitz preset. Linda's trigger is `OnUnitEndMoving` (`LindaFactionRoleHandler`).
+
+### Role zones on the grid
+
+A role zone is the set of tiles where a Bergson's Family Role can answer (each handler's own range). The zones are display only: nothing here changes when a role fires. "Built on the branch" means built on `thj/preview-improvements`, not yet merged to `main` ([Branch differences](#branch-differences)). Of those, THJ has confirmed in play only the items marked "play-checked" (the D-087 and D-088 fixes); the rest wait for the C9 play check ([`playtests/2026-10-20-preview-pass-play-check.md`](../../playtests/2026-10-20-preview-pass-play-check.md)).
+
+- **FR-8.** Each Bergson's zone is drawn with its own icon, tinted with its role colour, in a fixed quadrant of every tile in the zone (of the footprint box when a multi-tile unit stands there), so four zones on one tile never overlap (D-075). Icon, quadrant and colour are set per unit on its role handler (table below); `showRoleZone` off hides that unit's zone, its cover marker and its tether (D-063, D-067). *Built*
+- **FR-9.** When a zone is shown (D-064, D-077, D-087):
+  - the selected Bergson's zone, except as FR-10 says;
+  - holding Shift: every living Bergson's zone;
+  - Shift and hovering a Bergson that has a zone: only that zone. Hovering Toba, an enemy or an empty tile keeps every zone;
+  - hovering a unit's role badge (on the unit panel's Family Role icon): that unit's zone, drawn like the others, whether it is selected or not, with or without Shift.
+
+  *Built.* Shift narrowing: on the branch, play-checked (D-087 restores `main`'s rule after D-076 was tried). Badge hover: on the branch, not play-checked.
+- **FR-10.** Without Shift, the selected Bergson's zone is not drawn when it is the same tiles as its basic-attack reach from the tile it stands on, leaving its own tiles out of the comparison (D-080). Today that hides Linda's and Lucy's. A zone that is only the unit's own tiles is never hidden, and the check applies to player units only. Shift and the badge hover still show it. While the check holds, the role badge tooltip adds the line "Same tiles as the basic attack; Shift shows them." (D-084). It is checked live, so if a run upgrade ever makes the zone differ from the attack, the zone comes back by itself. *Built on the branch, not play-checked*
+- **FR-11.** Follow zone: while the player previews a move for any Bergson, its current zone is hidden and its zone is drawn from the ghost tile instead, in the normal style (D-082). The follow zone is skipped when it equals the basic-attack reach from the ghost tile (the FR-10 test), because the ghost's sword icons already show those tiles ([Combat rules](combat-rules.md) CR-37), so Linda and Lucy show no zone during a move preview. Other Bergsons' zones don't move. The current zone comes back on cancel, commit, death and turn end. *Built on the branch, not play-checked* (to check in play: whether the old zone flashes during the walk after a commit)
+- **FR-12.** Cover marker: while the player previews a move for any other unit, the destination tile shows the coverer's own zone icon in its own quadrant, at full opacity (D-082): John's shield if the destination is in John's zone, Mark's fist only if every tile a melee attacker could hit the destination from lies in Mark's zone (D-067: ranged attackers don't count, and with no such tile there is no fist). Both are measured from where John and Mark stand now. A unit never covers itself. *Built on the branch, not play-checked*
+- **FR-13.** John's tether: while John's role prompt is up (the game is paused), a thin arc in his role colour runs from John's head to the head of each ally he would cover, with a small shield (his zone icon) at the ally's end, drawn just above both units' sprites (D-081, D-088, D-089). It goes when the prompt ends (press, decline or expiry); an ally who dies or leaves the grid loses its arc. Values below. *Built on the branch.* Visible: play-checked; the cap over tall units: not yet.
+
+| Bergson | Icon | Quadrant | Colour (RGBA) |
+| --- | --- | --- | --- |
+| John | `ShieldOutline` | Top left | 0.35, 0.24, 0.12, 0.75 |
+| Mark | `PunchOutline` | Top right | 0.09, 0.04, 0.01, 0.75 (Q12) |
+| Linda | `BowArrow` | Bottom left | 0.34, 0.71, 0.91, 0.75 |
+| Lucy | `Fireball` | Bottom right | 0.70, 0.14, 0.14, 0.75 |
+
+| Tether value | Value |
+| --- | --- |
+| Width | 0.025 world units |
+| Opacity | 0.85 |
+| Arc | Quadratic curve, 16 samples; control height 1 + 0.15 per tile between John and the ally (radial), so the peak is half that above the chord |
+| Anchors | Each unit's head (its `ThreatLineRenderer` point, 0.8 above the pivot) |
+| Look | Plain unlit material (`Sprites/Default`); the threat arc's `M_LineShine` turned John's colour near-black (D-088) |
+| Draw order | The units' sorting layer, one above the highest sprite of John and that ally; the cap one above the line |
+| Cap | John's zone icon, 0.25 world units wide |
+
+Source: `Unit_<Name>.prefab` (role handler: `roleZoneSprite`, `roleZoneSlot`, `roleZoneColor`, `showRoleZone`; the code defaults in `<Name>FactionRoleHandler.cs` differ for John, Mark and Lucy), `Resources/GridOverlays/*.png`, `Core/Systems/RoleZoneSystem/Runtime/` (`RoleZoneRules.cs`, `RoleZonePresenter.cs`, `RoleZoneAttackMatch.cs`, `MovePreviewCoverPresenter.cs`, `CoverIconRules.cs`, `JohnTetherPresenter.cs`), `Core/Systems/GridSystem/Runtime/GridCell.RoleZone.cs`, `Features/UI/Panels/Scripts/RoleBadgeState.cs` and `UnitPanelUI.RoleBadge.cs`. How it is wired: [`tech/combat-architecture.md`](../../tech/combat-architecture.md) "Grid previews".
 
 ## Duos
 
@@ -89,6 +125,7 @@ Source: `Content/Controllers/PlayerController.prefab` (`UnitsPassByHandler`: 4 e
 
 - **On `main`:** no Bond locks, so Sisters' Rivalry, Command Shield Dash and the Linda–Toba Duo are open from the start. Roles pay 1 FTP; before `92853a5a9` they paid 1 ATB step.
 - **On `thj/home-test`:** roles pay 1 FTP until the role limits are built on `main` and merged (D-042). Bond locks are active (`HomeLockRules`).
+- **On `main` (until `thj/preview-improvements` merges):** the role badge hover draws the zone as sword icons instead of FR-9's zone icons; no zone is hidden for matching the attack (FR-10); only John and Mark have a follow zone, drawn opaque, with their current zone still showing (FR-11); the cover markers are separate shield and fist icons in the lower left and lower right instead of FR-12's quadrant icons; and the tether is a straight, opaque line on the Overlay layer (FR-13).
 
 ## Open questions
 
@@ -103,11 +140,12 @@ Source: `Content/Controllers/PlayerController.prefab` (`UnitsPassByHandler`: 4 e
 9. **Q9.** Catch & Return on `main` bounces the arrow back without the +1 AP refund (`returnMode` BounceBack). Intended?
 10. **Q10.** Duos cost the activator 0 AP, except Mark–Lucy (1), because the partner presets are free. Should every Duo cost the activator 1 AP as designed?
 11. **Q11.** Basic attacks have no cooldown on `main`, so rewards that make a basic attack "ready again" (Sisters' Rivalry, the Footrace, Father's Resolve, Revenge) add nothing. Give basic attacks a cooldown, or change the rewards?
+12. **Q12.** Role colours. The prefabs override the code defaults: John is a dark brown (0.35, 0.24, 0.12) rather than the orange the preview plans and the play check describe; Mark is nearly black (0.09, 0.04, 0.01) rather than green, although D-066 kept Mark's colour at the code default until THJ tested it; Lucy is a dark red rather than pink. Are these the intended colours? Mark's near-black icon may be hard to read on dark tiles.
 
 ## Related
 
-- Decisions: D-008, D-010, D-034 to D-042, D-048
-- Plan: [`plans/2026-10-16-ap-points-model.md`](../../plans/2026-10-16-ap-points-model.md)
+- Decisions: D-008, D-010, D-034 to D-042, D-048; role zones D-063, D-064, D-066, D-067, D-075, D-077, D-080 to D-082, D-084, D-087 to D-089 (D-076 reversed by D-087)
+- Plans: [`plans/2026-10-16-ap-points-model.md`](../../plans/2026-10-16-ap-points-model.md); role zones [`plans/2026-10-18-family-role-phase0-1.md`](../../plans/2026-10-18-family-role-phase0-1.md), [`plans/2026-10-19-preview-pass-design.md`](../../plans/2026-10-19-preview-pass-design.md), [`plans/2026-10-19-preview-pass-tech.md`](../../plans/2026-10-19-preview-pass-tech.md)
 - Detail: [`combat-balance.md`](../combat-balance.md) (Linda's damage share), [`player-skill-trees.md`](../player-skill-trees.md) (family tree), [Demo Spec](../demo-spec.md) (Bond)
 - Characters: [John](characters/john.md) · [Linda](characters/linda.md) · [Lucy](characters/lucy.md) · [Mark](characters/mark.md) · [Toba](characters/toba.md)
 - Code: [`tech/mechanics-brief.md`](../../tech/mechanics-brief.md) §0 and §3
