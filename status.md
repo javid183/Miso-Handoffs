@@ -35,6 +35,10 @@ Owner: coordinator. Every item has a scope: `all` or a branch. Started 2026-10-1
 - How and when `thj/home-test` merges into `main` (`branches.md`). FTP wins (D-036 to D-042).
 - Fill the "[THJ] To add" part of `vision.md`.
 
+**Narrative (Q1/Q2 proposals, 2026-10-20)** — scope all; all Tier 3; details `reports/narrative-q1-q2-proposals.md`
+
+- Q2-1 reading (Lucy and John share the concern), masked man setup + mask reason + "Masked Stranger" plate, thief line, Grandma Margaret alive or dead, why they go home after A Wolf's Blood, forms of address, forest name, Q1 M1/M2 slice and its four S8 beats.
+
 **Home (from the handoff's open decisions)** — scope `thj/home-test`
 
 - Fireside payoff: what else a pair can earn (Demo Spec open questions).
