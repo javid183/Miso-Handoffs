@@ -13,3 +13,7 @@ Should fix
 3. Tether filter (`JohnTetherPresenter.cs:178-183`): use `handler.Unit.Faction == CombatLevel.Instance.PlayerFaction` instead of a closed type list.
 
 Notes: Duo "reachable" reading is THJ's (`IsReachable` vs `slamsAfter`); enemy-turn answer may wait until the current unit's last chained action (watch in play, plus C1 (d)); suppression tests cover the registry only; `counterCanProvokeFamilyRoles` isn't serialized into the prefab yet (defaults true; expect noise on next save); preview still old until C5. Docs: core-systems Family Roles row gets `FactionRoleProvocationSuppression`; branches.md: home-test needs C1–C4.
+
+## Re-review after revisions 1 and 2 (2026-10-20)
+
+Verdict: **APPROVE**. Duo credit fixed (`MasherDuoCredit.cs`, 8 tests); suppression released after the idle settle (edge narrower than reported: only the Masher's own walk can stay listed, toggle-off only, clears at next settle; watch in play); tether faction filter fine; D-116 guard minimal, no-op for family handlers, swap removed; D-117 `SlamsAfterStep`/`IsReachable` correct with tests. Three commits: file lists match (7 + 1 + 14), order suppression → null guard → rewrite, each compiles alone; Packages/ProjectSettings excluded. Carry-overs: prefab will gain `counterCanProvokeFamilyRoles` on next save; enemy-turn answer may wait for the unit's last chained action (play).
