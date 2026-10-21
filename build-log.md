@@ -1795,3 +1795,24 @@ Done. The rest of the C9 checklist is not reported yet.
 ### Status
 
 Done. THJ merged `thj/preview-improvements` into `main` on 2026-10-20. The GDD labels were updated after the merge; the "Miso — Game Design" mirror needs a re-sync of Family systems and Combat rules.
+
+## 2026-10-20 · Masher reckless tank (`masher-tweak`)
+
+**Built.** The Masher Goblin's counter rework (design `plans/2026-10-20-masher-reckless-tank-design.md`, tech `plans/2026-10-20-masher-reckless-tank-tech.md`, D-092 to D-118), in five chunks and ten commits:
+- C1, core turn flow: the AI waits on its own action and replans if one started meanwhile (`08ca1d819`); turn-switch holds with a watchdog (`11f64c19f`).
+- C2: pure rules for aim, step, provokers, the Duo partner and the cap of 10, with tests (`212638ad2`).
+- C3, data: the counter is a copy of the slam, both slams target units only, and the prefab has one counter handler (`e409b2c94`); one AI catalog line (`519e05d9e`).
+- C4: the role-suppression check in Mark and Linda (`7556630a6`); a null guard on the base role handler's super-time ability (`d5402d48d`); the handler rewrite: queued answers after the whole action, reactions in any phase, Duo credit, Crippled, the cap, the toggle, and the tether filter (`9e6d50f51`).
+- C5: the `PlayerController` lookups made public (`1a0936a28`); the hover preview now follows the real answer (`256bcade6`).
+
+**Verified.** Each chunk: clean compile, and EditMode green except the known red `AIRegressionTest.Baseline_MatchesCurrentAI` (356/357 at C5). Reviewer APPROVE on every chunk, after FIX rounds on C1, C4 and C5.
+
+**Not verified.** Everything in game. Checklist: `playtests/2026-10-20-masher-play-check.md`.
+
+**Findings.**
+- John's relay of Masher answers may never have worked.
+- The Masher panel now shows a Family Role badge; THJ to keep or hide it.
+- The Unity MCP tools are fixed at session start. `/mcp` reconnects reach subagents launched after the reconnect.
+
+**Status.** Waiting on THJ's play session. `thj/home-test` needs all ten commits when it takes this work.
+

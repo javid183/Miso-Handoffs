@@ -2,7 +2,7 @@
 
 Size: L    Tier: 3 (core: Masher handler, AI controller, level run)    Assigned to: miso-implementer (opus for C1, C3, C4; sonnet for C2, C5)
 Branch: masher-tweak (THJ's branch from `main`; merges to `main` later)
-Status: approved 2026-10-20 (T1 to T4 all (a): D-101 to D-104); C1–C4 done; C5 in progress
+Status: approved 2026-10-20 (T1 to T4 all (a): D-101 to D-104); C1–C5 built and committed; play check pending (THJ)
 
 ## Why
 
@@ -295,3 +295,5 @@ Accept: the preview criteria above, in play.
 - C4 (role suppression query + Mark/Linda checks, D-103): `7556630a6` (2026-10-20)
 - C4 (`FactionRoleHandlerBase` super-time null guard, D-116): `d5402d48d` (2026-10-20)
 - C4 (handler rewrite, queue, Duo credit, tether filter): `9e6d50f51` (2026-10-20)
+- C5 (PlayerController lookups public, D-105): `1a0936a28` (2026-10-20)
+- C5 (Masher hover preview): `256bcade6` (2026-10-20)
