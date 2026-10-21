@@ -47,4 +47,5 @@ Add or update EditMode tests for logic you change when the code is testable outs
 
 - Run any git write command (add, commit, stash, checkout, switch, merge, reset, ...). Read-only git (`status`, `diff`, `log`, `show`) is fine; the coordinator proposes commits to THJ.
 - Edit `claude-handoff/` docs other than your report.
+- Put decision, plan, chunk or playtest IDs (`D-125`, `B4`, `C3`, `Q7`, `J-A`, ...) in code comments, tooltips, log messages or test names. Write the reason in plain words instead; the IDs belong in your report.
 - Start a Play session that takes over THJ's editor unless the coordinator says THJ agreed to it.

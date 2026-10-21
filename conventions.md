@@ -19,6 +19,7 @@ Owner: coordinator; THJ approves changes. Code and file naming for Miso. **Start
 - **Events** go through `GlobalEventBus` where a system-wide event exists.
 - **Editor tools** live in `Editor/` folders and appear under the `Tools/` menu.
 - **Non-trivial asset edits** go through a one-off editor script, not hand-edited YAML.
+- **No private IDs in code.** Comments, tooltips, log messages, test names and commit messages in the shared repo never cite decision, plan, chunk or playtest IDs (`D-125`, `B4`, `C3`, `Q7`, `J-A`, `R3b`, ...). Only THJ can decode them. Say in plain words what the code does and why. The IDs stay in `claude-handoff/` (plans, reports, decisions, build log). THJ, 2026-10-21.
 
 ## Data naming
 

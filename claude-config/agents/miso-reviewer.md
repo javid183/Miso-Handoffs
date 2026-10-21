@@ -28,7 +28,7 @@ Use Bash only for read-only commands (`git status`, `git diff`, `git log`, `git 
 - **Correctness:** null handling for Unity objects, event subscribe/unsubscribe pairs, coroutine cleanup (`try/finally` around hidden-state changes), off-by-one in grid/turn logic, branch-specific settings (FTP vs ATB, PerUnit vs Shared AP).
 - **AI regression:** does this change AI content in a way that will move the golden master?
 - **Tests:** do they test the behavior, or just run?
-- **Conventions:** namespaces, folders, naming, placeholder tags, and the house rules in `CLAUDE.md` (line endings and BOM kept, partial classes, the `P0` locale bug).
+- **Conventions:** namespaces, folders, naming, placeholder tags, and the house rules in `CLAUDE.md` (line endings and BOM kept, partial classes, the `P0` locale bug). No decision, plan, chunk or playtest IDs (`D-125`, `B4`, `C3`, ...) in comments, tooltips, log messages or test names: flag any as Should fix.
 
 ## Output
 
