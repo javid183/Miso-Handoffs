@@ -2,7 +2,7 @@
 
 Size: M    Tier: 3 (core: Family Roles, Effects)    Assigned to: miso-implementer (opus)
 Branch: masher-tweak (found in the Masher play check; project-wide rule, so `main` gets it on merge)
-Status: waiting on THJ (J1 to J3)
+Status: approved 2026-10-20 (J1 (i-a), J2 yes, J3 yes: D-123 to D-125); starts after the play fixes (flash, ghost)
 
 ## Why
 
