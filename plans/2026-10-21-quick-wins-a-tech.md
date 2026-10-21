@@ -2,7 +2,7 @@
 
 Size: M    Tier: mixed (per chunk; questions W5 to W8 below)    Assigned to: miso-implementer (one chunk per run)
 Branch: all (built on a `quick-wins` branch THJ creates from `main` @ `df58c4c0c`, D-111)
-Status: waiting on THJ (W5 to W8)
+Status: waiting on THJ (W8: shield animation approach); W5 to W7 answered (D-130 to D-132)
 
 ## Why
 
@@ -14,14 +14,14 @@ Seven small, independent fixes, each its own chunk and commit: one-click cancel,
 
 ## Acceptance criteria
 
-- [ ] **Q9:** with a unit selected and an ability armed, one right-click returns to unit selection with no range shown. During multishot target picking, a right-click removes the last picked target (if W5 = a). Right-click does nothing during a QTE, a Family Role prompt, the level intro, or while another faction is acting.
+- [ ] **Q9:** with a unit selected and an ability armed, one right-click returns to unit selection with no range shown. During multishot target picking, a right-click removes the last picked target (D-130). Right-click does nothing during a QTE, a Family Role prompt, the level intro, or while another faction is acting.
 - [ ] **Q10:** while picking targets for any multi-target ability (Lucy's Primary Attack, Mark–Lucy Duos, Dom's Swap, Mark's Command), a label over the counter reads "Target n/N" (n = the target being picked next, N = required count); for Lucy, N equals her orb count at the ability's level (2 to 7). The label updates on pick and undo and hides with the pips.
 - [ ] **Q22:** after the objectives panel folds, a one-line summary stays visible showing the first objective that is not yet satisfied; hovering still expands the full list; the line is hidden while expanded and when every objective is satisfied.
 - [ ] **Q12:** while John has `Status.ShieldUp` and is idle, he plays the shield-idle pose (the `John - Ability - InStand - *` sheets, D-109) facing the right way in all three directions; when the shield ends he returns to the normal idle at his next idle. Other animations (attacks, hit, walk) are unchanged and still return to the right idle. No new animator transitions or parameters.
 - [ ] **Q17:** every enemy unit's idle starts at a spread-out phase (no two neighbours in lockstep at level start) and runs at a small per-unit speed variance (±7 %, constant per unit). Players are unchanged. Pause/Resume and the QTE pause still freeze and restore the speed correctly.
-- [ ] **Q15:** Mark's hit sound is John's hit (`A_SFX_John_Hit`). The other Lucy SFX on Mark are handled per W7.
+- [ ] **Q15:** no Lucy sound plays on Mark: hit = `A_SFX_John_Hit`, Command and Cleanse use John's sounds, Walk keeps only footsteps (D-132).
 - [ ] **Q14 (b):** the two shared Workshop items (`Equipment_Shin Armor`, `Equipment_Vitality Brooch`) no longer appear in the Workshop on a fresh save.
-- [ ] **Q14 (a):** per W6.
+- [ ] **Q14 (a):** after M1 level 2 (`Level1C1-2`) ends, the grid stays faded out through the end of that level; the next level shows it as usual (D-131).
 - [ ] Compile clean; EditMode suite green except `AIRegressionTest.Baseline_MatchesCurrentAI` (unchanged, not re-baselined).
 
 ## Scope
@@ -43,7 +43,7 @@ Chunks, riskiest first. One implementer run and one commit each. Paths under `mi
 
 - `Core/Interactions/Runtime/PlayerController.cs:117`: replace `_inputController.OnCancel += () => GoBackToPreviousState();` with a named `OnCancelInput()` handler (subscribe/unsubscribe symmetrically).
 - Early return when any of: `IntroductionInProgress`, `QuickTimeEventHandler.IsEventActive`, `PhaseData.IsInProgress`, `!_reactiveInterrupt && OtherFactionActionInProgress()`.
-- If W5 = a and the current state is `TargetSelectionState` with `TargetCells.Count > 0`: one `GoBackToPreviousState()` (undo the last pick). Otherwise `while (GoBackToPreviousState()) ;` (the existing full-deselect pattern, e.g. `:564`), which stops at `UnitSelectionState` (its `GetPreviousState` is null).
+- (D-130) If the current state is `TargetSelectionState` with `TargetCells.Count > 0`: one `GoBackToPreviousState()` (undo the last pick). Otherwise `while (GoBackToPreviousState()) ;` (the existing full-deselect pattern, e.g. `:564`), which stops at `UnitSelectionState` (its `GetPreviousState` is null).
 - Put the decision in a small pure static helper (e.g. `CancelInputRules.Decide(bool blocked, bool pickingWithTargets) → None | StepOnce | ToUnitSelection`) with EditMode tests; no state in it.
 - Check by reading: the reactive-interrupt path (`:776-780`), the approach-attack pending fields cleared by the existing per-state `Cancel()`, and `TakeActionState.CancelCondition = false` (mid-action cancel stays a no-op).
 
@@ -77,15 +77,15 @@ Follows THJ's rule: states are played by name through `EntityAnimationHandler`; 
 ### C6. Q15 Mark's hit sound (sonnet; data)
 
 - `Features/Player/Mark/Prefabs/Unit_Mark.prefab:2412`: `A_SFX_Lucy_Hit` → `A_SFX_John_Hit` (the HP `onValueDecreased` PlaySFX call).
-- Per W7: the other three Lucy IDs on Mark (`:2504` `A_SFX_Lucy_FireShoot` on Walk, `:2528` `A_SFX_Lucy_Decoy` on Command, `:2532` `A_SFX_Lucy_Dedication` on Cleanse).
+- D-132: `:2532` `A_SFX_Lucy_Dedication` (Cleanse, ability [4]) → the ID John's own Cleanse slot uses (read `Unit_John.prefab`; it has `A_SFX_John_Dedication` and `A_SFX_Generic_Cleanse` on its Cleanse-family slots, pick the one on `CleanseAbility.asset`); `:2528` `A_SFX_Lucy_Decoy` (Command) → `A_SFX_John_Attack`; `:2504` `A_SFX_Lucy_FireShoot` (Walk event 0, before three `A_SFX_Generic_Footstep`) → removed if John's Walk has no start sound, else John's. Report the final mapping (Tier 2).
 
 ### C7. Q14 (b) Workshop shared items (sonnet; data)
 
 - `Resources/Unit Equipments/Shared/Equipment_Shin Armor.asset` and `Equipment_Vitality Brooch.asset`: `equipmentState: 2` → `0` (Hidden). `WorkshopPanelUI.cs:129-133` already filters Hidden. Saved states override the asset (`EquipmentManager.GetState`), so an existing save that owns them still shows them: acceptable for a demo cleanup; say so in the report.
 
-### C8. Q14 (a) M1 grid fade (sonnet; data) — waits on W6
+### C8. Q14 (a) M1 grid fade (sonnet; data)
 
-Correction: `FadeOutGridSequence.asset` is not unused; every `IntroCutscene` fades the grid out and every `OutroCutscene` fades it back in. M1's second level is `Level1C1-2` ("John's Map (2/3)"): start = [IntroCutscene, Start_Dialog, Start_Camera, `Level1C1-2_TutorialSequence`, OutroCutscene]; end = [IntroCutscene, End_Dialog, OutroCutscene]. Asset-only edit, shape per W6.
+Correction: `FadeOutGridSequence.asset` is not unused; every `IntroCutscene` fades the grid out and every `OutroCutscene` fades it back in. M1's second level is `Level1C1-2` ("John's Map (2/3)"): start = [IntroCutscene, Start_Dialog, Start_Camera, `Level1C1-2_TutorialSequence`, OutroCutscene]; end = [IntroCutscene, End_Dialog, OutroCutscene]. Asset-only edit (D-131): in `Resources/Sequences/Mission 1/Level1C1/Level1C1-2_End_SequenctialSequence.asset`, replace the final `OutroCutscene` with a sequence that restores input and the HUD but not the grid (a new `OutroCutsceneNoGrid` = [EnablePlayerInput, ShowHUD], or the two entries inline). Check the next level's own intro/outro still fades the grid back in, and that nothing between level end and the next level needs the grid.
 
 ## Risks
 
@@ -107,9 +107,7 @@ Correction: `FadeOutGridSequence.asset` is not unused; every `IntroCutscene` fad
 
 ## Questions for THJ
 
-- **W5 (Q9):** multishot: should a right-click while picking targets undo the last target (a) or always fully deselect (b)?
-- **W6 (Q14 a):** what exactly should "hide the grid after the level 2 tutorial" do, now that every cutscene already fades the grid out and back in?
-- **W7 (Q15):** the other Lucy sounds on Mark (walk, Command, Cleanse): clear them (silent until Mark audio), swap to John's equivalents where they exist, or leave?
+- W5 to W7: answered 2026-10-21 (D-130 to D-132).
 - **W8 (Q12):** confirm the approach: a new `IdleShield` state played by name via an additive `EntityAnimationHandler.SetIdleState`, no transitions.
 
 ## Commit log
