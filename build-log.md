@@ -1816,3 +1816,11 @@ Done. THJ merged `thj/preview-improvements` into `main` on 2026-10-20. The GDD l
 
 **Status.** Waiting on THJ's play session. `thj/home-test` needs all ten commits when it takes this work.
 
+
+## 2026-10-21: Quick wins bundle A, C1 (one-click cancel)
+
+- **Built:** `PlayerController.OnCancelInput()` replaces the one-step right-click; `CancelInputRules` (pure static) decides: undo the last picked target while targets are picked, else deselect fully; ignored during the level intro, a QTE or Family Role prompt, the unit's own action and while another faction acts (allowed in a reactive interrupt). 10 EditMode tests. Commit `64fbabef5` on `thj/quick-wins`. Plan `plans/2026-10-21-quick-wins-a-tech.md`, D-130.
+- **Verified:** reviewer APPROVE (should-fix applied); THJ: compile clean, EditMode suite passed (known red only), played and it works.
+- **Not verified:** nothing open for C1.
+- **Findings:** undoing the only picked target drops back to unit selection with the move range (existing behaviour, kept).
+- **Status:** C1 done; C2 next.

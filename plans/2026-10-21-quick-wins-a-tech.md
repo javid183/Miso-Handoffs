@@ -113,4 +113,4 @@ Correction: `FadeOutGridSequence.asset` is not unused; every `IntroCutscene` fad
 
 ## Commit log
 
-(filled as chunks land)
+- C1 (Q9 cancel): `64fbabef5` (2026-10-21). Review APPROVE (`reports/qw-a-c1-review.md`, should-fix applied); compile clean, EditMode passed (known red only) and play-checked by THJ.
