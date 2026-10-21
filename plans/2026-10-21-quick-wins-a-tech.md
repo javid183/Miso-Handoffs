@@ -1,8 +1,8 @@
 # Quick wins bundle A: plain fixes (tech plan)
 
 Size: M    Tier: mixed (per chunk; questions W5 to W8 below)    Assigned to: miso-implementer (one chunk per run)
-Branch: all (built on a `quick-wins` branch THJ creates from `main` @ `df58c4c0c`, D-111)
-Status: waiting on THJ (W8: shield animation approach); W5 to W7 answered (D-130 to D-132)
+Branch: all (built on `thj/quick-wins`, created by THJ from `main`, D-111)
+Status: approved 2026-10-21 (W5 to W8: D-130 to D-133); in progress
 
 ## Why
 
@@ -17,7 +17,7 @@ Seven small, independent fixes, each its own chunk and commit: one-click cancel,
 - [ ] **Q9:** with a unit selected and an ability armed, one right-click returns to unit selection with no range shown. During multishot target picking, a right-click removes the last picked target (D-130). Right-click does nothing during a QTE, a Family Role prompt, the level intro, or while another faction is acting.
 - [ ] **Q10:** while picking targets for any multi-target ability (Lucy's Primary Attack, Mark–Lucy Duos, Dom's Swap, Mark's Command), a label over the counter reads "Target n/N" (n = the target being picked next, N = required count); for Lucy, N equals her orb count at the ability's level (2 to 7). The label updates on pick and undo and hides with the pips.
 - [ ] **Q22:** after the objectives panel folds, a one-line summary stays visible showing the first objective that is not yet satisfied; hovering still expands the full list; the line is hidden while expanded and when every objective is satisfied.
-- [ ] **Q12:** while John has `Status.ShieldUp` and is idle, he plays the shield-idle pose (the `John - Ability - InStand - *` sheets, D-109) facing the right way in all three directions; when the shield ends he returns to the normal idle at his next idle. Other animations (attacks, hit, walk) are unchanged and still return to the right idle. No new animator transitions or parameters.
+- [ ] **Q12 (D-133):** while John has `Status.ShieldUp`, his idle, run and primary attack play `Idle_Shield`, `Run_Shield` and `PrimaryAttack_Shield`, facing the right way in all three directions; a shield gained while idle swaps the pose at once, otherwise at the next animation; when the shield ends he goes back to the normal states. States without a `_Shield` version (hit, Shield Dash, ...) play as before. The primary attack's hit still lands on its activation frame (no freeze). No new animator transitions or parameters.
 - [ ] **Q17:** every enemy unit's idle starts at a spread-out phase (no two neighbours in lockstep at level start) and runs at a small per-unit speed variance (±7 %, constant per unit). Players are unchanged. Pause/Resume and the QTE pause still freeze and restore the speed correctly.
 - [ ] **Q15:** no Lucy sound plays on Mark: hit = `A_SFX_John_Hit`, Command and Cleanse use John's sounds, Walk keeps only footsteps (D-132).
 - [ ] **Q14 (b):** the two shared Workshop items (`Equipment_Shin Armor`, `Equipment_Vitality Brooch`) no longer appear in the Workshop on a fresh save.
@@ -31,7 +31,7 @@ Out: Q13 (skipped, D-110); Q11 legend/reveal; the dead `ObjectivesPanelUI.Initia
 
 ## Touches
 
-Systems: faction controllers `PlayerController.cs` **(core, private change, no API change: Tier 2)**; `UnitBase.prefab` **(core-listed for its `onMinReached` → `GUnit.Die` wiring; adding a child object only)**; `TargetSelectCounterUI`, `ObjectivesPanelUI` / `ObjectiveEntryUI` and their prefabs; `EntityAnimationHandler` (not core-listed; additive); `JohnShieldRelay`; `AC_Playable_John.controller` (new state, no transitions); enemy unit prefabs; `Unit_Mark.prefab`; two equipment assets; one M1 sequence asset.
+Systems: faction controllers `PlayerController.cs` **(core, private change, no API change: Tier 2)**; `UnitBase.prefab` **(core-listed for its `onMinReached` → `GUnit.Die` wiring; adding a child object only)**; `TargetSelectCounterUI`, `ObjectivesPanelUI` / `ObjectiveEntryUI` and their prefabs; `EntityAnimationHandler` (not core-listed; additive state variant, D-133); `JohnShieldRelay`; `AC_Playable_John.controller` (THJ's new states; not edited); enemy unit prefabs; `Unit_Mark.prefab`; two equipment assets; one M1 sequence asset.
 USPs: none directly (Q12 is John's shield, not his Family Role).
 Docs: `build-log.md`; `tech/combat-architecture.md` (cancel behaviour, idle variance); `design/gdd` combat UI page if it describes cancel or objectives (designer to check); `status.md`.
 
@@ -47,14 +47,15 @@ Chunks, riskiest first. One implementer run and one commit each. Paths under `mi
 - Put the decision in a small pure static helper (e.g. `CancelInputRules.Decide(bool blocked, bool pickingWithTargets) → None | StepOnce | ToUnitSelection`) with EditMode tests; no state in it.
 - Check by reading: the reactive-interrupt path (`:776-780`), the approach-attack pending fields cleared by the existing per-state `Cancel()`, and `TakeActionState.CancelCondition = false` (mid-action cancel stays a no-op).
 
-### C2. Q12 John's shield idle (opus; animation)
+### C2. Q12 John's shield variants (opus; animation)
 
-Follows THJ's rule: states are played by name through `EntityAnimationHandler`; no new transitions or parameters.
+Follows THJ's rule: states are played by name through `EntityAnimationHandler`; no new transitions or parameters (D-133).
 
-- Clips: duplicate the three looping `Idle/A_Playable_John_Action_Idle_Weapon_{Down,Side,Up}.anim` as `A_Playable_John_Idle_Shield_{Down,Side,Up}.anim` and point their sprite curves at the sliced `John - Ability - InStand - {Down,Side,Up}.png` sprites `_0` to `_7` (D-109). Frame rate: keep the Weapon clips' (7/9/7 fps) unless the frame count differs; if the sprite mapping is ambiguous, stop and ask THJ to assign them (D-109).
-- Controller `Features/Player/John/Art/Animations/AC_Playable_John.controller`: add a state `IdleShield` whose motion is a 2D blend tree on the existing `DirectionX`/`DirectionY`, built like the `Idle` state's tree (`:712`). No transitions. Prefer an editor script or the Animator API over hand-written YAML for the blend tree; delete the script after if it is one-off.
-- `EntityAnimationHandler`: additive `SetIdleState(string stateName)` that swaps the idle state name used when a clip ends and by `Stop()`; if the unit is idle right now, play the new idle immediately. Default unchanged.
-- `Features/Player/John/Scripts/JohnShieldRelay.cs`: subscribe to `_unit.TagSet.OnTagGained/OnTagRemoved` (unsubscribe in `OnDisable`/`OnDestroy`); on a change of `IsShieldUp` call `SetIdleState(IsShieldUp ? "IdleShield" : "Idle")`. Guard with `HasState("IdleShield")` so a missing state never breaks idle.
+- Art is done by THJ (`3ae174a93`): states `Idle_Shield`, `Run_Shield`, `PrimaryAttack_Shield` in `Features/Player/John/Art/Animations/AC_Playable_John.controller` (blend trees on the existing `DirectionX`/`DirectionY`), clips `A_Playable_John_{Idle,Run}_Shield_*`, `A_Playable_John_Shield_PrimaryAttack_*`. Do not edit the controller or the clips.
+- `Core/Animation/EntityAnimation/Runtime/EntityAnimationHandler.cs`: additive `SetStateVariant(string suffix)` / `ClearStateVariant()` (suffix like `"_Shield"`). In the single place that resolves a state name before `animator.Play` (`Play`, around `:208-210`), use `stateName + suffix` when a suffix is set and `HasState(stateName + suffix)`, else `stateName`. `_targetStateName` must hold the resolved name so `HandleFrameAction` / `_playReady` and `IsPlaying` keep working; `IsPlaying(stateName)` should answer true for either name. On a variant change while the current state is the idle (resolved or not), replay the idle so the pose swaps at once; otherwise the change applies at the next `Play`. Cache the `HasState` result per name if it shows in profiling (not required).
+- `Features/Player/John/Scripts/JohnShieldRelay.cs`: subscribe to `_unit.TagSet.OnTagGained/OnTagRemoved` (unsubscribe in `OnDisable`/`OnDestroy`); when `IsShieldUp` changes, `SetStateVariant("_Shield")` or `ClearStateVariant()`. Also clear on death and level end.
+- Check frame timing: for `PrimaryAttack`, compare the ability's activation frame with each `A_Playable_John_Shield_PrimaryAttack_*` clip's frame count. If any shielded clip ends at or before the activation frame (the known freeze, `EntityAnimationHandler.cs:97-100`), stop and report instead of shipping.
+- EditMode test: the resolve rule as a pure static (`ResolveStateName(name, suffix, hasState)`).
 
 ### C3. Q10 Lucy's target counter (sonnet)
 
@@ -95,7 +96,7 @@ Correction: `FadeOutGridSequence.asset` is not unused; every `IntroCutscene` fad
 - **Saved data:** none. C7's asset change doesn't migrate saved equipment states (noted).
 - **Assets/prefabs:** small YAML edits; C2's blend tree via an editor script or the Animator API. `UnitBase.prefab` (C3) is the base of every unit: add the child only, check one player and one enemy still die and show the counter.
 - **Subscriptions:** C1 handler and C2 tag events unsubscribe on disable/destroy.
-- **Animation rule:** C2 adds a state but no transitions or parameters, played by name (THJ's rule).
+- **Animation rule:** C2 plays THJ's `_Shield` states by name; no transitions or parameters (THJ's rule).
 - **Other branches:** `thj/home-test` gets all of this when it takes `main`.
 
 ## Gates
@@ -108,7 +109,7 @@ Correction: `FadeOutGridSequence.asset` is not unused; every `IntroCutscene` fad
 ## Questions for THJ
 
 - W5 to W7: answered 2026-10-21 (D-130 to D-132).
-- **W8 (Q12):** confirm the approach: a new `IdleShield` state played by name via an additive `EntityAnimationHandler.SetIdleState`, no transitions.
+- W8: answered 2026-10-21 (D-133, option A).
 
 ## Commit log
 

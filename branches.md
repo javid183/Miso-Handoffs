@@ -20,6 +20,12 @@ Owner: coordinator; THJ approves. `claude-handoff/` doesn't change when the shar
 - 2026-10-21: `masher-tweak` merged in (fast-forward): the Masher reckless counter (C1–C5, D-092 to D-118), the hit-flash and ghost-facing fixes (D-121, D-122), John's area relay (D-119, D-120, D-123 to D-129), the private-ID comment cleanup `08bb27ac5`, and THJ's balance tweak `df58c4c0c`. `thj/home-test` will need this when it takes `main`.
 - The GDD reads its values from here (`main` @ `92853a5a9`), and its Home values from `thj/home-test` (D-046).
 
+## `thj/quick-wins`
+
+- **Purpose:** playtest Batch 3 quick wins (`plans/2026-10-20-quick-wins-triage.md`; bundle A tech plan `plans/2026-10-21-quick-wins-a-tech.md`; D-107 to D-111, D-130 to D-133).
+- Created by THJ on 2026-10-21 from `main` (0 ahead, 0 behind at creation; `main` includes THJ's John shield clips `3ae174a93`). THJ's working branch.
+- Combat resource and AP: same as `main` (FTP, PerUnit).
+
 ## `masher-tweak`
 
 **Merged into `main` by THJ on 2026-10-21 (fast-forward, `main` @ `df58c4c0c`); kept for history, no new work.** Items scoped to it now count as `all`.
