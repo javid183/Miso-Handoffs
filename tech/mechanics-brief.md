@@ -87,7 +87,7 @@
 
 - `Mark_Linda_ConsumeRaceDamage` removes its listener from `abilityActivationStarted`, but `Mark_Linda_ApplyBonus` added it on `abilityPerformed`. The listener leaks, though a null guard likely makes it harmless.
 - The `John_Linda_Duo` target adjuster is registered as null, and `John_Linda_Duo_TargetAdjust` is unused.
-- `CheatHandler`: K is bound twice (kill and +99 FTP). The speed cheats set `Time.timeScale` directly.
+- `CheatHandler`: K is bound twice (kill and +99 FTP). The speed cheats set `Time.timeScale` directly. *(Out of date: current keys in `tech/combat-architecture.md`.)*
 - Unverified: whether `autoMoveAllowed` is set on existing basic-attack presets, `LevelSpecificBehaviour` (one-line change not read), and `Linda_Toba` / `Mark_John` / `Mark_Lucy` ability data.
 
 ## 1. Turn / Combat Flow
@@ -501,7 +501,7 @@ A roguelite-style in-mission upgrade layer. **A "run" is one mission**: `Faction
   - `LevelFastForwardRoster`, whose statics now reset without wiping the fast-forward EditorPrefs.
   - `SkillTreeEditorWindow`, `DependencyGraphWindow`, `LevelPlaceholderAssignWindow`, `StatBackedEvaluationProbeWindow`.
   - **`Tools/AI/Run Regression Test`**, **`Tools/Levels/Assign Camera Boundaries (All Levels)`**, **`Tools/Levels/Spec Tags/*`**, **`Tools/Save Data/Reset Saved {Enemy,Ability} Introductions`**, **`Tools/Grid Entity Inspector`**.
-- **Dev cheats** (`Core/_Dev_/Runtime/CheatHandler.cs`; updated 10-03): enabled when `cheatsEnabled` is set, or at runtime by holding **C+H+T**. **K** kills the unit under the cursor and gives +99 FTP. **H** heals. **J** +1 ATB to all player units. **`[`** −1 HP (**Shift** −10). **`]`** +1 AP (**Shift** fills AP and resets cooldowns). **Numpad +/−/0** change or reset time scale. **Numpad 6** completes the objective. Holding **N** applies a key to the whole faction.
+- **Dev cheats** (`Core/_Dev_/Runtime/CheatHandler.cs`; updated 10-03; *out of date, current keys in `tech/combat-architecture.md`*): enabled when `cheatsEnabled` is set, or at runtime by holding **C+H+T**. **K** kills the unit under the cursor and gives +99 FTP. **H** heals. **J** +1 ATB to all player units. **`[`** −1 HP (**Shift** −10). **`]`** +1 AP (**Shift** fills AP and resets cooldowns). **Numpad +/−/0** change or reset time scale. **Numpad 6** completes the objective. Holding **N** applies a key to the whole faction.
 
 ## 10. Known Rough Edges / TODOs (as of this read)
 

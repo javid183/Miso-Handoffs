@@ -138,7 +138,7 @@ Each is a single `GlobalEventBus.RaiseSynergy(...)` line. It only records that t
 
 ### 4.5 Dev cheats (2026-10-10)
 
-`CheatHandler` raises `RaiseCheat` once per use, only when the cheat actually does something, and before it is applied. Cheats: `Kill`, `Heal`, `Damage` (detail `-1 HP` / `-10 HP`), `AP` (`+1 AP` / `fill AP, reset cooldowns`), `ATB` (whole family), `Family points` (`+99 FP`), `Game speed` (`x1.3`, `reset to x1`), `Complete objective`. **K** is bound to both Kill and Family points, so one press logs both.
+`CheatHandler` raises `RaiseCheat` once per use, only when the cheat actually does something, and before it is applied. Cheats: `Kill`, `Heal`, `Damage` (detail `-1 HP` / `-10 HP`), `AP` (`+1 AP` / `fill AP, reset cooldowns`), `ATB` (whole family), `Family points` (`+99 FP`), `Game speed` (`x1.3`, `reset to x1`), `Complete objective`. (Before 2026-10, K was bound to both Kill and Family points; Family points is now on L.)
 
 - The log flushes pending changes to their real owner first, then writes `[R2 Player] CHEAT Kill → DarkClaw #10-03`, and credits every change up to the next flush point to the cheat. Those rows are written under the CHEAT line (`CombatLog.Cheats.cs`, cheat frame with `IsCheat`).
 - Cheat rows never count: they are skipped in dealt, taken, healed, kills, family downs and the per-unit tables.

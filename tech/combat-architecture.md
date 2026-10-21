@@ -14,7 +14,22 @@ Owner: coordinator. The short map of the combat code; moved here from `CLAUDE.md
 
 ## Dev cheats in combat
 
-`Core/_Dev_/Runtime/CheatHandler.cs`: K kills the hovered unit, F11 on a hovered enemy kills its whole faction, F12 completes the objective, H heal, J ATB, L +99 family points, `[` −1 HP (Shift −10), `]` +1 AP.
+`Core/_Dev_/Runtime/CheatHandler.cs` (checked 2026-10-21, `main` @ `df58c4c0c`). On when `GlobalSettingsSO.cheatsEnabled` is set, or at runtime by holding **C+H+T** together. "Hovered" means the unit on the grid cell under the cursor; no unit there, no effect. Every use is logged (`tech/combat-log.md` §4.5).
+
+| Key | Effect |
+| --- | --- |
+| **K** | Kills the hovered unit, **allies included**. With **N** held: every living unit of the hovered unit's faction |
+| **F11** | Kills every living unit of the hovered unit's faction (same as N+K). Hovering a family member wipes the family |
+| **H** | Heals the hovered unit (N: its whole faction) |
+| **`[`** | −1 HP on the hovered unit, **Shift** −10 (N: its whole faction) |
+| **`]`** | +1 AP on the hovered unit; **Shift** fills AP to the cap and resets all its cooldowns (N: its whole faction) |
+| **L** | +99 FTP, given through the hovered unit (N: its faction) |
+| **J** | +1 ATB to every player unit (no hover needed; moot on FTP) |
+| **F12** or **Numpad 6** | Completes the current objective as a success (`BypassCurrentObjectiveAsSuccess`) |
+| **Numpad + / −** | Game speed ±0.1 (`Time.timeScale`, clamped 0–5, bypasses `TimeScaleCache`) |
+| **Numpad 0** | Game speed back to ×1 |
+
+A unit killed by K or F11 is restored when the level ends; it does not change the save.
 
 ## Grid previews (2026-10-20, `thj/preview-improvements`)
 

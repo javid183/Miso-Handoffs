@@ -2,7 +2,7 @@
 
 Branch `masher-tweak`. Plan: `plans/2026-10-20-masher-reckless-tank-tech.md` (decisions D-092 to D-117). Run after C5 is committed.
 
-**Levels:** `Generic Levels/Easy/E3/LevelE3-C1.prefab` or `Generic Levels/Medium/M1/LevelM1-C3.prefab` (both have a Masher). The cheats help: F11 kills all, F12 goes to the next level.
+**Levels:** `Generic Levels/Easy/E3/LevelE3-C1.prefab` or `Generic Levels/Medium/M1/LevelM1-C3.prefab` (both have a Masher). The cheats help: F11 kills the hovered unit's whole faction, F12 completes the objective (full list: `tech/combat-architecture.md`). `LevelM1-C3` is the better harness: four slots, no intro, the Masher in Linda's line on turn 1.
 
 Mark each item Pass, Fail (with what you saw) or Not run.
 
