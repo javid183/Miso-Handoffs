@@ -5,7 +5,7 @@ Outcome: done
 
 ## What changed
 
-Comment, tooltip and test-section-header text only, in 47 `.cs` files under `miso/Assets/_Project/` (143 lines changed, 143 insertions / 143 deletions). Decision, plan, chunk and playtest IDs (`D-###`, `B4`, `R3a/R3b/R4/R5/R6`, `item A-F`, `C2/C4/C5`, `F1/F3/F5`, `Q20`, `S9`) were removed and the sentences reworded to read on their own. No code, identifiers, test names or log strings changed (no log, header or test-name string held an ID). Line endings and BOM verified identical to HEAD for every file (CR count and first 3 bytes compared). `AIRegressionTest.cs` untouched.
+Comment, tooltip and test-section-header text only, in 48 `.cs` files under `miso/Assets/_Project/` (147 lines changed after the follow-up). Decision, plan, chunk and playtest IDs (`D-###`, `B4`, `R3a/R3b/R4/R5/R6`, `item A-F`, `C2/C4/C5`, `F1/F3/F5`, `Q20`, `S9`) were removed and the sentences reworded to read on their own. No code, identifiers, test names or log strings changed (no log, header or test-name string held an ID). Line endings and BOM verified identical to HEAD for every file (CR count and first 3 bytes compared). `AIRegressionTest.cs` untouched.
 
 Files:
 - Core/FX/Runtime/DamageNumber.cs
@@ -56,6 +56,12 @@ Files:
 - Features/UI/Panels/Scripts/RoleBadgeState.cs
 - Features/UI/Panels/Scripts/UnitPanelUI.RoleBadge.cs
 
+- Core/Editor/StatsResourcesTestDashboardWindow.cs (follow-up, see below)
+
+## Follow-up
+
+THJ asked to strip the dashboard warning tags too: removed `P0-2`, `P0-3`, `P0-4`, `P1-3` from the four warning strings in `Core/Editor/StatsResourcesTestDashboardWindow.cs` (each now reads as plain words). File is LF with BOM, both unchanged. Nothing else referenced those strings. Refresh: 0 errors. EditMode re-run: 413 total, 412 passed, 1 failed (known `AIRegressionTest.Baseline_MatchesCurrentAI`). No remaining non-format regex hits other than those listed above.
+
 ## Acceptance criteria
 
 - [x] No private IDs left in comments, tooltips, headers, log strings, test names: re-ran the regex plus a wider one (`item A-F`, `R3a`, `phase N`, `chunk`, `playtest`, `revision N`, `(THJ)`); only the items below remain.
@@ -71,7 +77,7 @@ Files:
 - `[R1/R2/R3 Player|Enemy]` and `Level2-C1` in CombatLogTests.cs: expected combat-log output (round numbers) and a level name.
 - `L={..} R={..} B={..} T={..}` in CameraHandler.cs and CameraBoundaryBatchTool.cs: left/right/bottom/top boundary in a log string.
 - GameHandler.cs:158 `back to L0`: level 0 of the family upgrades, a game term.
-- StatsResourcesTestDashboardWindow.cs (`P0-2`, `P0-3`, `P0-4`, `P1-3`, 4 warning strings shown in the dashboard window): look like audit-finding numbers (priority/item). Not decision/plan/chunk/playtest IDs as far as I can tell, but they are numbered tags only the author can decode. Left; THJ to decide.
+- (none: the four dashboard warning tags were stripped afterwards, see "Follow-up".)
 
 ## Save reset
 
@@ -85,7 +91,7 @@ no
 
 ## Needs THJ
 
-- The four `P0-x / P1-3` dashboard warning strings (see above): strip or keep?
+none
 
 ## Docs to update
 
@@ -98,7 +104,7 @@ none
 
 ## Proposed commits
 
-1. `chore(comments): replace decision and playtest tags in comments and tooltips with plain wording`: the 47 files listed above (plain, comment-only; no `.meta` files).
+1. `chore(comments): replace decision and playtest tags in comments and tooltips with plain wording`: the 48 files listed above (plain, comment-only; no `.meta` files).
 
 ## Other branches
 

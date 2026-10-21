@@ -57,7 +57,7 @@ Owner: coordinator. Every item has a scope: `all` or a branch. Started 2026-10-1
 
 (New requests land here before triage.)
 
-- 2026-10-21 `strip-private-ids` (all; tool/cleanup, M, Tier 2, THJ asked): remove decision, plan and playtest IDs from code comments, tooltips, log messages and test names across `_Project` (about 174 hits in 56 files, regex sweep), replacing them with plain descriptions. Runs after the John relay commits; one comment-only commit. Rule added to `conventions.md`, `CLAUDE.md` and the implementer and reviewer agent masters (THJ to sync `.claude/agents`).
+- 2026-10-21 `strip-private-ids` (all; tool/cleanup, M, Tier 2, THJ asked): remove decision, plan and playtest IDs from code comments, tooltips, log messages and test names across `_Project` (about 174 hits in 56 files, regex sweep), replacing them with plain descriptions. Done 2026-10-21: `08bb27ac5` (48 files, comment and tooltip text only; EditMode 412/413, known red only). Rule added to `conventions.md`, `CLAUDE.md` and the implementer and reviewer agent masters (THJ to sync `.claude/agents`).
 
 - 2026-10-20 `quick-wins-triage` (all; playtest Batch 3, paper plan + triage, M): THJ asked for it. Triage written: `plans/2026-10-20-quick-wins-triage.md` (bundles A plain fixes, P pace, F feedback design, S9 chain, N narrative). THJ answered W1–W4 (D-107 to D-111). Queued after Masher on a quick-wins branch; N (narrative Q1/Q2) and the F design pass can run in parallel.
 
