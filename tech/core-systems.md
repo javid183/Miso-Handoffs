@@ -11,7 +11,7 @@ Owner: coordinator; THJ approves additions and removals. Paths are under `miso/A
 | System | Main files | Why it's core |
 | --- | --- | --- |
 | Ability data and runtime | `Core/Systems/AbilitySystem/Abilities/Runtime/AbilityPreset.cs`, `RuntimeAbility.cs`, `AbilityOrchestrator.cs` | Every unit action goes through them |
-| Effects | `Core/Systems/AbilitySystem/Effects/Runtime/AEffectBase.cs`, `AEffectCompound.cs` (and the `AEffect*` family, 20 files) | Every ability's result; compounds carry shapes, unlocks and sub-effects |
+| Effects | `Core/Systems/AbilitySystem/Effects/Runtime/AEffectBase.cs`, `AEffectCompound.cs` (and the `AEffect*` family, 20 files; since 2026-10-21, D-123: `AEffectCompound.ApplyUnguarded` applies John's per-action relay record from `Abilities/Runtime/FamilyRoleRelay.cs`, a static registry reset in `PlayModeStaticReset`, a no-op when no record exists) | Every ability's result; compounds carry shapes, unlocks and sub-effects |
 | Area shapes *(added in setup)* | `Abilities/Runtime/AreaShapeDefinition.cs`, `Effects/Runtime/IAffectedAreaProvider.cs` | Where an ability lands; the interface is read in 7 files |
 | Duos (cooperation) | `Abilities/Runtime/UnitsCooperationHandler.cs`, `Effects/Runtime/AEffectCoOpTrigger.cs` | USP: Duos |
 | Pass-by | `Abilities/Runtime/UnitsPassByHandler.cs` | Tag mechanic; fills FTP/ATB; Synergies |
@@ -57,7 +57,7 @@ There is no damage-info type: a hit is a modifier on the target's HP attribute.
 | Level run | `Core/Managers/CombatLevelRunHandler.cs` (incl. its nested `SessionLogs` / `ActionLogEntry`, used in 13 files; partial since 2026-10-20 with `CombatLevelRunHandler.TurnSwitchHolds.cs`: public `RegisterTurnSwitchHold` / `ReleaseTurnSwitchHold` / `HasTurnSwitchHolds` and the public nested `TurnSwitchHoldSet`, a 5 s watchdog; `SwitchTurnIE` waits while any hold is registered, D-102), `LevelRunHandlerBase.cs` | Turn order, ATB fill, win/loss, end of level |
 | Combat level *(added in setup)* | `Core/Levels/Runtime/CombatLevel.cs`, `LevelBase.cs` | Singleton for faction relations, the player faction, objectives and the sequence player: 139 `.Instance` calls in 45 files |
 | Objectives and relations *(added in setup)* | `Core/Levels/Runtime/LevelObjectives.cs`, `LevelObjectiveConditions.cs`, `LevelFactionRelations.cs` | Win/lose conditions; ally/enemy checks (`FactionsRelationType` in 42 files) |
-| Faction controllers | `Core/Interactions/Runtime/FactionControllerBase.cs`, `FactionPhaseState.cs`, `PlayerController.cs` (since 2026-10-20, D-105: `TryFindApproachCell` and `ResolveGhostCell` are public, read-only, for previews), `AIController.cs` (since 2026-10-20, D-101/D-106: the per-unit wait also waits on its own action in progress and drops a plan if one started meanwhile) | Per-unit turn FSM, AP spending, player input flow |
+| Faction controllers | `Core/Interactions/Runtime/FactionControllerBase.cs`, `FactionPhaseState.cs`, `PlayerController.cs` (since 2026-10-20, D-105: `TryFindApproachCell` and `ResolveGhostCell` are public, read-only, for previews; since 2026-10-21, D-125/D-128: role QTEs restore the player's in-progress flag instead of clearing it, and the new public `EndTurnAvailable()` keeps End Turn off while another faction acts), `AIController.cs` (since 2026-10-20, D-101/D-106: the per-unit wait also waits on its own action in progress and drops a plan if one started meanwhile) | Per-unit turn FSM, AP spending, player input flow |
 | Player input *(added in setup)* | `Core/Interactions/Runtime/PlayerInputController.cs` | Input singleton: 53 calls in 16 files |
 | QTE | `Core/Interactions/Runtime/QuickTimeEventHandler.cs`, `QTEBehavior.cs`, `QTEProfile.cs` | Reaction-timing pillar |
 
@@ -86,7 +86,7 @@ There is no damage-info type: a hit is a modifier on the target's HP attribute.
 | Entity messages *(added in setup)* | `Core/Utilities/GameEntityMessage.cs` | String-based calls used by `AEffectBase` feasibility checks and function callers; the AI-thread-safe replacement for `SendMessage` |
 | Delayed execution *(added in setup)* | `Core/Utilities/ExecutionUtils.cs` | Delay and coroutine runner used by `Die` and 13 files |
 | Camera *(added in setup)* | `Core/Camera/Runtime/CameraHandler.cs` | 46 calls in 18 files (14 in `PlayerController`). Has a BOM |
-| Combat UI manager *(added in setup)* | `Core/UI/Runtime/CombatLevelUIManager.cs`, `LevelUIManagerBase.cs` | ATB gauge views and unit panels: 37 calls in 12 files (19 in `PlayerController`) |
+| Combat UI manager *(added in setup)* | `Core/UI/Runtime/CombatLevelUIManager.cs` (since 2026-10-21, D-128: `NotifyStateChange` uses `PlayerController.EndTurnAvailable()` for the player's End Turn button), `LevelUIManagerBase.cs` | ATB gauge views and unit panels: 37 calls in 12 files (19 in `PlayerController`) |
 
 **Checked, not core:** `Core/Systems/CombatLogging/` (`CombatLog` partials, `CombatLogBook`, `CombatLogEntry`, `CombatLogFileSink`, `CombatLogFormat`) only listens: it subscribes to 16 bus events and is called from three places (`MissionTracker` owns it, `CombatLevelRunHandler` calls `HookLevelEvents()`, `AudioSettingsPanel` calls `CombatLogFileSink.DeleteAll()`). Nothing in combat depends on it. Renaming or removing a bus event it listens to breaks it, so check it when the bus changes. Design notes: `tech/combat-log.md`.
 

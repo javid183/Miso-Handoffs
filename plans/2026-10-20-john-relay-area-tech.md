@@ -78,3 +78,6 @@ Compile / EditMode / reviewer (core) / play check (THJ): items 15 to 23 of `play
 ## Commit log
 
 - J-A (trigger fixes, D-119): `9ec1c4c29` (2026-10-20)
+- J-B (area relay record + `AEffectCompound` hook, D-120, D-123, D-126): `a7ec2f352` (2026-10-21)
+- J2 (reduction ends with the attack, D-124, D-127): `82ba0b82a` (2026-10-21)
+- J3 (QTE input guard + End Turn gate, D-125, D-128): `a13dd1f6c` (2026-10-21)

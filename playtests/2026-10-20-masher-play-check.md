@@ -39,6 +39,17 @@ Mark each item Pass, Fail (with what you saw) or Not run.
 19. **Enemy-turn answer timing:** the answer comes after the current enemy unit's action, and the AI then moves the Masher sensibly from its new tile (no stale move into an occupied tile).
 20. **2 × 2 target** (Big Ogre, if a level has both): the slam lands on the right tile.
 
+## Fixes since the first run (2026-10-21)
+
+24. **Ghost facing:** the Masher's step ghost and your own move ghosts face the way the unit will move. Check the Goblin Queen, Dark Worm and Toba ghosts too.
+25. **Red overlay:** after several Masher slams on two Bergsons, the red hit flash always clears. The reactive border fades in over about 0.5 s.
+26. **John relays the Masher's answer on your turn:** an ally in John's zone is the target. John takes it once at his reduction; the covered allies take nothing; units outside his zone are hit; John's neighbours are not hit because of him.
+27. **John relays the Masher's own-turn slam** on an ally in his zone, as in 26.
+28. **John is the main target:** he takes his normal damage, and nobody is relayed.
+29. **John's reduction ends after the attack:** his next unrelated hit is not reduced.
+30. **Goblin Queen strike near John** (M4 or M10): relayed as in 26. **Her charge** is not area-relayed: if she charges at an ally, the ally is still hit and John is added as an extra target. This is accepted for now.
+31. **During a Masher answer**, End Turn stays disabled and input stays locked until the answer ends, including when John's QTE plays.
+
 ## Regressions
 
 21. A normal enemy turn without the Masher has the same pace as before (C1 holds and the AI recheck).
