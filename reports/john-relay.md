@@ -126,6 +126,8 @@ None.
 
 ## Proposed commits
 
+**Superseded by "Revision 1 > Proposed commits (final)" below.**
+
 Already in: **J-A** `9ec1c4c29` `fix(roles): John relays enemy attacks on either turn, including the Masher's answers`.
 
 1. **J-B** `feat(roles): John takes an area attack once for every covered ally instead of moving the area onto himself` (**core**, risky). Depends on J-A.
@@ -160,3 +162,144 @@ Order: J-B, J2, J3. J2 and J3 can go in any order. Leave `miso/Packages/*` and `
 6. A single-target enemy attack on an ally in John's zone (Archer Goblin): the arrow goes to John, as before.
 7. With a Masher answer running on the player's turn, press John's prompt. While the answer is still running, you can't select units or abilities, and End Turn stays disabled until the answer finishes.
 8. Goblin Queen strike near John (M4 or M10): John takes one hit, and the covered allies are spared.
+
+## Revision 1 (review FIX; D-126, D-127, D-128)
+
+Review: `reports/john-relay-review.md`. Applied the four should-fixes (D-128) and THJ's two rulings (D-126, D-127). No Play mode, no git writes, save not reset.
+
+### Should-fixes (D-128)
+
+1. **End Turn gated on other factions** (J3).
+   - New `PlayerController.EndTurnAvailable()`: true when `CanEndTurn()` and no other faction's action is running.
+   - While another faction's action runs, it returns false and schedules one deferred refresh (`ExecutionUtils.WaitWhile(OtherFactionActionInProgress)`), so the button can't stay disabled.
+   - `CombatLevelUIManager.NotifyStateChange` uses it when the phase controller is the `PlayerController`. Every other controller still uses `CanEndTurn()`.
+   - This covers the refresh after the answer's `abilityStarted` and the refresh at the end of John's role.
+   - The turn-flow waits (`ForceEndTurnSafe`, `RequestEndTurnSafe`, `ResetCurrentPhase`) still use `CanEndTurn()`. Gating those could stall the automatic turn end, and the turn-switch hold already covers it.
+   - Note: `CombatLevelUIManager.cs` is a core file that the plan didn't name. The change is 5 lines, and the coordinator decided it under D-128.
+2. **Null guard.** Both `NotifyStateChange` calls (the role's clear, and the deferred End Turn refresh) go through `var ui = CombatLevelUIManager.Instance; if (ui) ...`.
+3. **`IsAreaAttack` tests.** New `FamilyRoleRelayAreaTests.cs`. It covers:
+   - a Surrounding preset;
+   - a Targeted preset with a Targeted compound;
+   - a Surrounding compound, directly and nested in another compound;
+   - the transporter case (see D-126);
+   - null or presetless abilities;
+   - `ClearAll`.
+
+   Presets and effects are built in memory with `CreateInstance`, and their private fields are set by reflection.
+4. **Level end.**
+   - New `FamilyRoleRelay.ClearAll()`.
+   - The first `Register` in a level hooks `GlobalEventBus.Instance.levelEnded` once per bus, and that hook calls `ClearAll`.
+   - `ResetPlayModeState` also forgets the hooked bus.
+
+### D-126: the Queen's charge stays out of the area relay
+
+- `HoldsArea` still doesn't look into transporters, so a charge is relayed as a single-target attack.
+- **The rule:** a cell target is never dropped or replaced when the attack moves a unit to its target. New `FamilyRoleRelay.MovesToTarget(attack)` checks the effect chain (top-level effects, compounds, spawner contents) for:
+  - an `AEffectTransporter`, `AEffectDashAttack`, `AEffectSwapper` or `AEffectCommand`;
+  - any `IGhostDestinationProvider`.
+
+  For those attacks, the cell target is the move destination. I chose effect types over target types because the same Cell target means "hit this tile" in a slam but "go here" in a charge, and only the effect chain tells the two apart.
+- For such an attack, John keeps the cell, drops only covered **unit** targets, and is added as an extra target. That is exactly the pre-J-B behaviour.
+- **What moved:** `RetargetToJohn` now calls a pure `FamilyRoleRelayRules.Retarget(targets, covered, occupantOf, john, johnCell, keepCellTargets)` with `keepCellTargets = MovesToTarget(trigger)`.
+- **Tests** in `FamilyRoleRelayTests`:
+  - a covered unit becomes John;
+  - a covered cell becomes John's cell;
+  - for a move attack, the destination cell is not rewritten and John is added;
+  - for a move attack, a covered unit is still dropped;
+  - John is added only once.
+
+  In `FamilyRoleRelayAreaTests`, the transporter test is now `TargetedPreset_TransporterWithSurroundingCompound_IsNotArea_ChargesStayOut`. It asserts that a charge is intentionally not an area attack and that `MovesToTarget` is true for it. There are also two `MovesToTarget` tests: a plain attack (no), and a dash nested in a compound (yes).
+
+### D-127: the reduction ends when the relayed attack completes
+
+- New pure `Features/Player/John/Scripts/JohnRelayReductionHolds.cs` (+ `.meta`), a set of the relayed attacks still running:
+  - `Hold(attack)`;
+  - `Release(attack)`, which returns true when none are left;
+  - attacks that are no longer active (aborted without a completion) are pruned on every `Hold` and `Release`.
+- In `JohnFactionRoleHandler.Activate`, when relaying, the new `ApplyReductionUntilCompleted(trigger)`:
+  - applies `JFR_DR` as before, so a second relay still only refreshes it (D-124);
+  - holds the trigger;
+  - adds to `trigger.OnCompletionPerRun` a step that releases it and, when no relayed attack is left, removes the reduction with `StatAttributes.TryRemoveModifier(JFR_DR)`.
+- **Fallbacks:** an aborted attack is pruned at the next completion or relay. The modifier's own one-turn Temporary duration still ends it at the next player phase start at the latest.
+- **Tests:**
+  - `Features/Player/John/Editor/JohnRelayReductionHoldsTests.cs` (+ `.meta`), 6 tests: one relay; two overlapping relays, where only the last completion ends it; the same attack held twice; an aborted attack pruned at completion and at the next hold; release with nothing held.
+  - `DurationModifierRefreshTests`: new `TryRemoveModifier_ById_EndsItBeforeItsDuration`.
+
+### Line endings (correction to the coordinator's note)
+
+`git ls-files --eol` shows `i/lf w/lf attr/text eol=lf` for every modified file:
+- `PlayerController.cs`
+- `PlayModeStaticReset.cs`
+- `AEffectCompound.cs`
+- `CombatLevelUIManager.cs`
+- `JohnFactionRoleHandler.cs`
+
+So they are LF in HEAD, in the index and in the working tree: `.gitattributes` forces `eol=lf`, and `core.autocrlf` is true. Every edit preserved each file's existing endings and BOM:
+- BOM: `AEffectCompound.cs`, `CombatLevelUIManager.cs`, `FamilyRoleRelay.cs`, and both `FamilyRoleRelay*Tests.cs`;
+- no BOM: the others.
+
+The original report's "LF kept" is therefore accurate. The review's "CRLF" doesn't match the repository: please check before changing anything.
+
+### Checks
+
+- Unity MCP refresh and recompile after each step: no `error CS` in the console.
+- Full EditMode suite:
+  - after the should-fixes: 399 tests, 398 passed;
+  - final run: **413 tests, 412 passed, 1 failed**.
+
+  The failure is `AIRegressionTest.Baseline_MatchesCurrentAI`, unchanged (CHECKS 706, FAILURES 35).
+
+### Acceptance criteria changes
+
+- **Two relays don't stack:** tests (`DurationModifierRefreshTests`, `JohnRelayReductionHoldsTests`). Still to play check (D-127): John's reduction is gone once the relayed attack has completed, for example on the next enemy hit in the same enemy turn.
+- **Queen charge at an ally in John's zone:** play check (D-126). The Queen still charges to the ally's tile, and John is added as an extra target. The area relay doesn't apply to it.
+- **End Turn:** play check. The button stays disabled for the whole Masher answer on the player's turn, then re-enables on its own.
+
+### Proposed commits (final)
+
+Already in: J-A `9ec1c4c29`.
+
+`JohnFactionRoleHandler.cs` holds J-B and J2 changes in overlapping lines, so the two can't be split with `git add -p`.
+- To stage J-B's version of that file, apply this patch to the index: `git apply --cached "C:\Users\javid\AppData\Local\Temp\claude\E--Work-Projects-miso\9e47f352-0971-417c-848d-a127a1c717c3\scratchpad\john-relay-jb-JohnFactionRoleHandler.patch"`. It was checked with `git apply --cached --check` against HEAD. It is HEAD plus everything except D-127, and builds without `JohnRelayReductionHolds`.
+- Then J2 stages the working-tree file normally, which adds the D-127 hunks.
+- If that's too fiddly, merge J-B and J2 into one commit.
+
+1. **J-B** `feat(roles): John takes an area attack once for every covered ally instead of moving the area onto himself` (**core**, risky). Depends on J-A.
+   - `miso/Assets/_Project/Core/Systems/AbilitySystem/Abilities/Runtime/FamilyRoleRelay.cs` (+ `.meta`)
+   - `miso/Assets/_Project/Core/Systems/AbilitySystem/Abilities/Editor/FamilyRoleRelayTests.cs` (+ `.meta`)
+   - `miso/Assets/_Project/Core/Systems/AbilitySystem/Abilities/Editor/FamilyRoleRelayAreaTests.cs` (+ `.meta`)
+   - `miso/Assets/_Project/Core/Systems/AbilitySystem/Effects/Runtime/AEffectCompound.cs`
+   - `miso/Assets/_Project/Core/Managers/PlayModeStaticReset.cs`
+   - `miso/Assets/_Project/Features/Player/John/Scripts/JohnFactionRoleHandler.cs`, **J-B version only** (the patch above)
+   - `miso/Assets/_Project/Features/Enemy/Masher Goblin/Scripts/MasherGoblinFactionRoleHandler.Counter.cs` (comment only: a decision ID removed from the J-A line, see "ID cleanup")
+2. **J2** `fix(roles): John's damage reduction ends when the attack he took for an ally completes` (plain; John's handler). Depends on J-B.
+   - `miso/Assets/_Project/Features/Player/John/Scripts/JohnRelayReductionHolds.cs` (+ `.meta`)
+   - `miso/Assets/_Project/Features/Player/John/Editor/JohnRelayReductionHoldsTests.cs` (+ `.meta`)
+   - `miso/Assets/_Project/Core/Systems/StatsResourcesSystem/Editor/DurationModifierRefreshTests.cs` (+ `.meta`)
+   - `miso/Assets/_Project/Features/Player/John/Scripts/JohnFactionRoleHandler.cs` (the rest: the D-127 hunks)
+3. **J3** `fix(input): a Family Role prompt no longer releases the player's flow, and End Turn waits for other factions' actions` (**core**, own commit). Independent of J-B and J2.
+   - `miso/Assets/_Project/Core/Interactions/Runtime/PlayerController.cs`
+   - `miso/Assets/_Project/Core/UI/Runtime/CombatLevelUIManager.cs`
+
+Order: J-B, J2, J3 (J3 can go anywhere). Leave `miso/Packages/*` and `miso/ProjectSettings/*` unstaged.
+
+### Docs to update (in addition to the list above)
+
+- `tech/core-systems.md`, Combat UI manager row: `NotifyStateChange` asks `PlayerController.EndTurnAvailable()` for the player's End Turn.
+- `tech/core-systems.md`, Family Roles row: `FamilyRoleRelay.MovesToTarget` and `ClearAll` (on level end).
+- The GDD or character sheet for John: the reduction lasts until the relayed attack completes (D-127).
+
+### New risks
+
+- **`EndTurnAvailable` depends on a deferred refresh.** If ExecutionUtils' runner were stopped while a refresh waits (a level unload), `_endTurnRefreshWait` would stay set on that `PlayerController`. Controllers are per level, so this shouldn't carry over.
+- **`MovesToTarget` lists effect types.** A new movement effect that neither is one of those types nor implements `IGhostDestinationProvider` would have its cell target rewritten for a covered ally.
+- **`OnCompletionPerRun` can be overwritten.** `RuntimeAbility.PhaseTick` nulls it, and `UnitsCooperationHandler.cs:671` assigns it with `=` (a player Duo ability, never a relayed attack). Either would skip the early removal. The one-turn fallback still ends the reduction.
+
+### ID cleanup (new house rule)
+
+- I removed every decision and chunk ID I had added in this work from code comments and test-section headers, across J-A, J-B, J2 and J3. Each was replaced with the reason in plain words.
+- That includes the J-A comments:
+  - in `JohnFactionRoleHandler.cs` (J-B commit);
+  - in `MasherGoblinFactionRoleHandler.Counter.cs` ("(John, D-119)" became "(John)"). That is a comment-only change to a file committed in J-A, listed under J-B.
+- No test names had IDs. Pre-existing IDs in these files (`D-068`, `D-069`, `D-088`, `D-105` in `PlayerController.cs`; `D-092` to `D-117` in `Counter.cs`) were left for the separate cleanup pass.
+- The J-B-only patch for John's handler was rebuilt after the cleanup and re-checked with `git apply --cached --check`.
