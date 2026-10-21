@@ -17,9 +17,12 @@ Owner: coordinator; THJ approves. `claude-handoff/` doesn't change when the shar
 - Has the Morta rebuild export (`miso/Assets/MortaStory/`) and the skill-tree redesign, combat log, enemy tiers, Lucy + John shield relay (merged into `thj/home-test` in Steps J, K, L).
 - No Home system.
 - 2026-10-19: `thj/fr-readability` merged in (fast-forward), plus THJ's `bcf2b263a` and `5550286dd` (Linda's role-zone icon is now `BowArrow`). `main` @ `5550286dd` now has all of it: the Batch 1 fixes (D-052, D-054, D-057, D-060), the Family Role fixes F1/F3/F5, `MarkQTE`, role zones with per-unit icons in quadrants (D-063, D-064, D-075), cover icons (D-067), the Shift preview layer (D-071, D-072), John's tether, role barks and the two additive `GlobalEventBus` events (D-068 to D-070), and the B5 fix (D-074). Commit hashes: the plans' commit logs.
+- 2026-10-21: `masher-tweak` merged in (fast-forward): the Masher reckless counter (C1–C5, D-092 to D-118), the hit-flash and ghost-facing fixes (D-121, D-122), John's area relay (D-119, D-120, D-123 to D-129), the private-ID comment cleanup `08bb27ac5`, and THJ's balance tweak `df58c4c0c`. `thj/home-test` will need this when it takes `main`.
 - The GDD reads its values from here (`main` @ `92853a5a9`), and its Home values from `thj/home-test` (D-046).
 
 ## `masher-tweak`
+
+**Merged into `main` by THJ on 2026-10-21 (fast-forward, `main` @ `df58c4c0c`); kept for history, no new work.** Items scoped to it now count as `all`.
 
 - **Purpose:** the Masher reckless-tank rework (`masher-reckless-tank`; design `plans/2026-10-20-masher-reckless-tank-design.md`, tech `plans/2026-10-20-masher-reckless-tank-tech.md`; D-092 to D-105).
 - Created by THJ on 2026-10-20 from `main` @ `4f2668918` (0 ahead, 0 behind). THJ's working branch.
