@@ -292,3 +292,4 @@ Accept: the preview criteria above, in play.
 - C2 (rules class + tests): `212638ad2` (2026-10-20)
 - C3 (data: counter preset, targetType, prefab, builder tool): `e409b2c94` (2026-10-20)
 - C3 (AIRegressionTest catalog line, D-104): `519e05d9e` (2026-10-20)
+- C4 (role suppression query + Mark/Linda checks, D-103): `7556630a6` (2026-10-20)
