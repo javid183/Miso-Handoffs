@@ -73,3 +73,15 @@ none
 4. Let the Masher answer once, select another unit, hover again: the preview is still there.
 5. Cripple the Masher: ghost and path gone. Aim a lethal hit: nothing shows.
 6. Select a Duo trigger and hover the Masher: the preview follows the partner that would be answered.
+
+## Revision 1 (review FIX, D-118)
+
+- Striker damage: when the striker's end tile differs from its current cell and it is not in the damage map, its damage now comes from its own HP: `AbilityDamagePreview.ComputeDamage(ability, hp.Value)`, then `hp.NormalizeValueChange`, clamped at 0. The borrow-from-another-unit path (`FallbackDamage`) is gone. Approximate: the striker's own tag mods and guaranteed resists are not applied (comment in code). `AbilityDamagePreview` untouched.
+- `OnDisable` also calls `ClearReactionPreview()`.
+- The 2 x 2 dash-landing approximation (D-105) is in the `.Preview.cs` class comment.
+- Unused usings trimmed in `MasherGoblinFactionRoleHandler.cs` (`System`, `MISO.Content.UI`, `MISO.Core.Interactions`).
+- Console: no errors. EditMode: full suite, only the known `AIRegressionTest.Baseline_MatchesCurrentAI` red.
+
+Commit file lists (paths under `miso/Assets/_Project/`):
+- A: `Core/Interactions/Runtime/PlayerController.cs`
+- B: `Features/Enemy/Masher Goblin/Scripts/MasherGoblinFactionRoleHandler.Preview.cs` + `.meta`, `MasherGoblinFactionRoleHandler.cs`, `MasherGoblinFactionRoleHandler.Counter.cs`
