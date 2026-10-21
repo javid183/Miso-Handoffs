@@ -114,3 +114,4 @@ Correction: `FadeOutGridSequence.asset` is not unused; every `IntroCutscene` fad
 ## Commit log
 
 - C1 (Q9 cancel): `64fbabef5` (2026-10-21). Review APPROVE (`reports/qw-a-c1-review.md`, should-fix applied); compile clean, EditMode passed (known red only) and play-checked by THJ.
+- C2 (Q12 shield variants): `dd567cdbc` (handler variant, John's relay, tests, Hit→Idle transition removed), `7716c3a8c` (John's Hit clips play once; needed without the transition), plus THJ's `51058e216` (shielded run faster). Review APPROVE (`reports/qw-a-c2-review.md`, should-fixes applied); EditMode 430/431 (known red only) via the Unity MCP; play-checked by THJ incl. hit while shielded.

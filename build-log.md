@@ -1824,3 +1824,11 @@ Done. THJ merged `thj/preview-improvements` into `main` on 2026-10-20. The GDD l
 - **Not verified:** nothing open for C1.
 - **Findings:** undoing the only picked target drops back to unit selection with the move range (existing behaviour, kept).
 - **Status:** C1 done; C2 next.
+
+## 2026-10-21: Quick wins bundle A, C2 (John's shield animation variants)
+
+- **Built:** `EntityAnimationHandler` state variant (additive `SetStateVariant`/`ClearStateVariant`; a state plays its `_Shield` version when the animator has one); `JohnShieldRelay` sets it with the shield and clears it on shield end, death, level end and disable. John's `Hit` state lost its leftover transition to `Idle`, and his Hit clips now play once, so the handler ends Hit and returns to the right idle. 8 EditMode tests. Commits `dd567cdbc`, `7716c3a8c`; THJ's shielded run tweak `51058e216`. D-133.
+- **Verified:** reviewer APPROVE (two should-fixes applied); compile clean and EditMode 430/431 (known red only) through the Unity MCP; THJ play check: idle, run, attack shield poses, hit while shielded returns to `Idle_Shield`.
+- **Not verified:** nothing open for C2.
+- **Findings:** the shielded attack is 0.8 s against 1.2 s (THJ: feels fine). The switch animation and a QTE-pause swap don't use the variant (known edges, left).
+- **Status:** C2 done; C3 next.
