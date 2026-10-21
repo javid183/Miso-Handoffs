@@ -29,7 +29,7 @@ Every request runs the same loop. Log it in `status.md` first.
 7. **Verify.** Run the gates (below). A failed gate goes back to the implementer with the specific failure.
 8. **Sync docs.** Every doc listed under "Docs to update" is updated by its owner. Note any Claude Docs mirror that now needs syncing.
 9. **Report.** Tell THJ: what's done, decisions you made (Tier 2 listed), what's waiting on him, how he can see it.
-10. **Commits.** If he wants it committed, propose the commits from the report's "Proposed commits" section, one at a time, following the Git rules in `CLAUDE.md` (files, `git diff --stat`, message, his yes on each).
+10. **Commits.** If he wants it committed, propose the commits from the report's "Proposed commits" section, one at a time, following the Git rules in `CLAUDE.md` (files, `git diff --stat`, message; then run stage and commit as one command, so its permission popup is the one yes for that commit; no extra chat question).
 
 **Sizes.** S = a bugfix, a number tweak, a text fix: skip Frame and the plan file. M = a feature inside an approved design: full loop, short Frame. L = a new system, a design problem, a playtest finding: full loop, parallel research, critics for design.
 
