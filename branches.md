@@ -24,7 +24,7 @@ Owner: coordinator; THJ approves. `claude-handoff/` doesn't change when the shar
 - **Purpose:** the Masher reckless-tank rework (`masher-reckless-tank`; design `plans/2026-10-20-masher-reckless-tank-design.md`, tech `plans/2026-10-20-masher-reckless-tank-tech.md`; D-092 to D-105).
 - Created by THJ on 2026-10-20 from `main` @ `4f2668918` (0 ahead, 0 behind). THJ's working branch.
 - Combat resource and AP: same as `main` (FTP, PerUnit).
-- Differences from `main`: Masher C1–C3 committed (`08ca1d819`, `11f64c19f`, `212638ad2`, `e409b2c94`, `519e05d9e`): `AIController` wait + recheck, `CombatLevelRunHandler` turn-switch hold, Masher rules, counter preset and prefab. C4 committed (`7556630a6`, `d5402d48d`, `9e6d50f51`: Mark/Linda suppression check, `FactionRoleHandlerBase` null guard, handler rewrite). C5 committed (`1a0936a28`, `256bcade6`: PlayerController lookups public, Masher preview). Play check pending. `thj/home-test` will need C1–C4 when it takes this work.
+- Differences from `main`: Masher C1–C3 committed (`08ca1d819`, `11f64c19f`, `212638ad2`, `e409b2c94`, `519e05d9e`): `AIController` wait + recheck, `CombatLevelRunHandler` turn-switch hold, Masher rules, counter preset and prefab. C4 committed (`7556630a6`, `d5402d48d`, `9e6d50f51`: Mark/Linda suppression check, `FactionRoleHandlerBase` null guard, handler rewrite). C5 committed (`1a0936a28`, `256bcade6`: PlayerController lookups public, Masher preview). Play-check fixes `f5778df92` (hit flash, carry to `main`) and `4e51d365f` (ghost facing). John relay in progress. `thj/home-test` will need C1–C4 when it takes this work.
 
 ## `thj/home-test`
 

@@ -3,6 +3,12 @@
 Plan: decisions D-122 (flash) and D-121 (ghost), coordinator brief    Agent: miso-implementer    Branch: masher-tweak
 Outcome: done
 
+Revision 1 (review should-fixes, `reports/masher-playfix1-review.md`):
+- (2) Applied. For a vertical facing (x about 0), the ghost now takes the body's side: first the handler's `CurrentFaceDirection.x`, then `_lastNonUpFaceDirection.x`, and the authored flip when neither is set. The rule lives in a new pure static, `EntityAnimationHandler.ResolveSideX(float facingX, int currentSideX, int lastSideX, float epsilon = 0.01f)`, covered by 2 new tests.
+- (1) Same behavior, different form. `abilityOrchestrator ? ... : null` doesn't compile: `AbilityOrchestrator` is a plain C# class, not a `UnityEngine.Object` (CS0029, which I hit in the first pass). The Unity lifetime check is on the `EntityAnimationHandler` itself (`if (!handler)`); with no handler the ghost keeps its authored flip. I added a comment saying so.
+- `GUnit.cs` gained `using MISO.Core.Animation;`.
+- Console: no errors. EditMode: 365 tests, 364 passed; only `AIRegressionTest.Baseline_MatchesCurrentAI` red (known). The file lists in Proposed commits are unchanged.
+
 ## What changed
 
 Fix 1, hit flash (D-122, not core):
