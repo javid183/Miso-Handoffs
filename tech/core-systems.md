@@ -15,7 +15,7 @@ Owner: coordinator; THJ approves additions and removals. Paths are under `miso/A
 | Area shapes *(added in setup)* | `Abilities/Runtime/AreaShapeDefinition.cs`, `Effects/Runtime/IAffectedAreaProvider.cs` | Where an ability lands; the interface is read in 7 files |
 | Duos (cooperation) | `Abilities/Runtime/UnitsCooperationHandler.cs`, `Effects/Runtime/AEffectCoOpTrigger.cs` | USP: Duos |
 | Pass-by | `Abilities/Runtime/UnitsPassByHandler.cs` | Tag mechanic; fills FTP/ATB; Synergies |
-| Family Roles | `Abilities/Runtime/FactionRoleHandlerBase.cs`; handlers for John, Linda, Lucy and Mark in `Features/Player/<Name>/Scripts/<Name>FactionRoleHandler.cs`, and the enemy-side `Features/Enemy/Masher Goblin/Scripts/MasherGoblinFactionRoleHandler.cs`. Toba has no handler | USP: Family Roles |
+| Family Roles | `Abilities/Runtime/FactionRoleHandlerBase.cs`; handlers for John, Linda, Lucy and Mark in `Features/Player/<Name>/Scripts/<Name>FactionRoleHandler.cs`, and the enemy-side `Features/Enemy/Masher Goblin/Scripts/MasherGoblinFactionRoleHandler.cs` (partials `.Counter.cs`; rules `MasherCounterRules.cs`, queue `MasherCounterQueue`). Since 2026-10-20 (D-103): `FactionRoleProvocationSuppression`, a static read-only query (reset in `PlayModeStaticReset`) that Mark's and Linda's handlers check before triggering. Toba has no handler | USP: Family Roles |
 | Damage preview | `Abilities/Runtime/AbilityDamagePreview.cs` | Must match the real hit (rounding, lethal checks) |
 
 ## Points
