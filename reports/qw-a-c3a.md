@@ -56,7 +56,7 @@ No.
 
 ## Needs THJ
 
-- The `GUnit` overload shape above (through the coordinator).
+- ~~The `GUnit` overload shape~~: accepted by THJ (D-136).
 - Whether the deep-red lethal segment needs a stronger contrast against the existing red decrease segment.
 
 ## Docs to update
@@ -76,10 +76,11 @@ No.
 
 ## Proposed commits
 
-1. `feat(settings): options for the lethal damage mark and the target counter label` (core): `Core/Managers/GlobalSettingsSO.cs`, `Resources/GlobalSettings.asset`.
-2. `feat(ui): stepped HP preview while picking several targets, with a lethal skull` (core: `GUnit` additive, `PlayerController` private): `Core/Units/Runtime/GUnit.cs`, `Core/Interactions/Runtime/PlayerController.cs`, `Features/UI/Panels/Scripts/DamagePreviewRules.cs` + `.meta`, `Features/UI/Panels/Scripts/LethalMarkPulse.cs` + `.meta`, `Features/UI/Panels/Scripts/EntityInfoPanelUI.cs`, `Features/UI/Panels/Scripts/Elements/UI_Element_FillBar.cs`, `Features/UI/Panels/Prefabs/UI/Base Elements/UI_Element_FillBar.prefab`, `Features/UI/Panels/Prefabs/UI/EntityInfoPanel.prefab`, `Features/UI/Panels/Editor/DamagePreviewRulesTests.cs` + `.meta`.
+Reviewer's three-commit split (Rev 1). Each commit compiles on its own, in this order.
 
-The plan asks for one commit per chunk. Commit 2 has to stay whole: the prefabs reference the new fields and the code uses the setting. Commit 1 can be folded into 2 if THJ prefers one commit for C3a.
+1. `feat(settings): options for the lethal damage mark and the target counter label` (core): `Core/Managers/GlobalSettingsSO.cs`, `Resources/GlobalSettings.asset`.
+2. `feat(ui): health bar draws picked and hovered damage apart, with a lethal skull` (plain UI): `Features/UI/Panels/Scripts/DamagePreviewRules.cs` + `.meta`, `Features/UI/Panels/Scripts/LethalMarkPulse.cs` + `.meta`, `Features/UI/Panels/Scripts/Elements/UI_Element_FillBar.cs`, `Features/UI/Panels/Scripts/EntityInfoPanelUI.cs`, `Features/UI/Panels/Prefabs/UI/Base Elements/UI_Element_FillBar.prefab`, `Features/UI/Panels/Prefabs/UI/EntityInfoPanel.prefab`, `Features/UI/Panels/Editor/DamagePreviewRulesTests.cs` + `.meta`. Needs commit 1 (it reads `displayLethalMarkPreview`). Checked: with `GUnit.cs` and `PlayerController.cs` set back to their HEAD versions in the working tree, Unity compiles clean (one `ShowDamagePreview` overload). Both files were then restored from a scratch backup; BOM and LF kept.
+3. `feat(combat): keep picked targets' damage on the bar while picking several targets` (core: `GUnit` additive overload, `PlayerController` private): `Core/Units/Runtime/GUnit.cs`, `Core/Interactions/Runtime/PlayerController.cs`.
 
 ## Other branches
 
@@ -95,3 +96,16 @@ None (`thj/home-test` gets it when it takes `main`).
 6. Right-click once: the last pick is removed and the bars redraw without it. Right-click again until back at unit selection: all previews clear. Pick all targets: on fire, all clear.
 7. Single-target check: John's attack on an enemy he can kill shows the skull with a deep-red segment; on one he can't kill, the bar looks as before.
 8. Turn the option off: `Resources/GlobalSettings` › Visuals › Display Lethal Mark Preview. The skull and the deep-red tint no longer show.
+
+## Rev 1 (2026-10-21, after review APPROVE; overload accepted as D-136)
+
+Should-fixes 2 and 3 applied. No commit.
+
+- **Should-fix 2:** `PlayerController.ClearMoveHoverPreview` now calls `HideDamagePreviews()` instead of its own copy of the hide loop.
+- **Should-fix 3, both halves:**
+  - No double redraw: `OnMoveHoverPreview` is now a thin wrapper. It calls the old body, renamed `UpdateMoveHoverPreview` (private, otherwise unchanged; it still starts with `ClearMoveHoverPreview()`), then draws the confirmed-only preview only when no full preview was drawn (`_damagePreviewUnits.Count == 0`). This saves one `ComputeFor` per hover that hits a target. Picked targets still keep their confirmed segment on hover-out, out of range, an empty cell, or the pointer over UI (that path goes through the same wrapper or the explicit calls in the shape-rotation handler).
+  - Pulse phase kept: `LethalMarkPulse` records when it was disabled. When the skull is shown again within one pulse cycle (0.5 s), as in the hide and re-show of a hover redraw (the same frame), it keeps its start time, so sweeping the cursor doesn't reset the pulse to scale 1. After a longer gap, or on first show, it starts a fresh pulse. It also applies the current scale at once in `OnEnable`. The rule is a pure `DamagePreviewRules.KeepsPulsePhase(hiddenSeconds, cycleSeconds)` with three new tests.
+- Unity MCP: forced refresh + compile, console has no errors. `MISO.Content.UI.EditorTests.DamagePreviewRulesTests` 32/32. Whole EditMode suite 462/463; the only failure is the known red `AIRegressionTest.Baseline_MatchesCurrentAI` (not re-baselined).
+- Commit-split check (commit 2 without commit 3) done as described under Proposed commits.
+- Play check still pending (THJ): sweep the cursor across a killable enemy and its neighbours. The skull should keep pulsing, and picked targets should keep their red segment when the cursor leaves.
+- Files changed in Rev 1: `Core/Interactions/Runtime/PlayerController.cs`, `Features/UI/Panels/Scripts/LethalMarkPulse.cs`, `Features/UI/Panels/Scripts/DamagePreviewRules.cs`, `Features/UI/Panels/Editor/DamagePreviewRulesTests.cs`.
