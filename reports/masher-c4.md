@@ -226,3 +226,44 @@ Commit lists after revision 1:
 - Commit 1 (core, suppression query): unchanged.
 - Commit 2 (handler rewrite) adds `MasherDuoCredit.cs`, `MasherDuoCreditTests.cs` and their `.meta` files (listed above under Proposed commits). Its other files are unchanged. 14 files.
 - The order and dependency stay the same: 1, then 2.
+
+## Revision 2 (THJ's answers: D-116, D-117)
+
+1. **D-116, core bugfix.** `Core/Systems/AbilitySystem/Abilities/Runtime/FactionRoleHandlerBase.cs`:
+   - `Initialize` and `InitializePartially` now initialize `superTimeAbility` only when `superTimeAbility?.Preset != null`. For John, Linda, Lucy and Mark this changes nothing: all four prefabs set a super-time preset.
+   - The stale comment at :80-81 no longer names the Masher.
+   - The diff is 3 lines changed plus 2 comment lines; CRLF and BOM kept.
+
+   In the Masher handler, `WithInertSuperTimeAbility` and the throwaway copy are gone. `Initialize` and `InitializePartially` call the base directly. The base now sets `Orchestrator` and `Unit`, so the duplicate assignments were dropped. This replaces the "stand-in super-time ability" entry under Decisions and closes the reviewer's should-fix 1, including the save-registration side effect.
+2. **D-117, Duo "reachable".** It now means the Masher can end next to the partner and slam: already adjacent, or the chosen step leaves it adjacent. This replaces the C2-review reading under Decisions.
+   - New pure rule `MasherCounterRules.SlamsAfterStep(candidates, currentDistance, alreadyAdjacent)`.
+   - `TryPlanAnswer` computes `slamsAfter` with this rule, and `IsReachable` returns `TryPlanAnswer(...) && slamsAfter`.
+   - 4 new tests in `MasherCounterRulesTests`: already adjacent; the step ends adjacent; the step only gets closer (false, which is the D-117 case); no step.
+
+Checks:
+- Unity MCP refresh and recompile: console clean, no `error CS`.
+- **Full** EditMode suite: 357 tests, 356 passed, 1 failed. The failure is `AIRegressionTest.Baseline_MatchesCurrentAI`, unchanged (CHECKS 706, FAILURES 35).
+- No Play mode, no git writes, save not reset.
+
+### Proposed commits (final, in order)
+
+1. `feat(family-roles): let an enemy answer suppress Mark's and Linda's role triggers` (core, D-103). Independent.
+   - `miso/Assets/_Project/Core/Systems/AbilitySystem/Abilities/Runtime/FactionRoleProvocationSuppression.cs` (+ `.meta`)
+   - `miso/Assets/_Project/Core/Systems/AbilitySystem/Abilities/Editor/FactionRoleProvocationSuppressionTests.cs` (+ `.meta`)
+   - `miso/Assets/_Project/Core/Managers/PlayModeStaticReset.cs`
+   - `miso/Assets/_Project/Features/Player/Mark/Scripts/MarkFactionRoleHandler.cs`
+   - `miso/Assets/_Project/Features/Player/Linda/Scripts/LindaFactionRoleHandler.cs`
+2. `fix(family-roles): skip the super-time ability when a role handler has none` (core bugfix, D-116). Independent of 1.
+   - `miso/Assets/_Project/Core/Systems/AbilitySystem/Abilities/Runtime/FactionRoleHandlerBase.cs`
+3. `feat(masher): queue counters, step and slam by the adjacency rule, hold the turn switch, cap chains, roles toggle` (core-list file, risky). **Depends on 1** (`FactionRoleProvocationSuppression`) **and on 2**: the handler now calls `base.Initialize` / `base.InitializePartially` directly, and without the guard that throws a NullReferenceException on the Masher's empty super-time preset. It also builds on C1 (hold API) and C3 (prefab).
+   - `miso/Assets/_Project/Features/Enemy/Masher Goblin/Scripts/MasherGoblinFactionRoleHandler.cs`
+   - `miso/Assets/_Project/Features/Enemy/Masher Goblin/Scripts/MasherGoblinFactionRoleHandler.Counter.cs` (+ `.meta`)
+   - `miso/Assets/_Project/Features/Enemy/Masher Goblin/Scripts/MasherCounterQueue.cs` (+ `.meta`)
+   - `miso/Assets/_Project/Features/Enemy/Masher Goblin/Scripts/MasherDuoCredit.cs` (+ `.meta`)
+   - `miso/Assets/_Project/Features/Enemy/Masher Goblin/Scripts/MasherCounterRules.cs`
+   - `miso/Assets/_Project/Features/Enemy/Masher Goblin/Editor/MasherCounterQueueTests.cs` (+ `.meta`)
+   - `miso/Assets/_Project/Features/Enemy/Masher Goblin/Editor/MasherDuoCreditTests.cs` (+ `.meta`)
+   - `miso/Assets/_Project/Features/Enemy/Masher Goblin/Editor/MasherCounterRulesTests.cs`
+   - `miso/Assets/_Project/Core/Systems/RoleZoneSystem/Runtime/JohnTetherPresenter.cs`
+
+Leave `miso/Packages/*` and `miso/ProjectSettings/*` unstaged.
