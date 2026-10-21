@@ -172,9 +172,13 @@ None that blocks. The two readings above (super-time stand-in, Duo "reachable") 
    - `miso/Assets/_Project/Features/Enemy/Masher Goblin/Scripts/MasherGoblinFactionRoleHandler.Counter.cs.meta`
    - `miso/Assets/_Project/Features/Enemy/Masher Goblin/Scripts/MasherCounterQueue.cs`
    - `miso/Assets/_Project/Features/Enemy/Masher Goblin/Scripts/MasherCounterQueue.cs.meta`
+   - `miso/Assets/_Project/Features/Enemy/Masher Goblin/Scripts/MasherDuoCredit.cs` (revision 1)
+   - `miso/Assets/_Project/Features/Enemy/Masher Goblin/Scripts/MasherDuoCredit.cs.meta` (revision 1)
    - `miso/Assets/_Project/Features/Enemy/Masher Goblin/Scripts/MasherCounterRules.cs`
    - `miso/Assets/_Project/Features/Enemy/Masher Goblin/Editor/MasherCounterQueueTests.cs`
    - `miso/Assets/_Project/Features/Enemy/Masher Goblin/Editor/MasherCounterQueueTests.cs.meta`
+   - `miso/Assets/_Project/Features/Enemy/Masher Goblin/Editor/MasherDuoCreditTests.cs` (revision 1)
+   - `miso/Assets/_Project/Features/Enemy/Masher Goblin/Editor/MasherDuoCreditTests.cs.meta` (revision 1)
    - `miso/Assets/_Project/Features/Enemy/Masher Goblin/Editor/MasherCounterRulesTests.cs`
    - `miso/Assets/_Project/Core/Systems/RoleZoneSystem/Runtime/JohnTetherPresenter.cs`
 
@@ -197,3 +201,28 @@ Order: 1 then 2. Leave unstaged `miso/Packages/*` and `miso/ProjectSettings/*`, 
 7. Enemy turn: let Mark's role strike the Masher. It answers after the current enemy unit finishes. Untick the toggle and repeat: Mark doesn't strike back at the Masher's answer, and Linda doesn't shoot at its step.
 8. Cripple the Masher: hit from range, and it doesn't step.
 9. Test Runner > EditMode > Run All: only `AIRegressionTest.Baseline_MatchesCurrentAI` is red.
+
+## Revision 1 (after the FIX review, D-115)
+
+Review: `reports/masher-c4-review.md`. Applied the coordinator's three items. The base-init swap (review should-fix 1) and the Duo "reachable" rule are unchanged; both wait on THJ.
+
+1. **Must fix: Duo partner credit.**
+   - New pure class `Features/Enemy/Masher Goblin/Scripts/MasherDuoCredit.cs` (+ `.meta`, BOM and LF). Pending damage goes to the **next partner `onAbilityEffectPerformedOn`, whatever its target**, and that clears the pending damage and the suspect. When no event follows the damage, the suspect fallback in `Finish()` credits the partner whose ability was last active when the health dropped.
+   - The class comment explains the ordering: `AEffectCompound.Apply` applies its effects and only then raises `onAbilityEffectPerformedOn` for the ability (`AEffectCompound.cs:156-162`).
+   - The handler now delegates to it: `OnDuoHealthDecreased` calls `OnDamage`, the partner event calls `OnPartnerEvent`, `CloseDuo` calls `Finish` and then `IsStruck`. `TouchesThisMasher` and the per-record `Struck` list are gone.
+   - Tests: `Features/Enemy/Masher Goblin/Editor/MasherDuoCreditTests.cs` (+ `.meta`), 8 tests. They cover a splash centred elsewhere, events without damage, damage with no following event (suspect), damage before any event, zero damage, an out-of-range index and `Begin` resetting.
+2. **Should fix 2: suppression release.**
+   - The role suppression is no longer released in `Finish`. The pump releases it after the next idle settle, at the top of the next loop iteration, before it dequeues.
+   - It is also released at pump exit, on the `turnEnded` backstop and in `StopCounter` (disable or destroy).
+   - New edge: if the Masher's own AI action starts before the flow settles, which needs an enemy-turn answer followed straight away by the Masher's own move, that own-turn walk or slam is still listed when the toggle is off. Mark and Linda would then not react to it. It's rare, and it only matters with the toggle off. Watch it in play.
+3. **Should fix 3: tether filter.** `JohnTetherPresenter.OnFamilyRoleActivated` now hides the tether when `handler.Unit && handler.Unit.Faction == CombatLevel.Instance.PlayerFaction` (with null guards), instead of checking a closed list of handler types. CRLF kept.
+
+Checks:
+- Unity MCP refresh and recompile: console clean, no `error CS`.
+- **Full** EditMode suite: 353 tests, 352 passed, 1 failed. The failure is `AIRegressionTest.Baseline_MatchesCurrentAI`, unchanged (CHECKS 706, FAILURES 35).
+- No Play mode, no git writes, save not reset.
+
+Commit lists after revision 1:
+- Commit 1 (core, suppression query): unchanged.
+- Commit 2 (handler rewrite) adds `MasherDuoCredit.cs`, `MasherDuoCreditTests.cs` and their `.meta` files (listed above under Proposed commits). Its other files are unchanged. 14 files.
+- The order and dependency stay the same: 1, then 2.
