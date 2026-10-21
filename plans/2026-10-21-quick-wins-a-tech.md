@@ -57,7 +57,25 @@ Follows THJ's rule: states are played by name through `EntityAnimationHandler`; 
 - Check frame timing: for `PrimaryAttack`, compare the ability's activation frame with each `A_Playable_John_Shield_PrimaryAttack_*` clip's frame count. If any shielded clip ends at or before the activation frame (the known freeze, `EntityAnimationHandler.cs:97-100`), stop and report instead of shipping.
 - EditMode test: the resolve rule as a pure static (`ResolveStateName(name, suffix, hasState)`).
 
-### C3. Q10 Lucy's target counter (sonnet)
+### C3 (revised 2026-10-21, D-134): multi-target clarity, split in three
+
+THJ's playtest read: while picking several targets, the hover preview shows *confirmed picks + this click* in one colour, and picked targets lose their preview when the cursor leaves, so mid-volley an enemy can look "dead" when it still needs one more click. Facts (Explore 2026-10-21): `PlayerController.ShowDamagePreview` (`:1489-1502`) → `AbilityDamagePreview.ComputeFor(ability, unit, hovered, TargetCells)`; with `oneEffectPerTarget` it maps `effects[i]` to `picks[i]` = committed cells + the hovered cell (`AbilityDamagePreview.cs:27-59`); `ComputeFor(..., hovered: null, TargetCells)` gives the confirmed part. `OnMoveHoverPreview` clears every preview first and returns early for hover-out / out of range / empty cell (`:988-993`, `:1009`). The bar is `EntityInfoPanelUI.ShowHealthMode` (`:55-79`) on `UI_Element_FillBar` (Images `mainBarFill`, `increaseBarFill`, `decreaseBarFill`, `lockedBarFill`; one decrease segment today).
+
+**C3a. Stepped HP preview + lethal skull (opus; core: `PlayerController`, `GUnit` additive)**
+- Two tints on the target's bar while picking: confirmed damage (the existing decrease tint) and the hit this click would add (a second, lighter tint), drawn as a second segment after the confirmed one. `EntityInfoData` gets the confirmed amount; `UI_Element_FillBar` gets a second decrease Image (new child, colour serialized) or a `SetSecondaryDecreaseBarFill`. `GUnit.ShowDamagePreview` gets an additive overload `(float total, float confirmed)`; the old one stays (confirmed = 0).
+- `PlayerController`: compute confirmed (`hovered: null`) and total (`hovered`) per unit; every already-picked unit keeps its confirmed segment while the cursor is elsewhere (the early-return branches call the confirmed-only preview when `TargetCells.Count > 0`); all cleared on cancel to unit selection, on fire and on turn end.
+- Lethal skull (moved here from the feedback pass, F item 1; D-113): on **every** damage preview, an icon (placeholder skull sprite) at the left of the bar, deep-red segment, pulse 2 Hz (scale 1 to 1.12), meaning "kills if it lands". Rule: single-target / normal previews: `damage > 0 && damage >= HP` (same as `PredictsLethalOn`; a test pins them together). Multi-target while picking: the skull shows only when the **confirmed** shots alone kill; a kill that needs this click shows only in the second tint. Option `displayLethalMarkPreview` (default on) on `EntityInfoPanelUI`.
+- EditMode tests: confirmed/total split for repeated picks on one cell and across cells; the lethal rule (equal to HP is lethal; confirmed-only for multi-target).
+
+**C3b. "Fires" cursor (sonnet; not core)**
+- `CursorSituationCatalog.cs`: a `finalPick` tri-state axis (as `basicAttack` is done: field, Specificity, `Matches`, snapshot). `CursorSituationDriver.Sample()`: Yes when the inferred ability is `MultipleTargets` and `RequiredTargetCount - TargetCellCount <= 1`, in TargetSelection and in ActionSelection (the first pick via the default ability). Catalog row "Multi Fire" (finalPick = Yes, above Basic Attack Valid) with a placeholder sprite **duplicated from an existing cursor** (`Features/UI/Cursors/Situations/`), so THJ can repaint it later. Multi-confirm abilities (`PossibleMultiActivations`) are out of scope.
+
+**C3c. Counter label, optional (sonnet)**
+- As the old C3 below, plus a `showLabel` option (default on) on `TargetSelectCounterUI`, so it can be turned off if C3a and C3b are enough.
+
+Order: C3a, C3b, C3c; one commit each.
+
+### C3c detail (was C3: Q10 Lucy's target counter) (sonnet)
 
 - `Features/UI/Panels/Scripts/TargetSelectCounterUI.cs`: optional `[SerializeField] TMP_Text label` (null-safe). In `Populate`, `CountUp`, `CountDown`: `label.text = FormatLabel(picked, total)`; hidden with the pips in `Reset`/hide. `FormatLabel` is a pure static: "Target n/N" with n = picked + 1 clamped to N. EditMode test for it.
 - `Features/_Common/Prefabs/UnitBase.prefab`: add a TMP child under the `TargetSelectCounter` world-space canvas, above the pips, and wire `label`. Additive child only; do not touch the attribute wiring. Use the project's existing world-space font/material.
