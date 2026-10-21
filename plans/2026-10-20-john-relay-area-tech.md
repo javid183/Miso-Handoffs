@@ -77,4 +77,4 @@ Compile / EditMode / reviewer (core) / play check (THJ): items 15 to 23 of `play
 
 ## Commit log
 
-(filled as chunks land)
+- J-A (trigger fixes, D-119): `9ec1c4c29` (2026-10-20)
