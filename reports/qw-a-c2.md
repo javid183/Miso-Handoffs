@@ -108,3 +108,11 @@ The pre-existing unrelated changes (`Packages/manifest.json`, `packages-lock.jso
 - `EntityAnimationHandler.ReplayIdleIfPlaying`: returns early when a frame callback (`_actionOnFrame`) or an end freeze (`_freezeOnEnd`) is active, so a variant change never cuts short a play that carries a callback. The variant then applies at the next `Play`.
 - `JohnShieldRelay`: the event-bus subscription (`unitDied`, `levelEnded`) is now lazy. `TrySubscribeEventBus()` runs in `OnEnable`, in `Start` and on each tag change, and an `_eventBusSubscribed` flag makes it subscribe only once. `OnDisable` removes the listeners only if it subscribed, then resets the flag. The flag is an instance field, not a static.
 - Line endings and BOM kept: the handler still has its BOM, both files are LF. Still not compiled or tested, since the Unity MCP is not connected. The same files and the same single commit as above.
+
+## Rev 2 (Hit transition)
+
+- Removed the legacy `Hit` -> `Idle` transition (exit time 1, duration 0, no conditions, fileID -74881292564830599) from `miso/Assets/_Project/Features/Player/John/Art/Animations/AC_Playable_John.controller`: `Hit` now has `m_Transitions: []` and the `AnimatorStateTransition` object is deleted. Done as a YAML edit (file is LF; line endings kept). Diff vs. before: exactly two hunks (the Hit transitions list and the removed 22-line object); no other `m_Transitions`, state or parameter changed. `AC_NPC_John.controller` not touched.
+- Reason: the animator left `Hit` on its own into plain `Idle`, so `EntityAnimationHandler` never reached its end-of-clip `Stop()`, which plays the resolved idle (`Idle_Shield` while shielded).
+- Handler check: in `EntityAnimationHandler.Update`, `if (normalizedTime >= 1 && !IsLooping)` calls `Stop()` (unless `_freezeOnEnd`). `Hit` is non-looping, so it now ends through that path like every other state. Not play-checked: needs the verifier to take a hit while shielded and confirm `Idle_Shield` afterwards.
+- Unity: forced asset refresh, console has no errors. EditMode suite: 430/431 passed; the only failure is the known `AIRegressionTest.Baseline_MatchesCurrentAI`.
+- Proposed commit: `AC_Playable_John.controller` alone (animation data fix).
