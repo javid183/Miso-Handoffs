@@ -1,7 +1,7 @@
 # Quick wins bundle P: pace (Q3, Q4, Q23)
 
 Size: S/M    Tier: 3 (feel values and core turn flow; decided in D-107)    Assigned to: miso-implementer
-Branch: all (built on `main` @ `fc731b0c5`; `thj/home-test` gets it when it takes `main`)
+Branch: all (built on `thj/quick-wins`, which THJ checked out from `main` @ `fc731b0c5` at 10:27 on 2026-10-22; all commits are on `thj/quick-wins`, not yet on `main`; `thj/home-test` gets it when it takes `main`)
 Status: approved 2026-10-22 (D-141; P1: right edge, upper third). C1 in progress
 
 ## Why

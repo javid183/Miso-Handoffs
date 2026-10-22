@@ -23,7 +23,7 @@ Owner: coordinator; THJ approves. `claude-handoff/` doesn't change when the shar
 
 ## `thj/quick-wins`
 
-**Merged into `main` on 2026-10-22 (fast-forward to `fc731b0c5`); kept for history, no new work.** Items scoped to it now count as `all`.
+**Merged into `main` on 2026-10-22 (fast-forward to `fc731b0c5`). THJ checked it out again at 10:27 the same day and it is the working branch again:** quick wins bundle P is committed here (`5d1456ea3`, `fd52cc377`, `ff0a9f70f`, `b0e58f6f6`, `e2c9bbf68`, `4c57f870f`, `7d4cd90ca`; 7 ahead of `main`, 0 behind), and the feedback pass builds on it. Not merged into `main` yet; THJ decides when (a fast-forward).
 
 - **Purpose:** playtest Batch 3 quick wins (`plans/2026-10-20-quick-wins-triage.md`; bundle A tech plan `plans/2026-10-21-quick-wins-a-tech.md`; D-107 to D-111, D-130 to D-133).
 - Created by THJ on 2026-10-21 from `main` (0 ahead, 0 behind at creation; `main` includes THJ's John shield clips `3ae174a93`). THJ's working branch.

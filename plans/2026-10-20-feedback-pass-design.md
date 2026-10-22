@@ -1,7 +1,7 @@
 # Feedback pass: kills, mini HP bars and low HP as one language
 
 Size: M    Tier: 3 (game feel and a new readability feature are THJ's until 2026-10-29); answered in D-113 and D-145    Assigned to: miso-game-designer (design), then tech plan, then miso-implementer
-Branch: all (builds on `main`, which now holds quick wins bundle A and bundle P; nothing here differs by branch)
+Branch: all (builds on `thj/quick-wins`, which holds quick wins bundle A and bundle P; bundle P is not on `main` yet; nothing here differs by branch)
 Status: ready for tech plan
 Revision 2 (2026-10-22)
 
@@ -29,7 +29,7 @@ Kills land as a punctuation mark, every unit's HP reads at a glance, and a Bergs
 
 **Root problem:** kills have no feedback of their own, the shakes that exist cancel each other with no priority, and HP state lives only in hover panels. (Hits feeling weak is the hit-stop question, postponed by D-113.)
 
-Evidence (revision 1 read `main` @ `08ca1d819`, 2026-10-20; revision 2 rechecked the marked items on `main` @ `7d4cd90ca`, 2026-10-22):
+Evidence (revision 1 read `main` @ `08ca1d819`, 2026-10-20; revision 2 rechecked the marked items on `thj/quick-wins` @ `7d4cd90ca`, 2026-10-22):
 
 1. **Hit slow-mo on every enemy, from `UnitBase.prefab` `hitEffects`** (slow-mo, blink, hit FX, unit volume, `UnitHit_ShakeCameraEffect`). Archer and both Claws also call `PlayHitSlowMo` directly. **Left as is:** D-113 postponed hit-stop, so this pass doesn't touch it.
 2. **Bergsons have no hit slow-mo and no shake on hits**; their fourth `hitEffects` call is the red flash `PlayerHit_CameraVolumeEffect`. *John read line by line; the other four assumed to match.* **Left as is.**

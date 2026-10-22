@@ -1,7 +1,7 @@
 # Feedback pass: tech plan (kill beat, mini HP bars, low HP)
 
 Size: M    Tier: 3 (game feel; design approved by THJ as D-146)    Assigned to: miso-implementer, one chunk at a time
-Branch: all (built on `main` @ `7d4cd90ca`; `thj/home-test` gets it when it takes `main`)
+Branch: all (built on `thj/quick-wins` @ `7d4cd90ca`, which holds bundle P; `main` is still at `fc731b0c5`; `thj/home-test` gets it when it takes `main`)
 Status: approved design; tech plan written 2026-10-22, ready to dispatch C1
 
 ## Why
@@ -35,7 +35,7 @@ Systems: `Core/FX/Runtime/CFX/ShakeCameraEffect.cs` and `CameraEffectBase.cs` (a
 USPs: Family Roles and Synergies (light).
 Docs: `design/gdd/combat-rules.md` new "Combat feedback" section (CR-44 on, game designer); `tech/pace-timings.md` kill-shake and feedback rows (coordinator); `tech/core-systems.md` only if `ShakeCameraEffect` is listed.
 
-## What the code does now (read 2026-10-22, `main` @ `7d4cd90ca`)
+## What the code does now (read 2026-10-22, `thj/quick-wins` @ `7d4cd90ca`)
 
 - **Shakes:** `ShakeCameraEffect.Apply` (`Core/FX/Runtime/CFX/ShakeCameraEffect.cs`) stops every coroutine in the static `CameraEffectBase.ActiveSCRs` unless `additive`, then starts its own. Finished coroutines stay in the list (never null), so `Count` checks are unreliable. `CameraEffectBase.ResetPlayModeState` is already called from `PlayModeStaticReset` (line 51). Played through `FXRunner.PlayCFX(effect)` (`Core/FX/Runtime/FXRunner.cs:77`). Hit shake: `Resources/UnitSpecific/Common/UnitHit_ShakeCameraEffect.asset` (0.2 s, 0.02, non-additive).
 - **Death:** `GlobalEventBus.unitDied` (`UnityEvent<GUnit>`, line 49), fired from `GUnit.DieInternal` (`GUnit.cs:772`) and `FakeDie` (`:792`). On one unit the hit (blink, hit shake) fires before `unitDied` (design evidence 11).
