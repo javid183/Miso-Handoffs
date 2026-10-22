@@ -1864,3 +1864,11 @@ Done. THJ merged `thj/preview-improvements` into `main` on 2026-10-20. The GDD l
 - **Not verified:** the ±15 % value in play (raised at commit time).
 - **Findings:** (1) enemy controllers still have animator transitions into Idle (Hit/Spawn, Queen jump/charge ends, Deev Idle Look), which bypass the handler: after a hit or spawn the idle plays at authored speed from frame 0. (2) Mark's Walk/Command/Cleanse sound overrides are empty (backlog). (3) An implementer left a scratch prefab copy in `Assets/`; deleted with THJ's OK.
 - **Status:** C5, C6 done; C5b proposed; C7, C8 next.
+
+## 2026-10-22: Quick wins bundle A, C5b (enemy idle returns) and boss idle revert
+
+- **Built:** removed the animator's own Hit → Idle (Dark Claw, Archer, Masher, Dark Worm, Shaman) and Spawn → Idle (Dark Claw, Dark Worm, Shaman) transitions so the handler ends those clips and plays the spread idle; the Dark Worm's looping spawn clip now plays once. Kept, with reasons in `reports/qw-a-c5b.md`: the Queen's Hit/JumpEnd/ChargeAttackEnd → Idle and her chains, the Deev's entry and Idle Look loop. `EnemyIdleReturnTransitionTests` pins both. Then the Queen and Deev prefabs were put back to their pre-C5 idle (no spread). Commits `8924cbe2b`, `ba186931e`. D-140.
+- **Verified:** guard test 26/26; EditMode 517/518 (known red only); THJ play check passed.
+- **Not verified:** nothing open.
+- **Findings:** the Mountain Deev has no `Hit` state though `UnitBase` plays one (backlog).
+- **Status:** done; C7 and C8 next.
