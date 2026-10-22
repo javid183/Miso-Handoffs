@@ -1896,3 +1896,11 @@ Done. THJ merged `thj/preview-improvements` into `main` on 2026-10-20. The GDD l
 **Not verified:** nothing played yet; the banner keeps its old 3 s timing and top-centre spot until C3.
 **Findings:** the banner's graphics catch raycasts, so clicks under it are swallowed now that the turn runs underneath (fix folded into C3); a turn-start HUD-hiding sequence now cuts the banner (play check); `UIPanelAnimator.Visible` can go stale (backlog, dev toggle only).
 **Status:** C2 next.
+
+## 2026-10-22: Quick wins bundle P, C1b (no player input during the player's banner)
+
+**Built:** the player's banner holds the existing input lock (one owner per banner, released on finish, hide, replacement or destroy); the ability bar (buttons and 1–9) and the End Turn button check the lock themselves. Commit `fd52cc377`. D-142.
+**Verified:** compile clean; EditMode 517/518 (known red only); reviewer APPROVE (`reports/quick-wins-p-c1b-review.md`); THJ play-tested it: works.
+**Not verified:** nothing open.
+**Findings:** the lock also blocks the ability bar and End Turn behind an open tutorial (closes an old gap). The L reaction key is ATB-only and does nothing on FTP. THJ asked next for a short pause before a faction's turn when the previous turn ended on its own (not by End Turn), set per faction and independent of the banner.
+**Status:** pause design proposed to THJ; then C2.
