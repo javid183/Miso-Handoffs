@@ -1856,3 +1856,11 @@ Done. THJ merged `thj/preview-improvements` into `main` on 2026-10-20. The GDD l
 - **Not verified:** nothing open for C4.
 - **Findings:** in LevelMarkIntro-C1 the queued win set's new objective gets its text only after the stage's sequence and LevelSpecificBehaviour (`WaitThenEvaluateNewStage`). The panel's resize called `LayoutRebuilder.ForceRebuildLayoutImmediate` on the mask, which has no layout controller, so nothing rebuilt and the old height was measured; rebuilding the objectives container fixes it. Found with temporary `[OBJ-DIAG]` logs (removed) and a read-only live probe through the Unity MCP. Process note: an implementer edited scripts during THJ's Play session and stopped Play once; implementers now never toggle Play mode.
 - **Status:** C4 done; C5 next.
+
+## 2026-10-22: Quick wins bundle A, C5 (enemy idle spread) and C6 (Mark's hit sound)
+
+- **Built:** C5: `IdlePhaseSequence` (golden-ratio start phases, reset each play session) replaces `Random.value` in `EntityAnimationHandler.Play`; opt-in per-unit speed spread on the idle only (others keep authored speed); Pause captures once, Resume restores the playing state's speed. 8 enemy prefabs at ±15 %. C6: Mark's hit plays `A_SFX_John_Hit`. Commits `74aa5f23f`, `f234f7259`. D-139.
+- **Verified:** EditMode 491/492 (known red only, confirmed by name); THJ play check passed.
+- **Not verified:** the ±15 % value in play (raised at commit time).
+- **Findings:** (1) enemy controllers still have animator transitions into Idle (Hit/Spawn, Queen jump/charge ends, Deev Idle Look), which bypass the handler: after a hit or spawn the idle plays at authored speed from frame 0. (2) Mark's Walk/Command/Cleanse sound overrides are empty (backlog). (3) An implementer left a scratch prefab copy in `Assets/`; deleted with THJ's OK.
+- **Status:** C5, C6 done; C5b proposed; C7, C8 next.
