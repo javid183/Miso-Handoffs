@@ -123,3 +123,4 @@ Acceptance: the remaining value criteria, and grid cells under the banner take c
 (filled in as chunks are committed)
 
 - C1: committed `5d1456ea3`; built (`reports/quick-wins-p-c1.md`), review APPROVE (`reports/quick-wins-p-c1-review.md`), EditMode 517/518 (known red only).
+- C1b: built (`reports/quick-wins-p-c1b.md`; existing input lock per banner, ability bar checks the lock), review APPROVE (`reports/quick-wins-p-c1b-review.md`), EditMode 517/518 (known red only). Waiting on THJ's play test, then the commit. Open: End Turn during the banner (THJ). The L reaction key is ATB-only and returns at once on FTP, so no gate is needed on `main`.
