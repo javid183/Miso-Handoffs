@@ -63,6 +63,14 @@ Files: `Core/Managers/CombatLevelRunHandler.cs` (or a new partial `CombatLevelRu
 
 Acceptance: the first five criteria. This is a behaviour change of a core system, already decided by THJ (D-107).
 
+### C1b. No player grid interaction until the player's banner ends (core, `opus`; D-142)
+
+THJ play-tested C1: good, but on the **player's** turn no grid interaction may happen before the banner has finished: no unit selection, ability selection (bar buttons and hotkeys), target selection or confirmation. Camera movement, hover and the like stay allowed. Enemy turns are unchanged (they start and play under the banner).
+
+- Gate only the interaction path, not the whole input: the existing `PlayerInputController.AddInputLock` blocks Camera too, so it doesn't fit. Preferred: an additive interaction-only lock on `PlayerInputController` (owner-based like `InputLockSet`, masks out `ActionMode.Interact`), with EditMode tests next to `InputLockTests`. Find every path that starts a grid interaction (input events filtered by `ActionMode.Interact`, the ability bar's buttons and hotkeys, `PlayerController` click handling) and make sure each one respects it.
+- `CombatLevelUIManager.PlayPhaseAnimation` takes the lock when the faction is the player's and releases it when the banner finishes, when `HideInstant` runs, or when another banner replaces it. The release must happen on every path (no stuck lock).
+- Acceptance: during the player's banner, clicks on units, cells and ability buttons and ability hotkeys do nothing, while the camera moves; the moment the banner ends everything works; enemy turns behave as in C1; a level that ends or hides the HUD mid-banner leaves no lock behind.
+
 ### C2. EndLevel waits as fields (core, `sonnet`)
 
 File: `Core/Managers/CombatLevelRunHandler.cs` (fields next to `timeBetweenFactionTurns`).
