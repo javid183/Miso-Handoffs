@@ -2,7 +2,7 @@
 
 Size: M    Tier: mixed (per chunk; questions W5 to W8 below)    Assigned to: miso-implementer (one chunk per run)
 Branch: all (built on `thj/quick-wins`, created by THJ from `main`, D-111)
-Status: approved 2026-10-21 (W5 to W8: D-130 to D-133); in progress
+Status: done 2026-10-22 (all chunks committed on `thj/quick-wins`; commit log below)
 
 ## Why
 
@@ -142,4 +142,7 @@ Correction: `FadeOutGridSequence.asset` is not unused; every `IntroCutscene` fad
 - C5 (enemy idle desync, D-139): `74aa5f23f`. Spread ±15 % on the idle only (THJ widened it from ±7 % at commit time). Play-checked. Open: animator transitions into Idle (Hit/Spawn → Idle on Dark Claw, Archer, Masher, Queen, Dark Worm, Shaman; Queen JumpEnd/ChargeAttackEnd → Idle; Deev Idle ↔ Idle Look) bypass the handler, so after a hit or spawn the idle returns at authored speed and frame 0. Follow-up proposed (C5b).
 - C6 (Mark's hit sound, D-139): `f234f7259`. Play-checked.
 - C5b (enemy idle returns, D-140): `8924cbe2b`. 8 Hit/Spawn → Idle transitions removed (Dark Claw, Archer, Masher, Dark Worm, Shaman), Dark Worm spawn clip plays once; Queen and Deev transitions kept. Guard test 26/26; EditMode 517/518 (known red only); play-checked by THJ. Follow-up `ba186931e`: Queen and Deev prefabs back to their pre-C5 idle (bosses are alone in their levels).
+- C7 (Workshop shared items hidden, D-108): `945067759`. Play-checked on a fresh save. Existing saves keep them (saved state wins); the character equipment panel's Hidden filter is commented out (`CharacterSelect_EquipmentsPanelUI.cs:84`).
+- C8 (M1 level 2 grid stays hidden, D-131): `fc731b0c5`. New `OutroCutsceneKeepGridHidden` used only by `Level1C1-2`'s end sequence. Play-checked. No effect when `deactivateIntroOutroSequences` is on.
+- **Bundle A complete 2026-10-22** (C3c dropped; C3b's cursor sprite awaits THJ's art).
 - C3b (fires cursor): `879f560f9`. EditMode 473/474 (known red only). Not play-checked: the placeholder `cursor_fire.png` is a copy of the attack cursor; THJ repaints it and checks later.

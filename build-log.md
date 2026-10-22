@@ -1872,3 +1872,11 @@ Done. THJ merged `thj/preview-improvements` into `main` on 2026-10-20. The GDD l
 - **Not verified:** nothing open.
 - **Findings:** the Mountain Deev has no `Hit` state though `UnitBase` plays one (backlog).
 - **Status:** done; C7 and C8 next.
+
+## 2026-10-22: Quick wins bundle A, C7 and C8; bundle A complete
+
+- **Built:** C7: `Equipment_Shin Armor` and `Equipment_Vitality Brooch` start Hidden. C8: `OutroCutsceneKeepGridHidden` (input + HUD, no grid fade-in) ends `Level1C1-2`'s end sequence. Commits `945067759`, `fc731b0c5`. D-108, D-131.
+- **Verified:** EditMode 517/518 (known red only); THJ play check (fresh save Workshop; M1 level 2 end).
+- **Not verified:** the character equipment panel (its Hidden filter is commented out, so the two items may show there).
+- **Findings:** none new.
+- **Status:** bundle A done on `thj/quick-wins`: C1 cancel, C2 shield poses, C3a stepped preview + lethal skull, C3b fires cursor (art pending), C4 objectives panel, C5/C5b idle spread, C6 Mark hit sound, C7, C8 (C3c dropped). Next: bundle P.
