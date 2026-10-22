@@ -140,6 +140,8 @@ Known issues carried over from the Oct 13 runs unless dated otherwise. All scope
 
 - 2026-10-21 (scope all; audio): Mark's ability animation-event sounds are effectively empty: on `Unit_Mark.prefab` the Walk, Command and Cleanse `animationEvents` overrides set `Array.size = 0`, so no footsteps or ability sounds play on him (only the hit sound, an HP event, is live). Other units may have the same pattern; not checked. Found during quick wins C6.
 
+- 2026-10-22 (scope all; dev tool, Minor): with the dev auto-player (`AutoPlayerController.prefab`) as the player faction, pressing End Turn still gets the enemy's turn-start pause, because `AIController.RequestEndTurn` doesn't call base where the End Turn mark is set. Fix: a protected helper on `FactionControllerBase` called from both. From the bundle P C1c review.
+
 - 2026-10-22 (scope all; UI, Minor): `UIPanelAnimator` Show/Hide coroutines wait on the shared `tween` field, so a Hide then Show back to back can leave `Visible` wrong. Only the dev HUD toggle (`HUDVisibilityToggle.cs:37`) reads it. Fix: wait on the local tween and write `Visible` only if it is still the current one. Found in the bundle P C1 review.
 
 - 2026-10-22 (scope all; animation): the Mountain Deev's controller has no `Hit` state, but `UnitBase`'s HP event still calls `SimplePlay("Hit")` on it; nothing visible breaks (its idle keeps playing). Found during quick wins C5b.
