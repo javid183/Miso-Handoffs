@@ -29,6 +29,7 @@ THJ's private working folder for Claude on Miso. It is **excluded from the share
 | Combat code map, dev cheats | `tech/combat-architecture.md` | Coordinator | The architecture changes |
 | Home code map, builders, test tools | `tech/home-system.md` | Coordinator | The Home system changes |
 | Editor checks (compile, logs, tests, play checks) | `tech/editor-checks.md` | Coordinator; the verifier reports corrections | A check turns out wrong, or the setup changes |
+| Combat pace timings (every wait, where to change it, what it affects) | `tech/pace-timings.md` | Coordinator | A timing is added, moved or retuned |
 | Core systems list | `tech/core-systems.md` | Coordinator; THJ approves additions and removals | A class becomes something combat relies on, or stops being one |
 | Technical notes | `tech/` | Coordinator | A system is added or its contract changes |
 | Playtest task lists (structured feedback, effort and owners) | `playtests/2026-10-playtest-tasks.md` | THJ writes; coordinator tracks items in `status.md` | After each playtest round |
