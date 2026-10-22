@@ -109,3 +109,22 @@ Play a mission from the normal flow (the container scene). The object is `---Man
 ## Review fix
 
 - Review fix (reviewer should-fix): `KillFeedbackPresenter.Flash` now reads the default `_ColorOverride` from `visual.material` after `DOTween.Kill(mat)` (whose kill callback restores the default), instead of from `sharedMaterial` before it. Once a blink has run, `sharedMaterial` is the per-unit instance, so a death that lands mid-blink would otherwise have faded back to the blink tint. The `sharedMaterial.HasProperty` guard stays. The file is still LF without BOM; it now has 126 lines. Recompiled with no console errors; EditMode 546 tests, 545 passed, the only failure the known red `AIRegressionTest.Baseline_MatchesCurrentAI`. Not staged.
+
+## Tuning after THJ's play test
+
+THJ's verdict: looks good, nothing off; the flash and kick should be slightly shorter, the kick slightly weaker, and the sting different. Values only, old → new:
+
+| Where | Field | Old | New |
+|---|---|---|---|
+| `KillFeedbackPresenter.cs` default + `KillFeedback` in `CombatLevelContainerScene.unity` and `DevScenes/TestLevel.unity` | `flashHold` | 0.1 | 0.07 |
+| same | `flashFade` | 0.1 | 0.07 |
+| same | `stingSfxId` | `A_SFX_John_ShieldImpact` | `A_SFX_Enemy_MasherGoblin_AttackImpact` |
+| `Kill_ShakeCameraEffect.asset` | `baseMagnitude` / `duration` | 0.05 / 0.25 | 0.04 / 0.2 |
+| `Kill2_ShakeCameraEffect.asset` | `baseMagnitude` / `duration` | 0.06 / 0.25 | 0.05 / 0.2 |
+| `Kill3_ShakeCameraEffect.asset` | `baseMagnitude` / `duration` | 0.07 / 0.25 | 0.06 / 0.2 |
+
+- The chain window follows the played shake's `Duration`, so it is now 0.2 s with no code change.
+- No test asserted the old numbers. `KillFeedbackRulesTests` uses its own 0.25 s shake length as an input to the pure step function, so I left it alone.
+- Each scene diff is still +53 lines, 0 deletions, and only the three field values changed inside the new block. All files stay LF without BOM.
+- Recompiled with no console errors. EditMode: 546 tests, 545 passed; the only failure is the known red `AIRegressionTest.Baseline_MatchesCurrentAI`. Nothing is staged.
+- Docs to update: `tech/pace-timings.md` should use the new values (flash 0.07 + 0.07 s, kill shake 0.2 s at 0.04/0.05/0.06), and the GDD section should use the new sting id.
