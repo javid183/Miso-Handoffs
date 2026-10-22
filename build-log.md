@@ -1888,3 +1888,11 @@ Done. THJ merged `thj/preview-improvements` into `main` on 2026-10-20. The GDD l
 - **Not verified:** nothing open.
 - **Findings:** closing Unity drops this session's Unity MCP connection; it comes back only when THJ reconnects it via /mcp (a fresh subagent doesn't reconnect it).
 - **Status:** `main` carries bundle A. Next: bundle P (pace).
+
+## 2026-10-22: Quick wins bundle P, C1 (non-blocking phase banner)
+
+**Built:** the turn switch starts the phase banner without waiting for it (`CombatLevelRunHandler.SwitchTurnIE` → new `CombatLevelUIManager.PlayPhaseAnimation`); the End Turn panel hides/shows in the same frame; `HideHUD` hides the banner at once; `PhaseVisualsUI` shares one sequence helper, adds `HideInstant`, kills its tween on destroy, eases both slides. Commit `5d1456ea3`. Plan `plans/2026-10-22-quick-wins-p-pace-tech.md` (D-141).
+**Verified:** compile clean; EditMode 517/518 (known red only); reviewer APPROVE (`reports/quick-wins-p-c1-review.md`).
+**Not verified:** nothing played yet; the banner keeps its old 3 s timing and top-centre spot until C3.
+**Findings:** the banner's graphics catch raycasts, so clicks under it are swallowed now that the turn runs underneath (fix folded into C3); a turn-start HUD-hiding sequence now cuts the banner (play check); `UIPanelAnimator.Visible` can go stale (backlog, dev toggle only).
+**Status:** C2 next.

@@ -86,7 +86,9 @@ Small YAML edits (one line each), in THJ's open editor's project. Prefer editing
 
 Before editing, check no level prefab or scene overrides these fields (a grep on 2026-10-22 found none besides the lines above). The banner move is the only non-trivial edit: the scene instance in `CombatLevelContainerScene.unity` (around line 6415) overrides the root's anchors, pivot, size and scale 1.3, so set the new layout on the **scene instance** (or remove those overrides and set it in the prefab, whichever leaves the smaller diff) and say which in the report. The `InfoPanel`/`LevelNameLbl` children move with the root; check they still read well.
 
-Acceptance: the remaining value criteria.
+Also (from the C1 review): the banner must not catch clicks. Its Images and TMP texts have Raycast Target on, and now that the turn starts under the banner, `PlayerController`'s click and hover checks (`IsPointerOverGameObject`) swallow input there. Add a CanvasGroup with `blocksRaycasts = false` (interactable off) on the PhaseVisuals root, or turn Raycast Target off on its graphics; say which in the report.
+
+Acceptance: the remaining value criteria, and grid cells under the banner take clicks and hovers while it shows.
 
 ## P1. Question for THJ (layout, Tier 3)
 
@@ -105,9 +107,11 @@ Acceptance: the remaining value criteria.
 - Compile clean after each chunk.
 - EditMode suite (known red only). No new EditMode tests: the change is coroutine timing and tween values in MonoBehaviours with no logic that runs outside Play; the reviewer and the play check cover it. (If the implementer extracts any pure logic, it gets a test.)
 - Reviewer: C1 and C2 (core).
-- Play check (THJ's time, about 10 minutes): a level with a turn-start dialog, several player/enemy switches including quick ones, an enemy turn with many actions, a win and a defeat. Feel check: is the new pace right?
+- Play check (THJ's time, about 10 minutes): clicking and hovering grid cells under the banner at the start of the player's turn; a level whose turn-start sequence hides the HUD (the banner goes with it: OK, or keep it?); a level with a turn-start dialog, several player/enemy switches including quick ones, an enemy turn with many actions, a win and a defeat. Feel check: is the new pace right?
 - Docs: `tech/core-systems.md`, `tech/combat-architecture.md`, build log, status.
 
 ## Commit log
 
 (filled in as chunks are committed)
+
+- C1: committed `5d1456ea3`; built (`reports/quick-wins-p-c1.md`), review APPROVE (`reports/quick-wins-p-c1-review.md`), EditMode 517/518 (known red only).
