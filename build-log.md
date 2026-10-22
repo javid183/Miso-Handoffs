@@ -1904,3 +1904,11 @@ Done. THJ merged `thj/preview-improvements` into `main` on 2026-10-20. The GDD l
 **Not verified:** nothing open.
 **Findings:** the lock also blocks the ability bar and End Turn behind an open tutorial (closes an old gap). The L reaction key is ATB-only and does nothing on FTP. THJ asked next for a short pause before a faction's turn when the previous turn ended on its own (not by End Turn), set per faction and independent of the banner.
 **Status:** pause design proposed to THJ; then C2.
+
+## 2026-10-22: Quick wins bundle P, C1c (turn-start pause after an automatic end)
+
+**Built:** `FactionControllerBase.turnStartPause` (per controller prefab; AI 0.5 s, player 0), waited in `SwitchTurnIE` after the shared gap and before the banner, skipped when the previous turn was ended with the End Turn button (`EndTurnFromButton` marks it only when the request goes out; cleared on turn end and start). 4 EditMode tests for the rule. Commit `ff0a9f70f`. D-143.
+**Verified:** compile clean; EditMode 521/522 (known red only); reviewer APPROVE (`reports/quick-wins-p-c1c-review.md`); THJ play-tested it: good.
+**Not verified:** nothing open.
+**Findings:** with the dev auto-player as the player faction, End Turn still gets the pause (`AIController.RequestEndTurn` skips base; backlog). Turn-switch holds added during the gap or pause aren't respected (pre-existing for the gap).
+**Status:** C2 next.
