@@ -1944,3 +1944,11 @@ Done. THJ merged `thj/preview-improvements` into `main` on 2026-10-20. The GDD l
 **Not verified:** nothing open (no asset uses a priority yet).
 **Findings:** tracking isn't cleared on scene load (≤ 0.25 s carry-over, harmless); a future priority-2 additive shake over a priority-1 one would leave the latter unprotected early (only if sequence shakes get priority 2).
 **Status:** C2 (kill feedback) next.
+
+## 2026-10-22: Feedback pass C2 (kill feedback)
+
+**Built:** `Features/Effects/KillFeedback/` (`KillFeedbackPresenter`, `KillFeedbackRules`, 10 EditMode tests): on `unitDied` outside the player's faction, a white flash (0.07 s hold, 0.07 s fade; blink killed first, default read after) and a stepped kill shake (`Kill_`/`Kill2_`/`Kill3_ShakeCameraEffect`, 0.04/0.05/0.06, 0.2 s, priority 1). Optional sting once per chain, left empty (THJ). `KillFeedback` object under `---Management---` in `CombatLevelContainerScene` and `TestLevel`. Commit `8d531ec64` on `thj/quick-wins`. D-146.
+**Verified:** compile clean; EditMode 545/546 (known red only); reviewer APPROVE (`reports/feedback-c2-review.md`, one should-fix applied); THJ play-tested it: looks good, asked for slightly shorter and softer values (applied).
+**Not verified:** the tuned values were committed on THJ's say-so without a second full play.
+**Findings:** Dark Worm splits, a boss's `FakeDie`, reverted spawns and player-allied non-player factions also get the beat. No placeholder sting fits; a real kill sound is wanted.
+**Status:** C3 (mini HP bar) next. `pace-timings.md` needs the kill-feedback rows.

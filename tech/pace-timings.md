@@ -76,6 +76,17 @@ All 0.5 s, untouched: `EndTurnPanel.prefab`, `HUD/AbilitiesHUD.prefab`, `HUD/Uni
 | Override focus expiry | 3 s | `CameraHandler.overrideFocusWaitExpiration`, same place | Inspector | How long a forced focus holds |
 | Enemy introduction focus | 0.5 s | `PlayerController.prefab` → `EnemyIntroductionController.focusDuration` | Inspector | Enemy intro camera moves |
 
+## Kill feedback (feedback pass, `8d531ec64`)
+
+Fire-and-forget: nothing here holds the turn. Scaled time, so pause stops it and hit slow-mo stretches it.
+
+| What | Value | Where to change it | Kind | Affects | Notes |
+| --- | --- | --- | --- | --- | --- |
+| Kill flash hold / fade | 0.07 / 0.07 s | `KillFeedback` object under `---Management---` in `CombatLevelContainerScene` (and `TestLevel`) → `KillFeedbackPresenter.flashHold` / `flashFade` | Inspector, scaled | The white flash on an enemy or neutral that dies | Tuned by THJ (was 0.1 / 0.1) |
+| Kill shake | 0.2 s; 0.04, then 0.05, then 0.06 cap | `Resources/UnitSpecific/Common/Kill_`, `Kill2_`, `Kill3_ShakeCameraEffect.asset` → `duration`, `baseMagnitude`; the presenter's `chainShakes` array picks them | Asset, scaled | Camera kick on a kill; kills within 0.2 s of the last kill shake step up | Priority 1: hit and ability shakes (priority 0) can't cut it |
+| Kill sting | none | Presenter → `stingSfxId` (empty = no sound) | Inspector | One sound per kill chain | Waiting on a real sound |
+| Shake priority | 0 on every other shake | `priority` on any `ShakeCameraEffect` asset | Asset | A lower-priority shake is skipped while a higher one runs | Feedback C1, `07f4e44fe` |
+
 ## Loading
 
 | What | Value | Where to change it | Kind | Affects | Notes |
