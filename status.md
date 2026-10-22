@@ -138,6 +138,8 @@ Known issues carried over from the Oct 13 runs unless dated otherwise. All scope
 
 - 2026-10-19 (scope all; narrative): Linda's role description still ends "(1 FP)" (old spelling, and roles are meant to be free, D-036 to D-042); the role badge tooltip titles are dev labels ("Linda's FactionRole", "Lucy's FR"). Renaming them is a Tier 3 naming pass.
 
+- 2026-10-21 (scope all; audio): Mark's ability animation-event sounds are effectively empty: on `Unit_Mark.prefab` the Walk, Command and Cleanse `animationEvents` overrides set `Array.size = 0`, so no footsteps or ability sounds play on him (only the hit sound, an HP event, is live). Other units may have the same pattern; not checked. Found during quick wins C6.
+
 **Not built yet (by choice or waiting on art)**
 
 - Dawn tick camera glide and sting; the Warren's own icon and corruption overlay; haul icons; the Queen's Might crack animation.
