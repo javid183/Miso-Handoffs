@@ -113,3 +113,21 @@ Compiles, no errors. Full EditMode suite: only `AIRegressionTest.Baseline_Matche
 # Rev 4 (diagnostics, temporary)
 
 `ObjectivesPanelUI.cs` now logs every step with the prefix `[OBJ-DIAG]` (SetObjectives, UpdateEntries per entry, each coroutine step with a counter, Expand/Shrink/Resize heights, OnClick). No other behaviour change, except the reveal loop now skips entries that are already destroyed (and logs them) instead of calling Show on them. The pre-diagnostics file is saved at `/tmp/ObjectivesPanelUI.prediag.cs` (Git Bash tmp). Remove all `[OBJ-DIAG]` lines and `DiagState`/`DiagText`/`Diag`/`_diagCoroutineCounter` once the cause is found. Compiles.
+
+---
+
+# Rev 5 (cause found, fix)
+
+## Cause (from THJ's diagnostics)
+
+At the stage change the new entry's `DisplayText` was still empty when it was revealed, so the open mask was sized for the shorter content (78). A later `UpdateEntries` set the text (content 112), but nothing was unrevealed or newly satisfied, so no coroutine started and nothing re-measured; only a click re-measured.
+
+## Fix
+
+- `UpdateEntries()` now refreshes every entry (it no longer stops at the first one that needs a reveal; the set of entries that get revealed is unchanged) and, when no reveal coroutine is started, calls `ResizeToContentIfOpen()`.
+- The resize decision is a pure rule, `ObjectivesFoldRules.ShouldResize(isOpen, lastTarget, measured)` (open and differs by >= 0.5), used by `ResizeToContentIfOpen()`. 3 new tests in `ObjectivesFoldRulesTests` (grew, unchanged, folded).
+- Rev 3 resizes kept. All `[OBJ-DIAG]` code removed (file restarted from the pre-diagnostics copy), so the destroyed-entry skip from Rev 4 is gone too (it was diagnostics-only).
+
+## Verification status
+
+Files written. I stopped Play mode once to compile and test, but the editor re-entered Play mode (Time.time ~20 s, not by me) and the test runner refuses to start while in Play mode, so I did NOT get a clean compile check or a test run for this revision. Needed: stop Play mode, let it compile, check the console, then run the EditMode suite (expect only `AIRegressionTest.Baseline_MatchesCurrentAI` red, 481 tests). Proposed commit files unchanged from Rev 2 (`ObjectivesFoldRules.cs` and its tests also changed).
