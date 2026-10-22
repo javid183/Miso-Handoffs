@@ -1,103 +1,117 @@
-# Feedback pass: hits, kills, lethal preview and low HP as one language
+# Feedback pass: kills, mini HP bars and low HP as one language
 
-Size: M    Tier: 3 (game feel and a new readability feature are THJ's until 2026-10-29)    Assigned to: miso-game-designer (design), then tech plan, then miso-implementer
-Branch: all (the build goes on a quick-wins branch from `main`; nothing here differs by branch)
-Status: waiting on THJ
+Size: M    Tier: 3 (game feel and a new readability feature are THJ's until 2026-10-29); answered in D-113 and D-145    Assigned to: miso-game-designer (design), then tech plan, then miso-implementer
+Branch: all (builds on `main`, which now holds quick wins bundle A and bundle P; nothing here differs by branch)
+Status: ready for tech plan
+Revision 2 (2026-10-22)
+
+## Changelog
+
+- **Revision 2 (2026-10-22)**, folding in THJ's answers:
+  - **Cut (D-113):** all hit-stop and every time effect (enemy hits, Bergson hits, crits, the low-HP crossing stop, the kill freeze); the combat feedback director that owned them; the fatigue cap and the time-owner guard (nothing left to guard); the `UnitBase.prefab` editor script (the hit slow-mo and hit shake stay as they are). Also cut, because they only existed in the director's table: the new Bergson hit shake, the crit shake, the crossing shake, and the multi-kill sting pitch-up (`AudioHandler.PlaySFX` takes no pitch).
+  - **Done (D-134 to D-136, bundle A, on `main`):** the lethal skull on every attack preview and the stepped HP preview. Removed from this plan's build list. Q6 (skull when the target can evade) was answered "show it" and is what bundle A built. The 2 Hz skull pulse from revision 1 was not built and is dropped: THJ play-checked the static skull and found picks clear (D-137).
+  - **In (D-145):** the kill flash and the kill camera shake, owned by a small kill-feedback component plus a shake priority, with no director (Recommendation, decision 1).
+  - **Settled (D-113):** mini HP bars on every unit; low HP at **25%** of max; the heartbeat announces once, then goes quiet; placeholder sounds and skull sprite.
+  - **Re-tuned for bundle P's faster turns:** the kill shake is 0.25 s (was 0.3), the kill flash is 0.2 s in total, the damage chip is 0.4 s, and the "one heartbeat cycle on selection" now plays at most once per unit per player turn.
+- Revision 1 (2026-10-20): first design; Q1 to Q7 to THJ.
 
 ## Why
 
-Bundle F of the [quick-wins triage](2026-10-20-quick-wins-triage.md): playtest items **Q5** (juice top-up: Parsa, Oct build, still named hits and kills as the weak spot), **Q6** (always-visible mini HP bars, a lethal-hit preview, a low-HP warning; asked by Al, U, Y, J) and **Q24** (low-HP feedback, "should be designed"). Source text: [`playtests/2026-10-playtest-tasks.md`](../playtests/2026-10-playtest-tasks.md) lines 79, 80, 106.
+Bundle F of the [quick-wins triage](2026-10-20-quick-wins-triage.md): playtest items **Q5** (juice top-up: Parsa, Oct build, still named hits and kills as the weak spot), **Q6** (always-visible mini HP bars, a lethal-hit preview, a low-HP warning; asked by Al, U, Y, J) and **Q24** (low-HP feedback, "should be designed"). Source text: [`playtests/2026-10-playtest-tasks.md`](../playtests/2026-10-playtest-tasks.md) lines 79, 80, 106. The lethal-hit preview part of Q6 shipped in bundle A ([tech plan](2026-10-21-quick-wins-a-tech.md), C3a).
 
 ## Goal
 
-One feedback language in which every hit, kill, lethal preview and low-HP state has a fixed channel, size and priority, so combat lands harder without burying the Shift and preview layers.
+Kills land as a punctuation mark, every unit's HP reads at a glance, and a Bergson in danger is announced once and then stays visibly hurt, all without slowing the faster turns of bundle P or burying the Shift and preview layers.
 
 ## Problem and evidence
 
 **Symptom (playtest):** hits and kills feel weak; HP is hard to read without hovering; nothing says "this one is about to die", on either side.
 
-**Root problem:** the feedback that exists was added piecemeal per prefab, has no owner and no priority, and some of it cancels itself. Kills have no feedback of their own, and HP state lives only in hover panels.
+**Root problem:** kills have no feedback of their own, the shakes that exist cancel each other with no priority, and HP state lives only in hover panels. (Hits feeling weak is the hit-stop question, postponed by D-113.)
 
-Evidence (verified in code and prefab data on `masher-tweak` = `main` @ `08ca1d819`, 2026-10-20, unless marked):
+Evidence (revision 1 read `main` @ `08ca1d819`, 2026-10-20; revision 2 rechecked the marked items on `main` @ `7d4cd90ca`, 2026-10-22):
 
-1. **Hit-stop is already on every enemy, but it's a slow-mo, not a stop.** `UnitBase.prefab` `hitEffects` (line ~2312) calls `PlayHitBlink`, `PlayHitSlowMo`, `PlayHitFX`, `UnitHit_CameraVolumeEffect` and `UnitHit_ShakeCameraEffect`. Every enemy variant inherits it, because each one calls `PlayHit` from HP `onValueDecreased`. Archer and both Claws also call `PlayHitSlowMo` directly, so it runs twice. The triage row's "wired only on UnitBase, Claws and Archer" undercounts this. The curve (`hitSlowMoDuration` 0.2) drops to a time scale of about 0.13 within 0.02 s and holds 0.13 to 0.19 until 0.17 s. It reads as "slow", not as "impact".
-2. **Bergsons have no hit-stop and no shake on hits.** `Unit_John.prefab` disables `hitEffects` calls 1 to 3 (slow-mo, hit FX, unit volume) and swaps call 4 (the shake) for `PlayerHit_CameraVolumeEffect`, the red flash (0.05 s in, 0.05 s hold, 0.05 s out). Linda, Lucy, Mark and Toba have the same four overrides. *Assumed to be the same pattern; only John was read line by line.*
-3. **No kill feedback.** The death path (`onMinReached`, then `SimplePlayEndFrozen("Die")`, then `GUnit.Die(1)`, then `GlobalEventBus.unitDied`, fired at once in `DieInternal`, `GUnit.cs:762`) has no flash, freeze or shake.
-4. **The shakes cancel each other.** `CameraEffectBase.ActiveSCRs` is **static** (`CameraEffectBase.cs:12`), so any non-additive shake stops every running shake. If an area attack kills target 1 and then hits target 2, target 2's small hit shake would cut target 1's kill shake short.
-5. **The screen volumes cancel each other.** A non-additive `CameraVolumeEffect.Apply` reverts every active volume through the static `_activeVolumes` (`VolumeCameraEffect.cs:30-37`). A held low-HP volume would be erased by the next red hit flash. So the low-HP overlay can't be a camera volume.
-6. **Several systems write the time scale with no shared owner.** `TimeScaleCache` has a lease and notify protocol (`TimeScaleCache.cs`), and `GUnit.PlayHitSlowMo` uses it. But Family Role activation (`PlayerController.cs:1470`), the Duo target pick (`UnitsCooperationHandler.cs:228`, time scale 0), Mark's catch (`ProjectileCatchAndReturn.cs:212`) and pause write `Time.timeScale` directly, without notify. A hit-stop that's running sets the scale every frame and restores the cached value at the end, so it can overwrite a role slow-mo. *That is the code; whether it shows in play today is not verified.*
-7. **HP is readable only on hover, Shift or preview.** `EntityInfoPanelUI` has three modes (Global = Shift, FullDetail = hover, Damage = preview) and a **one-slot queue** (`_queueData`, with `Debug.LogError` when a second item is stacked). A fourth "Mini" mode would need a stack.
-8. **The lethal data exists but is never shown.** Every damage preview (`PlayerController`, the Duo preview in `UnitsCooperationHandler:610`, the Masher role preview in `MasherGoblinFactionRoleHandler:424`) goes through `GUnit.ShowDamagePreview(amount)`, then `EntityInfoPanelUI.ShowHealthMode()`, which already has `damageValue` and `healthAttribute.Value`. `AbilityDamagePreview.PredictsLethalOn` uses `damage >= hp.Value`. `ComputeFor` returns damage per unit, so area attacks and friendly fire are covered.
-9. **No low-HP state anywhere** (no `LowHealth` or `Heartbeat` in code). The selected-unit HUD bar (`UnitPanelUI._healthBarFill`) tracks HP live through `onValueChanged`. On `main` (FTP), the ATB portrait row is not in use, so the only HUD portrait is the selected unit's (`UnitPanelUI.unitImage`). *Assumed from `InitATBGaugeView` being ATB-only; not checked in play.*
-10. **HP carries over between levels, with a floor of 20% of max** (CR-24). Any threshold above 20% means a member who starts a level at the floor starts it in the low-HP state.
+1. **Hit slow-mo on every enemy, from `UnitBase.prefab` `hitEffects`** (slow-mo, blink, hit FX, unit volume, `UnitHit_ShakeCameraEffect`). Archer and both Claws also call `PlayHitSlowMo` directly. **Left as is:** D-113 postponed hit-stop, so this pass doesn't touch it.
+2. **Bergsons have no hit slow-mo and no shake on hits**; their fourth `hitEffects` call is the red flash `PlayerHit_CameraVolumeEffect`. *John read line by line; the other four assumed to match.* **Left as is.**
+3. **No kill feedback.** The death path (`onMinReached`, then `Die(1)`, then `DieInternal`, which fires `GlobalEventBus.unitDied` at once, `GUnit.cs:772-778`) has no flash or shake. *Rechecked 2026-10-22.*
+4. **The shakes cancel each other.** `CameraEffectBase.ActiveSCRs` is **static** (`CameraEffectBase.cs:12`), and a non-additive `ShakeCameraEffect.Apply` stops every running shake (`ShakeCameraEffect.cs:21-27`). `UnitHit_ShakeCameraEffect` is non-additive (`additive: 0`, 0.2 s, magnitude 0.02). So if an area attack kills target 1 and then hits target 2, target 2's hit shake cuts target 1's kill shake. Eight other shake assets exist (Linda's shot and explosive arrow, the Masher, two Divine Relics, two Super Time, a Mark-intro altar); all would cut a kill shake the same way. *Rechecked 2026-10-22.*
+5. **The screen volumes cancel each other** (static `_activeVolumes`, `VolumeCameraEffect.cs:30-37`): a held low-HP volume would be erased by the next red hit flash. So the heartbeat can't be a camera volume.
+6. **Time-scale writers without a shared owner** (role slow-mo, Duo pick, Mark's catch, pause). Not this pass's problem any more: it adds no time effect.
+7. **HP is readable only on hover, Shift or preview.** `EntityInfoPanelUI` has three modes and a one-slot queue (`_queueData`), so a mini bar can't be a fourth mode.
+8. **Lethal skull and stepped preview: built** (bundle A, `EntityInfoPanelUI.ShowHealthMode` with `DamagePreviewRules.DecideLethalMark`, option `GlobalSettingsSO.displayLethalMarkPreview`). The rule ignores evasion, matching D-113. *Verified 2026-10-22.*
+9. **No low-HP state anywhere.** The selected-unit HUD bar (`UnitPanelUI._healthBarFill`) tracks HP live. On `main` (FTP) the only HUD portrait is the selected unit's. *Assumed from `InitATBGaugeView` being ATB-only.*
+10. **HP carries over with a 20% floor** (CR-24). At a 25% threshold, a member who starts a level at the floor starts it low.
+11. **Event order on one unit (new, verified):** `RuntimeAAttribute.SetValue` fires `onValueDecreased` (line 75, which plays the hit: blink and hit shake) **before** `onMinReached` (line 82, which leads to `unitDied`). So on a kill, the victim's own blink and hit shake have already started when the kill feedback runs; the kill feedback replaces them in the same frame.
+12. **Shake and camera focus compose (new, verified):** the shake writes the camera's `localPosition` (the child), while `CameraHandler` focus moves the handler's `transform.position` (`CameraHandler.cs:399-405`). A shake that's still running when the next enemy's focus pan starts doesn't fight it.
+13. **Shake bookkeeping quirk (new, read, not run):** finished coroutines stay in `ActiveSCRs` (they're never null), so the "reset to the original position when the last shake ends" branch (`Count == 1`) only runs for the first shake of a session. It's harmless today because every curve ends at 0, but a priority change must not rely on `ActiveSCRs.Count`. For the tech plan.
+14. **Kill flash access (verified):** `GUnit.GetMainVisual()` is public (`GUnit.cs:845`); the default `_ColorOverride` can be read from `sharedMaterial`, as `GUnit` does (`GUnit.cs:383-384`); the blink tween's `OnKill` restores the default colour (`GUnit.cs:1001`). *Assumed: `DOTween.Kill(material)` kills the blink, since a DOTween material shortcut targets the material.*
+15. **Pacing after bundle P** ([`tech/pace-timings.md`](../tech/pace-timings.md)): AI hold after each action 0.25 s (real time), gap between faction turns 0.25 s, enemy turn-start pause 0.5 s after an automatic end, banner about 1 s, end-of-level waits 0.25 s, camera focus 0.5 s. *When "action completed" fires relative to the killing blow is not checked; assumed at or after it.*
 
 ## Lens notes
 
 ### Creative
 
-**Target experience.** Hitting an enemy should feel like the family's strength landing: a short, sharp stop, then release. A kill should be a punctuation mark the player looks forward to. A Bergson in danger should feel like worry for *someone*, not a generic red screen: warmth against dread, as in Children of Morta, where the family's wounds are what the game makes you care about.
+**Target experience.** A kill should be a punctuation mark the player looks forward to. A Bergson in danger should feel like worry for *someone*, not a generic red screen: warmth against dread, as in Children of Morta, where the family's wounds are what you care about. Without hit-stop, the kill has to carry the "impact" alone, so it must be clearly bigger than a hit: a white flash and a camera kick no hit ever gets.
 
-**The moment to design for.** Lucy is at 4 HP with a Black Claw two tiles away. The player picks Linda, hovers the Claw, and sees a skull on its bar. The arrow lands: the world stops for a breath, the Claw goes white, the camera kicks, and only then does it crumple. Lucy's bar stops pulsing red at the edges of the screen. Seeing the kill coming, then the kill landing, then relief: that is the over-the-bar beat.
+**The moment to design for.** Lucy is at 4 HP, her mini bar pulsing amber-red, a Black Claw two tiles away. The player picks Linda, hovers the Claw, and sees the skull (built). The arrow lands: the Claw goes white, the camera kicks, and it crumples. Seeing the kill coming, then the kill landing, then relief.
 
-**The language, in one rule:** *the world shows what the family does; the screen shows what happens to the family.* Effects on enemies stay in the world (sprite flash, hit FX, a time stop, a camera kick). Effects on Bergsons may use the screen (red flash, heartbeat vignette, HUD glow). That keeps the screen-level signals rare and personal, and the two never compete for the same space.
+**The language, in one rule (unchanged):** *the world shows what the family does; the screen shows what happens to the family.* Kills on enemies stay in the world (sprite flash, camera kick). The screen (red flash, heartbeat vignette, HUD glow) belongs to Bergsons in danger.
 
 ### Systems
 
-**Channels.** Each channel carries at most one effect at a time, and a combat feedback director arbitrates them:
+**Channels after revision 2:**
 
-| Channel | Carries | Owner today | Owner after |
-| --- | --- | --- | --- |
-| Time | hit-stop, kill freeze | `GUnit.PlayHitSlowMo` (per unit, from the prefab) | director (Option B) |
-| Camera | shake | the prefab `hitEffects` (`UnitHit_ShakeCameraEffect`) | director |
-| Screen | red hit flash (family), heartbeat vignette (family) | prefab (`PlayerHit_CameraVolumeEffect`) | flash: unchanged; vignette: new UI overlay |
-| Unit body | blink, hit FX, kill flash | prefab | blink and FX: unchanged; kill flash: director |
-| World UI | mini bar, damage chip, lethal skull, low-HP pulse | none | mini bar component, info panel |
-| HUD | low-HP bar glow, portrait tint, item-pouch nudge | none | `UnitPanelUI` addition |
-| Audio | hit SFX (per prefab `PlaySFX`), kill sting, heartbeat | prefab | hit: unchanged; new stings: director and low-HP presenter |
+| Channel | Carries | Owner |
+| --- | --- | --- |
+| Time | hit slow-mo on enemies (unchanged) | prefab, as today. No new time effect (D-113) |
+| Camera | hit shake (unchanged), ability shakes (unchanged), **kill shake** (new) | `ShakeCameraEffect` with a new **priority**; the kill shake is played by the kill-feedback component |
+| Screen | red hit flash on Bergsons (unchanged), **heartbeat vignette** (new) | flash: prefab; vignette: low-HP presenter, its own UI canvas |
+| Unit body | blink and hit FX (unchanged), **kill flash** (new) | kill flash: kill-feedback component |
+| World UI | **mini HP bar**, damage chip, low-HP pulse | mini bar component |
+| HUD | low-HP bar glow, portrait tint, item-pouch bob | low-HP presenter (`UnitPanelUI` partial or child) |
+| Audio | hit SFX (unchanged), **kill sting**, **low-HP sting**, **heartbeat** (placeholders) | kill-feedback component; low-HP presenter |
 
-**Event tiers and priority** (highest first). Within one **coalescing window of 0.1 s real time**, each channel plays only the highest tier that fired. A higher tier replaces a lower one that is running; a lower one never interrupts a higher one.
+**Shake priority (the fix for evidence 4, without a director).** `ShakeCameraEffect` gets an int `priority` (default 0, so every existing asset behaves as today). Rule: *an `Apply` whose priority is lower than a shake still running is skipped*; equal or higher behaves as today (non-additive stops the others). The running priority and its end time are tracked in their own static, not through `ActiveSCRs.Count` (evidence 13), and cleared in the existing `CameraEffectBase.ResetPlayModeState`. The kill shake assets get priority 1. Result: once a kill shake starts, no hit or ability shake can cut it; when it ends, everything is as today. Skipped, not queued: a late hit shake is noise after a kill.
 
-1. **A Bergson falls.** Keeps its existing beat (the death animation, then Revenge, CR-25). The director plays **no** enemy-kill beat on it, and no white flash. *Out of scope beyond that rule.*
-2. **Kill** (an enemy, or any unit not in the player faction, dies).
-3. **A Bergson crosses the low-HP threshold** on this hit.
-4. **Critical hit** (`onCriticalDamageDoneOnUnit`, which fires before the HP change).
-5. **A Bergson is hit.**
-6. **An enemy is hit.**
-7. **Damage over time and push damage** (Burn ticks, collisions). Blink and SFX only, with no time or camera effect. *How the tech plan detects these hits is open; if they can't be told apart cheaply, they play as tier 6.*
+**Kill rule.** A kill is a `unitDied` for a unit that is **not in the player's faction** (enemies, and Deer or other neutrals). A Bergson or Toba death keeps its own beat (CR-25) and gets no kill flash or kill shake. `FakeDie` (the Dom boss end) fires `unitDied` too and gets the kill beat; intended.
 
-**Starting values** (real seconds; a time scale of 1 is normal speed):
+**Kill values** (scaled time, so pause stops them; matches the blink and shake today):
 
-| Event | Time | Camera shake (`baseMagnitude`, duration) | Body | Screen | Audio |
-| --- | --- | --- | --- | --- | --- |
-| Enemy hit | Hit-stop: drop to 0.05 in 0.015 s, hold to 0.09 s, ease back to 1 by 0.14 s (ease-in quad) | 0.02, 0.2 s (current values) | blink (current), hit FX | none | current hit SFX |
-| Bergson hit | none (as today) | **new** 0.03, 0.2 s | blink | red flash (current) | current |
-| Crit | 0.05 hold for 0.10 s, ease back over 0.08 s | 0.035, 0.25 s | blink | none | crit layer (optional) |
-| Bergson crosses low HP | 0.05 hold for 0.08 s, ease back over 0.08 s | 0.035, 0.25 s | blink | red flash, then the heartbeat starts 0.15 s later | low-HP sting |
-| Kill | **time scale 0 for 0.12 s**, ease back over 0.15 s (ease-out quad) | 0.05, 0.3 s; +0.01 per extra kill in the window, capped at 0.07 | **kill flash:** the sprite goes to full white (`_ColorOverride`) for 0.12 s, then the death animation runs | none | kill sting on top of the hit SFX |
-| Multi-kill (2 or more in one window) | one freeze, extended by 0.03 s per extra kill, capped at a 0.2 s hold | as above | every victim flashes at once | none | one sting, pitched up a semitone per extra kill (max +3) |
+| Element | Value | Note |
+| --- | --- | --- |
+| Kill flash | `_ColorOverride` to full white at once, hold **0.1 s**, fade back to the default over **0.1 s** | Replaces the blink: kill the blink tween first (its `OnKill` resets the colour), then flash. Runs on top of the death animation, which starts at the same moment (no freeze any more) |
+| Kill shake | `Kill_ShakeCameraEffect`: magnitude **0.05**, **0.25 s**, priority 1, the hit shake's curve shape | 0.25 s matches the AI hold after an action, so the next enemy's focus pan starts on a near-still camera (evidence 12, 15) |
+| Extra kill | A kill while a kill shake is still running restarts the shake one step up: `Kill2_` 0.06, `Kill3_` **0.07 cap**, each 0.25 s, priority 1 | Three assets, because `baseMagnitude` is serialized with no setter; this avoids a code change for a runtime magnitude. Chain resets when no kill shake is running |
+| Kill sting | Placeholder SFX, **once per chain** (the first kill), no pitch step | Pitch needs an audio API change; not worth it here |
 
-**Guards (what keeps it from overloading):**
+**Area attack that kills several units:** one shake chain (stepped 0.05, 0.06, 0.07, then capped), one sting, **one flash per victim**, each on its own sprite. Worst case the chain runs about 0.25 s past the last kill (for kills in one frame it's exactly 0.25 s).
 
-- **Fatigue cap:** at most **2** time effects per **1.0 s** real time. Later ones in that second are skipped, but their camera, body and audio still play. Multi-hit volleys (Lucy's multishot, area attacks) then stop at most twice.
-- **Time-owner guard:** the director plays no time effect while a QTE is active (`qteStarted` to `qteEnded`), while the game is paused, or when `Time.timeScale` is not 1 at trigger time (someone else owns time: a role slow-mo, the Duo pick, Mark's catch). That protects the reaction-timing pillar.
-- **Previews never move time or the camera.** Tier 0 (anything shown while the player is choosing) is world UI only.
-- **The heartbeat never stacks.** One vignette, whatever the number of low members.
+**Low HP (D-113: 25%, announce once then quiet).** Owned by the mini bar of each unit the player controls (the Bergsons, and Toba when he's in the party; *the tech plan confirms the faction check*). "Bergson" below means any of them:
 
-**How each lever fails:**
+- **Low** = alive and HP at or below **25%** of max. **Crossing** = the HP change took it from above 25% to at or below. Healing above 25% clears it; dropping again is a new crossing.
+- **Crossing beat:** the existing red flash (from the hit), the low-HP sting, then **3 heartbeat cycles** of the vignette starting 0.15 s later.
+- **Level start:** members who start at or below 25% (the 20% floor) count as one crossing, announced at the start of the first player turn, after the banner. One announcement whatever their number, one sting.
+- **Quiet afterwards:** the mini bar's amber-red pulse; when that member is selected, the HUD bar glow, the portrait tint and **one** heartbeat cycle, **at most once per member per player turn**; at the start of each player turn, if any Bergson is low, one cycle.
+- **Never stacks:** one vignette whatever the number of low members. A cycle requested while one is running is dropped.
+
+*Reading of D-113:* "announces once, then goes quiet" is taken as revision 1's Option 3 cadence, which included the selection and turn-start single cycles. The per-turn cap on the selection cycle is new, because faster turns mean more re-selection. If THJ meant "silent" (no further heartbeat cycles at all), cut the two single-cycle triggers; nothing else changes.
+
+**Levers and how they fail:**
 
 | Lever | Too high | Too low |
 | --- | --- | --- |
-| Hit-stop hold | enemy turns drag; area attacks stutter | the stop reads as lag, not impact (today's slow-mo problem) |
-| Kill freeze | the death animation looks like a hitch | a kill reads like a hit |
-| Shake | nausea; it fights the role-zone icons | no kick |
-| Low-HP threshold | permanent alarm (see the 20% floor, evidence 10) | the warning comes after it's too late |
-| Heartbeat repeats | noise the player tunes out | a member at low HP is forgotten after one turn |
+| Kill shake magnitude / length | nausea; runs into the next enemy's pan | a kill reads like a hit |
+| Kill flash hold | hides the death animation's first frames | lost on fast deaths |
+| Low-HP threshold (25%) | permanent alarm from the 20% floor | warning one hit late for low-HP Lucy |
+| Heartbeat single cycles | noise the player tunes out | a member at low HP is forgotten after one turn |
+| Mini bar size | clutter with role zones and sword icons (CR-38, CR-41 to CR-43) | unreadable |
 
 **Interactions:**
 
-- The hit-stop slows DOTween blinks and `ShakeCameraEffect`, which run on scaled time. A shake keeps jittering during a freeze, because it picks a new random offset every frame, and finishes afterwards. That is the classic look, so keep it. UI pulses and the vignette must run on **unscaled** time.
-- The kill flash uses the same material property as the hit blink (`_ColorOverride`, `GUnit.cs:932-946`). The kill flash must replace the blink tween, not fight it. The tech plan decides how; `DOTween.Kill(material)` triggers the blink's `OnKill` reset first, which suits this.
-- The Family Role, Duo and Synergy kills all go through the same `unitDied` path, so they get the kill beat with no extra rule.
+- **Pacing:** nothing in this pass waits or holds the action flow; every effect is fire-and-forget. The turn length stays what bundle P set. Checked against [`pace-timings.md`](../tech/pace-timings.md): the kill shake (0.25 s) and flash (0.2 s) fit inside the AI hold (0.25 s); a player's last kill before an automatic end is followed by 0.1 s + 0.25 s gap + 0.5 s pause, so the shake is over before the enemy banner; a level-ending kill overlaps the 0.25 s before the HUD hides, and the shake's tail is near zero. The 2.4 s crossing announcement can run into the next banner; that's fine, it is on its own canvas and doesn't lock input.
+- The hit slow-mo still runs on enemy hits (unchanged). It slows the scaled-time kill flash and shake for about 0.2 s when the killing blow is also a hit. Accepted: that's today's look, and hit-stop is THJ's later call.
+- Family Role, Duo and Synergy kills all go through `unitDied`, so they get the kill beat with no extra rule.
+- UI pulses, the vignette and the heartbeat run on **unscaled** time; a tutorial or pause that sets time to 0 must still pause them (the tech plan uses the pause state, not the time scale, for that).
 
 ### UX
 
@@ -106,175 +120,129 @@ Evidence (verified in code and prefab data on `masher-tweak` = `main` @ `08ca1d8
 | Moment | Shown | Not shown |
 | --- | --- | --- |
 | Idle on the board | A **mini HP bar** on every unit: no number, side colour. A Bergson at low HP: amber-red fill, pulsing every 0.8 s | Panels, skulls |
-| Hovering a unit (FullDetail) or holding Shift (Global) | The info panel **replaces** that unit's mini bar in the same spot (the mini bar hides while the panel is up) | Mini bar and panel together |
-| Previewing an ability (Damage mode) | The panel shows the damage segment. **If the damage is at least the target's HP: a skull at the left of the bar, a deep-red damage segment, and the skull pulsing at 2 Hz (scale 1 to 1.12).** The same skull on a Bergson or an ally hit by friendly fire | Any time or camera effect |
-| A hit lands | A white **damage chip** on the mini bar that holds 0.2 s and drains over 0.35 s (reuses the bar's decrease fill) | |
-| A Bergson crosses low HP | Red flash, short stop, sting, then **3 heartbeat cycles** of the screen-edge vignette, fading out | A constant loop |
-| Afterwards, while still low | Quiet signals only: the mini bar pulse; and when that Bergson is selected, the HUD bar glow, the portrait tint and **one** heartbeat cycle. At the start of each player turn, if any Bergson is low: one heartbeat cycle | |
-| The low Bergson is selected and holds an item that restores HP | The item-pouch button bobs once (scale 1 to 1.15 to 1, 0.3 s) | A bob when no HP item is held |
+| Hovering a unit or holding Shift | The info panel **replaces** that unit's mini bar in the same spot | Both at once |
+| Previewing an ability | The panel's damage segment, and the skull when it kills if it lands (**built**, bundle A) | Any camera effect |
+| A hit lands | A white **damage chip** on the mini bar: hold **0.15 s**, drain over **0.25 s**; a second hit within that time extends the chip rather than restarting it | |
+| A kill lands | White flash on the victim, camera kick, sting | |
+| A Bergson crosses 25% | Red flash (existing), sting, 3 heartbeat cycles at the screen edges | A constant loop |
+| Afterwards, while still low | Mini bar pulse; on selection the HUD glow, portrait tint and one cycle (once per turn); one cycle at each player turn start | |
+| The low Bergson is selected and holds an HP-restoring item | The item-pouch button bobs once (scale 1 to 1.15 to 1, 0.3 s) | A bob when no HP item is held |
 
-**Mini bar look:** about 60% of the footprint's width (multi-tile units get a wider bar), about 4 px tall at 1080p, a 1 px dark outline, no text. It sits at the info panel's anchor, so the panel takes its place, with one place to look. Side colours: the ones the info panel already uses. *Not checked which colours those are; the tech plan confirms them, and they must not clash with the four role colours or the Shift tints (CR-41 to CR-43).*
+**Mini bar look:** about 60% of the footprint's width (wider on multi-tile units), about 4 px tall at 1080p, a 1 px dark outline, no text, at the info panel's anchor so the panel takes its place. Side colours: the info panel's own. *Still to confirm in the tech plan: which colours those are, and that they don't clash with the role colours or the Shift tints (CR-41 to CR-43).* Every unit with a health attribute that the info panel would show gets one.
 
-**Heartbeat vignette:** a screen-edge red gradient (the existing hit-flash red), with a "lub-dub" of two pulses (peak alpha 0.25, then 0.18, each 0.12 s, 0.15 s apart) and a 0.8 s cycle (75 bpm). It's a UI image on its own canvas, not a camera volume (evidence 5).
+**Heartbeat vignette:** a screen-edge red gradient (the hit-flash red), a "lub-dub" of two pulses (peak alpha 0.25 then 0.18, each 0.12 s, 0.15 s apart) in a 0.8 s cycle. A UI image on its own canvas (evidence 5).
 
-**Portrait and HUD:** the portrait gets a red tint gradient from the bottom (alpha 0.35). The HUD health bar gets an outer glow pulsing in time with the heartbeat (0.8 s).
+**Portrait and HUD:** the portrait gets a red tint gradient from the bottom (alpha 0.35); the HUD health bar an outer glow pulsing with the heartbeat.
 
 **Likeliest misreads:**
 
-1. **"Skull = certain kill."** Evasion (CR-21) can still cancel the HP loss. The preview rule is "what a preview promises, the real action does", and the damage preview already leaves out crit and evasion. The skull means "kills if it lands". See Q6 for THJ.
-2. **Mini bar mistaken for the role zone or the Shift tint.** Keep the bar off the tiles (at the panel anchor, above the sprite) and keep its colours out of the tint table.
-3. **A low-HP pulse on an enemy read as "about to die".** Low HP is a family-only state. Enemies get no pulse; the lethal skull covers "finish it".
-4. **Starting a level already at low HP** (the 20% floor) and hearing the heartbeat at once. That's intended: they *are* hurt. The announce-once rule stops it nagging.
+1. **"Skull = certain kill."** Settled by D-113: it means "kills if it lands", like the rest of the damage preview.
+2. **Mini bar read as the role zone or the Shift tint.** Keep it off the tiles and its colours out of the tint table.
+3. **A low-HP pulse on an enemy read as "about to die".** Low HP is family-only; enemies get no pulse.
+4. **A kill shake read as a hit on the family.** The kill has no screen-level effect (no red), only the camera kick and the white flash on the enemy.
+5. **Starting a level already low** and hearing the heartbeat at once: intended; announced once.
 
 ## Options compared
 
-Three decisions really matter. The rest are values for THJ to tune in play.
+Revision 1's three decisions are answered (Q1 by D-113 and D-145; Q2 = always on; Q3 = 25%). One new decision is left, and it's an engineering-level one this plan settles.
 
-### 1. Who owns time and the camera (Q5)
+### 1. Who owns the kill flash and kill shake, and how a kill shake survives later shakes
 
-| | **A. Retune and add.** Keep `GUnit.PlayHitSlowMo` and the prefab shake on hits, retune the curve on `UnitBase`. A director adds kill and crit only, through the `TimeScaleCache` notify protocol, and fires the kill shake one frame late | **B. One arbiter** *(lean)*. The director owns the time and camera channels for every tier. Disable `PlayHitSlowMo` and the shake in the `UnitBase` `hitEffects` (and the extra direct `PlayHitSlowMo` on Archer and Claws). A small relay component in `hitEffects` tells the director "this unit was hit" | **C. Kills only.** Leave hits as they are, add only the kill beat |
+| | **A. Kill-feedback component + shake priority** *(lean)* | **B. Kill-feedback component + hit-shake relay** | **C. Kill-feedback component, no protection** |
 | --- | --- | --- | --- |
-| Experience | Better. Hits in later frames can still cut a kill shake (evidence 4) | Consistent: the priority table holds everywhere | Kills land, hits stay mushy (Parsa's complaint stays half fixed) |
-| Rules complexity | Two owners, implicit priority | One table | Low |
-| Implementation | S: curve data, plus a director for 2 tiers | S–M: director for 6 tiers, plus a one-off editor script for the prefab data | S |
-| Risk | Role and QTE time conflicts stay as they are (evidence 6); no fatigue cap on hits | Touches `UnitBase.prefab` (the core death wiring lives there, so it gets its own commit); fixes the conflicts through the guard | Least |
-| USP effect | Neutral | Neutral (protects the QTE pillar) | Neutral |
+| How | A scene component listens to `unitDied`, plays the flash and the stepped kill shake. `ShakeCameraEffect` gets an int `priority` (default 0); a lower one is skipped while a higher one runs | Same component; an editor script swaps the `UnitHit_ShakeCameraEffect` call in `UnitBase.prefab` `hitEffects` for a relay that skips while a kill shake runs | Same component; shakes stay as they are |
+| Experience | A kill shake is never cut, by hits **or** ability shakes | Never cut by hits; still cut by Linda's shot, Masher and relic shakes | An area kill's shake is cut by the next target's hit (evidence 4) |
+| Complexity | One rule on one asset type | A relay plus a prefab rewire | None |
+| Cost | S: a small additive change in `Core/FX` plus assets | S–M: editor script on the prefab that holds the core death wiring | XS |
+| Risk | Touches `Core/FX` (not on the core-systems list; default keeps today's behaviour); own commit | Edits next to `onMinReached → Die` on `UnitBase.prefab` | The bug the kill shake is most likely to hit |
+| USP | Neutral | Neutral | Neutral |
 
-**Lean: B.** The cost gap is one editor script, and only an arbiter can enforce the QTE guard, the fatigue cap and the "lower never interrupts higher" rule that evidence 4 and 6 show are needed. **No `GUnit` code changes in A or B:** `PlayHit`, `hitEffects`, `GetMainVisual()` and the bus events are all public today.
+**Lean: A.** It's the smallest change that covers every shake source, and it leaves `UnitBase.prefab` untouched now that the hit slow-mo stays. The kill flash needs no protection rule: per evidence 11 the blink starts before the kill, the flash kills it, and no later hit reaches a dead unit.
 
-### 2. Mini bar visibility (Q6)
+### 2. Multi-kill shake: restart stepped, or one shake after a window
 
-| | **A. Always on, every unit** *(lean)* | **B. Damaged units only** (enemies at full HP show none; Bergsons always) | **C. Status quo** (Shift only) plus a low-HP marker |
-| --- | --- | --- | --- |
-| Experience | Genre standard (Into the Breach pips, XCOM pips, Fire Emblem bars); what four playtesters asked for | Less clutter at the start of a fight, but "no bar" has to be read as "full HP" | Cleanest board; doesn't answer Q6 |
-| Clutter | Highest: 10 to 15 bars on a busy grid | Medium | Lowest |
-| Cost | M (one component, the panel-anchor hide) | M plus a rule | S |
-| Misread | Few | "Is that enemy unhurt or missing a bar?" | HP is still hidden |
+| | **A. Play at once, step up on each extra kill while running** *(lean)* | **B. Wait a 0.1 s window, then one shake sized by the count** |
+| --- | --- | --- |
+| Experience | The first kill kicks with no delay; extra kills hit harder | 0.1 s late on every kill, even single ones |
+| Cost | Three assets | One asset plus a runtime magnitude (needs a setter) |
 
-**Lean: A.** It's thin, has no number, and hides under the panel. If it clutters in play, B is a setting flip, not a redesign.
-
-### 3. Low-HP threshold and cadence (Q24)
-
-| | **A. 30% of max, announce once then quiet** *(lean)* | **B. 25% of max, announce once then quiet** | **C. Dynamic: "one hit from death"** (HP at or below the largest damage a threatening enemy can deal next turn) |
-| --- | --- | --- | --- |
-| Experience | Catches it early; every floor-start (20%) member reads as hurt | Tighter; still catches floor-starts | The most honest ("this enemy can kill her"), Into the Breach style |
-| Cost | S | S | M–L: the enemy damage preview for every threat on every HP change; it can disagree with what the AI actually does |
-| Risk | Slightly early on high-HP John | May come one hit late for low-HP Lucy | A wrong prediction breaks trust in the skull too |
-
-**Lean: A** for this pass, with C as a later upgrade once the preview pass's threat data (`UnitThreatAnalysis.GetThreateningEnemies`) is proven cheap enough. A constant heartbeat while low was rejected: at the 20% floor it would loop for whole levels.
+**Lean: A.** "While a kill shake runs" is the window, so no separate timer is needed, and it works for area damage spread over a few frames.
 
 ## Recommendation
 
-**Build B, A and A:** the director owns time and camera; mini bars always on; low HP at 30% of max, announced once, then quiet. The values are in the Systems table. Everything below reuses what exists.
+**Build A and A**, with the values in the Systems table. The build order (suggested commit order):
 
-**Cheapest build** (for the tech plan; the order is the suggested commit order):
-
-1. **Lethal skull.** In `EntityInfoPanelUI.ShowHealthMode`, `lethal = damageValue > 0 && damageValue >= healthAttribute.Value` (the same rule as `PredictsLethalOn`), plus a skull image (placeholder sprite) and the deep-red decrease fill. Every preview caller gets it for free (evidence 8). XS, no core change.
-2. **Mini HP bar.** A new world-space component on `UnitBase.prefab`, using the `UI_Element_FillBar` prefab, subscribed to the HP attribute's `onValueChanged` (the `UnitPanelUI.TrackHealthAttribute` pattern). It hides while the unit's `EntityInfoPanelUI` is active, and adds the damage chip through `SetDecreaseBarFill`. It owns the low-HP state and raises `LowHealthChanged(unit, isLow, crossedThisHit)`. Not a fourth panel mode (evidence 7).
-3. **Combat feedback director.** A scene MonoBehaviour that listens to `unitDied`, `onCriticalDamageDoneOnUnit`, `qteStarted` and `qteEnded`, plus a hit relay called from `hitEffects`. It applies the priority table, the window and the guards. Time goes through `TimeScaleCache` (Cache, Set with notify, Release). Shakes play the existing `ShakeCameraEffect` asset type through `FXRunner.PlayCFX`, with new assets: `BergsonHit_`, `Crit_` and `Kill_ShakeCameraEffect`. The kill flash uses `GetMainVisual().material` and `_ColorOverride`. Needs a `PlayModeStaticReset` hook if it holds statics.
-4. **Prefab data** (one-off editor script, its own commit): disable `PlayHitSlowMo` and `UnitHit_ShakeCameraEffect` in the `UnitBase` `hitEffects`; remove the direct `PlayHitSlowMo` on Archer, Dark Claw and Black Claw; add the relay call to `hitEffects` on `UnitBase` and on the five Bergson prefabs, which override that list.
-5. **Low-HP presenter.** The vignette on its own overlay canvas (unscaled time), the heartbeat cadence, the `UnitPanelUI` bar glow and portrait tint (a new partial or child component, not edits inside the big file), and the item-pouch bob when the bar's item preview says an item restores HP.
-6. **Audio:** kill sting, low-HP sting, heartbeat. They need assets (Q7).
+1. **Shake priority** (`Core/FX/Runtime/CFX/ShakeCameraEffect.cs`, own commit, flagged Tier 2 as `Core/` code): int `priority`, default 0; skip a lower `Apply` while a higher one runs; track the running priority and end time in a static reset by `CameraEffectBase.ResetPlayModeState`. EditMode test of the rule as plain logic.
+2. **Kill feedback.** A scene component in the combat scene (proposed name `KillFeedbackPresenter`; no static state), listening to `unitDied`. Applies the kill rule, the flash (`GetMainVisual().material`, kill the blink tween, white, hold, fade) and the shake chain; plays the placeholder sting once per chain. New assets: `Kill_`, `Kill2_`, `Kill3_ShakeCameraEffect` (priority 1).
+3. **Mini HP bar.** A world-space component on `UnitBase.prefab` (a child object and component, not a `hitEffects` edit), using `UI_Element_FillBar`, subscribed to the HP attribute (the `UnitPanelUI.TrackHealthAttribute` pattern). Hides while the unit's info panel is up. Damage chip via the decrease fill. For Bergsons, owns the low state and raises `LowHealthChanged(unit, isLow, crossedThisHit)`.
+4. **Low-HP presenter.** Vignette canvas (unscaled, respects pause), heartbeat cadence and its caps, the `UnitPanelUI` glow and portrait tint (new partial or child), the item-pouch bob, the low-HP sting and heartbeat (placeholders).
 
 **Playtest signals:**
 
-- **It worked:** without being asked, testers mention kills feeling good. They hover less to check HP (watch how often they use Shift). They heal or retreat a low member within one turn of the warning. Nobody mentions lag.
-- **It failed:** "the game stutters" or "hitches" on area attacks or the enemy turn (lower the hit hold to 0.05 s or the fatigue cap to 1). A QTE feels mistimed after a hit (check the guard). Testers say the board is busy (try Option 2B). The heartbeat annoys (cut the turn-start reminder).
-- **Measure:** the enemy-turn length in seconds before and after, on the same level. The added time should stay under +10%.
+- **It worked:** testers mention kills feeling good without being asked; they hover or hold Shift less to check HP; they heal or retreat a low member within a turn of the announcement.
+- **It failed:** "the camera is shaky" on area kills or busy enemy turns (lower the step to 0.055/0.06 cap, or the length to 0.2 s); a kill still reads like a hit (raise to 0.06 base); the board looks busy (fall back to bars on damaged units plus all Bergsons, a setting flip); the heartbeat annoys (cut the turn-start cycle).
+- **Measure:** the enemy-turn length on the same level before and after: it should not change (this pass adds no wait).
 
 ## USP check
 
-- **Family Roles:** strengthens, a little. Role kills (Linda's shots, Mark's counter, Lucy's follow-up) get the kill beat, and the low-HP state makes John's shield role and Mark's protection matter visibly. No new rule.
-- **Synergies:** strengthens, a little. The multi-kill scaling celebrates combo kills (Linda shooting into Lucy's cyclone) without a new mechanic.
-- **Duos:** neutral, on purpose. Duo kills get the kill beat. The Duo's time-0 target pick is protected by the time-owner guard.
-- **Managing the Home as a Family:** neutral, on purpose. HP carries over between levels (CR-24), so the low-HP state carries the run's damage forward. Tying it to the Home's Wounded state on `thj/home-test` is a later idea, not in scope.
-- **Pillars:** the QTE pillar is protected by the time-owner guard. The family pillar and emotional narrative: screen-level dread is reserved for the family. The art pillar: all effects are sprite and UI, with no new post-processing.
+- **Family Roles:** strengthens, a little. Role kills (Linda's shots, Mark's counter, Lucy's follow-up) get the kill beat; the low-HP state makes John's shield and Mark's protection visibly matter.
+- **Synergies:** strengthens, a little. The stepped multi-kill shake celebrates combo kills (Linda shooting into Lucy's cyclone).
+- **Duos:** neutral, on purpose. Duo kills get the kill beat; with no time effect, the Duo's time-0 pick needs no guard.
+- **Managing the Home as a Family:** neutral, on purpose. HP carries over (CR-24), so the low state carries a run's damage forward; a link to the Home's Wounded state stays out of scope.
+- **Pillars:** the QTE pillar is safe (no time effect at all now); screen-level dread stays reserved for the family; all effects are sprite and UI, no new post-processing.
 
 ## Critics
 
-Not run. The size is M, and no `miso-design-critic` agent type is available in this session. If THJ wants one, the systems lens is the one to run (the time-scale owners).
+Not run. M size, and the hardest systems question (time ownership) left the pass with D-113.
 
 ## Acceptance criteria
 
-- [ ] Hitting an enemy gives a stop of at most 0.14 s, a shake and a blink; a Bergson hit gives a shake and the red flash, with no stop.
-- [ ] A kill gives a 0.12 s freeze, a white flash on the victim, a 0.3 s shake and a sting. An area attack that kills 3 gives one freeze and 3 flashes.
-- [ ] No time effect plays during a QTE, a Duo pick, a role slow-mo or pause. At most 2 time effects play per second.
-- [ ] A lower-tier shake never cuts a higher-tier one.
-- [ ] Every unit shows a mini bar that hides while its info panel is up (Shift, hover, preview).
-- [ ] Any damage preview at or above the target's HP shows the skull, including friendly fire on a Bergson.
-- [ ] A Bergson that drops to 30% or below gets the crossing beat once and the quiet signals after; the vignette never stacks and survives a red hit flash.
-- [ ] EditMode tests: the lethal rule (equal to HP counts as lethal); the low-HP crossing (only on crossing, not on every hit below the threshold); the priority and window arbitration; the fatigue cap. Kept as plain logic, so they can be tested without a scene.
+- [ ] An enemy kill gives a white flash on the victim (0.2 s in total), a 0.25 s camera shake at 0.05 and the placeholder sting; a Bergson or Toba death gives neither.
+- [ ] An area attack that kills 3 gives 3 flashes, one stepped shake chain (0.05, 0.06, 0.07) and one sting; a fourth kill stays at 0.07.
+- [ ] While a kill shake runs, no hit shake or ability shake cuts it; with no kill shake running, every existing shake behaves as before.
+- [ ] The kill flash replaces the victim's blink: no blink colour shows after the flash, and the colour ends at the material's default.
+- [ ] The enemy-turn length on a test level is unchanged within 0.05 s (no added wait).
+- [ ] Every unit shows a mini bar that hides while its info panel is up (Shift, hover, preview); a hit shows the damage chip.
+- [ ] A Bergson that drops to 25% or below gets the crossing beat once; later hits while low don't repeat it; healing above 25% and dropping again repeats it. Members starting a level low get one announcement at the first player turn.
+- [ ] The vignette never stacks, survives a red hit flash, pauses with the game, and the selection cycle plays at most once per member per player turn.
+- [ ] EditMode tests (plain logic): the shake priority rule; the kill rule (faction filter) and the chain step and cap; the low-HP crossing (only on crossing; 25% exact counts as low; heal-then-drop re-crosses); the heartbeat caps. Every test passes except the known `AIRegressionTest.Baseline_MatchesCurrentAI`.
 
 ## Scope
 
-In: hit and kill time, camera and body feedback; the kill sting hook; mini HP bars; the lethal skull; the low-HP state, vignette, HUD glow, portrait tint and item-pouch bob.
-Out: the Bergson death beat beyond "no enemy-kill beat" (CR-25 unchanged); a dynamic threshold (Option 3C); barks on low HP (a narrative follow-up); new post-processing; audio asset creation; the Home Wounded link.
+In: kill flash, kill shake chain and the shake priority; kill sting hook; mini HP bars and the damage chip; the low-HP state, crossing beat, vignette, heartbeat cadence, HUD glow, portrait tint and item-pouch bob; placeholder sounds.
+Done already (bundle A): the lethal skull and the stepped HP preview.
+Out: every time effect, including hit-stop and the kill freeze (D-113, D-145); any change to hit feedback (slow-mo, blink, hit shake, red flash); new Bergson or crit shakes; the Bergson death beat beyond "no kill beat" (CR-25 unchanged); a dynamic "one hit away" threshold; low-HP barks; new post-processing; final audio and skull art.
 
 ## Touches
 
-Systems: `GUnit` (core; no code change, prefab data on `UnitBase.prefab`, which holds the core death wiring), `GlobalEventBus` (core; listen only), `QuickTimeEventHandler` (core; listen only), `AbilityDamagePreview` (core; untouched, its rule mirrored in the panel), `TimeScaleCache` (existing protocol), `ShakeCameraEffect` and `FXRunner` (assets only), `EntityInfoPanelUI`, `UnitPanelUI` (new partial or child), new director, mini bar and low-HP presenter.
-USPs: Family Roles, Synergies (light); Duos and Home neutral.
-Docs: GDD combat rules (a new section), glossary (if THJ names the low-HP state).
+Systems: `ShakeCameraEffect` / `CameraEffectBase` (`Core/FX`, additive priority; not on the core-systems list), `GlobalEventBus` (listen only), `GUnit` (no code change; reads `GetMainVisual()` and the HP attribute), `UnitBase.prefab` (adds the mini bar child only; `hitEffects` and the death wiring untouched), `EntityInfoPanelUI` (the mini bar hides when it shows; may need a small "panel visible" signal), `UnitPanelUI` (new partial or child), new kill-feedback, mini bar and low-HP presenter components, new shake assets.
+USPs: Family Roles and Synergies (light); Duos and Home neutral.
+Docs: GDD combat rules (new section), glossary only if THJ names the low-HP state.
 
 ## Risks
 
-- **Core-system impact:** no public API change to any core system. `UnitBase.prefab` gets data edits next to the Inspector-wired `onMinReached → Die` (core-systems.md, "Damage and death" step 3). The editor script must touch only `hitEffects`, and goes in its own commit, flagged Tier 2. The lethal rule is duplicated in the panel; a test pins it to `PredictsLethalOn`.
-- **Time-scale writers outside `TimeScaleCache`** (evidence 6): the guard skips rather than fights them. Moving those writers onto `TimeScaleCache` is a separate core-adjacent fix, not in this pass.
-- **Enemy-turn pacing:** Bergson hits get no stop, and there's a fatigue cap; measure it as above.
-- **Sorting:** mini bars against the CR-38 sword icons drawn above sprites, and against multi-tile footprints. Check in play.
-- **Burn and push detection** for tier 7 may not be cheap. The fallback is tier 6.
+- **Core-adjacent change:** the shake priority is in `Core/FX`. Default 0 keeps today's behaviour; its own commit so it can be reverted alone. It must not use `ActiveSCRs.Count` (evidence 13).
+- **`UnitBase.prefab`:** adding a child object is a prefab edit on the asset that holds the core death wiring. The tech plan keeps it to the new child and checks the diff touches nothing else.
+- **Hit slow-mo stretching kills:** the unchanged enemy-hit slow-mo slows the scaled kill flash and shake for about 0.2 s. Accepted; revisit with hit-stop.
+- **Action completion timing** (evidence 15, assumed): if an ability's "completed" fires well after the kill, the kill shake ends even earlier relative to the next pan; if it fires before, the shake overlaps the pan's start, which composes (evidence 12). Check in play.
+- **Sorting:** mini bars against the CR-38 sword icons and multi-tile footprints. Check in play.
+- **A sequence shake skipped:** a Super Time or cutscene shake (priority 0) that starts within 0.25 s of a kill is skipped. Unlikely; if it shows, give those assets priority 2.
 
 ## Gates
 
-Compile / EditMode tests (all green except the known `AIRegressionTest.Baseline_MatchesCurrentAI`) / review / play check: **yes, it needs THJ's time**, because feel can't be judged in edit mode / docs to update (below).
+Compile / EditMode tests (all green except the known `AIRegressionTest.Baseline_MatchesCurrentAI`) / review / play check: **yes, THJ plays it**, because feel can't be judged in edit mode / docs to update (below).
 
 ## Questions for THJ
 
-**Q1. Who owns hit-stop and shake?**
-- Context: today every enemy carries its own slow-mo and shake from the prefab. A non-additive shake stops every running shake, and several systems set the time scale without telling each other (evidence 1, 4, 6).
-- Options: A (retune and add a kill and crit director), B (one director owns all of it), C (kills only).
-- Recommendation: **B.** About one editor script more than A, and it's the only one that can keep hit-stop out of QTEs.
-- Blocked: the tech plan for steps 3 and 4.
+None blocking. Calls this revision makes on its own, which THJ can overrule at the play check:
 
-**Q2. Mini HP bars on every unit, or only damaged ones?**
-- Context: four playtesters asked for always-visible bars; the board already carries role zones, intent cells, threat arcs and sword icons.
-- Options: A (always, every unit), B (damaged units plus all Bergsons), C (keep Shift-only).
-- Recommendation: **A.** Thin, no number, hidden under any panel; fall back to B if it clutters.
-- Blocked: step 2.
-
-**Q3. Low-HP threshold?**
-- Context: HP carries over with a 20% floor (CR-24), so a threshold above 20% puts floor-start members in the low state from turn 1. That's intended, but the cadence must not nag.
-- Options: A (30%), B (25%), C (dynamic, "one enemy hit away").
-- Recommendation: **A, 30%**, with C later.
-- Blocked: step 5 and the low-HP test values.
-
-**Q4. Should Bergson hits get a hit-stop too?**
-- Context: today the Bergsons switch it off, so the enemy turn is never slowed. The plan stops only on crossing the low-HP threshold.
-- Options: (a) no stop on Bergson hits, a stop on the crossing *(as planned)*; (b) the same light stop as enemy hits; (c) no stop at all on the Bergson side.
-- Recommendation: **(a).** The crossing is the moment that matters; the other hits stay fast.
-- Blocked: nothing; it's a value in the director.
-
-**Q5. How loud is the screen heartbeat?**
-- Context: Q24 suggested a "constant beating screen overlay". A constant loop at the 20% floor would run for whole levels.
-- Options: (a) announce once (3 cycles), then one cycle on selection and at the start of each player turn *(lean)*; (b) constant while low; (c) no screen overlay, only the HUD and the bar.
-- Recommendation: **(a).**
-- Blocked: step 5.
-
-**Q6. Should the lethal skull show when the target can evade?**
-- Context: evasion cancels HP loss (CR-21); the damage preview already ignores crit and evasion.
-- Options: (a) always show the skull, meaning "kills if it lands" *(lean)*; (b) a dimmed skull when the target has evasion above 0; (c) hide it when the target has evasion above 0.
-- Recommendation: **(a).** Consistent with the existing damage preview; few units carry evasion.
-- Blocked: nothing; step 1 can ship (a) and change later.
-
-**Q7. Who supplies the three new sounds** (kill sting, low-HP sting, heartbeat) **and the skull sprite?**
-- Context: these are assets, not code. The plan wires the hooks either way.
-- Options: (a) THJ or the team sources them; (b) ship with placeholder sounds from the existing library and swap later.
-- Recommendation: **(b)**, so the play check isn't blocked.
-- Blocked: the audio part of the play check only.
+- **Recommend keep the single heartbeat cycles (on selection, once per turn; at each player-turn start);** cut both if "goes quiet" meant no heartbeat at all after the announcement. Blocks nothing; two triggers to drop.
+- **Recommend no kill beat on Toba's death** (treated like a Bergson's). Blocks nothing; a faction filter.
 
 ## Docs to update if approved
 
-- `design/gdd/combat-rules.md`: a new section, "Combat feedback", after "Grid previews and the Shift view", with rules **CR-44 onward**: the world/screen rule, the tier and priority table, the guards, the lethal skull, the mini bar, the low-HP threshold and cadence. Values are linked from here, not copied.
-- `glossary.md` (narrative agent): only if THJ wants a player-facing name for the low-HP state. Don't reuse "Wounded", which is a Home term.
-- `tech/core-systems.md`: no change (no core API touched). If the director becomes something combat depends on, the coordinator may list it.
-- `design/demo-spec.md`: no change expected (no rule or number of the demo changes); the coordinator decides.
+- `design/gdd/combat-rules.md`: a new section, "Combat feedback", after "Grid previews and the Shift view", rules **CR-44 onward**: the world/screen rule; the lethal skull and stepped preview (*Built*, D-134 to D-136, not yet in the GDD); the kill beat and the shake priority; the mini bar; the low-HP threshold (25%) and cadence. A line under "Deferred and dropped": hit-stop and all time effects postponed (D-113). Values are linked from here, not copied.
+- `tech/pace-timings.md` (coordinator): a row for the kill shake (0.25 s, fire-and-forget, does not hold the turn).
+- `glossary.md` (narrative agent): only if THJ wants a player-facing name for the low-HP state; not "Wounded" (a Home term).
+- `tech/core-systems.md`: no change unless the coordinator lists `ShakeCameraEffect` after the priority change.
+- `design/demo-spec.md`: no change expected; the coordinator decides.
