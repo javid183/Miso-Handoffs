@@ -1912,3 +1912,11 @@ Done. THJ merged `thj/preview-improvements` into `main` on 2026-10-20. The GDD l
 **Not verified:** nothing open.
 **Findings:** with the dev auto-player as the player faction, End Turn still gets the pause (`AIController.RequestEndTurn` skips base; backlog). Turn-switch holds added during the gap or pause aren't respected (pre-existing for the gap).
 **Status:** C2 next.
+
+## 2026-10-22: Quick wins bundle P, C2 (end-of-level waits)
+
+**Built:** `CombatLevelRunHandler.endLevelDelayBeforeHudHide` / `endLevelDelayAfterHudHide` (0.25 s each, code defaults; scenes not edited) replace the two hard-coded 0.5 s waits in `EndLevel`. Commit `b0e58f6f6`.
+**Verified:** compile clean; EditMode 521/522 (known red only); THJ play-tested it: good.
+**Not verified:** nothing open.
+**Findings:** level outros start with `IntroCutscene` (input off, grid fade out 0.8 s, HUD hide); that second HUD hide is instant. Saving `CombatLevelContainerScene` / `TestLevel` next time writes the two new fields (expected noise).
+**Status:** C3 next (values, banner to the right edge, banner stops catching clicks).
