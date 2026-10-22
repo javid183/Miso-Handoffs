@@ -97,3 +97,14 @@ no
 4. Watch an enemy turn: it starts and plays under the red banner as before.
 5. Win or lose a level while a player banner is up (or use a cheat to end it). The banner disappears and the next level or retry has normal input.
 6. Optional: press the reactive interrupt key and End Turn during the blue banner to see the two open items above.
+
+## Follow-up: End Turn
+
+THJ decision: the End Turn button is also locked during the player's turn banner.
+
+- File: `miso/Assets/_Project/Core/UI/Runtime/PhaseControlPanelUI.cs` (LF, no BOM, kept as is). Added `using MISO.Core.Interactions;` (line 4) and turned the `endTurnButton` listener in `Awake` into a block that returns early while `PlayerInputController.Instance` exists and `IsInputLocked` is true (lines ~41-47), then invokes `OnEndTurnPressed`. Comment is in plain words, matching the abilities bar check.
+- Side effect: the lock is the shared one the banner and tutorials hold, so End Turn is also blocked behind an open tutorial.
+- `ForceEndTurn` has no other entry point (only `CombatLevelUIManager` subscribes `OnEndTurnPressed`).
+- Compile: refreshed via Unity MCP, console shows 0 errors.
+- EditMode: 518 total, 517 passed, 1 failed = the known red `AIRegressionTest.Baseline_MatchesCurrentAI` (untouched).
+- Not verified: Play check (no Play mode entered). Nothing staged or committed.
