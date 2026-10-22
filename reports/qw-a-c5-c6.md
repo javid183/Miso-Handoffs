@@ -80,3 +80,31 @@ Play a level with Mark: take a hit and listen for John's hit sound; use Cleanse,
 
 ## Loose end
 I created a scratch folder `miso/Assets/_Project/ZZ_TmpCheck/` (one prefab, `MarkHead.prefab`, a copy of the HEAD Mark prefab, plus Unity's `.meta`) to compare against HEAD. My `rm` was denied by the permission system and I did not work around it. It is untracked; please delete it (in Unity or the file system). It must not be committed.
+
+---
+
+## Rev 1 (THJ's answers)
+
+Editor checked first: not in Play mode, never toggled. Compiled clean, no console errors; EditMode suite 492 tests (491 pass), the one failure being the known red `AIRegressionTest.Baseline_MatchesCurrentAI` (new `StateSpeed_OnlyTheIdleIsJittered` passes).
+
+### C5: jitter applies to the idle only
+- `IdlePhaseSequence.StateSpeed(isIdle, authoredSpeed, idleFactor)` (pure, tested): idle gets authored x factor, every other state the authored speed.
+- Handler: `Initialize` only rolls `_idleSpeedFactor` once (no stacking). `Play` sets `_defaultAnimatorSpeed` from `StateSpeed` for the state being played (idle = `idleAnimationData`, which also covers `Stop()` and variant replays; `SimplePlay` and ability states get the authored speed) and applies it to the animator unless paused.
+- `Pause`/`Resume`: new `_paused` flag; `Pause` only captures the speed the first time (a second Pause no longer stores 0 as the default), `Resume` restores the speed of whatever is playing. This is a small change to existing behaviour, flagged.
+- Other states, including attacks, keep their authored speed, so hit frames do not move.
+- Not run: play check of a QTE pause/resume on an enemy mid-idle and mid-attack.
+
+### C6: reverted to the hit sound only
+`Unit_Mark.prefab` restored from HEAD (LF, as HEAD) and `A_SFX_Lucy_Hit` -> `A_SFX_John_Hit` re-applied. `git diff` vs HEAD is that single value line. The Walk/Command/Cleanse remap is dropped.
+
+### Final proposed commits
+1. `feat(animation): spread enemy idle phases and speeds so groups stop moving in lockstep`
+   - `miso/Assets/_Project/Core/Animation/EntityAnimation/Runtime/IdlePhaseSequence.cs` + `.meta`
+   - `miso/Assets/_Project/Core/Animation/EntityAnimation/Runtime/EntityAnimationHandler.cs`
+   - `miso/Assets/_Project/Core/Managers/PlayModeStaticReset.cs`
+   - `miso/Assets/_Project/Core/Animation/EntityAnimation/Editor/IdlePhaseSequenceTests.cs` + `.meta`
+   - the 8 enemy prefabs under `miso/Assets/_Project/Features/Enemy/` (Unit_ArcherGoblin, Unit_DarkClaw, Unit_DarkShaman, Unit_MasherGoblin, Unit_GoblinQueen, Unit_DarkWorm, Deevoted, Unit_Deev)
+2. `feat(audio): Mark uses John's hit sound as a placeholder until his own exists`
+   - `miso/Assets/_Project/Features/Player/Mark/Prefabs/Unit_Mark.prefab`
+
+The earlier loose end (scratch folder) is resolved: THJ deleted it.
