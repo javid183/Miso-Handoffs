@@ -2,7 +2,7 @@
 
 Size: S/M    Tier: 3 (feel values and core turn flow; decided in D-107)    Assigned to: miso-implementer
 Branch: all (built on `main` @ `fc731b0c5`; `thj/home-test` gets it when it takes `main`)
-Status: waiting on THJ (one layout question, P1 below)
+Status: approved 2026-10-22 (D-141; P1: right edge, upper third). C1 in progress
 
 ## Why
 
@@ -90,7 +90,7 @@ Acceptance: the remaining value criteria.
 
 ## P1. Question for THJ (layout, Tier 3)
 
-Which side should the banner sit on? Recommended: **right edge, upper third**, sliding in from off-screen right (hidden x ≈ +width, shown x ≈ −16 from the right edge), because the left and top hold the level info and objectives. Alternative: left edge, below the objectives panel. The implementer checks for overlap with the objectives panel, unit panel and End Turn panel in the Game view at 16:9 and 4:3 and reports.
+**Answered (D-141): right edge, upper third.** Which side should the banner sit on? Recommended: **right edge, upper third**, sliding in from off-screen right (hidden x ≈ +width, shown x ≈ −16 from the right edge), because the left and top hold the level info and objectives. Alternative: left edge, below the objectives panel. The implementer checks for overlap with the objectives panel, unit panel and End Turn panel in the Game view at 16:9 and 4:3 and reports.
 
 ## Risks
 
