@@ -71,6 +71,17 @@ THJ play-tested C1: good, but on the **player's** turn no grid interaction may h
 - `CombatLevelUIManager.PlayPhaseAnimation` takes the lock when the faction is the player's and releases it when the banner finishes, when `HideInstant` runs, or when another banner replaces it. The release must happen on every path (no stuck lock).
 - Acceptance: during the player's banner, clicks on units, cells and ability buttons and ability hotkeys do nothing; the moment the banner ends everything works; enemy turns behave as in C1; a level that ends or hides the HUD mid-banner leaves no lock behind.
 
+### C1c. Turn-start pause after an automatic turn end (core, `opus`; D-143)
+
+THJ play-tested C1b: when the player's turn ends on its own (last AP spent), the enemy turn starting right away is confusing. Add a short pause, set per faction, skipped when the turn was ended with the End Turn button.
+
+- `FactionControllerBase`: a serialized `turnStartPause` (seconds, tooltip in plain words: the pause before this faction's turn when the previous turn ended on its own, skipped after End Turn), default 0 in code. A flag that the turn was ended with the End Turn button, set by a new public method (e.g. `EndTurnFromButton()` that sets the flag then calls `ForceEndTurn()`), cleared at the start of the faction's next turn and whenever it would otherwise go stale (restart, level end).
+- `CombatLevelUIManager`: the End Turn panel subscribes the new method instead of `ForceEndTurn`.
+- `CombatLevelRunHandler.SwitchTurnIE`: after the shared `timeBetweenFactionTurns` wait and after the next faction is chosen, if the ended faction's controller did not end by the button and the next controller's `turnStartPause` > 0, wait that long (scaled time, like the gap), then re-check `_levelEnded` before the banner and `StartTurn()`. The banner and the turn start come after the pause, unchanged.
+- Prefabs: `AIController.prefab` `turnStartPause: 0.5`; `PlayerController.prefab` 0 (the code default; write it explicitly only if the prefab needs the line). `AutoPlayerController.prefab` stays 0.
+- Acceptance: player turn ends by running out of AP → ~0.75 s (0.25 gap after C3 + 0.5) before the enemy banner; player presses End Turn → no pause beyond the gap; enemy turn ends → no extra pause before the player's banner; a level that ends during the pause doesn't start a turn; End Turn still locked during the player's banner (C1b).
+- Tests: EditMode for any pure logic extracted (e.g. a static "pause for this switch" function taking ended-by-button and the pause value); otherwise none.
+
 ### C2. EndLevel waits as fields (core, `sonnet`)
 
 File: `Core/Managers/CombatLevelRunHandler.cs` (fields next to `timeBetweenFactionTurns`).
