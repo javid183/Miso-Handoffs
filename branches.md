@@ -18,9 +18,12 @@ Owner: coordinator; THJ approves. `claude-handoff/` doesn't change when the shar
 - No Home system.
 - 2026-10-19: `thj/fr-readability` merged in (fast-forward), plus THJ's `bcf2b263a` and `5550286dd` (Linda's role-zone icon is now `BowArrow`). `main` @ `5550286dd` now has all of it: the Batch 1 fixes (D-052, D-054, D-057, D-060), the Family Role fixes F1/F3/F5, `MarkQTE`, role zones with per-unit icons in quadrants (D-063, D-064, D-075), cover icons (D-067), the Shift preview layer (D-071, D-072), John's tether, role barks and the two additive `GlobalEventBus` events (D-068 to D-070), and the B5 fix (D-074). Commit hashes: the plans' commit logs.
 - 2026-10-21: `masher-tweak` merged in (fast-forward): the Masher reckless counter (C1–C5, D-092 to D-118), the hit-flash and ghost-facing fixes (D-121, D-122), John's area relay (D-119, D-120, D-123 to D-129), the private-ID comment cleanup `08bb27ac5`, and THJ's balance tweak `df58c4c0c`. `thj/home-test` will need this when it takes `main`.
+- 2026-10-22: `thj/quick-wins` merged in (fast-forward, `main` @ `fc731b0c5`): quick wins bundle A (one-click cancel, John's shield animation variants, stepped damage preview + lethal skull with the `displayLethalMarkPreview` option, the "fires" cursor, objectives panel open/click to fold, enemy idle spread and hit/spawn returns through the handler, Mark's hit sound, Workshop shared items hidden, M1 level 2 grid stays hidden; D-130 to D-140). `main` is ahead of `origin/main` (not pushed). `thj/home-test` will need this when it takes `main`.
 - The GDD reads its values from here (`main` @ `92853a5a9`), and its Home values from `thj/home-test` (D-046).
 
 ## `thj/quick-wins`
+
+**Merged into `main` on 2026-10-22 (fast-forward to `fc731b0c5`); kept for history, no new work.** Items scoped to it now count as `all`.
 
 - **Purpose:** playtest Batch 3 quick wins (`plans/2026-10-20-quick-wins-triage.md`; bundle A tech plan `plans/2026-10-21-quick-wins-a-tech.md`; D-107 to D-111, D-130 to D-133).
 - Created by THJ on 2026-10-21 from `main` (0 ahead, 0 behind at creation; `main` includes THJ's John shield clips `3ae174a93`). THJ's working branch.
