@@ -88,3 +88,22 @@ Files:
 - `miso/Assets/_Project/Features/UI/Panels/Editor/ObjectivesFoldRulesTests.cs` (+ `.meta`)
 
 Message: `feat(ui): objectives panel stays open and folds on click`
+
+---
+
+# Rev 3 (mask re-measured when entries are revealed while open)
+
+## Cause
+
+`Expand()` reads `objectivesParent.rect.height` once, right after a layout rebuild, and tweens the mask to it. In `UpdateObjectives()` the entries are only revealed afterwards (`Show` calls `UpdateVisuals`, which sets the new text), so an objective whose text or line count changes at reveal time never grows the mask. Before rev 2 the panel folded again right after, so it was never noticed; a toggle (fold/unfold) re-ran `Expand()` and re-measured. Found by reading the code; not reproduced in Play mode.
+
+## Fix (`ObjectivesPanelUI.cs` only)
+
+- New `ResizeToContentIfOpen()`: if open, rebuild the layout, read the content height, and re-run `Expand()` only if it differs from the height the last `Expand()` targeted (`_openTargetHeight`, set in `Expand()`).
+- Called after each entry's `Show` and once after the reveal loop in `UpdateObjectives()`.
+- Both paths covered: change while open (re-measured per entry), change while folded (`_isOpen` is set true first, `Expand()` runs, then the same re-measure). `SetObjectives` at level start goes through `UpdateEntries` -> `UpdateObjectives`, so it gets the same re-measure.
+- No prefab or other file changes in this revision.
+
+## Verification
+
+Compiles, no errors. Full EditMode suite: only `AIRegressionTest.Baseline_MatchesCurrentAI` red (known). The mask-height behaviour is UI and needs the play check: change the objective mid-level in LevelMarkIntro-C1 with the panel open, and again with it folded; the new objective should show without a fold/unfold. Proposed commit is unchanged (same files as Rev 2).
