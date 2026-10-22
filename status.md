@@ -41,7 +41,7 @@ Owner: coordinator. Every item has a scope: `all` or a branch. Started 2026-10-1
 
 **Feedback pass (Q5/Q6/Q24, 2026-10-20)** — scope all; Tier 3 (game feel); `plans/2026-10-20-feedback-pass-design.md`
 
-- Answered 2026-10-20 (D-113): hit-stop postponed; bars on every unit; 25%; heartbeat once; skull always; placeholders. 2026-10-22 (D-145): kill flash and kill shake **in**, kill freeze out. N set aside; F goes next: designer revising the plan.
+- Answered 2026-10-20 (D-113): hit-stop postponed; bars on every unit; 25%; heartbeat once; skull always; placeholders. 2026-10-22 (D-145): kill flash and kill shake **in**, kill freeze out. N set aside; F goes next. Design revision 2 approved (D-146); tech plan `plans/2026-10-22-feedback-pass-tech.md` (C1 shake priority, C2 kill feedback, C3 mini HP bar, C4 low-HP state and presenter, C5 HUD glow, portrait tint, pouch bob); ready to dispatch C1.
 
 **Home (from the handoff's open decisions)** — scope `thj/home-test`
 
