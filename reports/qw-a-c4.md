@@ -52,3 +52,39 @@ Message: `feat(ui): collapsed objectives panel shows the first active objective`
 1. Play a combat level with objectives. After the intro reveal the panel folds; the first unfinished objective appears as one line under "Objectives".
 2. Hover the panel: it expands and the line disappears; move away: it folds and the line returns.
 3. Complete the first objective: the panel expands, strikes it through, folds, and the line now shows the next unfinished objective. Complete all: no line.
+
+---
+
+# Rev 2 (panel open, click toggles)
+
+Supersedes the summary-line design above; everything from Rev 1 was removed. Nothing committed.
+
+## What changed
+
+- Removed: `CollapsedSummary` child, `collapsedSummary` field and logic, `ObjectivesSummaryRules.cs` + tests (+ .meta), the `Objective` getter. `ObjectiveEntryUI.cs` is back to HEAD.
+- `ObjectivesFoldRules` (new, pure static): `StartsOpen` (true), `AfterClick(isOpen)` toggles, `AfterObjectivesChanged(isOpen)` always open.
+- `ObjectivesPanelUI`: `_isOpen` replaces `_isHovering`. `UpdateObjectives()` (reached from `SetObjectives` + `UpdateEntries`, and from mid-level changes) marks the panel open, expands, reveals new/changed entries as before, and no longer shrinks afterwards. New public `OnClick()` toggles Expand/Shrink (ignored while a reveal is running). `OnHover`/`OnUnhover` removed.
+- Prefab: only the `HoverInteraction` events changed: the enter/exit calls (OnHover/OnUnhover) are cleared and `OnPointerClickEvent` calls `ObjectivesPanelUI.OnClick`. No other diff vs HEAD (verified by `git diff`).
+- Clicks land through the existing raycast-target Images (Art, Background, Mask) that bubble to the root `HoverInteraction`; no new raycast target added. Not play-checked.
+
+## Decisions I made
+
+- Deleted the dead `InitialWait()` coroutine: it called the removed hover flag and was never started. `initialShowDuration` field is kept (now unused) to avoid losing serialized data.
+- Clicks during an entry reveal are ignored (existing `_forceShowPanel` guard), so a click can't fight the tween.
+- Only the first reveal after `SetObjectives` expands an initially-open panel; the panel's initial mask height is whatever the prefab/scene has today.
+
+## Acceptance
+
+- Compile OK, no errors. `ObjectivesFoldRulesTests` (5 tests: start open, click toggles both ways, change while folded opens, change while open stays open): Pass.
+- Full EditMode suite: 478/479 pass, only `AIRegressionTest.Baseline_MatchesCurrentAI` red (known).
+- Play check needed: panel open at level start and stays open, click folds/unfolds, hover does nothing, mid-level objective change re-opens a folded panel.
+
+## Proposed commit (one)
+
+Files:
+- `miso/Assets/_Project/Features/UI/Panels/Scripts/ObjectivesFoldRules.cs` (+ `.meta`)
+- `miso/Assets/_Project/Features/UI/Panels/Scripts/ObjectivesPanelUI.cs`
+- `miso/Assets/_Project/Features/UI/Panels/Prefabs/UI/ObjectivesPanel.prefab`
+- `miso/Assets/_Project/Features/UI/Panels/Editor/ObjectivesFoldRulesTests.cs` (+ `.meta`)
+
+Message: `feat(ui): objectives panel stays open and folds on click`
