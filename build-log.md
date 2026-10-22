@@ -1928,3 +1928,11 @@ Done. THJ merged `thj/preview-improvements` into `main` on 2026-10-20. The GDD l
 **Not verified:** the final console read (the Unity MCP stopped answering after the last refresh); the loading pad (player builds only).
 **Findings:** the banner root's `UIPanelAnimator` is unused (old top-centre positions left). The objectives panel may cover the banner's top ~20 px with three objectives. THJ asked next for a left/right option for the banner, and about a long pause between the last end-of-level dialog line and the end-level menu: the dialogue panel's hide animation (0.5 s, `DialogNodeSequence` waits for it) plus a hard-coded 1 s in `CombatLevelRunHandler.EndLevel` before `_uiManager.EndLevel`.
 **Status:** banner side option and end-panel delay proposed to THJ.
+
+## 2026-10-22: Quick wins bundle P, C4 (banner side) and C5 (end-menu delay)
+
+**Built:** C4: `PhaseVisualsUI.side` (Left/Right, default Right) mirrors the authored right-edge layout at load; `MirrorX` with 3 EditMode tests in a new `Features/UI/Panels/Scripts/Editor/`. Commit `4c57f870f`. C5: `CombatLevelRunHandler.endLevelDelayBeforeEndPanel` 0.25 s replaces the hard-coded 1 s before the end panel. Commit `7d4cd90ca`. D-144.
+**Verified:** compile clean; EditMode 524/525 (known red only); reviewer APPROVE (`reports/quick-wins-p-c4-c5-review.md`); THJ play-tested both: good.
+**Not verified:** nothing open.
+**Findings:** the end-of-level pause was the dialogue panel's 0.5 s slide-out plus the 1 s; now about 0.75 s. Reference of every pace timing written: `tech/pace-timings.md`.
+**Status:** bundle P done. Doc updates still owed: `tech/core-systems.md`, `tech/combat-architecture.md` (banner no longer blocks, turn-start pause, End Turn → `EndTurnFromButton`, the EndLevel fields).
