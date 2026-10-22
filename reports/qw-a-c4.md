@@ -131,3 +131,19 @@ At the stage change the new entry's `DisplayText` was still empty when it was re
 ## Verification status
 
 Files written. I stopped Play mode once to compile and test, but the editor re-entered Play mode (Time.time ~20 s, not by me) and the test runner refuses to start while in Play mode, so I did NOT get a clean compile check or a test run for this revision. Needed: stop Play mode, let it compile, check the console, then run the EditMode suite (expect only `AIRegressionTest.Baseline_MatchesCurrentAI` red, 481 tests). Proposed commit files unchanged from Rev 2 (`ObjectivesFoldRules.cs` and its tests also changed).
+
+---
+
+# Rev 6 (rebuild the layout root)
+
+## Cause (coordinator's live probe)
+
+`LayoutRebuilder.ForceRebuildLayoutImmediate(mask.rectTransform)` does not recurse into children when the passed rect has no layout controller or element itself, so the content (`objectivesParent`, with its ContentSizeFitter and VerticalLayoutGroup) was not rebuilt and a stale height was measured until the next canvas update.
+
+## Fix
+
+`Expand()`, `Shrink()` and `ResizeToContentIfOpen()` in `ObjectivesPanelUI.cs` now rebuild `objectivesParent` instead of `mask.rectTransform`. No `ForceMeshUpdate` added: the layout reads the text's preferred height directly. Rev 5 `UpdateEntries` change kept; nothing else touched.
+
+## Verification
+
+Play mode was off. Compiles, no errors. Full EditMode suite run (see summary); only `AIRegressionTest.Baseline_MatchesCurrentAI` red. Play check: the stage change in the intro level should show the new objective without a fold/unfold.
