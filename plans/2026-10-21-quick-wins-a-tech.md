@@ -70,7 +70,7 @@ THJ's playtest read: while picking several targets, the hover preview shows *con
 **C3b. "Fires" cursor (sonnet; not core)**
 - `CursorSituationCatalog.cs`: a `finalPick` tri-state axis (as `basicAttack` is done: field, Specificity, `Matches`, snapshot). `CursorSituationDriver.Sample()`: Yes when the inferred ability is `MultipleTargets` and `RequiredTargetCount - TargetCellCount <= 1`, in TargetSelection and in ActionSelection (the first pick via the default ability). Catalog row "Multi Fire" (finalPick = Yes, above Basic Attack Valid) with a placeholder sprite **duplicated from an existing cursor** (`Features/UI/Cursors/Situations/`), so THJ can repaint it later. Multi-confirm abilities (`PossibleMultiActivations`) are out of scope.
 
-**C3c. Counter label, optional (sonnet)**
+**C3c. Counter label, optional (sonnet)** — **dropped 2026-10-21 (D-137)**: not needed after C3a; its option removed.
 - As the old C3 below, plus a `showTargetCounterLabel` option (default on) on `GlobalSettingsSO` (D-135), so it can be turned off if C3a and C3b are enough.
 
 Order: C3a, C3b, C3c; one commit each.
@@ -133,3 +133,4 @@ Correction: `FadeOutGridSequence.asset` is not unused; every `IntroCutscene` fad
 
 - C1 (Q9 cancel): `64fbabef5` (2026-10-21). Review APPROVE (`reports/qw-a-c1-review.md`, should-fix applied); compile clean, EditMode passed (known red only) and play-checked by THJ.
 - C2 (Q12 shield variants): `dd567cdbc` (handler variant, John's relay, tests, Hit→Idle transition removed), `7716c3a8c` (John's Hit clips play once; needed without the transition), plus THJ's `51058e216` (shielded run faster). Review APPROVE (`reports/qw-a-c2-review.md`, should-fixes applied); EditMode 430/431 (known red only) via the Unity MCP; play-checked by THJ incl. hit while shielded.
+- C3a (stepped preview + lethal skull): `11af7b05c` (setting), `ef14a0d80` (bar, skull, rules, tests; carries harmless Unity resave noise: an unused `m_AspectRatio` on an AspectRatioFitter in mode None, and two stale keys of removed fields), `127c6964e` (core: `GUnit` overload D-136, `PlayerController`). Review APPROVE (`reports/qw-a-c3a-review.md`); EditMode 462/463 (known red only); play-checked by THJ. C3c dropped (D-137).

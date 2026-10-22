@@ -1832,3 +1832,11 @@ Done. THJ merged `thj/preview-improvements` into `main` on 2026-10-20. The GDD l
 - **Not verified:** nothing open for C2.
 - **Findings:** the shielded attack is 0.8 s against 1.2 s (THJ: feels fine). The switch animation and a QTE-pause swap don't use the variant (known edges, left).
 - **Status:** C2 done; C3 next.
+
+## 2026-10-21: Quick wins bundle A, C3a (stepped HP preview + lethal skull)
+
+- **Built:** while picking several targets, HP bars show confirmed hits (red) and this click's hit (light orange); picked targets keep their confirmed segment while the cursor is elsewhere. A pulsing lethal skull on every damage preview (placeholder sprite `Epic skull.png`): confirmed kills show the normal skull, the firing click shows it in the light tint when that click finishes the kill. Option `displayLethalMarkPreview` on `GlobalSettingsSO`. `GUnit.ShowDamagePreview(total, confirmed, pick)` additive overload; `AbilityDamagePreview` math unchanged. Commits `11af7b05c`, `ef14a0d80`, `127c6964e`. D-134 to D-137.
+- **Verified:** reviewer APPROVE (should-fixes applied); EditMode 462/463 (known red only) through the Unity MCP; THJ play check passed.
+- **Not verified:** nothing open for C3a.
+- **Findings:** the planned target-counter label (C3c) was not needed and is dropped. `ef14a0d80` carries harmless Unity resave noise in two prefabs. THJ may want a stronger deep red on lethal segments and final skull art.
+- **Status:** C3a done; C3b next.
