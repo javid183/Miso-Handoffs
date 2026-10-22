@@ -81,7 +81,11 @@ Order: C3a, C3b, C3c; one commit each.
 - `Features/_Common/Prefabs/UnitBase.prefab`: add a TMP child under the `TargetSelectCounter` world-space canvas, above the pips, and wire `label`. Additive child only; do not touch the attribute wiring. Use the project's existing world-space font/material.
 - No `PlayerController` change (the counter already gets `RequiredTargetCount`).
 
-### C4. Q22 objectives summary (sonnet)
+### C4. Q22 objectives panel (sonnet) — **reworked 2026-10-21 (D-138)**
+
+Rev 2 replaces the summary line below: open by default and stays open; click the panel to fold/unfold; an objective change while folded re-opens it and keeps it open; no hover expand; summary line, its rules file and tests removed. Acceptance: the panel is open at level start and after every objective change (incl. the mid-level change in LevelMarkIntro-C1); one click folds, the next unfolds; hovering does nothing; nothing else in the HUD moves.
+
+(Original rev 1, superseded:)
 
 - `Features/UI/Panels/Scripts/ObjectivesPanelUI.cs`: add `[SerializeField] TMP_Text collapsedSummary` placed outside the Mask. In `Shrink()`: set it to the first entry whose objective is not `Satisfied` and show it (hide if none). In `Expand()`: hide it. `ObjectiveEntryUI` gets a read-only `Objective` getter. The pick is a pure static (`FirstActive(IReadOnlyList<LevelObjective>)`) with an EditMode test.
 - `Features/UI/Panels/Prefabs/UI/ObjectivesPanel.prefab`: add the TMP line (same style as `objectiveText`, one line, ellipsis overflow).
