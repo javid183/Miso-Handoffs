@@ -107,3 +107,9 @@ Message: `feat(ui): objectives panel stays open and folds on click`
 ## Verification
 
 Compiles, no errors. Full EditMode suite: only `AIRegressionTest.Baseline_MatchesCurrentAI` red (known). The mask-height behaviour is UI and needs the play check: change the objective mid-level in LevelMarkIntro-C1 with the panel open, and again with it folded; the new objective should show without a fold/unfold. Proposed commit is unchanged (same files as Rev 2).
+
+---
+
+# Rev 4 (diagnostics, temporary)
+
+`ObjectivesPanelUI.cs` now logs every step with the prefix `[OBJ-DIAG]` (SetObjectives, UpdateEntries per entry, each coroutine step with a counter, Expand/Shrink/Resize heights, OnClick). No other behaviour change, except the reveal loop now skips entries that are already destroyed (and logs them) instead of calling Show on them. The pre-diagnostics file is saved at `/tmp/ObjectivesPanelUI.prediag.cs` (Git Bash tmp). Remove all `[OBJ-DIAG]` lines and `DiagState`/`DiagText`/`Diag`/`_diagCoroutineCounter` once the cause is found. Compiles.
