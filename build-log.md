@@ -1920,3 +1920,11 @@ Done. THJ merged `thj/preview-improvements` into `main` on 2026-10-20. The GDD l
 **Not verified:** nothing open.
 **Findings:** level outros start with `IntroCutscene` (input off, grid fade out 0.8 s, HUD hide); that second HUD hide is instant. Saving `CombatLevelContainerScene` / `TestLevel` next time writes the two new fields (expected noise).
 **Status:** C3 next (values, banner to the right edge, banner stops catching clicks).
+
+## 2026-10-22: Quick wins bundle P, C3 (pace values, banner timing and position)
+
+**Built:** AI hold 0.25 s; gap between faction turns 0.25 s (`CombatLevelContainerScene`, `TestLevel`); loading pad 0.5 s (`PreloadScreen`); banner 0.25 / 0.5 / 0.25 s (prefab and the scene's existing duration override), anchored to the right edge, shown (−16, −260), hidden (+760, −260); CanvasGroup with raycasts off. Commit `e2c9bbf68`. D-107, D-141.
+**Verified:** EditMode 521/522 (known red only); THJ play-tested it: good.
+**Not verified:** the final console read (the Unity MCP stopped answering after the last refresh); the loading pad (player builds only).
+**Findings:** the banner root's `UIPanelAnimator` is unused (old top-centre positions left). The objectives panel may cover the banner's top ~20 px with three objectives. THJ asked next for a left/right option for the banner, and about a long pause between the last end-of-level dialog line and the end-level menu: the dialogue panel's hide animation (0.5 s, `DialogNodeSequence` waits for it) plus a hard-coded 1 s in `CombatLevelRunHandler.EndLevel` before `_uiManager.EndLevel`.
+**Status:** banner side option and end-panel delay proposed to THJ.
