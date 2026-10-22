@@ -1880,3 +1880,11 @@ Done. THJ merged `thj/preview-improvements` into `main` on 2026-10-20. The GDD l
 - **Not verified:** the character equipment panel (its Hidden filter is commented out, so the two items may show there).
 - **Findings:** none new.
 - **Status:** bundle A done on `thj/quick-wins`: C1 cancel, C2 shield poses, C3a stepped preview + lethal skull, C3b fires cursor (art pending), C4 objectives panel, C5/C5b idle spread, C6 Mark hit sound, C7, C8 (C3c dropped). Next: bundle P.
+
+## 2026-10-22: `thj/quick-wins` merged into `main`
+
+- **Built:** fast-forward of `main` from `3ae174a93` to `fc731b0c5` (15 commits, 68 files); THJ's uncommitted package/ProjectSettings changes carried over untouched. Not pushed.
+- **Verified:** Unity reopened on `main`, compile clean, no console errors; EditMode 517/518, the only failure the known red `AIRegressionTest.Baseline_MatchesCurrentAI` (run through the Unity MCP after THJ reconnected it with /mcp).
+- **Not verified:** nothing open.
+- **Findings:** closing Unity drops this session's Unity MCP connection; it comes back only when THJ reconnects it via /mcp (a fresh subagent doesn't reconnect it).
+- **Status:** `main` carries bundle A. Next: bundle P (pace).
