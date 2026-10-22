@@ -1848,3 +1848,11 @@ Done. THJ merged `thj/preview-improvements` into `main` on 2026-10-20. The GDD l
 - **Not verified:** the cursor in play (looks like the attack cursor until THJ repaints it).
 - **Findings:** none.
 - **Status:** C3b done pending art; C4 next.
+
+## 2026-10-21: Quick wins bundle A, C4 (objectives panel)
+
+- **Built:** the objectives panel stays open (no auto-fold), a click folds/unfolds it, an objectives change re-opens it, hover does nothing; the first try (a one-line summary when folded) was dropped after THJ's play check. `ObjectivesFoldRules` with EditMode tests. Commit `785374c51`. D-138.
+- **Verified:** compile clean; EditMode 481/482 (known red only); THJ play check incl. the mid-level objective change in LevelMarkIntro-C1.
+- **Not verified:** nothing open for C4.
+- **Findings:** in LevelMarkIntro-C1 the queued win set's new objective gets its text only after the stage's sequence and LevelSpecificBehaviour (`WaitThenEvaluateNewStage`). The panel's resize called `LayoutRebuilder.ForceRebuildLayoutImmediate` on the mask, which has no layout controller, so nothing rebuilt and the old height was measured; rebuilding the objectives container fixes it. Found with temporary `[OBJ-DIAG]` logs (removed) and a read-only live probe through the Unity MCP. Process note: an implementer edited scripts during THJ's Play session and stopped Play once; implementers now never toggle Play mode.
+- **Status:** C4 done; C5 next.
