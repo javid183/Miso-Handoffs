@@ -109,6 +109,16 @@ Also (from the C1 review): the banner must not catch clicks. Its Images and TMP 
 
 Acceptance: the remaining value criteria, and grid cells under the banner take clicks and hovers while it shows.
 
+### C4. Banner side option (not core, `sonnet`; D-144a)
+
+`Features/UI/Panels/Scripts/PhaseVisualsUI.cs`: a serialized `side` (enum Left/Right, default Right) with a plain tooltip. The authored layout stays the Right one (C3: anchors/pivot x 1, shown (−16, −260), hidden (+760, −260)). On Left, at Awake (before any tween) mirror the root's `anchorMin.x`, `anchorMax.x` and `pivot.x` (x → 1 − x) and negate the x of `shownAnchoredPosition`, `hiddenAnchoredPosition` and the current `anchoredPosition`; `HideInstant` and the sequence use the mirrored values. Don't flip the content. Default Right means the current prefab and scene behave exactly as now; no prefab or scene edit needed. EditMode test for the mirroring if it's extracted as a pure function. Acceptance: Left → the banner slides in from off-screen left to 16 px from the left edge, same height and timing; Right → unchanged.
+
+### C5. End-menu delay as a field (core, `sonnet`; D-144b)
+
+`Core/Managers/CombatLevelRunHandler.cs`: a serialized `endLevelDelayBeforeEndPanel` (`[Min(0f)]`, tooltip, default `0.25f`) next to C2's two fields, used in place of the hard-coded `1` in `ExecutionUtils.ExecuteWithDelay(() => _uiManager.EndLevel(endResult, redirectAction), ExecutionUtils.DelayMode.CustomTime, 1)`. Scenes not edited (the initialiser applies). Acceptance: after the last end-of-level line, the menu shows about 0.75 s later (0.5 s dialogue hide + 0.25 s) on win, defeat and mission complete.
+
+C4 and C5 are separate commits.
+
 ## P1. Question for THJ (layout, Tier 3)
 
 **Answered (D-141): right edge, upper third.** Which side should the banner sit on? Recommended: **right edge, upper third**, sliding in from off-screen right (hidden x ≈ +width, shown x ≈ −16 from the right edge), because the left and top hold the level info and objectives. Alternative: left edge, below the objectives panel. The implementer checks for overlap with the objectives panel, unit panel and End Turn panel in the Game view at 16:9 and 4:3 and reports.
