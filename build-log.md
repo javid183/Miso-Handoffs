@@ -1840,3 +1840,11 @@ Done. THJ merged `thj/preview-improvements` into `main` on 2026-10-20. The GDD l
 - **Not verified:** nothing open for C3a.
 - **Findings:** the planned target-counter label (C3c) was not needed and is dropped. `ef14a0d80` carries harmless Unity resave noise in two prefabs. THJ may want a stronger deep red on lethal segments and final skull art.
 - **Status:** C3a done; C3b next.
+
+## 2026-10-21: Quick wins bundle A, C3b ("fires" cursor)
+
+- **Built:** a final-pick axis in the cursor catalog (yes when a multi-target ability has one pick left, including the first pick via the default ability) and a "Multi Fire" row (priority 66) with placeholder `cursor_fire.png` (a copy of the attack cursor). 11 EditMode tests incl. the real catalog asset. Commit `879f560f9`. D-134.
+- **Verified:** compile clean; EditMode 473/474 (known red only).
+- **Not verified:** the cursor in play (looks like the attack cursor until THJ repaints it).
+- **Findings:** none.
+- **Status:** C3b done pending art; C4 next.
