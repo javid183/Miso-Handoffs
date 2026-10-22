@@ -1935,4 +1935,12 @@ Done. THJ merged `thj/preview-improvements` into `main` on 2026-10-20. The GDD l
 **Verified:** compile clean; EditMode 524/525 (known red only); reviewer APPROVE (`reports/quick-wins-p-c4-c5-review.md`); THJ play-tested both: good.
 **Not verified:** nothing open.
 **Findings:** the end-of-level pause was the dialogue panel's 0.5 s slide-out plus the 1 s; now about 0.75 s. Reference of every pace timing written: `tech/pace-timings.md`.
-**Status:** bundle P done. Doc updates still owed: `tech/core-systems.md`, `tech/combat-architecture.md` (banner no longer blocks, turn-start pause, End Turn → `EndTurnFromButton`, the EndLevel fields).
+**Status:** bundle P done. Doc updates still owed: `tech/core-systems.md`, `tech/combat-architecture.md` (banner no longer blocks, turn-start pause, End Turn → `EndTurnFromButton`, the EndLevel fields). (Done later on 2026-10-22.) **Branch note:** bundle P's commits are on `thj/quick-wins` (THJ checked it out at 10:27), not `main`.
+
+## 2026-10-22: Feedback pass C1 (shake priority)
+
+**Built:** `ShakeCameraEffect.priority` (default 0); a shake is skipped while a higher-priority one still runs; running priority and end time tracked in statics on `CameraEffectBase`, cleared by `ResetPlayModeState` and `Revert`; pure `ShouldSkip` / `NextRunning` with 11 EditMode tests. Commit `07f4e44fe` on `thj/quick-wins`. Plan `plans/2026-10-22-feedback-pass-tech.md` (D-146).
+**Verified:** compile clean; EditMode 535/536 (known red only); reviewer APPROVE (`reports/feedback-c1-review.md`); THJ play-tested it: shakes look the same.
+**Not verified:** nothing open (no asset uses a priority yet).
+**Findings:** tracking isn't cleared on scene load (≤ 0.25 s carry-over, harmless); a future priority-2 additive shake over a priority-1 one would leave the latter unprotected early (only if sequence shakes get priority 2).
+**Status:** C2 (kill feedback) next.

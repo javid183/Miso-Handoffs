@@ -110,4 +110,4 @@ Per chunk: compile; EditMode (known red only); reviewer (C1 and C3 always; other
 
 (filled in as chunks are committed)
 
-- C1: built (`reports/feedback-c1.md`; 11 tests), review APPROVE (`reports/feedback-c1-review.md`; edge case for later: a priority-2 additive shake over a running priority-1 one), EditMode 535/536 (known red only). Waiting on THJ's play test, then the commit.
+- C1: committed `07f4e44fe` on `thj/quick-wins` after THJ's play test (shakes look the same); built (`reports/feedback-c1.md`; 11 tests), review APPROVE (`reports/feedback-c1-review.md`; edge case for later: a priority-2 additive shake over a running priority-1 one), EditMode 535/536 (known red only).
