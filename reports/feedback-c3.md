@@ -132,3 +132,12 @@ No.
 8. **Boss:** on the Goblin Queen level: a single-tile-width bar where her panel opens (she is 1x2).
 9. **Dead unit:** kill an enemy: its bar disappears at once with the death.
 10. **Sorting:** with a Bergson selected, look at sword icons on tiles just above an enemy and at role-zone icons: the bar should draw over them, and under nothing but the info panel.
+
+## Review fixes
+
+After the reviewer's APPROVE with two should-fixes:
+
+1. **Line endings:** `UnitMiniHealthBar.cs`, `MiniHealthBarRules.cs` and `Editor/MiniHealthBarRulesTests.cs` are now LF (`.gitattributes` has `*.cs text eol=lf`; `git check-attr` confirms `eol: lf`). The BOM stays on the test file only; neither runtime file has one. (I was wrong earlier to call the neighbours CRLF: they are CRLF only in the working tree, and the repo stores LF.)
+2. **Stale chip top while hidden:** `UnitMiniHealthBar.OnHealthChanged` now works out where the chip is drawn at the moment of the hit, `ChipValueAt(_chipTop, before, now - _chipHitTime, chipHold, chipDrain)`, and passes that to `ChipTopOnHit`. It no longer uses `_chipShown`, which only updates while the bar is visible. So a second hit while the info panel is up now extends the chip from its real top. The rules are unchanged, so no new test: the extend case is already covered by `SecondHitMidDrain_ExtendsFromShownTopAndHoldsAgain`, which uses the same pair of calls.
+
+Recompiled with no console errors. EditMode 563/564; the only failure is the known `AIRegressionTest.Baseline_MatchesCurrentAI`. Not play-tested.
