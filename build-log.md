@@ -1985,4 +1985,12 @@ Done. THJ merged `thj/preview-improvements` into `main` on 2026-10-20. The GDD l
 **Verified:** compile clean; EditMode 608/609 (known red; `AIRegressionTest` also flags the new graph and ability, no re-baseline); reviewer APPROVE (`reports/shaman-heal-c1-review.md`); THJ play-tested: good.
 **Not verified:** AI log scores in numbers.
 **Findings:** the HP-changed event reports the unclamped amount (C2 must use the real gain). Stunned/dormant dark allies can be healed (D-151). THJ's play session left six unrelated asset edits uncommitted (Mark–Lucy duo, Claw walks, Dom Swap, Lucy Cyclone).
-**Status:** C2 (heal pop-up, next-targets filter) next. Open: the steady low-HP screen overlay (D-148), the GDD "Combat feedback" section (game designer), real kill and low-HP sounds.
+**Status:** C2 (heal pop-up, next-targets filter) next.
+
+## 2026-10-23: Dark Shaman heal C2 and the Lucy role fix
+
+**Built:** C2: green "+N" on HP gains from abilities and items (real capped gain; `HealPopTracker`, `HealPopWindow` keeps gains during a running ability since animation-event heals report completion frames later; gains outside abilities dropped), `ec664b5fc`; next-targets panel lists only hostile units, `f4e9d9158`. Lucy (D-152, `reports/lucy-role-wrong-target.md`): ordered, locked attacker memory in `GUnit` (core) `b1848c5e8`; Lucy takes the action's target first, then an enemy that action hit, nearest first `4982d3b80`. All on `thj/quick-wins`.
+**Verified:** compile clean; EditMode 653/654 (known red only); reviewer APPROVE on C2 and the Lucy fix (`reports/shaman-heal-c2-review.md`, `reports/lucy-role-target-fix-review.md`); THJ play-tested both: Lucy solved, +N numbers show (after the `HealPopWindow` fix).
+**Not verified:** the Linda–Toba duo heal number path; a passive self-heal during an ability also pops.
+**Findings:** the AI's recent-attack factor now reflects real recency (steadier revenge targeting). Hovering a Shaman still highlights the healed Claw's cell (`GUnit.SetFutureTargetsHover`, core; follow-up). An implementer recompile once landed during THJ's Play session (agents must check Play mode first).
+**Status:** quick wins done; `thj/quick-wins` is 21 commits ahead of `main`, ready to merge (THJ). Docs: EN-11 "Dark Mending" in `enemies.md`, `core-systems.md` (GUnit attacker memory), glossary name. Open: the steady low-HP screen overlay (D-148), the GDD "Combat feedback" section (game designer), real kill and low-HP sounds.
