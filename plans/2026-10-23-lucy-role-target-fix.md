@@ -56,3 +56,5 @@ Compile; EditMode (known red only); reviewer (F1 core); **THJ's play test before
 ## Commit log
 
 (filled in as committed)
+
+- Built (`reports/lucy-role-target-fix.md`): F1 `RecentAttackerMemory` (ordered, locked: the AI worker reads it via `TargetRecentAttackFactor` → `GetRecentAttackFactor`, which now reflects real recency), 10 tests; F2 `LucyRoleTargetRanking` (direct targets first, fallback within the action's own area measured from its effects, +1 when the action pushes so Mark's Vault gets 2, ties by distance), 15 tests. EditMode 649/650 (known red, same 38 checks). In review. THJ's six assets were committed by THJ as `6ef6313bf`.
