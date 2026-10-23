@@ -84,6 +84,10 @@ Five chunks, one commit each (C4's tests with it). Riskiest first. **Each chunk 
 - Mini bar pulse for low members: amber-red fill pulsing every 0.8 s (unscaled, same pause rule).
 - Acceptance: the low-HP criteria above.
 
+### After C5: steady low-HP overlay? (D-148, decide with THJ)
+
+A subtle steady edge overlay while the **selected** member is low, staying after the heartbeat ends (THJ's Diablo IV reference). Not built; after C5's play test, ask THJ whether the HUD glow and portrait tint already cover it. If built: same canvas and texture as the vignette, a low constant alpha under the heartbeat, on/off with selection and the low state.
+
 ### C5. HUD glow, portrait tint, item-pouch bob (`sonnet`)
 
 - New partial `UnitPanelUI.LowHealth.cs`: while the selected unit is low, the HP bar's outer glow pulses with the heartbeat and the portrait (`unitImage`) gets a bottom-up red tint (alpha 0.35); both clear when not low or another unit is selected.
