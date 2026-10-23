@@ -87,6 +87,22 @@ Fire-and-forget: nothing here holds the turn. Scaled time, so pause stops it and
 | Kill sting | none | Presenter → `stingSfxId` (empty = no sound) | Inspector | One sound per kill chain | Waiting on a real sound |
 | Shake priority | 0 on every other shake | `priority` on any `ShakeCameraEffect` asset | Asset | A lower-priority shake is skipped while a higher one runs | Feedback C1, `07f4e44fe` |
 
+## Mini HP bar and low HP (feedback pass, `616af0754`, `ee2613f59`, `31b8473d7`, `403de3bf8`)
+
+Fire-and-forget: nothing here holds the turn.
+
+| What | Value | Where to change it | Kind | Affects | Notes |
+| --- | --- | --- | --- | --- | --- |
+| Damage chip hold / drain | 0.15 / 0.25 s | `UnitBase.prefab` → `MiniHealthBar` child → `UnitMiniHealthBar.chipHold` / `chipDrain` | Inspector, scaled | The white piece of mini bar after a hit; a hit during it extends it | |
+| Low-HP threshold | 25% | `LowHealthRules` (code) | Code | Player-faction units only; 0 HP never counts | D-113 |
+| Low bar pulse | 0.8 s | `UnitMiniHealthBar` low-HP fields (colour, period) | Inspector, unscaled, stops at timeScale 0 | Amber-red pulse on a low member's mini bar | |
+| Heartbeat cycle | 1.2 s; pulses 0.2 s, 0.25 s apart; peaks 0.16 / 0.11 | `LowHealthFeedback` object under `---Management---` in `CombatLevelContainerScene` (and `TestLevel`) → `LowHealthPresenter` (`cycleLength`, `pulseLength`, `pulseGap`, `firstPeak`, `secondPeak`, `edgeReach`, `vignetteColor`) | Inspector, unscaled, stops at timeScale 0 | Screen-edge vignette | Retuned by THJ (D-148) |
+| Announcement | 3 cycles (≈ 3.75 s), starting 0.15 s after the drop | Presenter → `announcementCycles`, `announcementDelay` | Inspector | On dropping to low; level start: once as turn 1 begins | |
+| Single beats | 1 cycle | Presenter | Inspector | On selecting a low member (once per member per player turn); each player turn start while anyone is low, after the banner (waits up to 4 s) | |
+| HUD glow | 0 at rest, 0.9 on the beat | `UnitPanelUI` (HUD) → `lowGlowSteadyAlpha`, peak, size, colour | Inspector | Glow around the HUD HP bar, only on beats | THJ: hidden between beats |
+| HUD bar track / portrait tint | 0.45 / 0.5 | `UnitPanelUI` → `lowBarTrackAlpha`, `lowPortraitTintAlpha` (+ colours) | Inspector | Steady signs while the selected member is low | No steady screen overlay (D-149) |
+| Item-pouch bob | 0.3 s, scale 1 → 1.15 → 1 | `UnitItemPouchButtonUI` | Inspector, unscaled, stops at timeScale 0 | Once per selection of a low member with a healing item | |
+
 ## Loading
 
 | What | Value | Where to change it | Kind | Affects | Notes |
