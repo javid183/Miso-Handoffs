@@ -76,3 +76,21 @@ Recompiled in the open editor, console clean of errors. EditMode: 619 run, 618 p
    - New commit unit: add these two files to commit 1.
 
 Compile clean. EditMode: 625 run, 624 pass, 1 fail. The failure is `AIRegressionTest.Baseline_MatchesCurrentAI`, the known red. The console shows its report, and the test-job output didn't list names, so I identified it from the AI report.
+
+## No +N in play: cause and fix
+
+**Cause.** The heal ability presets (`DarkShaman_Ability_Heal`, `Bergsons_Ability_HealthPotion`, `Dom_Ability_Heal_Enemy`) use `activationMode: 2` (event-based animated). Their effect lands on an animation event, and the ability's completion, which raises `onAbilityEffectPerformedOn` for the bare-modifier heals, comes many frames later. My end-of-frame drop (needed for the regen and restore exclusions) therefore discarded the gain before the claim could happen. I found this by reading the presets and `RuntimeAbility.Activate`; I could not confirm it in play. This is the risk the earlier review fix already warned about, and the case I proposed a fix for. Checked and fine: the trigger is on the `UnitBase.prefab` root object with `GUnit`, enabled; it binds the health attribute and the bus in `LateUpdate`; `DamageNumberManager.Instance` exists in the combat container scene; the colour has alpha 1. Sorting and position under the bar are not checked.
+
+**Fix.**
+- New `HealPopWindow` (`Core/FX/Runtime/HealPopWindow.cs`, plain class, no statics) tracks which abilities are running: `abilityActivationStarted` opens, `abilityPerformed` closes, and `turnStarted` and `turnEnded` clear it as a safety net.
+- `DamageNumberTrigger.Heal.cs` pops a gain at once when it lands while a window is open. Activation start is raised just before the effect is applied, so the pop shows at the heal frame, with the real capped gain from the tracker.
+- The `onAbilityEffectPerformedOn` claim stays as a fallback for abilities that never raise the activation start.
+- Outside any running ability the gain is still dropped at the end of the frame, so these are still excluded: regen and HoT ticks, level-start restore, safe room, resurrect, silent sets and max-HP changes. Damage numbers are unchanged.
+- Side effect: any HP gain that lands while an ability runs pops, including a passive's self-heal triggered by that ability, which is acceptable.
+- Not covered: abilities that raise neither the activation start nor the effect report, such as some faction-role abilities, will not pop. The Linda–Toba duo's path is not checked.
+
+**Files.** Added `Core/FX/Runtime/HealPopWindow.cs` (+meta) and `Core/FX/Editor/HealPopWindowTests.cs` (+meta, 5 tests, including a gain outside the window being dropped and one inside it popping at once). Edited `Core/FX/Runtime/DamageNumberTrigger.Heal.cs`. Add these to commit 1.
+
+**Checks.** Not in Play mode (confirmed before compiling). Compile clean. EditMode: 654 run, 653 pass, 1 fail = `Baseline_MatchesCurrentAI` (known red). No diagnostic logs were added.
+
+**To check in play.** Shaman heal on a hurt Claw: green "+N" at the heal frame. Then confirm a turn-start regen or level-start restore shows no number.
