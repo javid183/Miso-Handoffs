@@ -1962,3 +1962,11 @@ Done. THJ merged `thj/preview-improvements` into `main` on 2026-10-20. The GDD l
 **Status:** C4 (low-HP state and presenter) next.
 
 **Follow-up (2026-10-22, `ee2613f59`):** bar length 0.25 of the footprint (THJ: "a bit more than halved"); canvas moved from Overlay to DynamicTop order 0, under the text pop-ups (order 10) and the info panel (order 1), above unit sprites and the sword/role/cover icons. Image pop-ups (Default, 0) now draw under the bar; tile arrows tie at DynamicTop 0. No bug behind "no visible change at 0.39": the fraction applies in `Awake`; Edit-mode views show the authored 83. The 0.25 length is not play-checked.
+
+## 2026-10-23: Feedback pass C4 (low-HP state and heartbeat)
+
+**Built:** low state on the mini bar for player-faction units (≤ 25%, alive, above 0 HP; crossing rule in `LowHealthRules`, partial `UnitMiniHealthBar.LowHealth.cs`), amber-red pulsing bar. `Features/Effects/LowHealth/` (`LowHealthPresenter`, `LowHealthCadence`): edge vignette generated in code on its own overlay canvas (order −1, raycasts off); crossing → 3 cycles; level start → one shared announcement as turn 1 begins (no banner on turn 1); selection → one cycle, once per member per player turn; each player turn start → one cycle after the banner (max 4 s wait); never stacks; unscaled time stopped at `timeScale` 0. Sound ids empty. `LowHealthFeedback` object in both scenes. Commit `31b8473d7` on `thj/quick-wins`. D-146 to D-148.
+**Verified:** compile clean; EditMode 598/599 (known red only); reviewer FIX → fixed (lethal hit not a crossing; one sting per accepted announcement; live turn cleared on `turnEnded`), checked by the coordinator; THJ play-tested: triggers good, look retuned and re-tested good.
+**Not verified:** Toba joining mid-level then crossing; resurrect paths (revived in place announces, full resurrect doesn't).
+**Findings:** max-HP changes can cross without a hit (by design). Steady low-HP overlay deferred until after C5 (D-148).
+**Status:** C5 (HUD glow, portrait tint, pouch bob) next; then ask THJ about the steady overlay.
