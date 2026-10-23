@@ -153,3 +153,26 @@ I also fixed step 2 of "How THJ can see it": turn 1 has no banner, so the level-
 Files touched (all LF; the test file keeps its BOM): `Features/UI/Panels/Scripts/MiniHealthBar/LowHealthRules.cs`, `.../MiniHealthBar/Editor/LowHealthRulesTests.cs`, `Features/Effects/LowHealth/LowHealthCadence.cs`, `.../LowHealth/LowHealthPresenter.cs`, `.../LowHealth/Editor/LowHealthCadenceTests.cs`. No scene or meta changes, and the commit grouping is unchanged.
 
 **Checks:** forced refresh and recompile with no console errors. EditMode **597/598**; the only failure is the known `AIRegressionTest.Baseline_MatchesCurrentAI`. Not play-tested.
+
+## Look retune after THJ's play test
+
+THJ: the triggers and conditions are right, but the vignette was too fast, too red, too bright and reached too far in (his reference is a dark, desaturated blood red that stays near the edges and corners, with the centre clear). I changed only the vignette's look and timing. Every trigger, cap and rule is unchanged. The new values are the code defaults and are set on `LowHealthFeedback` in both scenes.
+
+| Value | Old | New |
+|---|---|---|
+| `vignetteColor` | (1, 0, 0) pure red | (0.42, 0.04, 0.04) dark blood red |
+| `edgeReach` (new field, generated placeholder only) | fixed 0.32 in code | 0.25: the tint fades to zero a quarter of the way in from each edge, so the middle half of the screen stays clear |
+| `firstPeak` / `secondPeak` | 0.25 / 0.18 | 0.16 / 0.11 |
+| `cycleLength` | 0.8 s | 1.2 s |
+| `pulseLength` | 0.12 s | 0.2 s |
+| `pulseGap` (end of the first pulse to start of the second) | 0.15 s | 0.25 s (lub 0 to 0.2 s, dub 0.45 to 0.65 s) |
+| Pulse shape | sine hump | squared sine: eases in and out with zero slope at both ends |
+| Announcement | 0.15 s + 3 x 0.8 s = 2.55 s | 0.15 s + 3 x 1.2 s = 3.75 s (still 3 cycles; delay unchanged) |
+
+- **Gradient:** a smoothstep falloff on each axis over `edgeReach`, combined so the corners come out a little stronger than the middle of each edge, then squared for a soft inner fade. The texture is still generated in `Awake` from these values; a sprite set in `vignetteSprite` replaces it.
+- **Code:** `LowHealthPresenter.cs` (new `edgeReach` field, new defaults, the texture reads `edgeReach`), `LowHealthCadence.cs` (`HeartbeatSchedule` defaults; `LubDubAlpha` uses a squared sine).
+- **Tests:** `LowHealthCadenceTests.cs`. The schedule tests now use 1.2 s cycles, the lub-dub peak test uses the new values, and there is a new `LubDub_EasesInAndOut`.
+- **Scenes:** each scene's `LowHealthFeedback` block gets one new line (`edgeReach: 0.25`) and five changed values (colour, cycle, pulse, gap, peaks). Each scene diff against HEAD is still only the new object (now 59 lines). I checked by loading both scenes additively: the values read back and neither scene was dirty.
+- Not added: the steady overlay THJ mentioned (after C5).
+
+**Checks:** forced refresh and recompile with no console errors. EditMode **598/599**; the only failure is the known `AIRegressionTest.Baseline_MatchesCurrentAI`. Not play-tested since the retune. All files keep LF (the one test file that has a BOM keeps it). Nothing staged.
