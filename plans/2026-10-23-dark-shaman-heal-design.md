@@ -2,7 +2,7 @@
 
 Size: S/M    Tier: 3 (new enemy rule and AI content; THJ's request)    Assigned to: miso-game-designer
 Branch: all (built on `thj/quick-wins`)
-Status: waiting on THJ (four open questions; everything else has a recommendation)
+Status: approved 2026-10-23 (D-150). THJ's answers: Q1 **1 AP like the summon** (not ending the turn; `apConsumptionType` Singular, Closure if it proves too strong); Q2 values yes; Q3 no self-heal; Q4 yes to both. Tech plan: `2026-10-23-dark-shaman-heal-tech.md`
 
 ## Why
 
