@@ -2,7 +2,7 @@
 
 Owner: coordinator. Where every combat-pace wait lives, what it does, and what changing it affects. Started 2026-10-22 from quick wins bundle P (`plans/2026-10-22-quick-wins-p-pace-tech.md`, D-107, D-141 to D-144). Update this file when a timing is added, moved or retuned.
 
-Paths are under `miso/Assets/_Project/`. "Scaled" waits stop when `Time.timeScale` is 0 (pause menu, tutorials) and slow down with it (slow-motion); "real time" waits don't. Values checked against `thj/quick-wins` @ `7d4cd90ca` (2026-10-22). Bundle P is on `thj/quick-wins` only until it merges into `main`; `main` @ `fc731b0c5` still has the old values.
+Paths are under `miso/Assets/_Project/`. "Scaled" waits stop when `Time.timeScale` is 0 (pause menu, tutorials) and slow down with it (slow-motion); "real time" waits don't. Values checked against `thj/quick-wins` @ `7d4cd90ca` (2026-10-22), with the feedback-pass rows added after; all of it is on `main` since the 2026-10-23 fast-forward (`f4e9d9158`).
 
 ## The order of one turn switch
 
