@@ -1960,3 +1960,5 @@ Done. THJ merged `thj/preview-improvements` into `main` on 2026-10-20. The GDD l
 **Not verified:** nothing open.
 **Findings:** Unity's pending serializer fields on `UnitBase.prefab` and `Deevoted.prefab` were removed by hand and come back on the next save (noise). The bar draws over a neighbouring unit's sprite like the info panel.
 **Status:** C4 (low-HP state and presenter) next.
+
+**Follow-up (2026-10-22, `ee2613f59`):** bar length 0.25 of the footprint (THJ: "a bit more than halved"); canvas moved from Overlay to DynamicTop order 0, under the text pop-ups (order 10) and the info panel (order 1), above unit sprites and the sword/role/cover icons. Image pop-ups (Default, 0) now draw under the bar; tile arrows tie at DynamicTop 0. No bug behind "no visible change at 0.39": the fraction applies in `Awake`; Edit-mode views show the authored 83. The 0.25 length is not play-checked.

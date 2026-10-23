@@ -162,3 +162,41 @@ THJ asked after playing: a narrower bar, and the bar must draw behind the pop-up
 **Files changed:** `Features/UI/Panels/Scripts/MiniHealthBar/UnitMiniHealthBar.cs` (1 line), `Features/_Common/Prefabs/UnitBase.prefab` (2 lines). Both LF. Add to the existing commit group.
 
 **Checks:** recompiled, no console errors. EditMode 563/564, the only failure is `AIRegressionTest.Baseline_MatchesCurrentAI`. Not play-tested: needs THJ to hit an enemy with a bar and check the damage number draws over it, and a bark over a unit.
+
+## Follow-up 2: length
+
+THJ played with 0.39 and saw no change from 0.6; he wants the bar about 0.65 of its current on-screen length.
+
+**Cause: no bug found; the fraction does drive the length.** Checked in Edit mode (no Play session) by loading the real unit prefabs and calling `ApplyWidth` on them:
+- All references are set on every unit prefab (unit, canvas, frame); the bar's chain is `Unit_*/Visual/UnitInfoHook/MiniHealthBar/Canvas`, world-space canvas, local scale 1/270 (lossy 0.003704 on most units; 0.004074 on BlackClaw, 0.003148 on DarkClaw, which the code compensates for).
+- Nothing else writes the frame's `sizeDelta` or any scale on that chain: no code (grep for `sizeDelta =` and `localScale =`), no animation clip touches `UnitInfoHook` or its parents' scale, no prefab variant, level prefab or scene overrides `widthFraction` or the frame size.
+- `cellWorldWidth` 0.5 matches the level grid (`LevelBase.prefab` Grid cell 0.5 x 0.5, scale 1).
+- The authored frame width 83 is exactly what 0.6 produces for a 1-tile unit (0.3 / 0.003704 + 2), so at 0.6 the Awake recompute was invisible, and at 0.39 it gives 54.65, a real 35 % cut.
+- The Editor log shows `UnitBase.prefab` re-imported before the later Play entries, so THJ's session had 0.39 loaded.
+
+So what THJ saw was the 0.39 length. Why it read as unchanged is not something I can find in code; one thing that can mislead is that the prefab and scene views always show the authored 83 (the width is only recomputed at Awake in Play).
+
+**New value:** `widthFraction` 0.39 to 0.25 (0.39 x 0.65 = 0.2535, rounded), on `UnitBase.prefab` and as the code default. Overall about 0.42 of the original 0.6.
+
+| Unit | Fraction | Frame sizeDelta.x (canvas units) | Outer world width | Fill world width |
+|---|---|---|---|---|
+| 1-tile (Archer Goblin) | 0.6 (original) | 83.00 | 0.3074 | 0.300 |
+| 1-tile | 0.39 (what THJ saw) | 54.65 | 0.2024 | 0.195 |
+| 1-tile | **0.25 (new)** | **35.75** | **0.1324** | **0.125** |
+| Masher (2 wide) | 0.6 | 164.00 | 0.6074 | 0.600 |
+| Masher | 0.39 | 107.30 | 0.3974 | 0.390 |
+| Masher | **0.25** | **69.50** | **0.2574** | **0.250** |
+
+(Canvas units include the 1-unit outline on each side; at 1080p and default zoom one canvas unit is one pixel.)
+
+**Prefab diff cleaned:** removed Unity serializer noise that had crept into `UnitBase.prefab` (two `requireTargetTag`/`targetTagQuery` blocks and one `idleSpeedJitter` line). Unity may add them back on the next save of that prefab; harmless. The prefab diff is now the two intended lines only (sorting layer DynamicTop, `widthFraction` 0.25).
+
+**Files changed (uncommitted, both LF, no BOM):**
+- `miso/Assets/_Project/Features/UI/Panels/Scripts/MiniHealthBar/UnitMiniHealthBar.cs` (default 0.25)
+- `miso/Assets/_Project/Features/_Common/Prefabs/UnitBase.prefab` (sorting layer, `widthFraction` 0.25)
+
+Commit grouping: one follow-up commit with both files (the width and the draw-order change together), e.g. `tweak(ui): shorter mini HP bar, drawn under pop-ups`.
+
+**Checks:** recompiled, no compile errors (only the editor's "Objects are trying to be loaded during a domain backup" messages during the reload). EditMode 563/564; only `AIRegressionTest.Baseline_MatchesCurrentAI` fails. Rules unchanged, so no test changes. Not play-tested: THJ should check the bar length on a 1-tile unit and the Masher.
+
+**Loose ends:** the authored frame width (83) no longer matches any fraction; setting it to 35.75 would make the Edit-mode prefab view match the game. Not done (outside the ask).
