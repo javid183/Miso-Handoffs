@@ -72,3 +72,5 @@ Per chunk: compile; EditMode (known red only); reviewer; **THJ's play test befor
 ## Commit log
 
 (filled in as chunks are committed)
+
+- C1: built (`reports/shaman-heal-c1.md`): `Kin.Dark` in `GTagSet` and `GTagRegistry`, on Dark Claw, Black Claw (own second entry), Dark Worm, Dark Shaman; effect, preset (classed Ability, not Attack, unlike Dom's template), graph, `Heal` clip and state, fourth ability on the Shaman. EditMode 608/609 (known red; `AIRegressionTest` now also flags the new graph and ability; no re-baseline). In review. **For C2:** the HP change event reports the unclamped amount, so the pop-up must use the real gained HP; the healed Claw shows in next-targets until C2.
