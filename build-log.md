@@ -1970,3 +1970,11 @@ Done. THJ merged `thj/preview-improvements` into `main` on 2026-10-20. The GDD l
 **Not verified:** Toba joining mid-level then crossing; resurrect paths (revived in place announces, full resurrect doesn't).
 **Findings:** max-HP changes can cross without a hit (by design). Steady low-HP overlay deferred until after C5 (D-148).
 **Status:** C5 (HUD glow, portrait tint, pouch bob) next; then ask THJ about the steady overlay.
+
+## 2026-10-23: Feedback pass C5 (HUD low-HP signs)
+
+**Built:** `UnitPanelUI.LowHealth.cs` (built in code, no prefab change) following the selected unit's mini bar low state: a blood-red overlay on the HP bar's empty track (`LowHealthTrack`, alpha 0.45, inside `Mask_Shape`, under the fill and text), a portrait tint from the bottom (alpha 0.5, fading two-thirds up), a glow around the bar that flashes only on the heartbeat (`LowHealthPresenter.BeatStrength`, steady alpha 0). Item-pouch bob once per selection for a low member with a healing item (`ItemEffectPreview.GetHealthIncrease`). Rules in `LowHealthHudRules` (tests); `BeatStrength` in `LowHealthRules`. Commit `403de3bf8` on `thj/quick-wins`.
+**Verified:** compile clean; EditMode 606/607 (known red only, read from the results file); reviewer APPROVE (`reports/feedback-c5-review.md`, two should-fixes applied); THJ play-tested and tuned it (track overlay, live tint, glow only on beats): good.
+**Not verified:** leaving a level with a low member selected (console clean expected).
+**Findings:** `Mask_Shape`'s `Mask` has `showMaskGraphic` off; the bar's black comes from the frame art `Panel_Fat_0`. The bob plays while the panel slides in; a member who turns low while selected doesn't bob until reselected.
+**Status:** feedback pass C1–C5 done. Open: the steady low-HP screen overlay (D-148), the GDD "Combat feedback" section (game designer), real kill and low-HP sounds.
