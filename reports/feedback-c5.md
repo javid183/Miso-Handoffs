@@ -116,3 +116,14 @@ Only `UnitPanelUI.LowHealth.cs` changed (LF).
 - **Bar background:** it is the `Image` on the bar's `Mask_Shape` child (`Mask_InsidePanels`, the dark track behind the fill; the bar root's `Panel_Fat_0` is the frame and is left alone). While low it is lerped from its original colour toward `lowBarBackgroundColor` (0.42, 0.04, 0.04) by `lowBarBackgroundBlend` (default 0.3), re-applied each `LateUpdate` so edits are live. Its original colour is stored once, the first time it is needed, and restored exactly when the unit stops being low, on another selection, on hide, and on disable or destroy (all go through the same release path). The glow is unchanged (0.25 resting, 0.9 peak).
 
 Checks: forced refresh and recompile, no new errors. EditMode 606/607 (one failure). This run's results omitted the per-test list, so the failing test's name could not be read; the count matches the known red `AIRegressionTest.Baseline_MatchesCurrentAI`, and the AI regression report was printed to the console as before. Not play-tested.
+
+### Bar track overlay (replaces the colour blend)
+
+THJ's screenshot showed no red on the track. Cause: the blend target was the `Image` on `Mask_Shape`, but that `Mask` has `showMaskGraphic` off, so its image only masks and draws nothing; the lerp changed an invisible colour.
+
+- **What draws the black:** the bar root's own `Image` (`Panel_Fat_0`, sliced), the frame art with the dark interior. It is left untouched.
+- **The overlay:** `LowHealthTrack`, a child `Image` (no sprite, so a flat colour; raycasts off, ignore-layout) of `Mask_Shape`, set as its first sibling. Hierarchy: `UI_Element_FillBar` (frame, draws the black) > `Mask_Shape` (index 0 `LowHealthTrack`, then 1 `MainBarFill_Mask` with the green fill, then the decrease, secondary, locked and increase fills, and `BarNumLbl` last). So it draws after the frame, is clipped to the bar's masked shape, and sits under the fill, the damage and heal previews and the HP text.
+- **Look:** `lowBarTrackColor` (0.42, 0.04, 0.04) at `lowBarTrackAlpha` 0.45, shown only while low (`Image.enabled`), re-applied each `LateUpdate` so edits are live.
+- **Removed:** the colour lerp on `Mask_Shape` and its stored original colour (`lowBarBackgroundColor`/`lowBarBackgroundBlend` fields are gone), so nothing of the prefab's colours is touched any more.
+
+Only `UnitPanelUI.LowHealth.cs` changed. Recompiled with no new errors; EditMode 606/607, the failure being `MISO.Core.Systems.AI.EditorTests.AIRegressionTest.Baseline_MatchesCurrentAI` (known red). Not play-tested.
