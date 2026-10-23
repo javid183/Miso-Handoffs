@@ -99,7 +99,7 @@ Source: `Resources/Game Data.asset`, `Resources/GlobalSettings.asset`, `Content/
 
 | Area | Sub-doc | Design state | Branch | Checked | Notes |
 | --- | --- | --- | --- | --- | --- |
-| Combat rules | [combat-rules](combat-rules.md) | Built | both | `main` @ `92853a5a9` (presets read) | |
+| Combat rules | [combat-rules](combat-rules.md) | Built | both | `main` @ `92853a5a9` (presets read); Combat feedback from `thj/quick-wins` @ `403de3bf8` | Combat feedback CR-47 to CR-52 on `thj/quick-wins` only |
 | Family systems | [family-systems](family-systems.md) | Built, differs | both | `main` @ `92853a5a9` (presets read) | Role limits planned |
 | Characters | [john](characters/john.md) · [linda](characters/linda.md) · [lucy](characters/lucy.md) · [mark](characters/mark.md) · [toba](characters/toba.md) | Built | both | `main` @ `92853a5a9` (presets read) | |
 | Enemies | [enemies](enemies.md) | Built | both | `main` @ `92853a5a9` (presets read) | |
