@@ -1994,3 +1994,10 @@ Done. THJ merged `thj/preview-improvements` into `main` on 2026-10-20. The GDD l
 **Not verified:** the Linda–Toba duo heal number path; a passive self-heal during an ability also pops.
 **Findings:** the AI's recent-attack factor now reflects real recency (steadier revenge targeting). Hovering a Shaman still highlights the healed Claw's cell (`GUnit.SetFutureTargetsHover`, core; follow-up). An implementer recompile once landed during THJ's Play session (agents must check Play mode first).
 **Status:** quick wins done; `thj/quick-wins` is 21 commits ahead of `main`, ready to merge (THJ). Docs: EN-11 "Dark Mending" in `enemies.md`, `core-systems.md` (GUnit attacker memory), glossary name. Open: the steady low-HP screen overlay (D-148), the GDD "Combat feedback" section (game designer), real kill and low-HP sounds.
+
+## 2026-10-23: GDD mirror re-sync
+
+**Built:** the "Miso — Game Design" Claude Doc brought up to `design/gdd/` and `glossary.md` at `50752ac`. Replaced the whole body of four tabs from the repo files: Combat rules (grid previews now Built, the Combat feedback section CR-44 to CR-53, Q12), Family systems (role zones post-merge labels, Q12; it had a half-done earlier sync), Enemies (EN-11 Dark Mending), Glossary (last synced 2026-10-16: enemy abilities and kin, low HP, dungeon safe rooms, canon table). Overview: the two "Checked" cells for Combat rules and Enemies. Tab headers rewritten as one "Checked against ..." line.
+**Verified:** none of the five tabs had comments, so nothing was detached. The other tabs last changed in the repo on 2026-10-17 and match (spot-checked Toba).
+**Not verified:** a line-by-line read of the rendered tabs.
+**Status:** mirror in sync with `claude-handoff` @ `50752ac`.
