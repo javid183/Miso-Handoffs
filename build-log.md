@@ -1977,4 +1977,12 @@ Done. THJ merged `thj/preview-improvements` into `main` on 2026-10-20. The GDD l
 **Verified:** compile clean; EditMode 606/607 (known red only, read from the results file); reviewer APPROVE (`reports/feedback-c5-review.md`, two should-fixes applied); THJ play-tested and tuned it (track overlay, live tint, glow only on beats): good.
 **Not verified:** leaving a level with a low member selected (console clean expected).
 **Findings:** `Mask_Shape`'s `Mask` has `showMaskGraphic` off; the bar's black comes from the frame art `Panel_Fat_0`. The bob plays while the panel slides in; a member who turns low while selected doesn't bob until reselected.
-**Status:** feedback pass C1–C5 done. Open: the steady low-HP screen overlay (D-148), the GDD "Combat feedback" section (game designer), real kill and low-HP sounds.
+**Status:** feedback pass C1–C5 done.
+
+## 2026-10-23: Dark Shaman heal C1 (ability and AI, data only)
+
+**Built:** hidden tag `Kin.Dark` (`GTagSet`, `GTagRegistry`) on Dark Claw, Black Claw, Dark Worm, Dark Shaman; `Resources/UnitSpecific/Enemy/DarkShaman/Heal/`: effect (+10 × caster `Stat_DMG` on `Specs_Health`, clamped at max), preset (targeted Kin.Dark ally, not self, range 3 Manhattan, 1 AP, cooldown 2, camera focus, classed Ability), utility graph (valid ≤ 75% HP, score 3.5 + 2 × missing + 0.5 Leader); `Heal` clip and state (copy of `SpawnEnemy`, frame 14); fourth Shaman ability. Commits `2b8e4ea88`, `e81c20f59`, `2095e4eaf` on `thj/quick-wins`. D-150, D-151.
+**Verified:** compile clean; EditMode 608/609 (known red; `AIRegressionTest` also flags the new graph and ability, no re-baseline); reviewer APPROVE (`reports/shaman-heal-c1-review.md`); THJ play-tested: good.
+**Not verified:** AI log scores in numbers.
+**Findings:** the HP-changed event reports the unclamped amount (C2 must use the real gain). Stunned/dormant dark allies can be healed (D-151). THJ's play session left six unrelated asset edits uncommitted (Mark–Lucy duo, Claw walks, Dom Swap, Lucy Cyclone).
+**Status:** C2 (heal pop-up, next-targets filter) next. Open: the steady low-HP screen overlay (D-148), the GDD "Combat feedback" section (game designer), real kill and low-HP sounds.
