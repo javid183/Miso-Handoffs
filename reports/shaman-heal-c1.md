@@ -23,6 +23,7 @@ Changed:
 - `Features/Enemy/Dark Shaman/Prefabs/Unit_DarkShaman.prefab`: tag set override `Kin.Dark`; abilities 3 → 4, `data[3]` = `DarkShaman_Ability_Heal`, `stateName: Heal`, `abilityActivationFrame: 14`, `sideVisualMode: 1`, stat sources Ability/Unit/Faction (copied from the summon entry).
 - `Features/Enemy/Dark Shaman/Art/Animations/AC_Enemy_DarkShaman.controller`: new state `Heal` (no transitions) with a 1D blend tree on `DirectionY` (-1/0/1, all three the Heal_Side clip), same setup as `SpawnEnemy`; added to the Base Layer's child states.
 - `Core/Animation/EntityAnimation/Editor/EnemyIdleReturnTransitionTests.cs`: `[TestCase(DarkShaman, "Heal")]` added to both tests (no Idle transition; clip plays once).
+- Review should-fix: that test class's summary now says "hit, spawn and ability-cast states". Recompiled with no errors; `EnemyIdleReturnTransitionTests` passes 28/28.
 
 Not mine: `miso/Assets/TextMesh Pro/.../LiberationSans SDF - Fallback.asset` was already modified before I started (in the session's initial git status).
 
