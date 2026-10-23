@@ -96,3 +96,12 @@ Bring a Bergson to 25% HP or less (cheat menu or an enemy hit).
 5. **Pouch bob, with and without a healing item:** select a low member who holds a health item with uses left: the item pouch button bobs once (about 15% bigger and back in 0.3 s). Select a low member with no healing item (or only an FP/AP item, or an empty one): no bob. Select a healthy member holding a healing item: no bob. Selecting the same member again after another one bobs again; clicking a tile or ability on the same selected member does not.
 6. **Pause during the glow:** open the pause menu mid-heartbeat: the glow freezes with the vignette and carries on at resume; a bob caught by the pause freezes mid-scale and finishes after.
 7. **Layout:** the HUD panel does not move or resize when the glow appears or goes away.
+
+## Review fixes
+
+After the reviewer's APPROVE, these two should-fixes and nothing else:
+
+1. **Glow and tint toggle the `Image` components, not the objects.** `SetLowHealthShown` is reached from the panel's `OnDisable`, so `SetActive` there could log "already being activated or deactivated". The two children are now created once with their image disabled, and shown or hidden with `Image.enabled`. (`UnitPanelUI.LowHealth.cs`)
+2. **`BeatStrength` moved to `LowHealthRules`** (the heartbeat feature's own rules) with its two tests (`LowHealthRulesTests.cs`). `LowHealthPresenter` calls `LowHealthRules.BeatStrength`, and the added `using MISO.Content.UI.UnitPanel;` is gone. `LowHealthHudRules` keeps only the glow alpha, bob decision and bob curve (its test file lost the two tests).
+
+Checks: forced refresh and recompile, no new errors. EditMode 606/607, only the known `AIRegressionTest.Baseline_MatchesCurrentAI` failing. Line endings and BOMs unchanged.
