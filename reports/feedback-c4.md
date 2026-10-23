@@ -131,7 +131,7 @@ None blocking. The calls above (banner wait for every turn-start cycle, extend-n
 The object is `---Management--- / LowHealthFeedback` in `CombatLevelContainerScene` (and `TestLevel`). To hear the cues, fill its `Sting Sfx Id` / `Heartbeat Sfx Id` (empty plays nothing). The cheat menu or an enemy can bring a member's HP down.
 
 1. **A member crossing 25%:** let an enemy (or a cheat) take a Bergson from above 25% to 25% or below. You get the red hit flash, then 0.15 s later three red edge "lub-dub" beats (about 2.4 s), and the member's mini bar turns amber-red and pulses every 0.8 s. Hit them again while low: no new beats.
-2. **A level started with a member already low:** start a mission with a member at the 20% carry-over floor. Nothing plays during setup. At the first player turn, once the "Turn" banner has slid out, you get one announcement (three beats), even with two members low. Their bars pulse from the start.
+2. **A level started with a member already low:** start a mission with a member at the 20% carry-over floor. Nothing plays during setup. Turn 1 has no banner (the first turn starts without the phase animation), so the one announcement (three beats) plays as turn 1 begins, while the HUD slides in, even with two members low. Their bars pulse from the start.
 3. **Selecting a low member twice in one turn:** click the low member: one beat. Click someone else, then them again: nothing. A second low member gets their own one beat. Next player turn, selecting them gives one beat again.
 4. **Turn starts while low:** end the turn. After the enemy turn, when your banner has slid out, one beat plays. With nobody low, nothing.
 5. **Healing above and dropping again:** heal the member above 25%: the bar goes back to green, no sound. Bring them down to 25% or below again: the full three-beat announcement plays again.
@@ -139,3 +139,17 @@ The object is `---Management--- / LowHealthFeedback` in `CombatLevelContainerSce
 7. **A red hit flash during the vignette:** hit a low member while beats are playing (or cross with a hit): the red flash plays and the beats carry on through it without restarting or doubling.
 8. **Enemies:** bring an enemy below 25%: its bar stays green, no beats.
 9. **Clicks:** during a beat, clicking tiles, units and HUD buttons works as normal (the vignette blocks nothing).
+
+## Review fixes
+
+After the reviewer's FIX verdict, these three changes and nothing else:
+
+1. **A lethal hit is not a crossing.** `onValueChanged` fires before `onMinReached` leads to `Die`, so the bar saw a unit still alive at health 0 and announced on the death. `LowHealthRules.IsLow` now also requires health above the minimum (`health > 0f`, measured from `MinValue`), and its comment says why. New test `LethalHitFromAbove_IsNotACrossing` (known, was not low, alive, health 0 of 100: not low, not crossed).
+2. **One sting per run.** `LowHealthPresenter.Play` plays the sting only when `_schedule.Request(...)` takes the announcement. A fresh run, or an announcement that extends a running single cycle, keeps its sting. A second announcement while a 3-cycle run is going (e.g. two members crossing on one hit) is dropped, sting included.
+3. **The turn stops being live at `turnEnded`.** `PlayerController.StartTurn`'s automatic selection fires before `turnStarted`, so when the player plays twice in a row it was treated as a live selection under the banner. New `LowHealthCadence.OnTurnEnded()` clears the flag. The presenter subscribes to `turnEnded` in the bus binding and removes it in `Rebind`, which also runs from `OnDisable`. New test `SelectionAfterTurnEndBeforeNextTurnStart_PlaysNothingAndKeepsTheCap`.
+
+I also fixed step 2 of "How THJ can see it": turn 1 has no banner, so the level-start announcement plays as turn 1 begins.
+
+Files touched (all LF; the test file keeps its BOM): `Features/UI/Panels/Scripts/MiniHealthBar/LowHealthRules.cs`, `.../MiniHealthBar/Editor/LowHealthRulesTests.cs`, `Features/Effects/LowHealth/LowHealthCadence.cs`, `.../LowHealth/LowHealthPresenter.cs`, `.../LowHealth/Editor/LowHealthCadenceTests.cs`. No scene or meta changes, and the commit grouping is unchanged.
+
+**Checks:** forced refresh and recompile with no console errors. EditMode **597/598**; the only failure is the known `AIRegressionTest.Baseline_MatchesCurrentAI`. Not play-tested.
