@@ -105,3 +105,14 @@ After the reviewer's APPROVE, these two should-fixes and nothing else:
 2. **`BeatStrength` moved to `LowHealthRules`** (the heartbeat feature's own rules) with its two tests (`LowHealthRulesTests.cs`). `LowHealthPresenter` calls `LowHealthRules.BeatStrength`, and the added `using MISO.Content.UI.UnitPanel;` is gone. `LowHealthHudRules` keeps only the glow alpha, bob decision and bob curve (its test file lost the two tests).
 
 Checks: forced refresh and recompile, no new errors. EditMode 606/607, only the known `AIRegressionTest.Baseline_MatchesCurrentAI` failing. Line endings and BOMs unchanged.
+
+## Tint fix and bar background
+
+Only `UnitPanelUI.LowHealth.cs` changed (LF).
+
+- **Why the tint was faint:** the colour and alpha were applied once, when the tint image was created, so Inspector edits in Play did nothing. They are now re-applied every `LateUpdate` while the tint is shown.
+- **Is the tint above the portrait?** Yes. In `CharacterHUD.prefab` (as nested in `UnitPanel.prefab`), `UnitAvatar` (sprite `Avatar_John` etc., `unitImage`) is the first child of `CharacterHUD`, whose own image is only the background art (`HUD_Background_0`) behind its children. Nothing is parented to the avatar and no mask or overlay frame sits over it, so the tint, a child of `unitImage`, draws right above the portrait art. The other siblings (fill bar, name bar, bottom bar) are elsewhere on the panel. No reparenting was needed. The main cause was the low default plus the live-edit bug.
+- **Defaults:** tint alpha 0.5 at the bottom (was 0.35); the gradient now reaches clear about two-thirds of the way up (was the full height).
+- **Bar background:** it is the `Image` on the bar's `Mask_Shape` child (`Mask_InsidePanels`, the dark track behind the fill; the bar root's `Panel_Fat_0` is the frame and is left alone). While low it is lerped from its original colour toward `lowBarBackgroundColor` (0.42, 0.04, 0.04) by `lowBarBackgroundBlend` (default 0.3), re-applied each `LateUpdate` so edits are live. Its original colour is stored once, the first time it is needed, and restored exactly when the unit stops being low, on another selection, on hide, and on disable or destroy (all go through the same release path). The glow is unchanged (0.25 resting, 0.9 peak).
+
+Checks: forced refresh and recompile, no new errors. EditMode 606/607 (one failure). This run's results omitted the per-test list, so the failing test's name could not be read; the count matches the known red `AIRegressionTest.Baseline_MatchesCurrentAI`, and the AI regression report was printed to the console as before. Not play-tested.
