@@ -27,6 +27,13 @@ Owner: narrative agent. Names and terms as the game uses them, with the code nam
 | Archer Goblin, Masher Goblin, Dark Shaman | Regular enemies. Masher Goblin counter-attacks (enemy-side faction role) and is Immovable |
 | Dark Worm | Minor; splits into halves |
 
+### Enemy abilities and kin
+
+| Term (player-facing) | Code name | Meaning |
+| --- | --- | --- |
+| **Dark Mending** [PROPOSED] | Dark Shaman heal (`DarkShaman/Heal/`, state `Heal`) | The Dark Shaman heals one dark-brood ally at 75% HP or less, within 3 cells (not itself): 10 HP at Standard, 1 AP, cooldown 2 (D-150; stunned or dormant allies too, D-151). Not shown on screen today (enemies.md Q7). Options: **Dark Mending** (recommended: matches the brood's "Dark" names, reads at once), **Brood Mending** (the Corruption tending its own; mirrors the family theme), **Blight Salve** (oily, corrupted medicine). Description: "Heals a nearby dark ally for 10 HP." Avoid "wounded" in the text: it's a Home term. Awaiting THJ |
+| **the dark brood** [PROPOSED] | `Kin.Dark` (hidden GTag) | The units Dark Mending can heal: Dark Claw, Black Claw, Dark Worm (split halves too), Dark Shaman. Hidden tag, never shown on screen today. If it ever appears: "dark brood" (recommended), or "the Brood". Awaiting THJ |
+
 ## Combat terms
 
 | Term (player-facing) | Code name | Meaning |
@@ -37,6 +44,7 @@ Owner: narrative agent. Names and terms as the game uses them, with the code nam
 | ATB | `ATBGauge`, `PointConsumptionMode.ATB` | Per-unit gauge; fills while the unit isn't acting; a full gauge converts to an extra AP. **Dropped as the direction** (playtesters found it confusing): the code still runs on `main` until FTP is built out there. Don't use the term in new player-facing text |
 | Family Role (family passive) | Faction Role, `FactionRoleHandlerBase`, `*FactionRoleHandler` | Each unit's one reactive passive, triggered by a simple-press QTE prompt (D-034). Costs no FTP; each role has a limit per round instead, refilled at the start of the player turn (Linda 2, Lucy 3, Mark 1, John unlimited, HP-paid) (D-036, D-042). **Intended design; the role limits are not built yet** (to be built on `main`; today's code still charges FTP or ATB) |
 | Role uses per round: **Watch** [PROPOSED] | (not built yet; planned "uses per round" field) | Player-facing name for a Family Role's uses left this round, e.g. "Watch 2/2"; Linda's become **Watch Shots** ("Watch Shot 1 of 2"). Awaiting THJ |
+| Low HP: **Bloodied** [PROPOSED] | low-HP state (CR-50) | A Bergson or allied Toba at 25% max HP or less (mini bar turns amber-red and pulses). No name on screen today (combat-rules.md Q12). Options: **Bloodied** (recommended: the genre's familiar word), **Faltering** (softer, family-worry tone). Not "Wounded": that's a Home term. Awaiting THJ |
 | Duo | Cooperation, `UnitsCooperationHandler`, `CooperationEntry` | A deliberate paired ability: AP from the activator plus 2 FTP (D-035; code today checks 1 per partner). Seven in code: John–Lucy, Linda–Lucy, Linda–Toba, John–Linda, Mark–Lucy (Fist Blitz), Mark–Linda (the race), Mark–John (the shout) |
 | Synergy (family combo) | | Automatic, conditional effect between family members. E.g. **Sister's Rivalry** (Lucy/Linda kill chain), **Tempest Bloom** |
 | Pass-by / tag | `UnitsPassByHandler` | One Bergson moving through another's tile; fills FTP (ATB in the old code) once per turn per pair |
