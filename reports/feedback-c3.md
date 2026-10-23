@@ -141,3 +141,24 @@ After the reviewer's APPROVE with two should-fixes:
 2. **Stale chip top while hidden:** `UnitMiniHealthBar.OnHealthChanged` now works out where the chip is drawn at the moment of the hit, `ChipValueAt(_chipTop, before, now - _chipHitTime, chipHold, chipDrain)`, and passes that to `ChipTopOnHit`. It no longer uses `_chipShown`, which only updates while the bar is visible. So a second hit while the info panel is up now extends the chip from its real top. The rules are unchanged, so no new test: the extend case is already covered by `SecondHitMidDrain_ExtendsFromShownTopAndHoldsAgain`, which uses the same pair of calls.
 
 Recompiled with no console errors. EditMode 563/564; the only failure is the known `AIRegressionTest.Baseline_MatchesCurrentAI`. Not play-tested.
+
+## Follow-up: width and draw order
+
+THJ asked after playing: a narrower bar, and the bar must draw behind the pop-ups.
+
+**Width.** `widthFraction` 0.6 to 0.39 (0.6 x 0.65) in `UnitMiniHealthBar.cs` (code default) and on `UnitBase.prefab`. No variant prefab overrides it. The tests pass explicit widths and never relied on the default, so none changed.
+
+**Pop-up sorting found.**
+- Text pop-ups (`DamageNumber.prefab` TextMeshPro: damage, "Critical", every `DamageNumberManager.ShowText` caller, so `BarkManager` barks and `RoleBarkPresenter` barks): sorting layer DynamicTop, order 10.
+- Image pop-ups (`ShowImage`: pickups, divine relic icon): `DamageNumber.prefab` SpriteRenderer is on Default, order 0 and nothing sets it in code. That is already under the unit sprites (Default, orders 10 per vertical index), so the bar cannot sit behind it without going under the units too. This was already true before the change; the bar is on DynamicTop, so it now draws over image pop-ups. Reported, not fixed.
+- No other world pop-ups: role barks and status/bark text all go through `DamageNumberManager`. The unit info panel canvas and the target-select counter are DynamicTop, order 1.
+
+**Bar's new sorting.** Canvas on `UnitBase.prefab` moved from Overlay (uniqueID 2982333829), order 0 to DynamicTop (1097219007), order 0. Only the `m_SortingLayerID` line changed. The old setting was actually above DynamicTop, so it drew over both the info panel and the text pop-ups.
+
+**Draws above:** unit sprites and shadows (Default), sword (in-range) icons at Default -9, cover icon (-5) and role-zone icon (-10), tile highlights; and the sword icons that are raised to DynamicTop under multi-cell units (their order is -9).
+**Draws below:** the info panel and target-select counter (DynamicTop 1), all text pop-ups and barks (DynamicTop 10).
+**Tie:** the tile "Highlight_Targeted_Arrow" and "Highlight_Ability_Arrow" are also DynamicTop order 0, so against those the bar's order is a tie; it is cosmetic and I left it. Image pop-ups see above.
+
+**Files changed:** `Features/UI/Panels/Scripts/MiniHealthBar/UnitMiniHealthBar.cs` (1 line), `Features/_Common/Prefabs/UnitBase.prefab` (2 lines). Both LF. Add to the existing commit group.
+
+**Checks:** recompiled, no console errors. EditMode 563/564, the only failure is `AIRegressionTest.Baseline_MatchesCurrentAI`. Not play-tested: needs THJ to hit an enemy with a bar and check the damage number draws over it, and a bark over a unit.
