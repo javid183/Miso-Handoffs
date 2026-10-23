@@ -2,7 +2,7 @@
 
 Size: L    Tier: 3 (new mechanic; THJ approves this plan before dispatch)    Assigned to: `miso-implementer` (C1 opus, C2 and C3 sonnet) → `miso-reviewer` → `miso-verifier`
 Branch: all (built on `main`)
-Status: waiting on THJ
+Status: approved (THJ 2026-10-23), C1 in progress
 
 ## Why
 
