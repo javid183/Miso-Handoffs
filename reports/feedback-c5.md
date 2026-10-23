@@ -127,3 +127,5 @@ THJ's screenshot showed no red on the track. Cause: the blend target was the `Im
 - **Removed:** the colour lerp on `Mask_Shape` and its stored original colour (`lowBarBackgroundColor`/`lowBarBackgroundBlend` fields are gone), so nothing of the prefab's colours is touched any more.
 
 Only `UnitPanelUI.LowHealth.cs` changed. Recompiled with no new errors; EditMode 606/607, the failure being `MISO.Core.Systems.AI.EditorTests.AIRegressionTest.Baseline_MatchesCurrentAI` (known red). Not play-tested.
+
+Glow rest alpha set to 0 (`lowGlowSteadyAlpha` default 0, was 0.25): the HUD glow now follows the heartbeat only, 0 up to 0.9 and back, and is invisible between beats and after them. `LowHealthHudRules.GlowAlpha` and its tests take the rest value as an argument, so they needed no change. Recompiled clean; EditMode 606/607, failing test `AIRegressionTest.Baseline_MatchesCurrentAI` (known red).
