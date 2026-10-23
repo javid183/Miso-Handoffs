@@ -1951,4 +1951,12 @@ Done. THJ merged `thj/preview-improvements` into `main` on 2026-10-20. The GDD l
 **Verified:** compile clean; EditMode 545/546 (known red only); reviewer APPROVE (`reports/feedback-c2-review.md`, one should-fix applied); THJ play-tested it: looks good, asked for slightly shorter and softer values (applied).
 **Not verified:** the tuned values were committed on THJ's say-so without a second full play.
 **Findings:** Dark Worm splits, a boss's `FakeDie`, reverted spawns and player-allied non-player factions also get the beat. No placeholder sting fits; a real kill sound is wanted.
-**Status:** C3 (mini HP bar) next. `pace-timings.md` needs the kill-feedback rows.
+**Status:** C3 (mini HP bar) next. `pace-timings.md` needs the kill-feedback rows (done).
+
+## 2026-10-22: Feedback pass C3 (mini HP bar)
+
+**Built:** `Features/UI/Panels/Scripts/MiniHealthBar/` (`UnitMiniHealthBar`, `MiniHealthBarRules`, 18 EditMode tests); a `MiniHealthBar` child on `UnitBase.prefab` under `Visual/UnitInfoHook` (world-space canvas, Overlay order 0, two Images); hidden while the info panel is up and when dead; damage chip 0.15 s hold, 0.25 s drain, computed from timestamps on game time; off on Deevoted and Lucy's decoy (no info panel). One green for all (D-147). Commit `616af0754` on `thj/quick-wins`.
+**Verified:** compile clean; EditMode 563/564 (known red only); reviewer APPROVE (`reports/feedback-c3-review.md`, two should-fixes applied); THJ play-tested it: good.
+**Not verified:** nothing open.
+**Findings:** Unity's pending serializer fields on `UnitBase.prefab` and `Deevoted.prefab` were removed by hand and come back on the next save (noise). The bar draws over a neighbouring unit's sprite like the info panel.
+**Status:** C4 (low-HP state and presenter) next.
