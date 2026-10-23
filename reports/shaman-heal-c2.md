@@ -66,3 +66,13 @@ Recompiled in the open editor, console clean of errors. EditMode: 619 run, 618 p
 - Heal numbers rely on `onAbilityEffectPerformedOn`; any heal path that doesn't go through an `AEffectCompound` with a `RuntimeAbility` context won't pop.
 - The pending-gain window is one frame; fine with current content (see edge cases above).
 - Pop colour is the new serialized `healColor` on `DamageNumberTrigger` (prefab default is used; not overridden anywhere).
+
+## Review fixes
+
+1. **Claim source corrected.** The earlier text said the claim always comes from `AEffectCompound` in the same call. Only compound heals (Linda–Toba arrow) work that way. The Shaman heal, the potion and Dom's heal use a bare `AEffectAttributeModifier`, so their `onAbilityEffectPerformedOn` comes from `RuntimeAbility.OnCompletionShared` (`RuntimeAbility.cs:316-318`), only for presets with `actualTargets` on, and after `AbilityPreset.Activate` finishes (`AbilityPreset.cs:368-404`). The comment in `DamageNumberTrigger.Heal.cs` now names both raisers and the condition.
+   - **Risk:** the pop-up works only if the completion report arrives in the same frame as the heal: `minimumDuration` and `waitTimeAfterCompletion` at 0 or less, no effect still in progress, and no frame wait in between. If a heal ability has a wait or a longer animation after the effect, the gain is dropped and nothing pops. Not play-verified for the Shaman heal, the potion or Dom's heal; check `actualTargets` and the waits on those presets first if one doesn't pop.
+   - **Proposal (not built):** keep an unclaimed gain until the ability completes, for example by listening to `abilityPerformed` and claiming for the ability's targets, and clear it at the next ability start instead of at end of frame. That would pop regardless of waits. The cost is a wider window in which a regen tick could be mis-claimed.
+2. **Tracker extracted.** `Core/FX/Runtime/HealPopTracker.cs` (+meta, 36 lines) is a plain class with `Reset`, `OnHealthReading`, `Claim` and `EndFrame`. `DamageNumberTrigger.Heal.cs` uses it and no longer holds pending-gain fields. `Core/FX/Editor/HealPopTrackerTests.cs` (+meta, 6 tests) covers damage then heal, heal at the cap, heal at full HP, unclaimed gain then end of frame then claim giving 0, two gains then one claim, and a silent change before end of frame. The optional next-targets fallback move was not done.
+   - New commit unit: add these two files to commit 1.
+
+Compile clean. EditMode: 625 run, 624 pass, 1 fail. The failure is `AIRegressionTest.Baseline_MatchesCurrentAI`, the known red. The console shows its report, and the test-job output didn't list names, so I identified it from the AI report.
