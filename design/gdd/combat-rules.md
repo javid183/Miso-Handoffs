@@ -203,7 +203,7 @@ Source: `Core/Managers/CombatLevelRunHandler.cs`, `Core/Managers/GameHandler.cs`
 9. **Q9.** After a death, FTP is capped below its maximum until the next level, so the pool can't be full and Family Super Time can't fire for the rest of that level. Intended?
 10. **Q10.** Answered by THJ (D-090): the threat arcs count attacks ready on the enemy's next turn (`cooldownTicksAhead: 1`), like the Shift danger zone, so the two agree (CR-39). Built in `d1254f7c8`, on `main` since the 2026-10-20 merge.
 11. **Q11.** "Danger zone" is a working name. It needs a player-facing name only if it ever appears as text (tutorial, tooltip). Glossary, narrative agent.
-12. **Q12.** The low-HP state (CR-50) has no player-facing name. It needs one only if it ever appears as text; not "Wounded", which is a Home term. Glossary, narrative agent.
+12. **Q12.** ~~The low-HP state (CR-50) has no player-facing name.~~ **Answered (D-153):** plain "low HP" in descriptions and player text; "Bloodied" only if a tag or a forced name is needed; never "Wounded" (a Home term).
 
 ## Related
 
