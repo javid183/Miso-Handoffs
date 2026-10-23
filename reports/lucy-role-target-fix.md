@@ -122,3 +122,53 @@ All branches, per the plan (built on `thj/quick-wins`).
 5. **Out-of-zone target:** Linda shoots an enemy outside Lucy's zone. Another enemy that the same shot did not hit, two or more cells away but inside Lucy's zone, should **not** draw Lucy (no QTE). If the shot splashed an enemy inside her zone (Explosive Arrow), Lucy takes that one.
 6. **Zone edge (radius-4 case):** Linda hits an enemy standing on the outer ring of Lucy's zone outline: Lucy still triggers.
 7. Optional: an enemy's damage bark after a hit should still name the unit that hit it last.
+
+## Review changes
+
+The reviewer approved; F1 is unchanged. F2 was reworked per should-fix 1, which also settles 2 and 3. **This section replaces the "ranking as built", the knockback decision and the F2 line counts above.**
+
+**What changed in F2**
+- **"Hit by" now means hit by this action.** The fallback no longer uses `GetMostRecentAttacker() == acting unit`, which also accepted an enemy the same ally hit on an earlier action. `LucyFactionRoleHandler` now listens to the public `GlobalEventBus.onAbilityEffectPerformedOn` and records which units each cast actually hit.
+- **What counts as a hit:** a hit unit, the occupant of a hit cell, or every unit in a hit bundle. These are the same units `AEffectBase` tags as attacked.
+- **Hits are keyed by the cast's `ActionLogEntry`, not by the ability.** An ability instance is reused on every cast, but `RuntimeAbility.Activate` records a fresh log entry for each one, so no explicit reset on "action started" is needed. `abilityStarted` is not raised by every path anyway.
+  - A hit is filed under the newest in-progress entry for that ability. If the cast has already completed (a late projectile), it goes under the newest completed entry for it.
+  - Entries the session log has dropped are pruned whenever a new hit arrives.
+  - `PrepareTargets` reads the set for `SessionLogs.LastActions[0]`, the same entry it already reads the action from.
+- **Subscription** follows the bus-rebind pattern (`KillFeedbackPresenter`): `OnEnable` binds, `OnDisable` unbinds (Unity calls it before `OnDestroy`) and clears the record. An `Initialize` override re-binds if the bus did not exist yet when the component was enabled. No statics; no core changes.
+- **Ranking** (`LucyRoleTargetRanking.Pick(candidates, allowFallback)`):
+  1. Direct targets first, unchanged.
+  2. Otherwise, enemies hit by this action that pass the existing filters (alive, not downed, in Lucy's zone, not last hit by Lucy). There is no radius.
+  3. Ties go to the enemy nearest the target cell, then list order.
+  - Kept: a Move still only counts its direct targets (`allowFallback` false), as before.
+- **Removed:** `MeasureActionArea`, `PushAll`, `ShapeReach`, `FallbackRadius`, the knockback +1, and the `...AbilitySystem.Effects` using.
+- **Effect:** pushed Vault victims, diagonal (Radial) splash hits and Harmonic Slam-style area victims now qualify because they were really hit. An enemy shot on an earlier action does not.
+
+**Tests:** `LucyRoleTargetRankingTests` now has 14 tests:
+- Earlier tests, kept: targeted enemy beats an earlier-listed neighbour; shot C then B → B; targeted wins without a hit record; nearest, then list order among direct targets; no candidates; fallback not allowed.
+- New:
+  - `Pick_TargetKilledNextToEnemyShotLastTurn_NoFollowUp`
+  - `Pick_TargetKilledAndThisActionAlsoHitNeighbour_NeighbourPicked`
+  - `Pick_VaultVictimPushedAway_StillPicked`
+  - `Pick_AreaAttackVictims_NearestPicked`
+  - `Pick_NoTargetedEnemy_NearestEnemyHitByThisActionWins`
+  - `Pick_NoTargetedEnemy_HitEnemiesSameDistance_EarlierInListWins`
+- The hit recording itself (the event listener) needs the play check; it relies on live `SessionLogs` and the bus.
+
+**Compile and EditMode:** a forced refresh rebuilt both assemblies (15:11). There are no compile errors (no `error CS`) and no console entry from Lucy's code. Full EditMode run: 649 total, 648 passed, 1 failed, the known red `MISO.Core.Systems.AI.EditorTests.AIRegressionTest.Baseline_MatchesCurrentAI` (CHECKS 709, FAILURES 38, unchanged; not re-baselined). The total is 649 because the Lucy class went from 15 tests to 14.
+
+**Play-mode disruption, for THJ:** when I forced the refresh, the editor was apparently in a Play session that THJ had started. The console then showed `IndexOutOfRangeException` at `EntityAnimationHandler.cs:91` (`HandleFrameAction`, from `Update`) and a few `NullReferenceException`s, plus InputSystem "Disable() has not been called" asserts. That is the usual result of recompiling mid-Play with domain reload off. None of it comes from the changed files. Play mode had ended by the time the test run started. I should have checked the editor state before refreshing. If THJ was mid-test, that session needs a restart.
+
+**Updated files and line counts (F2 commit):**
+- `LucyFactionRoleHandler.cs`: +91/-14
+- `LucyRoleTargetRanking.cs`: 61 lines (new)
+- `Editor/LucyRoleTargetRankingTests.cs`: 148 lines (new)
+- `.meta` files and the `Editor.meta` folder file, as before
+
+The F1 commit is unchanged. The proposed commit message stays.
+
+**How to see it, additions:**
+- Linda shoots C. On a later action her Bow kills B, standing next to C, inside Lucy's zone. There should be no Lucy follow-up on C.
+- Linda's Harmonic Slam, or any area hit centred on an empty cell, catches an enemy inside Lucy's zone, diagonals included. Lucy takes the nearest one hit.
+- Mark's Vault pushes an enemy two cells from the landing cell, inside Lucy's zone. Lucy still takes it.
+
+**Risk:** if a hit lands after its cast's log entry has already been dropped from `SessionLogs`, it is ignored, and the follow-up then falls back to direct targets only. That happens when a new action is recorded before a late projectile lands. It is unlikely, because the trigger runs at the cast's completion.
