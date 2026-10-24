@@ -24,3 +24,12 @@ Reviewer: `miso-reviewer`, 2026-10-23. Saved by the coordinator (the reviewer ha
 - LF, no BOM, no statics, balanced subscriptions, no private IDs; file list matches; commit split right.
 - Visible side effects: "Unaware" gain pop over every enemy at level start; Masher counter preview hidden while Unaware (`MasherGoblinFactionRoleHandler.Preview.cs:69`) yet it counters.
 - Other branches: `thj/home-test` needs this when it takes `main`.
+
+## Re-review after fix round 1 (2026-10-24): APPROVE
+
+- Must fix 1 resolved: a unit wakes only when a report names it (`EnemyAlertTracker.Events.cs:159-180`; `AEffectCompound` names units only after `PassesFactionFilter`); Shaman and Deev summon reports name only the tile, and an enemy caster makes no area noise. Second guard: `_bornDuring` + `EnemyAlertRules.WokenByReport` (report fires before `log.Complete()`; `ForgetFinishedBirths` on `abilityPerformed`; instance field, cleared at level end).
+- Should fix resolved: enemy area attack over an Unaware ally wakes nobody; Burn ticks wake (D-161); tests now cover `WokenByReport` (9 cases), start-alert spread (3), timing (3).
+- `UnitAlerted` third value (`Action<GUnit,int,bool>`): safe, no subscriber yet; false for start-alert spread wakes.
+- `CloseActionPointsOnWake(ownTurn, Points)`: safe; closes only with points left; enemies never use the Shared pool; same public `Consume(Closure)`.
+- Note: the newborn guard covers any ability running at the birth, not only the spawner (e.g. a family hit in progress when Worm children appear makes no area noise on them; damage still wakes via the HP watch). Acceptable.
+- Play check still needed: summons stay Unaware, level-start spread, Masher counter, area noise from projectiles.
