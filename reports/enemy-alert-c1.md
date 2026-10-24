@@ -145,3 +145,41 @@ Per the play-test-before-commit rule, commit 2 should wait for THJ's play (or fo
 7. Hit an Unaware Masher with an adjacent attack: it wakes and counters as before.
 8. In a level with the allied Toba or the Deer: neither shows Unaware.
 9. Optional: add `EnemyAlertSettings` to a placed enemy (`startsAlert`) or `LevelAlertSettings` (`allEnemiesStartAlert`) to the level root: those start alert, with no "Unaware" pop.
+
+## Fix round 1 (review FIX; decisions D-159 to D-161)
+
+Same constraints: no core code, no AI graph/variable/ability edit, `AIRegressionTest` untouched, read-only git, no commits. Only the three EnemyAlertSystem scripts and the rules test file changed; assets and prefabs are as in the first round.
+
+### Changes
+
+- **Spawns are never woken by the ability that spawned them (must fix, D-161).** New pure rule in `EnemyAlertRules.WokenByReport`: a candidate flagged `BornDuringThisAbility` is never woken by that report (neither as the named unit nor by area noise). The tracker records, on `unitBorn`, the abilities being performed at that moment (`SessionLogs.ActionsInProgress`) in `_bornDuring` and drops the record once none of them runs (checked on each action's end; cleared at level end).
+- **Only a real effect on a unit wakes it (D-161).** A report now *names* a unit only when the unit itself is the reported entity, which `AEffectCompound` only does for an occupant that passed its faction filter (`PassesFactionFilter`, `AEffectCompound.cs:629-634`). A reported tile no longer names the unit standing on it; it only counts as area noise, which needs a player-side caster. An awake enemy's area attack over its Unaware ally therefore wakes nobody, and enemy abilities make no noise on nearby tiles. An enemy ability that applies to the unit (an awake Shaman's heal) still wakes it.
+- **Burn and other damage ticks still wake the unit they damage (D-161, EN-14a):** kept, through the HP-drop watch.
+- **Units that start alert spread the wake (D-160).** `Register` now reports when a unit starts alert *because a hostile is in sight*, whatever its flags (a boss that sees the family spreads too; with the level's "all start alert" nobody is Unaware, so nothing to spread). New pure `EnemyAlertRules.SpreadFromStartAlert`: the sources spread through their alert range recursively but aren't woken themselves. At level start every unit is registered first, then the spread runs, so a source reaches neighbours registered after it. On a spawn it runs at once for that unit.
+- **No pop for start or spawn wakes:** `UnitAlerted` is now `Action<GUnit, int, bool>` (unit, spread depth, show pop). Wakes caused by a start-alert spread pass `false`; all other wakes `true`. C2 reads the flag.
+- **Timing rule made a real decision:** `CloseActionPointsOnWake(ownFactionsTurn, actionPointsLeft)` replaces `ClosesTurnOnWake` (closes only in the unit's own faction's turn and only if it still has points, so a unit skipped at turn start isn't drained twice).
+- **Tests rewritten:** the trivial `Timing_*` and `Noise_*` tests are gone. New: 3 start-alert spread tests, 3 timing tests, 9 `WokenByReport` tests (player hit + tiles in range; enemy area attack over its ally; enemy ability applied to the unit; summon and spawn-during-hit newborns; family move; hazard tick after its ability; multi-tile sleeper; already alert; no tiles).
+- Not in this round (C2): the "Unaware" text pop on tag gain (D-159).
+
+### Spawn paths checked
+
+| Spawn | How it spawns | What reports, and the result now |
+| --- | --- | --- |
+| Dark Shaman summon | `DarkShaman_Summon_Ability` → `DarkShaman_Summon_GUnitSpawnerEffect` (plain spawner, not a compound), `targetType` Cell, `actualTargets: 1` | On completion `RuntimeAbility` reports the target cell, where the summoned Claw now stands. That was the reviewer's bug. Now the cell doesn't name the Claw, the caster is an enemy (no area noise), and the Claw is also marked born during this ability. It stays Unaware unless a hostile is in sight on arrival. |
+| Mountain Deev summon | `MountainDeev_Summon_Ability` → `MountainDeev_Summon_GUnitSpawnerEffect`, same shape (`targetType` Cell, `actualTargets: 1`) | Same as the Shaman: fixed the same way. |
+| Dark Worm split | `DarkWormPassiveAbility.Split`, run from a coroutine 0.8 s after the hit; applies `splitSpawnEffect` directly with the worm as context, so the split itself reports nothing | The children are new units: Unaware unless a hostile is in sight (likely when the hit was melee, and then they start alert and spread). If the family ability that hit the worm is still running when they appear, its later reports can't wake them (newborn rule). |
+| Corruption pool | `CP_Spawner` hazard: `phaseTickEffect` → `CP_SpawnerCompoundEffect` → `GUnitSpawnerEffect`, at the pool's phase tick (turn start, outside any ability) | The compound only reports when its context is a `RuntimeAbility`; a pool placed in a level has none, so no report. Even if it reported, its ability wouldn't be in progress and the owner isn't player-side. Spawns follow the start rule. |
+
+### Test results
+
+Batchmode, Unity 6000.3.4f1, editor closed. 712 tests: 711 passed, 1 failed, the known red `AIRegressionTest.Baseline_MatchesCurrentAI` (still 38 failures out of 709 checks, unchanged). The EnemyAlert suites: 58/58 (54 rule cases, 4 data). No compiler warnings from the new files.
+
+### Still needs play
+
+The newborn rule depends on the spawn happening while the spawning ability is listed in `SessionLogs.ActionsInProgress` (true for the summons: the spawner runs inside the activation, before `log.Complete()`). The start-alert spread at level start and on spawn, and that no pop appears for it, are play checks (C2 adds the pop).
+
+### Proposed commits (updated)
+
+Same split, same files as above. Commit 1's rules file now also holds `WokenByReport`, `SpreadFromStartAlert` and the two noise structs:
+1. `feat(enemies): enemy alert rules with edit-mode tests` (plain): `Core/Systems/EnemyAlertSystem.meta`, `.../Runtime.meta`, `.../Editor.meta`, `Runtime/EnemyAlertRules.cs` + `.meta`, `Editor/EnemyAlertRulesTests.cs` + `.meta`.
+2. `feat(enemies): enemies start unaware and skip their turns until they see or hear the family` (risky: every level's pace): `Resources/Tags/GTagSet.asset`, `Resources/Tags/GTagRegistry.asset`, `Content/Controllers/AIController.prefab`, `Content/Levels/LevelBase.prefab`, `Runtime/EnemyAlertTracker.cs` + `.meta`, `Runtime/EnemyAlertTracker.Events.cs` + `.meta`, `Runtime/EnemyAlertSettings.cs` + `.meta`, `Runtime/LevelAlertSettings.cs` + `.meta`, `Editor/EnemyAlertDataTests.cs` + `.meta`. Depends on 1; waits for THJ's play check.
