@@ -90,3 +90,14 @@ None blocking. To tune in play: marker offset and scale (the placeholder lamp ma
 4. Enemies that start alert because they see the family at level start (and anything they wake by spread) wake with no "!".
 5. A Shaman summon starts Unaware: marker, no text pop. Kill an Unaware enemy: its marker goes. Win or lose: no markers left.
 6. To tune, change Pop Seconds Per Step, Marker Offset and Marker Scale on the `EnemyAlertTracker` of LevelBase.
+
+## Fix round 1 (review: approve with should-fix items)
+
+Same constraints. Only `Runtime/EnemyAlertTracker.Visuals.cs` and `Editor/EnemyAlertVisualTests.cs` changed.
+
+- **Reflection guard test:** `UnitClasses_HaveNoEnableOrDisableHandler_SoTheQuietTagAddIsHarmless` fails if `GUnit`, `GridPluggableEntity` or `GameEntity` declare `OnEnable` or `OnDisable` (any visibility, static or instance), with the reason in the message (it guards the quiet tag add). 3 cases, all pass today.
+- **Marker sorting:** order is now the mini bar canvas's order plus the serialized `markerSortingOffset` (default 1). The magic layer id is gone: the fallback is the serialized layer name `fallbackSortingLayerName` ("DynamicTop", resolved with `SortingLayer.NameToID`), and the old `fallbackSortingOrder` field is replaced by the offset. The fallback order is the offset itself.
+- **Hide while the info panel is open:** done, cheaply. Each marker keeps the unit's `EntityInfoPanelUI` (found once at creation, the same panel the bar watches) and its renderer is disabled while that panel's GameObject is active; `MiniHealthBarRules.IsShown` itself is not reused, since the marker has no health condition.
+- **Death before the pop:** every pop, including step 0, now waits at least one frame (`yield return null`), so the existing alive check drops it for a unit killed by the hit that woke it.
+- Tests: batchmode, 6000.3.4f1, editor closed. 727 tests, 726 pass, 1 fail: the known `AIRegressionTest.Baseline_MatchesCurrentAI`. No compile errors.
+- Commit shape: the reviewer's proposal (data-only commit of `GTagRegistry.asset`, `GTagSet.asset`, `AIController.prefab`, then everything else including these C2 files and `LevelBase.prefab`) fits and replaces the single-commit proposal above; the Visuals partial and the edited tracker files go in the second commit.

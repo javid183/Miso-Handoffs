@@ -19,3 +19,10 @@ Reviewer: `miso-reviewer`, 2026-10-24. Saved by the coordinator.
 - No statics, balanced subscriptions, no core code, no private IDs, LF/no BOM.
 - Commit shape: C1 commit 2 and C2 can't compile apart. Cleanest: (1) data-only commit `GTagRegistry.asset`, `GTagSet.asset`, `AIController.prefab` (core turn-flow data, inert until the tag is added); (2) everything else (tracker partials, settings components, visual rules, `LevelBase.prefab`, three test files, metas). Both after THJ's play check.
 - Play check: marker size (placeholder lamp), position against the open info panel, sorting.
+
+## Re-check after fix round 1 (2026-10-24): APPROVE
+
+- Reflection test (`EnemyAlertVisualTests.cs:64-75`) covers `GUnit`, `GridPluggableEntity`, `GameEntity` with `DeclaredOnly`.
+- Sorting: canvas order + `markerSortingOffset` (1); fallback layer by name; marker hidden while the unit's `EntityInfoPanelUI` is active (looked up once per marker; trivial per-frame cost; no null access).
+- Every pop waits at least one frame; the `IsAlive` check drops a pop for a unit killed by its waking hit.
+- Should fix: both changed files became CRLF (the folder is LF; `.gitattributes` says `eol=lf`). Convert back before commit (sent to the C3 run).
