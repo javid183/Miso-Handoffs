@@ -93,3 +93,14 @@ None blocking. Confirm that M10 is `LevelM2-C1` and M4's Queen level is `Level3-
 1. Open `Level3-C1` (M4 Queen) in Play: all enemies should act from turn 1, no Unaware markers.
 2. Open a plain level (for example `LevelM1-C1`): enemies start Unaware with the marker.
 3. Select `Unit_TobaEnemy` in the Project window: `EnemyAlertSettings` shows Always Alert ticked. On `LevelHomeDefence` the root shows `LevelAlertSettings` with All Enemies Start Alert ticked.
+
+## Round 2
+
+THJ's decision: also flag the two other Mark Intro levels. Level1-C3 family left alone.
+
+- Added `LevelAlertSettings` (`allEnemiesStartAlert = true`) on the root, same method as before (temporary editor script, deleted afterwards), to:
+  - `miso/Assets/_Project/Content/Levels/Generic Levels/FamilyLevels/MarkIntro/LevelMarkIntro-C3.prefab` ("Survive for 3 turns")
+  - `miso/Assets/_Project/Content/Levels/Generic Levels/FamilyLevels/MarkIntro/LevelMarkIntro-C2.prefab` ("Leave the area to reach Lucy")
+  Each diff is 16 lines (added-component entry plus the component doc; the stripped root GameObject already existed there). `LevelMarkIntro-C2_BKP` not touched.
+- Tests: batchmode EditMode, 727 total, 726 passed, 1 failed: the known red `AIRegressionTest.Baseline_MatchesCurrentAI`. No missing-script or import errors for the two prefabs in the data-run or test logs (logs `c3run3.log`, `test3.log`, `results3.xml` in the scratchpad). No other asset changed.
+- Updated proposed commit 1: same message, now 3 unit prefabs and 11 level prefabs (the 9 above plus the two Mark Intro files). Still depends on the held C1 and C2 commits.
