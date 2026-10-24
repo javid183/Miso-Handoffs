@@ -52,6 +52,19 @@ Every placed and spawned enemy starts Unaware and skips its turns until sight, n
 
 - `EnemyAlertSettings.alwaysAlert` on boss prefabs (Goblin Queen, Mountain Deev, the duel's enemy Toba); `LevelAlertSettings.allEnemiesStartAlert` on: M4 Queen level, M10, M12, M4 Level2-C2, Level2-C3-1, Level2-C3-2, M3 Mark Intro C1 (survive waves), the Dom duel, `LevelHomeDefence`. Implementer confirms each path and lists them. Commit on its own.
 
+### C4: ranges as attributes, Unaware range preview, marker size (opus) — added 2026-10-24 after THJ's first play check (D-164, D-165)
+
+Replaces rule 4's formula and rule 5. Rules 1–3 and 6–10 stay.
+
+1. **Two unit attributes**, `Sight` and `AlertRange` (follow the existing attribute naming and registry). Defaults on `UnitBase.prefab`: sight 3, alert range 2. `Unit_MasherGoblin.prefab`: sight 2. Read them through the normal attribute API, so attribute modifiers apply. Read them at check time, not cached at registration.
+2. **Remove** the walk + attack formula, `SightFloor`, `MinAlertRange` and `EnemyAlertSettings.sightOverride`. Clean the `sightOverride` lines from the three boss prefabs. Values below 0 are treated as 0.
+3. **`LevelAlertSettings`** gets `sightBonus` and `alertRangeBonus` (int, may be negative; the result is clamped at 0), applied to every enemy in that level.
+4. **Range preview:** hovering an enemy, and Shift, draw its sight tiles and its alert-range tiles in two distinct tints, **only while it is Unaware**. Use the existing hover and Shift preview layers (`GridCell.ShiftPreview.cs` and others) through their current API. If this needs a change to `GridCell` or another core system, stop and report the smallest option.
+5. **Marker size:** a fixed world size (serialized, about 0.35 of a tile) whatever the sprite's resolution, placed above the unit's head and the mini bar.
+6. Update the tests (the rules no longer have a formula; add tests for the bonus and clamp).
+
+Acceptance: changing `Sight` on a prefab or the level's `sightBonus` visibly changes when that enemy wakes and the drawn tiles. The preview never shows on an Alerted enemy. The marker is small and above the head.
+
 Then THJ play-checks (see Gates). **Later, not in this approval:** Shift on an Unaware enemy shows its sight area; "this move will wake X" marker on the move ghost; the ability-targeting wake preview; sound and barks; a level-by-level pass.
 
 ## Acceptance criteria
