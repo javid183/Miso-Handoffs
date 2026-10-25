@@ -200,3 +200,41 @@ The tests already ran in batchmode (above). In the editor: open Unity, let it re
    - Set Sight Bonus to -5: frames vanish and enemies only wake from noise.
    - On `UnitBase` (GUnit > Attribute Set > Specs_Sight > Default Sb Value > Constant Value), change 3 to 4: every non-Masher enemy's frames reach 4.
    - Revert both afterwards.
+
+## Fix round 1 (review: approve with two should-fix items)
+
+The constraints are the same as before: no commits, no core code, and no AI graph, variable or ability edit. The editor was closed, so I used batchmode.
+
+### 1. The preview redraws when the previewed enemy wakes
+
+`Core/Interactions/Runtime/ShowStatsHoverPreview.cs` (still LF, no BOM):
+- When `ShowUnawareRanges` draws an Unaware enemy's ranges, it subscribes to that level tracker's `UnitAlerted` and remembers the enemy (`_wakeWatchTracker`, `_wakeWatchUnit`).
+- When that enemy wakes, from any source and in any turn (the enemy turn too, with Shift held):
+  - If Shift is still held, the same unit is still hovered and no ability target is being picked, it calls `ShowPreview`, which now draws the normal move layer and danger zone.
+  - Otherwise it calls `ClearPreview`.
+- The event fires after the tag is removed, so the redraw already sees the unit as alert.
+- `ClearPreview` always unsubscribes first. Every path goes through it: a new `ShowPreview`, releasing Shift, unhover, `Rebind` and `OnDisable`.
+- The unsubscribe uses a reference check, so a tracker destroyed with its level is still handled.
+- With this, the ranges never stay on an Alerted enemy.
+- This needs play: hold Shift on an Unaware enemy while an enemy-turn spread or a Masher counter wakes it.
+
+### 2. Deevoted inherits the range attributes
+
+- `Features/Enemy/Deevoted/Prefabs/Deevoted.prefab`: removed its `attributeSet.attributeEntries.Array.size = 4` override with `PrefabUtility.RevertPropertyOverride`, in a temporary batchmode editor script (since deleted with its folder and `.meta`).
+- It now has six entries, with `Specs_Sight` at index 4 and `Specs_AlertRange` at index 5 (checked in the run log).
+- Its other overrides are unchanged. The `statAttributes` size 0 override and the tag overrides stay.
+- The diff is the 4 removed lines plus two existing modifications reordered by the save.
+- The Lucy decoy variant is untouched.
+- `Editor/EnemyAlertDataTests.cs`: added 2 cases, Deevoted sight 3 and alert range 2.
+
+### Test results
+
+- Batchmode, Unity 6000.3.4f1. 739 tests: 738 passed, 1 failed. The failure is `AIRegressionTest.Baseline_MatchesCurrentAI` (the known red, still 38/709).
+- No compile, missing-script or import errors in `c4fix-data.log` or `c4fix-test.log`. Results are in `c4fix-results.xml`, in the same scratchpad.
+
+### Proposed commits (updated)
+
+- Commit 1 (`feat(enemies): sight and alert range unit attributes`) also takes `Features/Enemy/Deevoted/Prefabs/Deevoted.prefab`.
+- Commit 3 already holds `EnemyAlertDataTests.cs`. Its Deevoted cases depend on commit 1.
+- Commit 4 (`ShowStatsHoverPreview.cs`) is the same file with the wake redraw added.
+- Nothing else changes.
