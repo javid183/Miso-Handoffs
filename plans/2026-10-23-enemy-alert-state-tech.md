@@ -2,7 +2,7 @@
 
 Size: L    Tier: 3 (new mechanic; THJ approves this plan before dispatch)    Assigned to: `miso-implementer` (C1 opus, C2 and C3 sonnet) → `miso-reviewer` → `miso-verifier`
 Branch: all (built on `main`)
-Status: approved (THJ 2026-10-23), C1 done (commit 2 held), C2 in progress
+Status: done (2026-10-24)
 
 ## Why
 
@@ -112,4 +112,4 @@ Compile / EditMode (known red only) / reviewer per chunk / play check: yes, THJ 
 ## Commit log
 
 - C1 commit 1 `3378acaca` feat(enemies): enemy alert rules with edit-mode tests (review APPROVE after fix round 1; EditMode 711/712, known red only).
-- C1 commit 2 (tag, prefabs, tracker, settings): built and approved, held for THJ's play check after C3.
+- 2026-10-24, after THJ's play check ("works great"): `3378acaca` rules + tests; `b8ea2ff58` tag-set parent links (core, D-166); `2bea515d5` sight/alert attributes; `923ab777b` Unaware tag + AI skip query; `0d3427685` tracker, rules, visuals, settings, LevelBase, tests; `af04281a7` Shift-hover range preview; `dc64f974a` boss and level start-alert data.

@@ -33,6 +33,14 @@ Owner: coordinator. The short map of the combat code; moved here from `CLAUDE.md
 
 A unit killed by K or F11 is restored when the level ends; it does not change the save.
 
+## Enemy alert state (2026-10-24)
+
+- Code: `Core/Systems/EnemyAlertSystem/` (`EnemyAlertRules` pure rules; `EnemyAlertTracker` + `.Events`, `.Visuals` partials; `EnemyAlertSettings` per unit: `startsAlert`, `alwaysAlert`; `LevelAlertSettings` per level root: `allEnemiesStartAlert`, `sightBonus`, `alertRangeBonus`).
+- The tracker sits on `LevelBase.prefab` (the `GlobalEventBus` object), main thread only, no statics. It tags player-hostile units `Status.Unaware` at level start and on `unitBorn`; the AI skips them through `AIController.prefab`'s `skipTurnTagsQuery` (no AI code). Wakes: stop events + a full sight check after each action and at enemy turn start; noise from `onAbilityEffectPerformedOn` (units named directly; cells only from family-side casters; never the ability that spawned the unit), HP/tag/evade watches; recursive spread. A unit woken in its own faction's turn has its AP closed. `UnitAlerted(GUnit, depth, showPop)` drives the "!" pop and the Shift-hover redraw.
+- Ranges: unit attributes `Specs_Sight` (default 3, Masher 2) and `Specs_AlertRange` (2) in `AAttributes.asset`, read at check time, plus the level bonus, clamped at 0.
+- No "Unaware" gain pop: the tracker disables the unit for the moment it adds the tag (`ShowTagGained` skips inactive units), guarded by a test that `GUnit` and its bases have no `OnEnable`/`OnDisable` (D-162).
+- Preview: `ShowStatsHoverPreview.cs` draws sight (enemy-move frame) and alert (enemy-attack icon) tiles while Unaware; redraws on wake.
+
 ## Grid previews (2026-10-20, `thj/preview-improvements`)
 
 Design and inventory of all 23 previews: `plans/2026-10-19-preview-pass-design.md`. Tech plan and commit hashes: `plans/2026-10-19-preview-pass-tech.md`.
