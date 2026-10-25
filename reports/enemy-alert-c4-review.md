@@ -17,3 +17,10 @@ Reviewer: `miso-reviewer`, 2026-10-24. Saved by the coordinator. **Verdict: APPR
 - Marker: about 0.175 world units (cells 0.5); scale independent of sprite resolution.
 - Tests meaningful; LF, no BOM, no statics, no private IDs.
 - Five-commit plan compiles in order; commit 3 (C1 commit 2 + C2 + C4, shared files) is large and risky: say so to THJ.
+
+## Re-check after fix round 1 (2026-10-24): APPROVE
+
+- Wake watch in `ShowStatsHoverPreview.cs`: one subscription at a time; `ClearPreview` always unsubscribes first (Shift release, unhover, `Rebind` from enable/disable/bus change); on wake it redraws the normal layers or clears; safe to unsubscribe during the raise; destroyed tracker handled; LF.
+- `Deevoted.prefab`: only the size-4 override removed; other attribute overrides target `data[0]`; two modifications reordered with the same values.
+- Two new data tests (`EnemyAlertDataTests.cs:148-149`) check the inheritance itself.
+- Play check: hold Shift on an Unaware enemy while an enemy-turn spread or a Masher counter wakes it.
