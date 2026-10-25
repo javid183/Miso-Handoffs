@@ -14,6 +14,8 @@ Every placed and spawned enemy starts Unaware and skips its turns until sight, n
 
 ## The rules as decided (what the code must do)
 
+> **2026-10-24, D-164/D-165:** rules 4 and 5 below and the range acceptance line are superseded by chunk C4 (sight and alert range are unit attributes, defaults 3/2, Masher sight 2, per-level bonus; the Shift + hover range preview on Unaware enemies is now in scope). Read C4 first.
+
 1. **Who:** only units of factions hostile to the player faction. Allied AI (Toba ally) and neutrals (Deer) are never Unaware. Rule is **on by default in every level**; no global switch (D-154).
 2. **Start:** at level start every such unit is Unaware, except: the level has "all enemies start alert"; the unit has "starts alert"; the unit is "always alert" (bosses); or a hostile unit is already within its sight (Alerted with no pop).
 3. **Spawned units follow the same rule** (Shaman summons, corruption pool, wave spawns, Worm split children): Unaware when they appear, Alerted at once (no pop) if a hostile is already in sight (D-156). Revived units keep their previous state.
