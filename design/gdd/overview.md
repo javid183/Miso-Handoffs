@@ -99,12 +99,12 @@ Source: `Resources/Game Data.asset`, `Resources/GlobalSettings.asset`, `Content/
 
 | Area | Sub-doc | Design state | Branch | Checked | Notes |
 | --- | --- | --- | --- | --- | --- |
-| Combat rules | [combat-rules](combat-rules.md) | Built | both | `main` @ `92853a5a9` (presets read); Combat feedback from `thj/quick-wins` @ `403de3bf8` (CR-53 @ `ec664b5fc`), on `main` since 2026-10-23 (`f4e9d9158`) | |
+| Combat rules | [combat-rules](combat-rules.md) | Built | both | `main` @ `92853a5a9` (presets read); Combat feedback from `thj/quick-wins` @ `403de3bf8` (CR-53 @ `ec664b5fc`), on `main` since 2026-10-23 (`f4e9d9158`); CR-54 @ `af04281a7`, 2026-10-24 | |
 | Family systems | [family-systems](family-systems.md) | Built, differs | both | `main` @ `92853a5a9` (presets read) | Role limits planned |
 | Characters | [john](characters/john.md) · [linda](characters/linda.md) · [lucy](characters/lucy.md) · [mark](characters/mark.md) · [toba](characters/toba.md) | Built | both | `main` @ `92853a5a9` (presets read) | |
-| Enemies | [enemies](enemies.md) | Built | both | `main` @ `92853a5a9` (presets read); EN-11 (Dark Shaman heal) on `main` since 2026-10-23 (`f4e9d9158`), from the build reports | |
+| Enemies | [enemies](enemies.md) | Built | both | `main` @ `92853a5a9` (presets read); EN-11 (Dark Shaman heal) on `main` since 2026-10-23 (`f4e9d9158`), from the build reports; EN-12 to EN-17 (alert state) on `main` @ `dc64f974a`, 2026-10-24 | Alert-state previews and sound planned (Q8) |
 | Progression and economy | [progression-economy](progression-economy.md) | Built | both | `main` @ `92853a5a9` (presets read) | Skill-tree values not play-checked |
-| Missions and structure | [missions-structure](missions-structure.md) | Built | both | `main` @ `92853a5a9` (level prefabs read) | M8–M14 unreachable, not rebalanced |
+| Missions and structure | [missions-structure](missions-structure.md) | Built | both | `main` @ `92853a5a9` (level prefabs read); MI-27 @ `dc64f974a`, 2026-10-24 | M8–M14 unreachable, not rebalanced |
 | Home | [home](home.md) → [Demo Spec](../demo-spec.md) | Built | `thj/home-test` | Demo Spec, 2026-10-16 (branch code not read) | |
 | Narrative and world | [narrative-world](narrative-world.md) | Proposed | all | `main` @ `92853a5a9` (briefings only) | |
 

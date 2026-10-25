@@ -1,6 +1,6 @@
 # Missions and structure
 
-Owner: game designer (THJ approves) · Scope: `all` · Checked against assets: `main` @ `92853a5a9`, 2026-10-16 (every mission level prefab read from the live project) · Mirror: Claude Doc "Miso — Game Design", tab Missions and structure · Up: [Overview](overview.md)
+Owner: game designer (THJ approves) · Scope: `all` · Checked against assets: `main` @ `92853a5a9`, 2026-10-16 (every mission level prefab read from the live project); MI-27 from the build report, on `main` @ `dc64f974a`, 2026-10-24 · Mirror: Claude Doc "Miso — Game Design", tab Missions and structure · Up: [Overview](overview.md)
 
 The campaign is a graph of missions. Each mission is one or more combat levels played in a row, sometimes with a choice of route and an enemy-free safe room on the way. The family's HP, FTP, items and run upgrades carry through a mission and reset when it ends. The design's larger loop (chapters, each with a main dungeon and a deadline) exists only in the Home demo so far.
 
@@ -113,6 +113,24 @@ Source: `Core/Levels/Runtime/MissionRouteProgress.cs`, `MissionTracker.cs` (`Sho
 | Never | Never (a placeholder) |
 
 "Protect a unit" and "defeat the boss" are built from "Unit dies" in a loss or win group. Source: `Core/Levels/Runtime/LevelObjectives.cs`, `LevelObjectiveConditions.cs`, `CombatLevel.cs`, `Content/Levels/LevelBase.prefab`.
+
+- **MI-27.** Enemies start each level Unaware unless the level sets **"all enemies start alert"** ([Enemies](enemies.md) EN-12, EN-17). The setting is for levels where the enemies must come from turn 1: boss fights, protect and escort, survive-N-turns and some reach-the-exit levels. A level can also add a sight bonus and an alert-range bonus to every enemy in it (EN-17); none does yet. The levels that set "all enemies start alert" are listed below. *Built* (D-154, D-163)
+
+| Mission | Level | Why |
+| --- | --- | --- |
+| M3 Mark Intro | LevelMarkIntro-C1 | Survive 3 turns of Dark Claw waves |
+| M3 Mark Intro | LevelMarkIntro-C2 | Mark alone leaves the area to reach Lucy |
+| M3 Mark Intro | LevelMarkIntro-C3 | Survive for 3 turns |
+| M4 | LevelDomFight | Toba's duel (MI-25) |
+| M4 | Level2-C2 | The Whitemother stag must survive |
+| M4 | Level2-C3-1 | Escort the fawns; the Pathmother must survive |
+| M4 | Level2-C3-2 | Escort the new Pathmother to an exit |
+| M4 | Level3-C1 | The Goblin Queen (MI-23) |
+| M10 | LevelM2-C1 | The Goblin Queen again (MI-23) |
+| M12 | LevelMountainDeev | The Mountain Deev (MI-24) |
+| — | LevelHomeDefence | "Defend Home" |
+
+Bosses are always alert in every level, flagged or not: the Goblin Queen, the Mountain Deev and the duel's enemy Toba (EN-17). Not flagged for now (D-163): the `Level1-C3` family ("Allies must survive") and `Level2-C1-TArtEx` (defeat all and reach the exit). Every other level, the `LevelM1-*` and `LevelE*` levels included, starts its enemies Unaware. Source: `LevelAlertSettings` (`allEnemiesStartAlert` 1) on the root of each level prefab above, under `Content/Levels/` (`Generic Levels/FamilyLevels/MarkIntro/`, `Level2/`, `Level3/`, `Generic Levels/Medium/M2/`, `Generic Levels/Medium/MountainDeev/`, `Generic Levels/Easy/`), committed in `dc64f974a`; [`reports/enemy-alert-c3.md`](../../reports/enemy-alert-c3.md).
 
 ## Safe rooms
 

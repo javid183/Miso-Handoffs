@@ -2,7 +2,7 @@
 
 Size: L    Tier: 3 (new mechanic; THJ decides)    Assigned to: miso-game-designer
 Branch: all (built on `main`; `thj/home-test` takes it with `main`)
-Status: waiting on THJ
+Status: approved with changes and built on `main` (2026-10-24, `3378acaca..dc64f974a`). THJ's answers D-154 to D-167 override parts of this plan (ranges as attributes, spawns start Unaware, start-alert spread, no global switch). The rules as built live in `design/gdd/enemies.md` EN-12 to EN-17, `combat-rules.md` CR-54 and `missions-structure.md` MI-27; this plan keeps the reasoning only
 
 ## Why
 

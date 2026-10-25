@@ -1,13 +1,13 @@
 # Combat rules
 
-Owner: game designer (THJ approves) · Scope: `all` · Checked against assets: `main` @ `92853a5a9`, 2026-10-16 (ability presets and core scripts read from the live project); [Grid previews and the Shift view](#grid-previews-and-the-shift-view) read from `thj/preview-improvements` @ `f5d263743`, 2026-10-20, now merged into `main`; [Combat feedback](#combat-feedback) from `thj/quick-wins` @ `403de3bf8`, 2026-10-23 (build reports, `pace-timings.md` and the damage-preview rules read) · Mirror: Claude Doc "Miso — Game Design", tab Combat rules · Up: [Overview](overview.md)
+Owner: game designer (THJ approves) · Scope: `all` · Checked against assets: `main` @ `92853a5a9`, 2026-10-16 (ability presets and core scripts read from the live project); [Grid previews and the Shift view](#grid-previews-and-the-shift-view) read from `thj/preview-improvements` @ `f5d263743`, 2026-10-20, now merged into `main`; [Combat feedback](#combat-feedback) from `thj/quick-wins` @ `403de3bf8`, 2026-10-23 (build reports, `pace-timings.md` and the damage-preview rules read); CR-54 read from `main` @ `dc64f974a`, 2026-10-24 · Mirror: Claude Doc "Miso — Game Design", tab Combat rules · Up: [Overview](overview.md)
 
 A level is a grid fight played in rounds: the family takes its turn, then each other faction takes its own. Every unit acts with its own AP. The family shares one pool of FTP, which pays for Duos. Reactions (Family Roles, QTEs) happen on both turns, so the player is never just watching. Lines marked "(to check in play)" are read from the data but not yet confirmed in a playtest.
 
 ## Turns and rounds
 
 - **CR-1.** Factions take turns in a fixed order: the family (Bergsons) first, then enemies, then neutral factions. A level can set its own order. A round ends when the order comes back to the first faction. *Built*
-- **CR-2.** At the start of a faction's turn, each of its units gets its AP back. A unit tagged Inactive (family) or Stunned (enemies) skips the turn. Then cooldowns, stat effects and status lifetimes tick. *Built*
+- **CR-2.** At the start of a faction's turn, each of its units gets its AP back. A unit tagged Inactive (family) or Stunned (enemies) skips the turn; so does an Unaware enemy ([Enemies](enemies.md) EN-12). Then cooldowns, stat effects and status lifetimes tick. *Built*
 - **CR-3.** The family's turn ends when the player ends it or when no unit has AP left. Enemies act one unit at a time, then end their turn. *Built*
 - **CR-4.** Objectives are checked at the start of each turn, after every ability and right after deaths. A win or loss ends the level at once. *Built*
 
@@ -63,20 +63,21 @@ The rule for previews: what a preview promises, the real action does. Role zones
 
 - **CR-37.** Every preview of where an attack reaches uses the real attack's rules: its shape, straight lines only when the ability has them, the unit's whole footprint, and ranged reach across missing tiles (Linda's arrow crosses a gap). That covers the ghost's sword icons (basic-attack reach from the ghost tile), the approach preview (attack range from the tile the unit would walk to before attacking, CR-7), the Shift view and the enemy threat arcs. Abilities that preview an affected area keep that preview. *Built*
 - **CR-38.** On a multi-tile unit, every tile in reach gets its own sword icon, drawn above the unit's sprite; hovering any of its tiles as a target marks all of them once. The move frame still wraps the whole footprint (D-088, D-089). *Built*
-- **CR-39.** Enemy threat arcs: while the player previews a move, a curved line runs from each enemy that could attack the ghost tile after moving, with any Attack ability, without area splash. Like the danger zone (CR-43), the arcs count any Attack ability ready on the enemy's next turn, so an ability with 1 turn of cooldown left draws an arc (D-085, D-090). *Built*
+- **CR-39.** Enemy threat arcs: while the player previews a move, a curved line runs from each enemy that could attack the ghost tile after moving, with any Attack ability, without area splash. Like the danger zone (CR-43), the arcs count any Attack ability ready on the enemy's next turn, so an ability with 1 turn of cooldown left draws an arc (D-085, D-090). Unaware enemies (EN-12) draw arcs too, though they won't act until woken (read in code; [Enemies](enemies.md) Q11). *Built*
 - **CR-40.** Grid hover stops while the pointer is over the on-screen HUD, and entering the HUD clears the hovered tile, so a ghost, follow zone or Shift preview never fires under a panel (D-078). Unit info panels over the board don't block hover. Clicks are unchanged. *Built*
 - **CR-41.** Holding Shift shows details: info panels, every Bergson's role zone, and for the hovered unit a move and attack preview on its own layer, softer than and under the real highlights, so it never erases them (D-064, D-071). The preview is recomputed on each Shift press and hover, and isn't shown while the player is picking an ability target. *Built*
 - **CR-42.** Shift on a unit that is not hostile to the player (Bergsons, the allied Toba, Deer): sword icons where its basic attack reaches from the tile it stands on, plus its move range, except on the selected unit, whose real move range is already drawn (D-079, D-086). *Built*
-- **CR-43.** Shift on a unit hostile to the player: its move range and its danger zone, in enemy tints. The danger zone is every tile it could target after moving with any Attack ability ready on its next turn (cooldowns tick at the start of its turn, so an ability with 1 turn left counts), without area splash: the tiles it can aim at, not those caught next to a target (D-079, D-085, D-086). Its intent cells (its planned action) show as before. *Built*
+- **CR-43.** Shift on a unit hostile to the player: its move range and its danger zone, in enemy tints. The danger zone is every tile it could target after moving with any Attack ability ready on its next turn (cooldowns tick at the start of its turn, so an ability with 1 turn left counts), without area splash: the tiles it can aim at, not those caught next to a target (D-079, D-085, D-086). Its intent cells (its planned action) show as before. An Unaware enemy shows CR-54 instead. *Built*
+- **CR-54.** Shift and hover on an **Unaware** enemy ([Enemies](enemies.md) EN-12): in place of its move range and danger zone (CR-43), its **sight tiles** in the hostile move tint (the red-brown frame) and its **alert-range tiles** with the hostile attack icon (the strong red). A tile in both ranges shows both. The tiles are every tile within that many Manhattan steps of its footprint, through walls, without its own tiles (EN-13, EN-15). The preview shows only while the enemy is Unaware: if it wakes while the preview is up, in either side's turn, the preview switches at once to CR-43's. Like every Shift preview (CR-41), it isn't shown while the player is picking an ability target. *Built* (D-164; on `main` since `af04281a7`, 2026-10-24). Known limit: the alert tiles reuse the attack icon, so they can read as "it can hit this tile" ([Enemies](enemies.md) Q10).
 
 | Shift tint | Bergson and allies | Hostile |
 | --- | --- | --- |
-| Move | Grey-teal (0.6, 0.8, 0.8) | Red-brown (0.7, 0.45, 0.4) |
-| Attack | Warm white (1, 0.9, 0.75) | Strong red (1, 0.25, 0.2) |
+| Move (on an Unaware enemy: its sight, CR-54) | Grey-teal (0.6, 0.8, 0.8) | Red-brown (0.7, 0.45, 0.4) |
+| Attack (on an Unaware enemy: its alert range, CR-54) | Warm white (1, 0.9, 0.75) | Strong red (1, 0.25, 0.2) |
 
 On screen, each preview tile is the normal overlay colour moved 35% toward its tint, at 0.55 opacity, so the red is softer than its value. The tints sit outside the four role colours. If a tile holds both kinds, the Bergson tint wins. Confirmed in play (2026-10-20): the tints read apart from Linda's blue and Lucy's red, and the enemy red is strong enough.
 
-Source: `Core/Interactions/Runtime/UnitThreatAnalysis.cs` (`AttackReachFrom`, `BasicAttackReachFrom`, `GetAttackableCells`, `GetThreateningEnemies`), `ShiftPreviewRules.cs` (`EnemyCooldownTicksAhead` 1, `EnemyIncludeAreaSplash` false), `ShowStatsHoverPreview.cs`, `PlayerController.cs` (ghost, approach, threat arcs), `Core/Systems/GridSystem/Runtime/GridCell.ShiftPreview.cs` (tints, `ShiftPreviewTintBlend` 0.35, `ShiftPreviewAlpha` 0.55), `GridCell.cs` (per-tile attack icons), `GridManager.HoverGate.cs`. Design and the full list of 23 previews: [`plans/2026-10-19-preview-pass-design.md`](../../plans/2026-10-19-preview-pass-design.md).
+Source: `Core/Interactions/Runtime/UnitThreatAnalysis.cs` (`AttackReachFrom`, `BasicAttackReachFrom`, `GetAttackableCells`, `GetThreateningEnemies`), `ShiftPreviewRules.cs` (`EnemyCooldownTicksAhead` 1, `EnemyIncludeAreaSplash` false), `ShowStatsHoverPreview.cs` (`ShowUnawareRanges` for CR-54, with `EnemyAlertTracker.TryGetUnawareRangeTiles`), `PlayerController.cs` (ghost, approach, threat arcs), `Core/Systems/GridSystem/Runtime/GridCell.ShiftPreview.cs` (tints, `ShiftPreviewTintBlend` 0.35, `ShiftPreviewAlpha` 0.55), `GridCell.cs` (per-tile attack icons), `GridManager.HoverGate.cs`. Design and the full list of 23 previews: [`plans/2026-10-19-preview-pass-design.md`](../../plans/2026-10-19-preview-pass-design.md).
 
 ## Combat feedback
 
@@ -130,6 +131,7 @@ Source: `Core/Units/Runtime/GUnit.cs`, `Core/Units/Runtime/Factions/FactionTrack
 | Immovable | Immovable | Can't be pushed or commanded | Built |
 | Pact Leader | Pact Leader | Black Claw: attacking it turns the pack on the attacker | Built |
 | Inactive | (hidden) | Skips its turn; ignored by objectives and by Pass-by | Built |
+| Unaware (working name) | Unaware, plus a marker over the unit | Enemy alert state: takes no action until it wakes; never comes back. No floating text when gained ([Enemies](enemies.md) EN-12 to EN-17) | Built |
 
 Durations count the affected unit's own turns. Source: `Resources/Tags/GTagSet.asset`; the status effects in the ability presets (`John_Ability_Attack_Sword_Effect_Vulnerable*`, `*_Effect_Weak*`, `Lucy_Ability_PrimaryAttack_Effect_Burn*`, `Linda_Ability_HarmonicSlam_CompundEffect`, `Mark_Ability_Attack_Vault_Effect_Stun`); timing in `AAttributeSet.cs` and `GameEntity.PhaseTick`.
 
@@ -207,6 +209,6 @@ Source: `Core/Managers/CombatLevelRunHandler.cs`, `Core/Managers/GameHandler.cs`
 
 ## Related
 
-- Decisions: D-034 to D-038; previews D-064, D-071, D-072, D-078, D-079, D-085, D-086, D-088 to D-090; feedback D-113, D-134 to D-137, D-145 to D-149
+- Decisions: D-034 to D-038; previews D-064, D-071, D-072, D-078, D-079, D-085, D-086, D-088 to D-090, D-164 (CR-54); feedback D-113, D-134 to D-137, D-145 to D-149
 - Detail: [`combat-balance.md`](../combat-balance.md), [`tech/pace-timings.md`](../../tech/pace-timings.md) (every combat timing), [`tech/mechanics-brief.md`](../../tech/mechanics-brief.md), [`tech/combat-architecture.md`](../../tech/combat-architecture.md) (dev cheats)
 - [Family systems](family-systems.md) · [Enemies](enemies.md) · [Progression and economy](progression-economy.md)

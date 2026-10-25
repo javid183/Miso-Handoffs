@@ -1,6 +1,6 @@
 # Enemies
 
-Owner: game designer (THJ approves) · Scope: `all` · Checked against assets: `main` @ `92853a5a9`, 2026-10-16 (ability presets and boss levels read from the live project); EN-11 from the build reports, on `main` @ `f4e9d9158`, 2026-10-23 · Mirror: Claude Doc "Miso — Game Design", tab Enemies · Up: [Overview](overview.md)
+Owner: game designer (THJ approves) · Scope: `all` · Checked against assets: `main` @ `92853a5a9`, 2026-10-16 (ability presets and boss levels read from the live project); EN-11 from the build reports, on `main` @ `f4e9d9158`, 2026-10-23; EN-12 to EN-17 (alert state) read from the code and the build reports, on `main` @ `dc64f974a`, 2026-10-24 · Mirror: Claude Doc "Miso — Game Design", tab Enemies · Up: [Overview](overview.md)
 
 The Corruption's forces are goblins, beasts and two bosses. Each type asks for a different answer: hitting a Black Claw turns its pack on you, poking the Masher draws a counter-attack, and every Worm you kill splits into smaller ones. All enemies use the same turn rules as the family ([Combat rules](combat-rules.md)); difficulty per level comes from tiers (CR-32).
 
@@ -24,8 +24,8 @@ Source: `Features/Enemy/<Name>/Prefab(s)/Unit_<Name>.prefab` (`Specs_Health`, `p
 
 ## Special rules
 
-- **EN-1. Pact Leader (Black Claw).** When a Black Claw is attacked, every Dark Claw within 5 cells of it targets the attacker. Black Claws also share grudges with each other within 10 cells. *Built* (Q4)
-- **EN-2. Counter-attack (Masher Goblin).** When the Masher survives a hit, it strikes back at the attacker, walking into range first if it has to. It counters every hit, with no limit per turn, and its slam hits both sides. Hovering the Masher while targeting it shows the counter in advance: its path, the cells it will hit and the damage. *Built* (Q2)
+- **EN-1. Pact Leader (Black Claw).** When a Black Claw is attacked, every Dark Claw within 5 cells of it targets the attacker. Black Claws also share grudges with each other within 10 cells. The call also wakes the units it reaches (EN-15). *Built* (Q4)
+- **EN-2. Counter-attack (Masher Goblin).** When the Masher survives a hit, it strikes back at the attacker, walking into range first if it has to. It counters every hit, with no limit per turn, and its slam hits both sides. Hovering the Masher while targeting it shows the counter in advance: its path, the cells it will hit and the damage. An Unaware Masher (EN-12) is woken by the hit before the counter is decided, so it counters as usual, but its counter preview is hidden while it is Unaware (Q9). *Built* (Q2)
 - **EN-3. Immovable (Masher Goblin, Mountain Deev).** Can't be pushed, swapped or moved by Mark's Command. The Masher is also Reckless: it turns on whoever attacks it. *Built*
 - **EN-4. Split (Dark Worm).** When a Worm dies, it splits into smaller worms: 12 HP (6 damage), then 6 HP (4 damage), then 4 HP (2 damage). *Built* (Q3)
 - **EN-5. Summon (Dark Shaman).** The Shaman calls 1 Dark Claw onto a random empty cell within 2 of itself (1 AP, cooldown 3). There is no cap, and summoned Claws stay when the Shaman dies. *Built*
@@ -38,10 +38,40 @@ Source: `MemorableAttackMemoryShare` on `Unit_DarkClaw` and `Unit_BlackClaw`; `F
 
 ## How enemies think
 
-- **EN-9.** Enemies are run by a utility AI. Each unit scores its options (attack, move, use an ability) against a plan for the whole faction, then acts. A Taunted unit must go after its taunter. *Built*
+- **EN-9.** Enemies are run by a utility AI. Each unit scores its options (attack, move, use an ability) against a plan for the whole faction, then acts. A Taunted unit must go after its taunter. An Unaware enemy doesn't act at all ([Alert state](#alert-state-unaware-and-alerted), EN-12). *Built*
 - **EN-10.** The player can see who each enemy plans to hit next, and hovering an enemy shows its threat. New enemy types are introduced with a short close-up the first time they appear. *Built* (no introduction text is written yet; Q6)
 
 Source: `tech/mechanics-brief.md` §7 and §8; `Content/Controllers/AIController.prefab`; `EnemyIntroductionController` on `Content/Controllers/PlayerController.prefab`.
+
+## Alert state (Unaware and Alerted)
+
+Enemies wait until they notice the family. Each one is **Unaware** or **Alerted** (working names, pending the narrative agent and THJ): an Unaware enemy holds its tile and does nothing until a family member comes within its sight, something happens to it or near it, or a neighbour wakes. This gives every fight a "before": the family chooses where, when and how to start it. On by default in every level, with no global switch; levels and units opt out (EN-17). Design and reasoning: [`plans/2026-10-23-enemy-alert-state-design.md`](../../plans/2026-10-23-enemy-alert-state-design.md), with THJ's answers D-154 to D-167 on top (where they differ, the decisions win).
+
+- **EN-12. Unaware and Alerted.** At level start, every unit of a faction hostile to the player is **Unaware**, unless it is exempt (EN-17) or a unit hostile to it is already within its sight (EN-13), in which case it starts **Alerted**. An Unaware enemy takes no action on its turn: no move, attack, heal or summon. It is skipped like a Stunned one (CR-2) and is left out of the next-targets list (EN-10). An enemy never goes back to Unaware. Units that appear mid-fight follow the same rule: Shaman summons, corruption-pool and wave spawns and Worm split children are Unaware when they appear, or Alerted at once if a hostile unit is already in their sight (D-156). A revived unit keeps the state it had. An enemy turn in which every enemy is Unaware still shows its turn banner, then ends at once. *Built* (D-154, D-156)
+- **EN-13. Sight.** An Unaware enemy becomes Alerted when a unit hostile to it **stops** on a tile within its sight. That unit can be a Bergson, the allied Toba, the Deer, a protectee such as the Whitemother stag, or a decoy. Sight is counted in Manhattan steps (four directions, CR-15) from the nearest tile of the enemy's footprint to the nearest tile of the other unit's, through walls, gaps and units: there is no line of sight. "Stops" means the end of a walk, a push or pull, a Command move, a swap, a teleport (Blink), a jump (Vault), a Duo move (the Dance, the Footrace) or appearing on the board (deploy, decoys). Passing through sight in the middle of a walk doesn't count. A full sight check also runs after every action and, as a safety net, at the start of each enemy turn. The ranges are unit attributes with a per-level bonus (table below; D-164, D-165). *Built*
+- **EN-14. Noise.** An Unaware enemy becomes Alerted when (a) something really happens to it, from any side: an ability's effect lands on it (damage, a status, a push, Command, a heal, so an awake Shaman's heal wakes the ally it heals), it dodges a hit, it gains Taunted, or it loses HP from anything (spikes, Burn and other damage ticks); or (b) an ability used by the player's side (the family and its allies, the allied Toba included) affects a tile within the enemy's **alert range** while that ability runs: the tiles it hits or lands on, not its flight path. A tile that was targeted but where the ability applied nothing to the enemy standing there doesn't wake it through (a) (D-161). Moves make no noise: they wake only through sight. Enemy abilities, status ticks and hazards make no noise around them (a hazard a family ability left behind wakes only the enemy it damages). The ability that spawns a unit never wakes that unit (D-161). *Built*
+- **EN-15. Spread.** When an enemy becomes Alerted, every Unaware enemy within *its* alert range (Manhattan, footprint to footprint) becomes Alerted too, and those spread it in turn. Spread happens only at the moment of waking: an Alerted enemy walking past a sleeping one doesn't wake it. An enemy that starts Alerted because it sees a hostile unit (at level start or when it appears) spreads the same way (D-160); one that starts Alerted only because of a flag (EN-17) doesn't spread. The Black Claw's Pact Leader call (EN-1) wakes the units it calls, because it taunts them and gaining Taunted wakes (EN-14a): the Dark Claws within 5 and the Black Claws within 10 of the attacked Black Claw (counted in eight directions), even outside the alert range. The call answers any ability used on the Black Claw, an awake Shaman's heal included, so that heal also wakes the pack. *Built* (D-155, D-160)
+- **EN-16. Timing.** An enemy woken during the family's turn acts normally on the next enemy turn. An enemy woken during an enemy turn (by a Masher counter, a Family Role, a spread or the turn-start sight check) doesn't act in the rest of that turn and acts from the next one: its AP is closed when it wakes. Waking at level start or on arrival has no delay: the enemy is simply Alerted from the start. *Built* (D-156)
+- **EN-17. Exceptions and level settings.** The rule covers only factions hostile to the player. The player's faction and its allies (the allied Toba, the Deer) are never Unaware. Always Alerted, wherever they are placed: the Goblin Queen, the Mountain Deev and the duel's enemy Toba (D-163). A level can set **"all enemies start alert"** ([Missions and structure](missions-structure.md) MI-27) and can add a sight bonus and an alert-range bonus to every enemy in it (a whole number, which may be negative; the result never drops below 0). A unit, on its prefab or as a placed instance, can be set **"starts alert"**. There is no global switch (D-154). Dev scenes that don't use the level base prefab (`SampleScene`, `TestLevel`) have no alert tracker, so their enemies are always alert. *Built* (D-154, D-163, D-164)
+
+| Unit | Sight | Alert range |
+| --- | --- | --- |
+| Every enemy (default) | 3 | 2 |
+| Masher Goblin | 2 | 2 |
+| Goblin Queen, Mountain Deev, the duel's enemy Toba | Always Alerted (EN-17) | — |
+
+Both values are unit attributes, read at the moment of each check, so an attribute effect would change them (none does yet). They are hidden from the unit panel. Each level's bonus is added on top. Deevoted and Lucy's decoy don't carry the attributes and use the attribute defaults (3 and 2). The values are starting points, to tune per prefab after play (D-165). Family reach for comparison: Linda's arrow 4 (6 with Longshot), Lucy's embers within 3.
+
+**What the player sees** (D-159, D-162, D-164, D-167):
+
+| Moment | Shown |
+| --- | --- |
+| Always, on an Unaware enemy | A small marker above its head and mini HP bar, at a fixed size of about 0.35 of a tile (placeholder icon: the save-indicator circle). Alerted enemies carry nothing |
+| Hover, info panel | The "Unaware" status line. No floating "Unaware" text when the status is gained (level start, spawns) |
+| Shift and hover on an Unaware enemy | Its sight tiles and its alert-range tiles, in place of its move range and danger zone ([Combat rules](combat-rules.md) CR-54) |
+| On waking | A "!" pops over the enemy. Along a spread, each step pops 0.1 s after the one before, so the wave reads outward. No pop for enemies that start Alerted or that their spread wakes (level start, arrival) |
+
+Source: `main`, commits `3378acaca..dc64f974a` (2026-10-23 to 2026-10-24). Code: `Core/Systems/EnemyAlertSystem/` (`EnemyAlertRules`, `EnemyAlertTracker` and its `.Events` and `.Visuals` partials: `popSecondsPerStep` 0.1, `markerTileFraction` 0.35; `EnemyAlertSettings`: `startsAlert`, `alwaysAlert`; `LevelAlertSettings`: `allEnemiesStartAlert`, `sightBonus`, `alertRangeBonus`). The tracker sits on `Content/Levels/LevelBase.prefab`. Data: `Resources/Attributes/AAttributes.asset` (`Specs_Sight` 3, `Specs_AlertRange` 2), `Features/_Common/Prefabs/UnitBase.prefab`, `Unit_MasherGoblin.prefab` (sight 2); the `Status.Unaware` tag in `Resources/Tags/GTagSet.asset` and `GTagRegistry.asset`; the skip query (`Status.Stunned` or `Status.Unaware`) on `Content/Controllers/AIController.prefab`; `alwaysAlert` on `Unit_GoblinQueen.prefab`, `Unit_Deev.prefab`, `Unit_TobaEnemy.prefab`. Build: [`plans/2026-10-23-enemy-alert-state-tech.md`](../../plans/2026-10-23-enemy-alert-state-tech.md), reports `reports/enemy-alert-c1.md` to `enemy-alert-c4.md`. Played by THJ on 2026-10-24 ("works great"); some paths are tested only in edit mode (the reports list which).
 
 ## Enemy faction
 
@@ -62,6 +92,11 @@ The Neutral and Stranger (Toba's duel) factions have a single tier row; their un
 5. **Q5.** The Deev's tentacles and immunity are unused on `main`: M12 removes the Summon that spawns the Deevoted and switches the immunity on. If it ran, the immunity would end when *any* other enemy dies, and nothing removes the tentacles' Inactive status. Restore the Summon and tie the immunity to the tentacles, as designed?
 6. **Q6.** Enemy introductions have no text yet. Who writes them (narrative)?
 7. **Q7.** Some enemy abilities carry copied titles and text: the Queen's charge and the Deev's pools are titled "Shield Dash" with John's description, the Deev's wave "Taunt". Fix before any screen lists enemy abilities?
+8. **Q8.** Alert state, the parts not built yet (left for after THJ's play check, D-158): a wake marker on the move ghost (a faint "!" over each Unaware enemy that stopping on the ghost tile would wake), the same marker while picking an ability's target (EN-14b), a wake sound and enemy barks. Which of these next, and in what order? Until then, the player can't see a wake coming before the click, except by reading the Shift sight tiles (CR-54).
+9. **Q9.** Known limit: the Masher's counter preview (EN-2) is hidden while it is Unaware, yet hitting it wakes it and it counters. The preview promises less than happens. Show the counter preview on an Unaware Masher too?
+10. **Q10.** Known limit: the alert-range tiles of the Shift preview (CR-54) reuse the strong red attack icon of the danger zone, so they can read as "it can hit this tile". Give the alert range its own icon or tint?
+11. **Q11.** Known limit (read in code, not checked in play): the enemy threat arcs on the move ghost (CR-39) don't skip Unaware enemies, so a sleeping enemy draws an arc to a tile it can't attack this turn. Leave it (the arc means "once awake"), or draw arcs only from Alerted enemies and from those the move would wake (part of Q8's move-ghost marker)?
+12. **Q12.** "Unaware" and "Alerted" are working names, pending the narrative agent and THJ (the tag's display name and its `[PLACEHOLDER]` tooltip use them today).
 
 ## Related
 
