@@ -2,7 +2,7 @@
 
 Size: M    Tier: 3 (new tool)    Assigned to: miso-implementer (C1 opus, C2–C3 sonnet), then miso-reviewer and miso-verifier
 Branch: all (editor-only code; built on the current branch, `thj/onboarding`)
-Status: approved by THJ 2026-10-26 (D-236 to D-239); ready to dispatch
+Status: approved by THJ 2026-10-26 (D-236 to D-239); checked against the onboarding levels 2026-10-26 (round-trip criterion corrected, D-240; see [Onboarding fit](#onboarding-fit)); ready to dispatch once THJ has checked out `thj/onboarding` (the checkout is on `main`; both at `a1483f0b9`)
 
 ## Why
 
@@ -21,7 +21,7 @@ A menu tool that builds a level prefab from one grid block, by copying a templat
 - [ ] The level's name and ID are its own (`GB_<id>` unless `level name` says otherwise), never the template's.
 - [ ] Camera bounds are assigned on build, through the existing camera boundary tool.
 - [ ] The level appears in the level toolbar's dropdown and plays from it (sandbox mission; no Mission asset touched). The window's **Play** button does the same.
-- [ ] Round trip: `python claude-handoff/tools/level_to_grid.py "Content/Levels/Greybox/GB_<id>.prefab"` prints the same grid rows as the source block, for every block in the verification set.
+- [ ] Round trip: `python claude-handoff/tools/level_to_grid.py "Content/Levels/Greybox/GB_<id>.prefab"` prints the source block's rows **after normalising** (D-240), for every block in the verification set. `level_to_grid.py` can't print them verbatim: it prints every missing tile as `_` (never `#`), the drawing aids (`@ E ~ ? R d`) as `.`, a big unit's tiles as `.` plus a `note` on its anchor, and crops to the cells' bounding box. So both sides are normalised the same way before comparing: `#` → `_`, drawing aids → `.`, big units → anchor notes, then cropped to the cells. The C1 builder test compares the same way in C#.
 - [ ] No missing references in the built prefab (the stripped extras leave none behind).
 - [ ] Rebuilding an existing `GB_` prefab asks first, then regenerates it whole.
 - [ ] EditMode tests pass (parser and builder); `AIRegressionTest.Baseline_MatchesCurrentAI` stays the known red and is not re-baselined.
@@ -127,7 +127,7 @@ Acceptance for C2: a block with `level tier tutorial` and `level alert all` buil
 
 ## Verification set (verifier)
 
-Build these, read each back with `level_to_grid.py`, and compare the rows with the block:
+Build these, read each back with `level_to_grid.py`, and compare the rows with the block, both normalised as in the acceptance criteria (D-240):
 
 | Block | Why |
 | --- | --- |
@@ -138,6 +138,28 @@ Build these, read each back with `level_to_grid.py`, and compare the rows with t
 | `m1-linda` (onboarding plan) | A real D-235 level, with `level tier tutorial` and `level alert all` added to its block |
 
 Then play `GB_24-nook` from the toolbar to a win: the Claws come, Linda's Watch fires on 4,2, the win screen shows. No `LevelSequenceTrigger` holds the enemies.
+
+## Onboarding fit
+
+Checked 2026-10-26 against the ten blocks in [`onboarding/2026-10-26-onboarding-levels.md`](onboarding/2026-10-26-onboarding-levels.md), which onboarding structure C3 and C4 build (D-235).
+
+**The tool builds:** every tile, hero and enemy in all ten blocks (only `c`, `a`, `J`, `L`, `U`, `M`, with `#` walls and `_` water gaps); the tier and "all enemies start alert" from `level` lines; a different template and origin per block, so each level can sit on the source the paper plan names (segment 1 on `Level1-C1-2`, the River on `LevelLucyJohn-C1`, the Ridge on `LevelLindaJohn-C1`, the pile on `LevelLucyJohn-C3`).
+
+**Before building:** each block needs its `level` lines. Memory 1–4: `tier tutorial`, `alert all`. River and Ridge: `tier tutorial`. M2's four: `tier early`. Plus `template` and `origin` where the plan names a source. The game designer adds them to the paper plan (their file); the implementer may add them in C3 and C4 and report it.
+
+**Left to the wiring in structure C3 and C4** (out of v1, D-238):
+
+| Need | Levels |
+| --- | --- |
+| Stage objectives: punchline or turn cap | Memory 1–4 |
+| Exit objective (`E` builds as plain floor) | M2 trailhead |
+| "Unit on tiles" stage on 6,9 / 7,9 / 8,9 | Memory 4 |
+| Per-instance HP (6, 8, 12, 16) | Memory 1, 2, 4; M2 blood |
+| Spawns on cue (`cells … spawn` lines are drawing notes) | Memory 2 and 4, the pile's rear wave (its "starts alert" variant) |
+| The mother and the cub (`R` on 7,10 builds as floor, with a warning) | Memory 4 |
+| Sequences, `LevelStartFPFiller`, Tempest Bloom grant | Memory 1–4, M2 |
+
+**Watch out:** segment 1's template `Level1-C1-2` carries the D-131 grid-fade outro, which the default strip removes. Every memory segment needs that fade (paper plan, grid fade rule), so C3 re-adds it to each segment (or keeps it on segment 1 with the palette's sequence toggle off). The templates' background art won't match the new shapes; expected until THJ's edit pass.
 
 ## Gates
 

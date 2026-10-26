@@ -6,6 +6,7 @@ Rows D-001 to D-011 were carried over on 2026-10-15 from the Home handoff and pr
 
 | Date | ID | Tier | Scope | Decided by | Decision | Why | Affects |
 | --- | --- | --- | --- | --- | --- | --- | --- |
+| 2026-10-26 | D-240 | 1 | all | Coordinator | Grid → Level's round trip compares normalised rows (`#` → `_`, drawing aids → `.`, big units → anchor notes, cropped to the cells), not the block verbatim | `level_to_grid.py` prints missing tiles as `_` and big units as notes, so a verbatim match fails on every block with `#` walls (all ten onboarding levels, chunk 24) | `plans/2026-10-26-grid-to-level-tech.md` acceptance, verification set |
 | 2026-10-26 | D-239 | 3 | all | THJ | Grid → Level: the character → prefab table, the default template and the strip toggles live in a `GridLevelPalette` asset, not in code | Swapping a placeholder or a template needs no code change | `plans/2026-10-26-grid-to-level-tech.md` C2 |
 | 2026-10-26 | D-238 | 3 | all | THJ | Grid → Level v1 reads name, enemy tier, "all enemies start alert" and origin from a block's `level` lines; objectives stay the template's until a built level has been played | Small first build | `plans/2026-10-26-grid-to-level-tech.md` C2 |
 | 2026-10-26 | D-237 | 3 | all | THJ | Grid → Level builds a level by copying an existing level (default `LevelM1-C2`, set in the palette) and stripping its grid content, `LevelSequenceTrigger`, intro and outro, turn-order override, variant groups and `LevelAlertSettings` | Keeps a real level's lighting, music and setup | `plans/2026-10-26-grid-to-level-tech.md` C1 |
