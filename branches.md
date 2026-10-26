@@ -45,8 +45,8 @@ Owner: coordinator; THJ approves. `claude-handoff/` doesn't change when the shar
 - Combat resource: **FTP** (`pointConsumptionMode: 0`), because the Home demo writes its effects against FTP.
 - New Home rules apply (see `design/demo-spec.md`).
 - AP: PerUnit, same as `main`.
-- Merges `origin/main` periodically through Claude Code; THJ commits. Merges so far: Step J `59a4f5cde` (Oct 3), Step K `182201e82` (Oct 4), Step L `5c8476822` (Oct 11).
-- Committed, not pushed. Last commit `2f828e662` (Oct 15, playtest fixes 2).
+- Merges `origin/main` periodically through Claude Code; THJ commits. Merges so far: Step J `59a4f5cde` (Oct 3), Step K `182201e82` (Oct 4), Step L `5c8476822` (Oct 11), and `ee126a407` (Oct 26: `main` @ `a1483f0b9`: everything listed under `main` above through the enemy alert state, plus THJ's Unity MCP package; D-181, D-198). Since that merge, all `main` work through `a1483f0b9` is also on home-test, and the earlier "home-test will need this" notes are done.
+- Committed, not pushed. Last commit `ee126a407` (Oct 26, merge of main).
 - Home scene fallback after a merge: take `main`'s scene and re-run the builders (order in `CLAUDE.md`).
 - FTP wins on merge (D-036 to D-042). **[THJ]** Still open: how and when is this expected to merge into `main`?
 

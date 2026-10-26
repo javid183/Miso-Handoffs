@@ -2009,3 +2009,11 @@ Done. THJ merged `thj/preview-improvements` into `main` on 2026-10-20. The GDD l
 **Not verified:** the EditMode count after the tag fix (THJ ran it with the play check; count not reported); every stop path in play (pushes, teleports, Dance, Command); Worm splits; the corruption pool.
 **Findings:** derived sight (walk + attack) was unreadable in play, replaced by attributes (D-164). The tag registry desync was pre-existing and editor-only.
 **Status:** done on `main` (not pushed). `thj/home-test` needs it when it takes `main`.
+
+## 2026-10-26: Merge main into thj/home-test
+
+**Built:** `ee126a407` "Merge main into thj/home-test" brings `main` @ `a1483f0b9` into home-test @ `46c9a88ab` (128 commits in, 59 on home-test). Six conflicts were resolved as decided in D-181 and D-198 (event bus, play-mode resets, `FactionRoleHandlerBase`, `CheatHandler`, `GlobalSettings`, `GTagSet`). Report: `reports/merge-main-into-home-test.md`; review: `reports/merge-main-into-home-test-review.md` (clean; one question escalated to THJ, which became D-199).
+**Verified:** EditMode 1138/1139 (known red only); THJ's play check of Home and a sortie: "looks good". After opening Unity there was no `GTagRegistry.asset` rewrite.
+**Not verified:** a Masher level on home-test (THJ couldn't find one; the names are now known); losing a Home attempt.
+**Findings:** main's alert tracker runs in every sortie (D-199: home-test's copies of main's start-alert levels get the setting). The `Home` tag group's fields are wrong (D-182). There are private plan IDs in `FactionControllerBase.cs` and `HomeFromHomeTags.cs` (pre-existing).
+**Status:** merged, not pushed. Next: the sortie start-alert commit, then the Home tag fix.
