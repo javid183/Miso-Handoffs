@@ -22,6 +22,12 @@ Owner: coordinator; THJ approves. `claude-handoff/` doesn't change when the shar
 - 2026-10-23: `thj/quick-wins` fast-forwarded in again (in place, `main` @ `f4e9d9158`, 21 commits): bundle P pace (non-blocking banner, player input locked during the banner, turn-start pause, end-of-level fields, values, banner side; D-141 to D-144), the feedback pass (shake priority, kill flash and shake, mini HP bars, low-HP state and heartbeat, HUD low-HP signs; D-145 to D-149), the Dark Shaman heal with the `Kin.Dark` tag, heal "+N" numbers and the next-targets filter (D-150, D-151), the Lucy role targeting fix with the ordered attacker memory in `GUnit` (D-152), and THJ's balance tweaks `6ef6313bf`. Every value: `tech/pace-timings.md`. `main` matches `origin/main` minus these 21 (not pushed). `thj/home-test` will need this when it takes `main`.
 - The GDD reads its values from here (`main` @ `92853a5a9`), and its Home values from `thj/home-test` (D-046).
 
+## `thj/linda-quiver`
+
+- **Purpose:** the Linda's Quiver prototype (`linda-quiver`; design `plans/2026-10-26-linda-quiver-design.md`, D-241 to D-245; tech plan `plans/2026-10-26-linda-quiver-tech.md`).
+- Created by THJ on 2026-10-26 from `main` @ `a1483f0b9` (0 ahead, 0 behind at creation). THJ's working branch.
+- Combat resource and AP: same as `main` (FTP, PerUnit). No differences from `main` yet.
+
 ## `thj/quick-wins`
 
 **Merged into `main` twice:** on 2026-10-22 (fast-forward to `fc731b0c5`, bundle A), and on 2026-10-23 (fast-forward in place with `git fetch . thj/quick-wins:main`, to `f4e9d9158`, 21 commits: bundle P, the feedback pass C1–C5, the Dark Shaman heal, the Lucy role fix and THJ's balance tweaks `6ef6313bf`). `main` and `thj/quick-wins` point at the same commit; THJ is still checked out on `thj/quick-wins`. Quick wins are done; no new work planned here.
