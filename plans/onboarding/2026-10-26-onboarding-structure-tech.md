@@ -2,11 +2,11 @@
 
 Size: L    Tier: 3 (milestone content, Home, dramatic moments; two small code items need THJ's yes)    Assigned to: `miso-implementer` (chunks below) → `miso-reviewer` → `miso-verifier`
 Branch: all (built on `thj/onboarding`, cut from `main` @ `dc64f974a`)
-Status: draft. Answered: T1 data only (D-200), T3 THJ builds the levels, implementer wires (D-201). Open: T2, T4, and the paper plan's questions (`plans/2026-10-26-onboarding-levels.md`, done 2026-10-26: it adds an enemy-free M2 trailhead level, symmetric rigged drops, scripted Tempest Bloom, punchline/turn-cap endings; fold into C1–C4 once THJ answers)
+Status: draft. Answered: T1 data only (D-200), T3 THJ builds the levels, implementer wires (D-201). Open: T2, T4, and the paper plan's questions (`plans/onboarding/2026-10-26-onboarding-levels.md`, done 2026-10-26: it adds an enemy-free M2 trailhead level, symmetric rigged drops, scripted Tempest Bloom, punchline/turn-cap endings; fold into C1–C4 once THJ answers)
 
 **C2 under D-200:** no `Mission.grantsXP`; the implementer zeroes XP on every memory enemy instance and every spawn source, sets `completionXPReward` 0, and adds an EditMode test that walks the Hearth mission's levels and spawn sources and fails on any XP above 0 (guards against a later prefab change). C2 is sonnet, no core code.
 
-Design: `plans/2026-10-25-onboarding-first-hour-design.md`. Work plan: `plans/2026-10-25-onboarding-first-hour-workplan.md` (this is step A3; builds B1–B5). Decisions: D-168 to D-180.
+Design: `plans/onboarding/2026-10-25-onboarding-first-hour-design.md`. Work plan: `plans/onboarding/2026-10-25-onboarding-first-hour-workplan.md` (this is step A3; builds B1–B5). Decisions: D-168 to D-180.
 
 ## Why
 
@@ -81,7 +81,7 @@ One implementer run each, in this order, each play-checked by THJ before its com
 
 - Four segments as one mission, levels from the paper plans. Cutaways between segments as `DialogNodeSequence` image nodes over a placeholder still; Home state at the open and close (`homeState` of the Hearth; the open state is the new-game Home).
 - Narrator interruptions: `LevelSequenceTrigger` / objective stage → `SequentialSequence` (dialogue, camera, `LSBExecutionSequence` with `GUnitSpawn`). Always freeze and show the change.
-- Placeholder text from `reports/onboarding-narrative-draft.md`.
+- Placeholder text from `plans/onboarding/onboarding-narrative-draft.md`.
 - Acceptance: each segment plays in 2–4 turns at the planned difficulty; interruptions freeze, show and resume; the mission ends in the Hearth close state.
 
 ### C4 — The River, The Ridge, The Trail (levels per T3 + data) · sonnet

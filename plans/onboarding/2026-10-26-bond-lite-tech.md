@@ -4,7 +4,7 @@ Size: L    Tier: 3 (new reusable system; Home; save data; THJ's yes before any c
 Branch: all (built on `thj/onboarding`; must fold into `thj/home-test` on merge)
 Status: draft. Answered: BL1 nodes only (D-202), BL2 lock in the Home skill-tree UI (D-203). Open: BL3 (Bond visibility), BL4 (Rivalry's empty cooldown reset), then THJ's yes on the whole plan
 
-Design: `plans/2026-10-25-onboarding-first-hour-design.md` ("New tech", "The Sister's Rivalry arc"). Work plan step A4(a), build step B7. Decisions: D-173 (Rivalry to the Family tree, Bond gates the pair's nodes, Yard grants the first Family point), D-179 (go to a tech plan), D-180 (built after the greybox and the pacing check).
+Design: `plans/onboarding/2026-10-25-onboarding-first-hour-design.md` ("New tech", "The Sister's Rivalry arc"). Work plan step A4(a), build step B7. Decisions: D-173 (Rivalry to the Family tree, Bond gates the pair's nodes, Yard grants the first Family point), D-179 (go to a tech plan), D-180 (built after the greybox and the pacing check).
 
 ## Why
 

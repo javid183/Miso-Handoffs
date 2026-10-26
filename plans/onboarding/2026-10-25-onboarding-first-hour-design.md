@@ -158,7 +158,7 @@ Rough length: Hearth ~12–15 min (4 short segments, each 2–4 turns; cutaways 
 
 ## Open questions for THJ
 
-Answered 2026-10-25: 1 → open by default, the node upgrades it (D-177); 2 → alive, she hosts (D-178); 3 → yes (D-179). Build order: structure first (D-180, `plans/2026-10-25-onboarding-first-hour-workplan.md`).
+Answered 2026-10-25: 1 → open by default, the node upgrades it (D-177); 2 → alive, she hosts (D-178); 3 → yes (D-179). Build order: structure first (D-180, `plans/onboarding/2026-10-25-onboarding-first-hour-workplan.md`).
 
 1. Catch & Return in The Ridge: open by default on `main`, or a one-mission grant?
 2. Margaret: alive or dead in Miso's timeline (canon)? It decides the Hearth teller and the `MargaretStoryNight` idle.

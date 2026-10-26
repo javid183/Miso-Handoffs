@@ -35,7 +35,7 @@ THJ's private working folder for Claude on Miso. It is **excluded from the share
 | Playtest task lists (structured feedback, effort and owners) | `playtests/2026-10-playtest-tasks.md` | THJ writes; coordinator tracks items in `status.md` | After each playtest round |
 | GDD open-question answer sheet (temporary) | `design/gdd-open-questions.md` | THJ answers; game designer folds answers into the GDD | Until all are answered |
 | Plan and report templates | `templates/` | Coordinator | The format changes |
-| Task plans | `plans/YYYY-MM-DD-<slug>.md` | The agent that plans | Once per task, revised on review |
+| Task plans | `plans/YYYY-MM-DD-<slug>.md`; a large topic with several plans gets a folder, `plans/<topic>/YYYY-MM-DD-<slug>.md`, which also holds its images and design drafts (first: `plans/onboarding/`, 2026-10-26; older `decisions.md` rows keep the paths from before the move) | The agent that plans | Once per task, revised on review |
 | Task reports | `reports/<slug>.md`, `reports/<slug>-verify.md` | The agent that did the work | Once per task |
 | Playtest notes | `playtests/` | THJ writes raw; coordinator structures | After each playtest |
 | Agent and skill definitions | `claude-config/` (master; `.claude/agents` and `.claude/skills` are copies, see below) | THJ; coordinator proposes | The workflow changes |

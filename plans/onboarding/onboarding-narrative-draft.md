@@ -1,6 +1,6 @@
 # Onboarding first hour · narrative draft (placeholder grade)
 
-Narrative agent, 2026-10-26. Step **A5** of `plans/2026-10-25-onboarding-first-hour-workplan.md`. Design: `plans/2026-10-25-onboarding-first-hour-design.md` (D-168 to D-180). Branch `thj/onboarding`, scope `all`. Read-only on `miso/`; `glossary.md` unchanged (proposals at the end).
+Narrative agent, 2026-10-26. Step **A5** of `plans/onboarding/2026-10-25-onboarding-first-hour-workplan.md`. Design: `plans/onboarding/2026-10-25-onboarding-first-hour-design.md` (D-168 to D-180). Branch `thj/onboarding`, scope `all`. Read-only on `miso/`; `glossary.md` unchanged (proposals at the end).
 
 **Grade (D-180).** Greybox text: one short line per beat, 2–4 for a cutaway, enough to play and time the flow. Every line here goes in as `[PLACEHOLDER] ` until THJ approves it. All of it is Tier 3 (story beats, lore). Where a line matters, options are given with the recommended one first.
 

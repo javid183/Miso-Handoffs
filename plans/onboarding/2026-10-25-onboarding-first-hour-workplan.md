@@ -4,7 +4,7 @@ Size: L    Tier: 3 (parts; see each chunk)    Assigned to: coordinator (routing,
 Branch: all (code lands on `thj/onboarding`, cut from `main` @ `dc64f974a`)
 Status: approved order (D-180). Design Q1–Q3 answered (D-177 Catch & Return open by default, node becomes an upgrade; D-178 Margaret alive, hosts; D-179 Bond Lite to a tech plan). Still open: Q4 (single combined search mission as fallback), Q5 (Hearth painting), Rivalry's empty reward on `main`, who authors the levels
 
-Design: `plans/2026-10-25-onboarding-first-hour-design.md` (D-168 to D-176). This file says **who does what, in what order, and what each step waits on**. It does not change the design.
+Design: `plans/onboarding/2026-10-25-onboarding-first-hour-design.md` (D-168 to D-176). This file says **who does what, in what order, and what each step waits on**. It does not change the design.
 
 ## Why
 
@@ -40,7 +40,7 @@ Phases A run now, mostly in parallel (no Unity writes). Phase B is one writer at
 | A2 | **Paper level plans**: memory segments 1–4, The River, The Ridge, M2's two route levels and the animal pile. Grids from `design/level-chunks.md`, `tools/grid_render.py`; per level: the one thing taught, the twist, turn budget (memory 2–4 turns), where the first Role/Synergy/Duo trigger happens, interruption cues, start-alert setting, rigged drops | `miso-game-designer` (critic pass: UX lens for "one thing per level") | Q1 for The Ridge only | `plans/2026-10-2x-onboarding-levels.md` + grid images |
 | A3 | **Structure tech notes** (`miso-tech-plan`): mission graph and Mission assets, rosters, memory rules (no XP, FTP, "doesn't count as seen", start alert, grid-fade rule D-131 re-placed), narrator interruptions from existing sequences, one-mission grants, Home visit hooks (guided Workshop, guided skill spend, Map Table clue scene, M2 pin reveal), what's cut from the graph. Mostly data; list every code touch and its tier | Coordinator | — | `plans/2026-10-2x-onboarding-structure-tech.md` |
 | A4 | **New-tech plans**: (a) Bond Lite + Sister's Rivalry family node + story Family point; (b) first-trigger framed beat; (c) sisters' tally (HUD + results MVP row, fade cue). One plan file each, so each gets its own yes | Coordinator | (a) Q3 yes to go to a tech plan | three tech plans, each Tier 3 |
-| A5 | **Narrative draft, placeholder grade first**: one line per beat for the greybox (Hearth cutaways, the 4 narrator jokes, clues, Map Table, "stays home" lines for John and Mark, Yard scene, framed-beat lines). Full draft later, in parallel with B | `miso-narrative` | Q2 (Margaret) for the Hearth teller | `reports/onboarding-narrative-draft.md` |
+| A5 | **Narrative draft, placeholder grade first**: one line per beat for the greybox (Hearth cutaways, the 4 narrator jokes, clues, Map Table, "stays home" lines for John and Mark, Yard scene, framed-beat lines). Full draft later, in parallel with B | `miso-narrative` | Q2 (Margaret) for the Hearth teller | `plans/onboarding/onboarding-narrative-draft.md` |
 
 ### Phase B — build the greybox (one writer at a time, each chunk play-checked by THJ before its commit)
 
@@ -68,7 +68,7 @@ Phases A run now, mostly in parallel (no Unity writes). Phase B is one writer at
 
 ## Risks
 
-- **Half of Sister's Rivalry's reward is empty on `main`**: the +AP works, the "basic attack ready again" adds nothing (no basic-attack cooldown, GDD Q11). Corrected 2026-10-26 from "the reward is empty". Asked as BL4 in `plans/2026-10-26-bond-lite-tech.md`.
+- **Half of Sister's Rivalry's reward is empty on `main`**: the +AP works, the "basic attack ready again" adds nothing (no basic-attack cooldown, GDD Q11). Corrected 2026-10-26 from "the reward is empty". Asked as BL4 in `plans/onboarding/2026-10-26-bond-lite-tech.md`.
 - **Level authoring load.** Five new levels (segment 4, River, Ridge, two M2 branches) plus reworks. Who builds levels in the editor (THJ or the implementer with builders) decides the B pace; ask before B2.
 - **Run-upgrade lifetime.** The one-off Tempest Bloom must not leak past the memory; check in A3.
 - **Missions core.** Any code change in `MissionTracker`/`Mission`/`MissionRouteProgress` is Tier 3; A3 aims for data only.

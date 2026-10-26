@@ -78,9 +78,9 @@ Option B. The memory is 4 short tellings that end on their punchline, with a vis
 
 ## Conventions for the grids
 
-Grids use [`tools/grid_render.py`](../tools/grid_render.py) (x from the left, y from the **bottom**; legend in [`design/level-chunks.md`](../design/level-chunks.md)). Draw them with:
+Grids use [`tools/grid_render.py`](../../tools/grid_render.py) (x from the left, y from the **bottom**; legend in [`design/level-chunks.md`](../../design/level-chunks.md)). Draw them with:
 
-`python claude-handoff/tools/grid_render.py claude-handoff/plans/2026-10-26-onboarding-levels.md --out claude-handoff/plans/onboarding-levels`
+`python claude-handoff/tools/grid_render.py claude-handoff/plans/onboarding/2026-10-26-onboarding-levels.md --out claude-handoff/plans/onboarding/onboarding-levels`
 
 (Not run in this session: the designer has no shell. The coordinator runs it once; the image links below point to its output.)
 
