@@ -29,6 +29,13 @@ Owner: coordinator. Every item has a scope: `all` or a branch. Started 2026-10-1
 
 ## Waiting on THJ
 
+**Onboarding Phase A (2026-10-26)** — scope all; all Tier 3. Answered so far: D-177 to D-180, D-200 to D-203.
+
+- Structure (`plans/2026-10-26-onboarding-structure-tech.md`): T2 M4 squad pick (deploy slots on M4's 7 levels), T4 guided skill spend now or after the pacing check.
+- Bond Lite (`plans/2026-10-26-bond-lite-tech.md`): BL3 Bond visibility, BL4 Rivalry's empty cooldown reset; then the yes on the whole plan.
+- Levels (`plans/2026-10-26-onboarding-levels.md`, "Questions for THJ"; grids rendered in `plans/onboarding-levels/`): Q1 Catch & Return node upgrade ("Return to Sender" recommended), Q2 Mark's Workshop upgrade (designer: his weapon slot doesn't equip on `main`; unverified), Q3 punchline endings + an enemy-free M2 trailhead, **Q4 Family Roles still cost 1 FTP** (roles go silent in the Ridge/M2; designer recommends making them free before the timed check, FR-3/FR-4). Hearth estimate ~17 min (target 12–15), Hearth → M4 ~55 min; ordered cut list in the plan.
+- Narrative (`reports/onboarding-narrative-draft.md`, "Open questions" 1–8 + glossary/lore rows): rescue one year ago; Tempest Bloom as Mark's made-up claim; where Lucy's motive line goes; who asks "Still counting?"; Toba's traces (stone axe, leaf poultice); forms of address; bark scoping per mission/level; Mark's "She stays" line.
+
 **Workflow**
 
 - GDD open questions are asked on demand (D-050); THJ answers in `design/gdd-open-questions.md` when he likes.

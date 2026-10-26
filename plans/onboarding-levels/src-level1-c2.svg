@@ -1,0 +1,162 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 466 420" width="466" height="420">
+<defs><marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="context-stroke"/></marker><pattern id="gap" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="8" stroke="#c9c2b4" stroke-width="2"/></pattern></defs>
+<rect width="466" height="420" fill="#ffffff"/>
+<text x="49.0" y="17.0" font-size="11" text-anchor="middle" font-weight="normal" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#777">0</text>
+<text x="49.0" y="411.0" font-size="11" text-anchor="middle" font-weight="normal" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#777">0</text>
+<text x="95.0" y="17.0" font-size="11" text-anchor="middle" font-weight="normal" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#777">1</text>
+<text x="95.0" y="411.0" font-size="11" text-anchor="middle" font-weight="normal" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#777">1</text>
+<text x="141.0" y="17.0" font-size="11" text-anchor="middle" font-weight="normal" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#777">2</text>
+<text x="141.0" y="411.0" font-size="11" text-anchor="middle" font-weight="normal" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#777">2</text>
+<text x="187.0" y="17.0" font-size="11" text-anchor="middle" font-weight="normal" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#777">3</text>
+<text x="187.0" y="411.0" font-size="11" text-anchor="middle" font-weight="normal" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#777">3</text>
+<text x="233.0" y="17.0" font-size="11" text-anchor="middle" font-weight="normal" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#777">4</text>
+<text x="233.0" y="411.0" font-size="11" text-anchor="middle" font-weight="normal" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#777">4</text>
+<text x="279.0" y="17.0" font-size="11" text-anchor="middle" font-weight="normal" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#777">5</text>
+<text x="279.0" y="411.0" font-size="11" text-anchor="middle" font-weight="normal" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#777">5</text>
+<text x="325.0" y="17.0" font-size="11" text-anchor="middle" font-weight="normal" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#777">6</text>
+<text x="325.0" y="411.0" font-size="11" text-anchor="middle" font-weight="normal" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#777">6</text>
+<text x="371.0" y="17.0" font-size="11" text-anchor="middle" font-weight="normal" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#777">7</text>
+<text x="371.0" y="411.0" font-size="11" text-anchor="middle" font-weight="normal" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#777">7</text>
+<text x="417.0" y="17.0" font-size="11" text-anchor="middle" font-weight="normal" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#777">8</text>
+<text x="417.0" y="411.0" font-size="11" text-anchor="middle" font-weight="normal" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#777">8</text>
+<text x="16.0" y="375.0" font-size="11" text-anchor="middle" font-weight="normal" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#777">0</text>
+<text x="450.0" y="375.0" font-size="11" text-anchor="middle" font-weight="normal" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#777">0</text>
+<text x="16.0" y="329.0" font-size="11" text-anchor="middle" font-weight="normal" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#777">1</text>
+<text x="450.0" y="329.0" font-size="11" text-anchor="middle" font-weight="normal" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#777">1</text>
+<text x="16.0" y="283.0" font-size="11" text-anchor="middle" font-weight="normal" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#777">2</text>
+<text x="450.0" y="283.0" font-size="11" text-anchor="middle" font-weight="normal" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#777">2</text>
+<text x="16.0" y="237.0" font-size="11" text-anchor="middle" font-weight="normal" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#777">3</text>
+<text x="450.0" y="237.0" font-size="11" text-anchor="middle" font-weight="normal" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#777">3</text>
+<text x="16.0" y="191.0" font-size="11" text-anchor="middle" font-weight="normal" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#777">4</text>
+<text x="450.0" y="191.0" font-size="11" text-anchor="middle" font-weight="normal" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#777">4</text>
+<text x="16.0" y="145.0" font-size="11" text-anchor="middle" font-weight="normal" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#777">5</text>
+<text x="450.0" y="145.0" font-size="11" text-anchor="middle" font-weight="normal" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#777">5</text>
+<text x="16.0" y="99.0" font-size="11" text-anchor="middle" font-weight="normal" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#777">6</text>
+<text x="450.0" y="99.0" font-size="11" text-anchor="middle" font-weight="normal" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#777">6</text>
+<text x="16.0" y="53.0" font-size="11" text-anchor="middle" font-weight="normal" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#777">7</text>
+<text x="450.0" y="53.0" font-size="11" text-anchor="middle" font-weight="normal" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#777">7</text>
+<g><rect x="26" y="26" width="46" height="46" fill="url(#gap)" stroke="#e2dccf" stroke-width="1"/><title>0,7  Gap</title></g>
+<g><rect x="72" y="26" width="46" height="46" fill="url(#gap)" stroke="#e2dccf" stroke-width="1"/><title>1,7  Gap</title></g>
+<g><rect x="118" y="26" width="46" height="46" fill="url(#gap)" stroke="#e2dccf" stroke-width="1"/><title>2,7  Gap</title></g>
+<g><rect x="164" y="26" width="46" height="46" fill="#ece6d8" stroke="#cfc7b6" stroke-width="1"/><title>3,7  Floor</title></g>
+<text x="167.0" y="69.0" font-size="8" text-anchor="start" font-weight="normal" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#a39b8c">3,7</text>
+<g><rect x="210" y="26" width="46" height="46" fill="#ece6d8" stroke="#cfc7b6" stroke-width="1"/><title>4,7  Floor</title></g>
+<text x="213.0" y="69.0" font-size="8" text-anchor="start" font-weight="normal" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#a39b8c">4,7</text>
+<g><rect x="256" y="26" width="46" height="46" fill="#ece6d8" stroke="#cfc7b6" stroke-width="1"/><title>5,7  Floor</title></g>
+<text x="259.0" y="69.0" font-size="8" text-anchor="start" font-weight="normal" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#a39b8c">5,7</text>
+<g><rect x="302" y="26" width="46" height="46" fill="#ece6d8" stroke="#cfc7b6" stroke-width="1"/><title>6,7  Floor</title></g>
+<text x="305.0" y="69.0" font-size="8" text-anchor="start" font-weight="normal" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#a39b8c">6,7</text>
+<g><rect x="348" y="26" width="46" height="46" fill="url(#gap)" stroke="#e2dccf" stroke-width="1"/><title>7,7  Gap</title></g>
+<g><rect x="394" y="26" width="46" height="46" fill="url(#gap)" stroke="#e2dccf" stroke-width="1"/><title>8,7  Gap</title></g>
+<g><rect x="26" y="72" width="46" height="46" fill="url(#gap)" stroke="#e2dccf" stroke-width="1"/><title>0,6  Gap</title></g>
+<g><rect x="72" y="72" width="46" height="46" fill="url(#gap)" stroke="#e2dccf" stroke-width="1"/><title>1,6  Gap</title></g>
+<g><rect x="118" y="72" width="46" height="46" fill="#ece6d8" stroke="#cfc7b6" stroke-width="1"/><title>2,6  Floor</title></g>
+<text x="121.0" y="115.0" font-size="8" text-anchor="start" font-weight="normal" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#a39b8c">2,6</text>
+<g><rect x="164" y="72" width="46" height="46" fill="#ece6d8" stroke="#cfc7b6" stroke-width="1"/><title>3,6  Floor</title></g>
+<text x="167.0" y="115.0" font-size="8" text-anchor="start" font-weight="normal" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#a39b8c">3,6</text>
+<g><rect x="210" y="72" width="46" height="46" fill="#ece6d8" stroke="#cfc7b6" stroke-width="1"/><title>4,6  Floor</title></g>
+<text x="213.0" y="115.0" font-size="8" text-anchor="start" font-weight="normal" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#a39b8c">4,6</text>
+<g><rect x="256" y="72" width="46" height="46" fill="#ece6d8" stroke="#cfc7b6" stroke-width="1"/><title>5,6  Floor</title></g>
+<text x="259.0" y="115.0" font-size="8" text-anchor="start" font-weight="normal" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#a39b8c">5,6</text>
+<g><rect x="302" y="72" width="46" height="46" fill="#ece6d8" stroke="#cfc7b6" stroke-width="1"/><title>6,6  Floor</title></g>
+<text x="305.0" y="115.0" font-size="8" text-anchor="start" font-weight="normal" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#a39b8c">6,6</text>
+<g><rect x="348" y="72" width="46" height="46" fill="#ece6d8" stroke="#cfc7b6" stroke-width="1"/><title>7,6  Floor</title></g>
+<text x="351.0" y="115.0" font-size="8" text-anchor="start" font-weight="normal" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#a39b8c">7,6</text>
+<g><rect x="394" y="72" width="46" height="46" fill="url(#gap)" stroke="#e2dccf" stroke-width="1"/><title>8,6  Gap</title></g>
+<g><rect x="26" y="118" width="46" height="46" fill="#ece6d8" stroke="#cfc7b6" stroke-width="1"/><title>0,5  Floor</title></g>
+<text x="29.0" y="161.0" font-size="8" text-anchor="start" font-weight="normal" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#a39b8c">0,5</text>
+<g><rect x="72" y="118" width="46" height="46" fill="#ece6d8" stroke="#cfc7b6" stroke-width="1"/><title>1,5  Floor</title></g>
+<text x="75.0" y="161.0" font-size="8" text-anchor="start" font-weight="normal" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#a39b8c">1,5</text>
+<g><rect x="118" y="118" width="46" height="46" fill="#ece6d8" stroke="#cfc7b6" stroke-width="1"/><title>2,5  Floor</title></g>
+<text x="121.0" y="161.0" font-size="8" text-anchor="start" font-weight="normal" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#a39b8c">2,5</text>
+<g><rect x="164" y="118" width="46" height="46" fill="#ece6d8" stroke="#cfc7b6" stroke-width="1"/><title>3,5  Floor</title></g>
+<text x="167.0" y="161.0" font-size="8" text-anchor="start" font-weight="normal" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#a39b8c">3,5</text>
+<g><rect x="210" y="118" width="46" height="46" fill="#ece6d8" stroke="#cfc7b6" stroke-width="1"/><title>4,5  Floor</title></g>
+<text x="213.0" y="161.0" font-size="8" text-anchor="start" font-weight="normal" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#a39b8c">4,5</text>
+<g><rect x="256" y="118" width="46" height="46" fill="#ece6d8" stroke="#cfc7b6" stroke-width="1"/><title>5,5  Floor</title></g>
+<text x="259.0" y="161.0" font-size="8" text-anchor="start" font-weight="normal" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#a39b8c">5,5</text>
+<g><rect x="302" y="118" width="46" height="46" fill="#ece6d8" stroke="#cfc7b6" stroke-width="1"/><title>6,5  Floor</title></g>
+<text x="305.0" y="161.0" font-size="8" text-anchor="start" font-weight="normal" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#a39b8c">6,5</text>
+<g><rect x="348" y="118" width="46" height="46" fill="#ece6d8" stroke="#cfc7b6" stroke-width="1"/><title>7,5  Floor</title></g>
+<text x="351.0" y="161.0" font-size="8" text-anchor="start" font-weight="normal" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#a39b8c">7,5</text>
+<g><rect x="394" y="118" width="46" height="46" fill="url(#gap)" stroke="#e2dccf" stroke-width="1"/><title>8,5  Gap</title></g>
+<g><rect x="26" y="164" width="46" height="46" fill="#ece6d8" stroke="#cfc7b6" stroke-width="1"/><title>0,4  Floor</title></g>
+<text x="29.0" y="207.0" font-size="8" text-anchor="start" font-weight="normal" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#a39b8c">0,4</text>
+<g><rect x="72" y="164" width="46" height="46" fill="#ece6d8" stroke="#cfc7b6" stroke-width="1"/><title>1,4  Floor</title></g>
+<text x="75.0" y="207.0" font-size="8" text-anchor="start" font-weight="normal" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#a39b8c">1,4</text>
+<g><rect x="118" y="164" width="46" height="46" fill="#ece6d8" stroke="#cfc7b6" stroke-width="1"/><title>2,4  Floor</title></g>
+<text x="121.0" y="207.0" font-size="8" text-anchor="start" font-weight="normal" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#a39b8c">2,4</text>
+<g><rect x="164" y="164" width="46" height="46" fill="#ece6d8" stroke="#cfc7b6" stroke-width="1"/><title>3,4  Floor</title></g>
+<text x="167.0" y="207.0" font-size="8" text-anchor="start" font-weight="normal" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#a39b8c">3,4</text>
+<g><rect x="210" y="164" width="46" height="46" fill="url(#gap)" stroke="#e2dccf" stroke-width="1"/><title>4,4  Gap</title></g>
+<g><rect x="256" y="164" width="46" height="46" fill="url(#gap)" stroke="#e2dccf" stroke-width="1"/><title>5,4  Gap</title></g>
+<g><rect x="302" y="164" width="46" height="46" fill="#ece6d8" stroke="#cfc7b6" stroke-width="1"/><title>6,4  Floor</title></g>
+<text x="305.0" y="207.0" font-size="8" text-anchor="start" font-weight="normal" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#a39b8c">6,4</text>
+<g><rect x="348" y="164" width="46" height="46" fill="#ece6d8" stroke="#cfc7b6" stroke-width="1"/><title>7,4  Floor</title></g>
+<text x="351.0" y="207.0" font-size="8" text-anchor="start" font-weight="normal" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#a39b8c">7,4</text>
+<g><rect x="394" y="164" width="46" height="46" fill="#ece6d8" stroke="#cfc7b6" stroke-width="1"/><title>8,4  Floor</title></g>
+<text x="397.0" y="207.0" font-size="8" text-anchor="start" font-weight="normal" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#a39b8c">8,4</text>
+<g><rect x="26" y="210" width="46" height="46" fill="url(#gap)" stroke="#e2dccf" stroke-width="1"/><title>0,3  Gap</title></g>
+<g><rect x="72" y="210" width="46" height="46" fill="url(#gap)" stroke="#e2dccf" stroke-width="1"/><title>1,3  Gap</title></g>
+<g><rect x="118" y="210" width="46" height="46" fill="url(#gap)" stroke="#e2dccf" stroke-width="1"/><title>2,3  Gap</title></g>
+<g><rect x="164" y="210" width="46" height="46" fill="url(#gap)" stroke="#e2dccf" stroke-width="1"/><title>3,3  Gap</title></g>
+<g><rect x="210" y="210" width="46" height="46" fill="url(#gap)" stroke="#e2dccf" stroke-width="1"/><title>4,3  Gap</title></g>
+<g><rect x="256" y="210" width="46" height="46" fill="url(#gap)" stroke="#e2dccf" stroke-width="1"/><title>5,3  Gap</title></g>
+<g><rect x="302" y="210" width="46" height="46" fill="#ece6d8" stroke="#cfc7b6" stroke-width="1"/><title>6,3  Floor</title></g>
+<text x="305.0" y="253.0" font-size="8" text-anchor="start" font-weight="normal" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#a39b8c">6,3</text>
+<g><rect x="348" y="210" width="46" height="46" fill="#ece6d8" stroke="#cfc7b6" stroke-width="1"/><title>7,3  Floor</title></g>
+<text x="351.0" y="253.0" font-size="8" text-anchor="start" font-weight="normal" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#a39b8c">7,3</text>
+<g><rect x="394" y="210" width="46" height="46" fill="#ece6d8" stroke="#cfc7b6" stroke-width="1"/><title>8,3  Floor</title></g>
+<text x="397.0" y="253.0" font-size="8" text-anchor="start" font-weight="normal" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#a39b8c">8,3</text>
+<g><rect x="26" y="256" width="46" height="46" fill="url(#gap)" stroke="#e2dccf" stroke-width="1"/><title>0,2  Gap</title></g>
+<g><rect x="72" y="256" width="46" height="46" fill="url(#gap)" stroke="#e2dccf" stroke-width="1"/><title>1,2  Gap</title></g>
+<g><rect x="118" y="256" width="46" height="46" fill="url(#gap)" stroke="#e2dccf" stroke-width="1"/><title>2,2  Gap</title></g>
+<g><rect x="164" y="256" width="46" height="46" fill="url(#gap)" stroke="#e2dccf" stroke-width="1"/><title>3,2  Gap</title></g>
+<g><rect x="210" y="256" width="46" height="46" fill="url(#gap)" stroke="#e2dccf" stroke-width="1"/><title>4,2  Gap</title></g>
+<g><rect x="256" y="256" width="46" height="46" fill="url(#gap)" stroke="#e2dccf" stroke-width="1"/><title>5,2  Gap</title></g>
+<g><rect x="302" y="256" width="46" height="46" fill="#ece6d8" stroke="#cfc7b6" stroke-width="1"/><title>6,2  Floor</title></g>
+<text x="305.0" y="299.0" font-size="8" text-anchor="start" font-weight="normal" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#a39b8c">6,2</text>
+<g><rect x="348" y="256" width="46" height="46" fill="#ece6d8" stroke="#cfc7b6" stroke-width="1"/><title>7,2  Floor</title></g>
+<text x="351.0" y="299.0" font-size="8" text-anchor="start" font-weight="normal" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#a39b8c">7,2</text>
+<g><rect x="394" y="256" width="46" height="46" fill="#ece6d8" stroke="#cfc7b6" stroke-width="1"/><title>8,2  Floor</title></g>
+<text x="397.0" y="299.0" font-size="8" text-anchor="start" font-weight="normal" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#a39b8c">8,2</text>
+<g><rect x="26" y="302" width="46" height="46" fill="url(#gap)" stroke="#e2dccf" stroke-width="1"/><title>0,1  Gap</title></g>
+<g><rect x="72" y="302" width="46" height="46" fill="url(#gap)" stroke="#e2dccf" stroke-width="1"/><title>1,1  Gap</title></g>
+<g><rect x="118" y="302" width="46" height="46" fill="url(#gap)" stroke="#e2dccf" stroke-width="1"/><title>2,1  Gap</title></g>
+<g><rect x="164" y="302" width="46" height="46" fill="url(#gap)" stroke="#e2dccf" stroke-width="1"/><title>3,1  Gap</title></g>
+<g><rect x="210" y="302" width="46" height="46" fill="url(#gap)" stroke="#e2dccf" stroke-width="1"/><title>4,1  Gap</title></g>
+<g><rect x="256" y="302" width="46" height="46" fill="#ece6d8" stroke="#cfc7b6" stroke-width="1"/><title>5,1  Floor</title></g>
+<text x="259.0" y="345.0" font-size="8" text-anchor="start" font-weight="normal" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#a39b8c">5,1</text>
+<g><rect x="302" y="302" width="46" height="46" fill="#ece6d8" stroke="#cfc7b6" stroke-width="1"/><title>6,1  Floor</title></g>
+<text x="305.0" y="345.0" font-size="8" text-anchor="start" font-weight="normal" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#a39b8c">6,1</text>
+<g><rect x="348" y="302" width="46" height="46" fill="#ece6d8" stroke="#cfc7b6" stroke-width="1"/><title>7,1  Floor</title></g>
+<text x="351.0" y="345.0" font-size="8" text-anchor="start" font-weight="normal" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#a39b8c">7,1</text>
+<g><rect x="394" y="302" width="46" height="46" fill="url(#gap)" stroke="#e2dccf" stroke-width="1"/><title>8,1  Gap</title></g>
+<g><rect x="26" y="348" width="46" height="46" fill="url(#gap)" stroke="#e2dccf" stroke-width="1"/><title>0,0  Gap</title></g>
+<g><rect x="72" y="348" width="46" height="46" fill="url(#gap)" stroke="#e2dccf" stroke-width="1"/><title>1,0  Gap</title></g>
+<g><rect x="118" y="348" width="46" height="46" fill="url(#gap)" stroke="#e2dccf" stroke-width="1"/><title>2,0  Gap</title></g>
+<g><rect x="164" y="348" width="46" height="46" fill="url(#gap)" stroke="#e2dccf" stroke-width="1"/><title>3,0  Gap</title></g>
+<g><rect x="210" y="348" width="46" height="46" fill="url(#gap)" stroke="#e2dccf" stroke-width="1"/><title>4,0  Gap</title></g>
+<g><rect x="256" y="348" width="46" height="46" fill="#ece6d8" stroke="#cfc7b6" stroke-width="1"/><title>5,0  Floor</title></g>
+<text x="259.0" y="391.0" font-size="8" text-anchor="start" font-weight="normal" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#a39b8c">5,0</text>
+<g><rect x="302" y="348" width="46" height="46" fill="#ece6d8" stroke="#cfc7b6" stroke-width="1"/><title>6,0  Floor</title></g>
+<text x="305.0" y="391.0" font-size="8" text-anchor="start" font-weight="normal" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#a39b8c">6,0</text>
+<g><rect x="348" y="348" width="46" height="46" fill="url(#gap)" stroke="#e2dccf" stroke-width="1"/><title>7,0  Gap</title></g>
+<g><rect x="394" y="348" width="46" height="46" fill="url(#gap)" stroke="#e2dccf" stroke-width="1"/><title>8,0  Gap</title></g>
+<g><path d="M325.0,33.0 L341.0,62.0 L309.0,62.0 z" fill="#c0532a" stroke="#fff" stroke-width="1.5"/><title>6,7  Archer</title></g>
+<text x="325.0" y="53.5" font-size="12" text-anchor="middle" font-weight="bold" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#fff">a</text>
+<g><path d="M233.0,80.0 L248.0,95.0 L233.0,110.0 L218.0,95.0 z" fill="#d9822b" stroke="#2b1035" stroke-width="1.5"/><title>4,6  Dark Claw</title></g>
+<text x="233.0" y="99.5" font-size="12" text-anchor="middle" font-weight="bold" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#fff">c</text>
+<g><path d="M371.0,80.0 L386.0,95.0 L371.0,110.0 L356.0,95.0 z" fill="#d9822b" stroke="#2b1035" stroke-width="1.5"/><title>7,6  Dark Claw</title></g>
+<text x="371.0" y="99.5" font-size="12" text-anchor="middle" font-weight="bold" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#fff">c</text>
+<g><circle cx="141.0" cy="141.0" r="15" fill="#5a3d1f" stroke="#fff" stroke-width="2"/><title>2,5  John</title></g>
+<text x="141.0" y="145.5" font-size="13" text-anchor="middle" font-weight="bold" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#fff">J</text>
+<g><path d="M279.0,126.0 L294.0,141.0 L279.0,156.0 L264.0,141.0 z" fill="#d9822b" stroke="#2b1035" stroke-width="1.5"/><title>5,5  Dark Claw</title></g>
+<text x="279.0" y="145.5" font-size="12" text-anchor="middle" font-weight="bold" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#fff">c</text>
+<g><circle cx="95.0" cy="187.0" r="15" fill="#b32424" stroke="#fff" stroke-width="2"/><title>1,4  Lucy</title></g>
+<text x="95.0" y="191.5" font-size="13" text-anchor="middle" font-weight="bold" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#fff">U</text>
+<g><path d="M371.0,172.0 L386.0,187.0 L371.0,202.0 L356.0,187.0 z" fill="#d9822b" stroke="#2b1035" stroke-width="1.5"/><title>7,4  Dark Claw</title></g>
+<text x="371.0" y="191.5" font-size="12" text-anchor="middle" font-weight="bold" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#fff">c</text>
+<g><circle cx="279.0" cy="371.0" r="15" fill="#2f86b8" stroke="#fff" stroke-width="2"/><title>5,0  Linda</title></g>
+<text x="279.0" y="375.5" font-size="13" text-anchor="middle" font-weight="bold" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#fff">L</text>
+</svg>
