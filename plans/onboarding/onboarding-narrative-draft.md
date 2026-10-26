@@ -2,6 +2,9 @@
 
 Narrative agent, 2026-10-26. Step **A5** of `plans/onboarding/2026-10-25-onboarding-first-hour-workplan.md`. Design: `plans/onboarding/2026-10-25-onboarding-first-hour-design.md` (D-168 to D-180). Branch `thj/onboarding`, scope `all`. Read-only on `miso/`; `glossary.md` unchanged (proposals at the end).
 
+**Answered 2026-10-26 (D-234):** open questions 1–8 all as recommended (one year; Bloom is Mark's claim; Lucy's line at Toba in M4; Linda asks "Still counting?"; stone axe and leaf wrapper; "Dad"/"Father"; scoped barks later, level sequences in the greybox; Mark's line without Grandma). The glossary and lore rows still wait on THJ.
+
+
 **Grade (D-180).** Greybox text: one short line per beat, 2–4 for a cutaway, enough to play and time the flow. Every line here goes in as `[PLACEHOLDER] ` until THJ approves it. All of it is Tier 3 (story beats, lore). Where a line matters, options are given with the recommended one first.
 
 **Binding rules used.** Margaret alive and hosting the Hearth (D-178). One narrator per memory segment, unreliable-narrator jokes; the mother's death is never joked about and the jokes stop there (D-171). Ryker is the only thread and is "she" (D-169). Q1: directed dialogue, no scenery narration, no line explains an objective. Forms of address follow the open proposal (Lucy: "Dad", Linda: "Father"; see open question 6).
