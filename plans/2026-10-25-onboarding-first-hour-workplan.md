@@ -68,7 +68,7 @@ Phases A run now, mostly in parallel (no Unity writes). Phase B is one writer at
 
 ## Risks
 
-- **Sister's Rivalry's reward is empty on `main`** (no basic-attack cooldown, GDD Q11). The design makes it the payoff of the whole arc, so the framed first trigger would show a reward that does nothing. Needs a THJ call before B7 (Q11 answer, or a different Rivalry reward).
+- **Half of Sister's Rivalry's reward is empty on `main`**: the +AP works, the "basic attack ready again" adds nothing (no basic-attack cooldown, GDD Q11). Corrected 2026-10-26 from "the reward is empty". Asked as BL4 in `plans/2026-10-26-bond-lite-tech.md`.
 - **Level authoring load.** Five new levels (segment 4, River, Ridge, two M2 branches) plus reworks. Who builds levels in the editor (THJ or the implementer with builders) decides the B pace; ask before B2.
 - **Run-upgrade lifetime.** The one-off Tempest Bloom must not leak past the memory; check in A3.
 - **Missions core.** Any code change in `MissionTracker`/`Mission`/`MissionRouteProgress` is Tier 3; A3 aims for data only.
