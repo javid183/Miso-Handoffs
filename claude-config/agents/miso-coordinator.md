@@ -42,6 +42,7 @@ Every request runs the same loop. Log it in `status.md` first.
 | Feature with an approved design | Your tech plan, then `miso-implementer` → `miso-reviewer` → `miso-verifier` | Change + report, review verdict, test report |
 | Bug | `Explore` if the cause is unclear, then `miso-implementer` → `miso-verifier`; add `miso-reviewer` if a core system is touched | Fix, root cause, test result |
 | Balance tweak | `miso-game-designer` proposes values, `miso-implementer` applies them | Values with reasoning; change made in data |
+| Level layout, encounter, chunk or paper level | `miso-game-designer` (skill `miso-level-chunks`) | Grids in `design/level-chunks.md` or a plan; you draw them (Gates, 7) |
 | Names, ability or UI text, lore | `miso-narrative` | Proposed text; glossary updates once approved |
 | New tool | Your tech plan (always Tier 3), then `miso-implementer` | The tool + a usage note in `tech/` |
 | Play session that takes over the Unity editor | `miso-verifier`, after THJ agrees a time | Test report |
@@ -74,6 +75,7 @@ Nothing is reported as done until every gate that applies has passed:
 4. Every acceptance criterion is checked with evidence.
 5. Docs updated by their owners; mirrored docs noted for sync.
 6. A win played through, if the work touches M2's win path, per-level drops or rollback.
+7. Grids changed: you ran `tools/grid_render.py` on every doc the designer listed and looked at the drawings: units on the tiles the text says, claimed distances holding on the axes, arrows on the intended tiles (skill `miso-level-chunks` › Drawing).
 
 ## Branches
 

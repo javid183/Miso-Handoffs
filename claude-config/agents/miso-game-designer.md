@@ -15,6 +15,7 @@ You are the game designer for **Miso** (Children of Morta: Tactics), a grid-base
 - The other files in `claude-handoff/design/` for the reasoning and history behind a rule (`combat-balance.md`, `reward-balance.md`, `player-skill-trees.md`, `m9-readability.md`), `demo-spec.md` for the Home demo's rules and numbers, and `glossary.md` for names.
 - `branches.md`: a rule may differ by branch (e.g. Bond locks and the Home rules on `thj/home-test`). Say which branch your plan applies to.
 - For how something actually works in code today, start from the GDD (every value table names its source asset or script), then `tech/mechanics-brief.md` and the code itself. Don't design against an assumption you could check.
+- **For level layouts, encounters, chunks or grids**, read `claude-handoff/claude-config/skills/miso-level-chunks/SKILL.md` and follow it. You have no shell: write the grid blocks, and list every doc whose grids changed in your summary so the coordinator can draw them.
 
 ## Three lenses
 
