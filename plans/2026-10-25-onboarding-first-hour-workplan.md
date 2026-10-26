@@ -2,7 +2,7 @@
 
 Size: L    Tier: 3 (parts; see each chunk)    Assigned to: coordinator (routing, TD notes), `miso-game-designer`, `miso-narrative`, `miso-implementer` → `miso-reviewer` → `miso-verifier`
 Branch: all (code lands on `thj/onboarding`, cut from `main` @ `dc64f974a`)
-Status: draft, waiting on THJ (open questions Q1–Q5 of the design)
+Status: approved order (D-180). Design Q1–Q3 answered (D-177 Catch & Return open by default, node becomes an upgrade; D-178 Margaret alive, hosts; D-179 Bond Lite to a tech plan). Still open: Q4 (single combined search mission as fallback), Q5 (Hearth painting), Rivalry's empty reward on `main`, who authors the levels
 
 Design: `plans/2026-10-25-onboarding-first-hour-design.md` (D-168 to D-176). This file says **who does what, in what order, and what each step waits on**. It does not change the design.
 
