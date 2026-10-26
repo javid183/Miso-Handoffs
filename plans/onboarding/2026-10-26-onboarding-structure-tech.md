@@ -2,7 +2,7 @@
 
 Size: L    Tier: 3 (milestone content, Home, dramatic moments; two small code items need THJ's yes)    Assigned to: `miso-implementer` (chunks below) → `miso-reviewer` → `miso-verifier`
 Branch: all (built on `thj/onboarding`, cut from `main` @ `dc64f974a`)
-Status: draft. Answered: T1 data only (D-200), T3 THJ builds the levels, implementer wires (D-201). Open: T2, T4, and the paper plan's questions (`plans/onboarding/2026-10-26-onboarding-levels.md`, done 2026-10-26: it adds an enemy-free M2 trailhead level, symmetric rigged drops, scripted Tempest Bloom, punchline/turn-cap endings; fold into C1–C4 once THJ answers)
+Status: ready for dispatch once THJ points to his level-creation workflow. All questions answered: T1 data only (D-200); T2 deploy slots in M4 (D-227); T3 reversed: the implementer creates the levels from the paper plans, THJ edits them (D-235, replaces D-201); T4 guided spend built in C5 (D-230). Folded in from the paper plan: punchline/turn-cap memory endings and an enemy-free M2 trailhead (D-226); Mark's weapon slot for the Wrist Wrap, Tunic as fallback (D-229); Catch & Return node = Return to Sender (D-228); Family Roles keep 1 FTP, temporary data stopgap only if needed (D-225)
 
 **C2 under D-200:** no `Mission.grantsXP`; the implementer zeroes XP on every memory enemy instance and every spawn source, sets `completionXPReward` 0, and adds an EditMode test that walks the Hearth mission's levels and spawn sources and fails on any XP above 0 (guards against a later prefab change). C2 is sonnet, no core code.
 

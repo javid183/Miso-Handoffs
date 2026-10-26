@@ -2,7 +2,7 @@
 
 Size: L    Tier: 3 (level content and dramatic moments; one Family-tree node change)    Assigned to: miso-game-designer
 Branch: all (built on `thj/onboarding`, cut from `main` @ `dc64f974a`); nothing here differs on `thj/home-test`
-Status: waiting on THJ (the UX and systems critic passes are folded in: see Critics). Grid SVGs are not rendered yet (command under Conventions)
+Status: answered by THJ 2026-10-26: Q1 Return to Sender (D-228), Q2 Mark's weapon slot, Tunic fallback (D-229), Q3 punchlines + trailhead (D-226), Q4 roles keep 1 FTP, data stopgap only if needed (D-225). Grids rendered in `onboarding-levels/` (`index.html`). The levels are created by the implementer from this plan and edited by THJ (D-235)
 
 Feeds: [`2026-10-25-onboarding-first-hour-design.md`](2026-10-25-onboarding-first-hour-design.md) (D-168 to D-176) and its [work plan](2026-10-25-onboarding-first-hour-workplan.md) (step A2; D-177 to D-180). This file does not change that design; where it has to bend it, the [contradictions](#where-this-bends-the-design) say so.
 

@@ -2,7 +2,7 @@
 
 Size: L    Tier: 3 (new reusable system; Home; save data; THJ's yes before any code, D-179)    Assigned to: `miso-implementer` (opus) → `miso-reviewer` → `miso-verifier`
 Branch: all (built on `thj/onboarding`; must fold into `thj/home-test` on merge)
-Status: draft. Answered: BL1 nodes only (D-202), BL2 lock in the Home skill-tree UI (D-203). Open: BL3 (Bond visibility), BL4 (Rivalry's empty cooldown reset), then THJ's yes on the whole plan
+Status: **approved (D-233)**; built after the greybox and the pacing check (D-180). Answers: BL1 nodes only (D-202), BL2 lock in the Home skill-tree UI (D-203), BL3 tooltip + Yard scene, no meter (D-231), BL4 +AP only now, the reset becomes D-220's AP refund once its amounts are set (D-232). C1 adds the silent-lock test (THJ)
 
 Design: `plans/onboarding/2026-10-25-onboarding-first-hour-design.md` ("New tech", "The Sister's Rivalry arc"). Work plan step A4(a), build step B7. Decisions: D-173 (Rivalry to the Family tree, Bond gates the pair's nodes, Yard grants the first Family point), D-179 (go to a tech plan), D-180 (built after the greybox and the pacing check).
 
@@ -74,7 +74,7 @@ Order: riskiest first (save data and the store), then the gate, then sources, th
 
 | # | Chunk | Files (likely) | Acceptance | Tests |
 |---|---|---|---|---|
-| C1 | `BondStore` + settings asset + save + play-mode reset; `HomeLockRules` port | `Core/Systems/HomeSystem/Runtime/BondLite/*`, `Core/Managers/PlayModeStaticReset.cs` | Pair points saved and loaded; levels at 10/25/45; `Add` reports crossed levels; Linda–Lucy starts at 15 on a new save | EditMode: levels, pair key symmetry, save round trip, reset |
+| C1 | `BondStore` + settings asset + save + play-mode reset; `HomeLockRules` port | `Core/Systems/HomeSystem/Runtime/BondLite/*`, `Core/Managers/PlayModeStaticReset.cs` | Pair points saved and loaded; levels at 10/25/45; `Add` reports crossed levels; Linda–Lucy starts at 15 on a new save | EditMode: levels, pair key symmetry, save round trip, reset; **silent-lock check** (THJ, 2026-10-26): fails when an entry in `UnlockableSet.asset` is off by default and no skill-tree node literal and no run upgrade's `grantUnlockable` can unlock it (reads the assets; lists the offending ids) |
 | C2 | Node gate per BL2 + lock tooltip | Home skill-tree UI (or `SkillTree.cs` if BL2 b, own commit) | Rivalry and Tempest Bloom nodes can't be bought below Bond Lv 2, can at Lv 2; other nodes unchanged | EditMode on the rule; play check of the panel |
 | C3 | Sources: mission end, help bonus (capped), Home activity API; level-up queue | `BondSources`, store | Values per the settings asset; no gain for a pair not in the squad; cap respected | EditMode with fake events |
 | C4 | Rivalry: literal gate + once per turn; Rivalry node in the Family tree (data); Tempest Bloom node gated | `UnitKillAbilityPointProvider.cs`, unit prefab / tree data | Rivalry off until bought; fires at most once per player turn; Tempest Bloom off until bought | EditMode for the per-turn guard if testable; play check |
