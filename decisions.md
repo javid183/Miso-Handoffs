@@ -6,6 +6,9 @@ Rows D-001 to D-011 were carried over on 2026-10-15 from the Home handoff and pr
 
 | Date | ID | Tier | Scope | Decided by | Decision | Why | Affects |
 | --- | --- | --- | --- | --- | --- | --- | --- |
+| 2026-10-27 | D-265 | 3 | all | THJ | Mark–Linda Duo: not Long Pass (too close to Catch & Return; the name isn't thematic). THJ likes the Fetch Race idea, depending on what it is: designer to detail it | Duo and synergy should differ | `plans/2026-10-27-linda-distance-design.md` rev 2 |
+| 2026-10-27 | D-264 | 3 | all | THJ | Fetch's +1 FTP for a walking pickup is a skill-node upgrade, not a base rule | Sounds like an upgrade | Distance design rev 2, progression |
+| 2026-10-27 | D-263 | 3 | all | THJ | Encore cooldown 2 → 3 in the distance test (a toggle) | Today Encore beats walking on AP; the test needs walking to compete | Quiver tech plan, `Linda_Ability_Recall` |
 | 2026-10-27 | D-262 | 3 | all | THJ | Recall's on-screen name is **Encore** (code name stays `Linda_Ability_Recall`) | Musical like the rest of her kit | Ability data, UI strings, glossary, GDD |
 | 2026-10-27 | D-261 | 3 | all | THJ | A caught arrow's return flight ends at Linda (a return variant of her arrow with `travelEntireRadius: 0`, kept out of Mark's whitelist), not her full range past her | It ends in her hands | C3b |
 | 2026-10-27 | D-260 | 3 | all | THJ | Build Mark's QTE catch as the spike found (C3b, after C4): freeze Linda's arrow at Mark on contact; pressed → back to the quiver, animation, return flight from Mark (Linda's action stays open until it ends; fallback timer); declined → the same arrow carries on with its range and falloff; `triggerWithQTE: 1`. No bullet-time. Also fixes today's double damage | No core code, no sync problem | `ProjectileCatchAndReturn.cs`, `Unit_Mark.prefab`, `reports/mark-catch-qte-spike.md` |
