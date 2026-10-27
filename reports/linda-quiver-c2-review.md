@@ -33,3 +33,21 @@ Clean:
   - Allied units in another faction (`Unit_Toba_Ally`) don't pick up.
   - `Resurrect` plugs the unit before it is alive, so a unit revived on arrows probably doesn't pick them up.
 - **Unity noise in the tree:** the TMP fallback asset and two ProjectSettings files. Never stage them.
+
+---
+
+# Re-review after fixes (2026-10-26)
+
+**Verdict: FIX** (one new must-fix; every earlier fix is correct)
+
+- The `unitBorn` hook is safe: it is unsubscribed, never double-picks, and leaves G3 unchanged. The only core change is still the reset line. LF, no BOM, no private IDs. The merged units build in order.
+
+## Must fix
+1. **The locked look goes stale** (`GroundedArrowField.Pickup.cs:78-82`, `ArrowPickupRules.cs:33`).
+   - `Pickup` stores the lock state, but the view only refreshes when an arrow is taken.
+   - Result: an enemy stepping onto a free stack never shows the locked look, and `OnChanged` isn't raised. A Bergson with a full quiver can also leave a stale red look behind.
+   - Fix: compare the lock before and after, and when it changed, call `RefreshView` and `OnChanged`.
+   - Play-check step: an enemy walks onto a free arrow, and the stack shows the locked look at once.
+
+## Notes
+- A player-faction decoy or summon spawned on a stack picks it up. That is consistent with D-254.
