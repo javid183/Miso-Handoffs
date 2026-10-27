@@ -36,3 +36,20 @@ Clean:
 - **Follow zone:** the move preview's follow zone hides at 0 arrows, even on a path that would pick some up.
 - **D-258 return path:** it can't double count.
 - **Timing:** the "+1" cue shows when the toss starts, not when it arrives.
+
+---
+
+# Re-review after fixes and the core hook (2026-10-27)
+
+**Verdict: APPROVE**
+
+- The `PlayerController` diff is exactly additive: the class declaration gains the interface, and one property is added.
+- No Core file gains a Features import.
+- No compile risks found.
+- LF, no BOM, no private IDs.
+- The 5 commit units build in order: hook → role-zone interface → quiver scripts → UI → asset and wiring test.
+
+Notes:
+- `QuiverTextRules.WithReason` strips `[PLACEHOLDER]` from every unit's ability description in the bar tooltip, not only Linda's.
+- An old `_previewPath` is kept but never shown, because the path must end on the hovered cell. Watch for it in play-check step 8.
+- The follow zone hides at 0 arrows, on purpose.
