@@ -142,3 +142,11 @@ THJ play-checked C1–C3 on 2026-10-27 ("working, seems fun, needs work"; possib
 - `502902b38` PlayModeStaticReset line (unit b, core)
 - `f6dd15a0f` Cyclone scatter + Mark's catch (unit c)
 - `dd95002f8` prefabs, ability data, Recall, wiring test (unit d)
+
+THJ play-checked C4 on 2026-10-27 (works; most elements too big, sizing left until the final decision). EditMode 893/894 (known red only, THJ's Test Runner). Committed:
+
+- `c7081b76c` PlayerController preview-path hook (core, D-270)
+- `741ac9dd2` role-zone visibility interface (shared presenters)
+- `6e3d92517` quiver readability scripts + arrow-with-nowhere-to-land fix
+- `886f32e88` Linda's panel, badge, prompt and reasons
+- `7ad75622c` Encore title + wiring test

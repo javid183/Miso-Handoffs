@@ -2026,3 +2026,26 @@ Done. THJ merged `thj/preview-improvements` into `main` on 2026-10-20. The GDD l
 **Not verified:** readability UI (C4) and combat log (C5) not built.
 **Findings:** THJ play check: working, fun, needs work; a shot arrow sometimes seemed to land nowhere (under investigation).
 **Status:** committed `c6aade3c9`, `502902b38`, `f6dd15a0f`, `dd95002f8`; not pushed.
+
+## 2026-10-27: Linda's Quiver C4 readability (`thj/linda-quiver`)
+
+**Built:**
+- arrow pips under Linda and on her panel
+- empty-quiver badge, and her zone hidden at 0
+- "Arrows 3 > 2" on the Watch prompt
+- grey reasons
+- landing marker
+- "+N arrows" on the move preview
+- Encore return lines
+- a "+N" return cue (Mark's glow on a catch)
+- a clearer grounded/locked look with a count badge
+- an arrow with nowhere to land goes back to the quiver
+- Encore title
+
+Core: one additive `PlayerController` hook (D-270). Core never imports Linda (D-272).
+
+**Verified:** THJ's Test Runner gave EditMode 893/894 (known red only). Review APPROVE. THJ played it: works.
+
+**Not verified:** sizes; THJ finds most elements too big and leaves it for the final decision.
+
+**Status:** committed `c7081b76c`, `741ac9dd2`, `6e3d92517`, `886f32e88`, `7ad75622c`; not pushed.
