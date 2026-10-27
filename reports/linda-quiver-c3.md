@@ -102,3 +102,12 @@ Never stage the TMP fallback asset or the two ProjectSettings files.
 4. Try Recall on her next turn: unavailable. The turn after: available (if arrows are grounded).
 5. End the level mid-flight: no sprites left over. Kill Linda mid-flight: they vanish.
 6. Tune `Recall Flight Seconds` on `Unit_Linda`'s `LindaQuiver`; keep it at or under 0.5 (the ability's minimum duration).
+
+## Review fixes
+
+1. **QuiverAfter:** deleted, with its test (nothing in game code used it; `Resolve` tests already cover the arithmetic).
+2. **Test reset:** added `GroundedArrowField.ResetForTests()` (public, clears the static). `GroundedCount_ReadsZeroOnceTheFieldIsClosed` destroys its GameObject and calls the reset in `finally`.
+3. **Target mark:** removed the `data[9].disableTargetCellIndication` override from `Unit_Linda.prefab`; Recall's entry now has only the preset and the stat-source overrides.
+4. **Recall needs room:** `RecallRules.CanRecall(grounded, alive, quiverRoom)` now also needs room. `LindaQuiver.HasGroundedArrows` (the feasibility message) and `RecallTo` both use it. Tests: `CanRecall_NeedsAGroundedArrowALivingLindaAndRoom` (5 cases) and `FullQuiverWithGroundedArrows_CannotRecall`.
+
+Full EditMode suite, command line (`c3c.xml`): 849 tests, 848 passed, 1 failed: `AIRegressionTest.Baseline_MatchesCurrentAI`, message identical to the previous C3 run (the one accepted new `abilities.unexpected` line, nothing else changed). No compile errors. The test class and baseline were not touched. Not verified in play: the grey-out with a full quiver.

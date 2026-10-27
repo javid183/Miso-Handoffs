@@ -2,7 +2,7 @@
 
 Size: L    Tier: 3 (Family Roles, a new mechanic; design approved D-241 to D-245)    Assigned to: miso-implementer (chunks below), reviewer, verifier
 Branch: all, built on `thj/linda-quiver` (from `main` @ `a1483f0b9`)
-Status: approved (THJ, 2026-10-26: TQ1 (a), TQ2 (a), TQ3 play after C3 and C4; D-246 to D-248). Next: C1
+Status: approved (THJ, 2026-10-26: TQ1 (a), TQ2 (a), TQ3 play after C3 and C4; D-246 to D-248). C1–C3 built, reviewed, verified (uncommitted); waiting on THJ play check
 
 ## Why
 
