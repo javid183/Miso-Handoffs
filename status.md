@@ -37,6 +37,12 @@ Owner: coordinator. Every item has a scope: `all` or a branch. Started 2026-10-1
 - Glossary and lore rows proposed in `plans/onboarding/onboarding-narrative-draft.md` (Ryker, Caeldippo caves, the Hearth, mission titles, sisters' tally, Toba's traces): approve for the narrative agent to add.
 - `thj/onboarding` into `branches.md`.
 
+**Linda's Quiver text (2026-10-26)** — scope all; Tier 3 (names, canon); proposals in `reports/linda-quiver-text.md`; not blocking C1
+
+- Recall's on-screen name: **Encore** (narrative's pick, musical like her kit) or Recall (code name stays `Linda_Ability_Recall`).
+- Do the children call John "Dad" in barks (`Thanks, Dad.`)? Not checked against Children of Morta canon.
+- Glossary rows for Quiver, grounded arrow, Encore/Recall; and the clash between the glossary's proposed "Watch" label for role uses per round and Watch as Linda's role name.
+
 **Workflow**
 
 - GDD open questions are asked on demand (D-050); THJ answers in `design/gdd-open-questions.md` when he likes.
