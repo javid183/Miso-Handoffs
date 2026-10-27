@@ -125,3 +125,49 @@ Run the EditMode suite first (only `AIRegressionTest.Baseline_MatchesCurrentAI` 
 10. **Return cue:** a green "+1" and a small arrow float up beside Linda on: walking John over an arrow (also the toss beat), Linda picking up her own, an arrow that lands under a Bergson, Encore (one "+N" for the whole recall), and Mark's catch (also a short warm glow on Mark). One cue per event.
 11. **Locked look:** shoot an enemy so the arrow lies under it: bright orange arrow, red outline and a red count badge showing "1". A free arrow is white with a dark outline and a dark badge, also showing "1". Check on a busy enemy sprite.
 12. **Safety:** hard to trigger by hand; kill the last enemy with an arrow still in flight: the quiver shows 4/4 and no arrow icon is left.
+
+## Review fixes
+
+Still not compiled or run (the editor is open). All fixes below are in the files named; LF kept, no BOM, a `.meta` for each new file.
+
+**Must fix 1 (commit units):** the arrow-landing fix and the scripts are one unit now (see the updated units below).
+
+**Should fix**
+1. `QuiverReturnCue`: cues and flashes are destroyed in `OnDisable` (a shared `ClearViews`), so nothing freezes when Linda is deactivated at death.
+2. Catch flash: it now looks through all `ProjectileCatchAndReturn` components and takes one whose unit is alive and in Linda's faction.
+3. Role badge tooltip: the "Same tiles as the basic attack; Shift shows them." line is skipped for the empty-quiver state.
+4. Dead code removed: `ArrowIcon`, `NoteArrowIcon` (and its call in `QuiverArrow`), `QuiverPipRules.ZoneShown` and its test. The zone check is now the `IRoleZoneVisibility` property (below); `LindaQuiver.IsEmptyFor(unit)` replaces the old static (the badge uses it).
+5. The closed-field test now passes a real `GridCell` (added to a test object), so it checks the refusal for the reason it claims. Renamed `ClosedField_RefusesALandingOnARealCell_...`. If `AddComponent<GridCell>()` misbehaves in edit mode, that is the test to look at first.
+6. Placeholder text: every string I wrote that carries words is tagged `[PLACEHOLDER] ` (the grey reasons, badge line, "Quiver full", the Watch prompt, the panel label, the "+N arrow(s) (N left)" label), and stripped where shown with `QuiverTextRules.Show`, which uses the existing `HandBackLines.Strip`. `QuiverTextRules.WithReason` strips both the description and the reason, so the Encore tooltip no longer shows the tag (`AbilitiesBarHUDUI` needed no further change). The "+N" return cue is a symbol, not words, so it is untagged. Tests compare the stripped text.
+7. Sorting on the board: outline 49, icon 50, badge 51, count 52, toss 53.
+8. `QuiverAimPresenter`: the stack list for Encore's lines is a reused buffer, and the landing marker no longer recomputes (or re-runs `CollectPreviewPathHits`) every frame when there was no landing cell to show.
+
+**Core hook (approved), item 7**
+- `Core/Interactions/Runtime/IMovePreviewPathSource.cs` (+ `.meta`): the interface now lives in `MISO.Core.Interactions`; the copy in the quiver folder is gone.
+- `PlayerController.cs`: exactly two additive lines: `, IMovePreviewPathSource` on the class and `public IReadOnlyList<GridCell> PreviewPath => _previewPath;`. Nothing else changed.
+- `_previewPath[0]` is the mover's cell: `CommitPreviewedMovePath` itself refuses a path whose first cell is not the unit's cell. The presenter still checks first cell = mover, last cell = hovered cell, and that the active ability is a move. One edge: `_previewPath` is not cleared when the path highlight is cleared by moving the pointer off the range, so the guard on the hovered cell is what keeps a stale path from showing.
+
+**Core no longer imports Linda's folder**
+- `Core/Systems/RoleZoneSystem/Runtime/IRoleZoneVisibility.cs` (+ `.meta`): `IRoleZoneVisibility { bool HidesRoleZone }` and a small `RoleZoneVisibility.Hidden(unit)` helper. `LindaQuiver` implements it (true while empty). `RoleZonePresenter` and `MovePreviewCoverPresenter` query it; `RoleZonePresenter` redraws when any such component's value changes. It has no `using` of the Bergsons namespace now.
+- Follow zone: it still hides at 0 arrows, even on a path that would pick arrows up. Left as it was (it would need the path in the zone presenters).
+
+### Updated commit units (each builds on the ones before it)
+
+1. `feat(player): expose the previewed move path to the preview layer`: `Core/Interactions/Runtime/IMovePreviewPathSource.cs` + `.meta`, `PlayerController.cs`. **Core hook, own commit.**
+2. `feat(roles): let a unit hide its own role zone`: `Core/Systems/RoleZoneSystem/Runtime/IRoleZoneVisibility.cs` + `.meta`, `RoleZonePresenter.cs`, `MovePreviewCoverPresenter.cs`. Shared presenters, own commit.
+3. `feat(linda): quiver readability and arrows that always find their way back`: everything under `Scripts/Quiver/` (new scripts, edits to `LindaQuiver.cs`, `QuiverArrow.cs`, `GroundedArrowField*.cs`, all `.meta`, `Editor/QuiverReadabilityTests.cs`). This includes the landing fix (merged, per the review). Needs 1 and 2.
+4. `feat(ui): quiver pips, empty-quiver badge and arrow reasons on Linda's panel`: `UnitPanelUI.Quiver.cs`, `UnitPanelUI.cs`, `UnitPanelUI.RoleBadge.cs`, `RoleBadgeState.cs`, `AbilitiesBarHUDUI.cs`, `FactionRoleVisual.cs`, `Editor/RoleBadgeQuiverTests.cs` (+ `.meta`). Needs 3.
+5. `chore(linda): show Encore as the ability name`: `Linda_Ability_Recall.asset`, `Scripts/Quiver/Editor/QuiverWiringTests.cs`. Needs 3.
+
+Never stage the TMP fallback asset or the two ProjectSettings files.
+
+### Tests for THJ to look at (EditMode, Run All; only `AIRegressionTest.Baseline_MatchesCurrentAI` may fail)
+
+- Compile first. New or changed test classes: `QuiverReadabilityTests` (all), `RoleBadgeQuiverTests` (all), and in `QuiverWiringTests`: `ReadabilityLayer_FindsEncoreAndTheBowFromTheirData`, `Recall_...` title check (now "Encore").
+- Watch these by name if anything is red:
+  - `ClosedField_RefusesALandingOnARealCell_SoTheArrowGoesBackToTheQuiver` (builds a `GridCell` in edit mode).
+  - `Quiver_ReportsEmptyOnlyAtZero`, `Quiver_RaisesOneReturnEventPerAddWithTheCountThatWentIn`, `Quiver_ACatchAndARecallAreOneEventEach`, `Quiver_NothingWentInMeansNoEvent`, `Quiver_PlainAddIsAReturnOfKindOther` (build a `LindaQuiver` on a bare object).
+  - `ReadabilityLayer_FindsEncoreAndTheBowFromTheirData` (loads the real Encore and bow assets by path).
+  - `WithReason_PutsTheReasonOnItsOwnLine` (checks the tag is stripped).
+- Existing suites untouched: `RoleBadgeRulesTests`, the C1 to C3 quiver tests, `AIRegressionTest` (no new preset).
+- Play: after the hook, hover a move across arrows to see "+N arrow(s)" (How to see it, step 8); the other steps are unchanged except that all on-screen texts show without `[PLACEHOLDER]`.
