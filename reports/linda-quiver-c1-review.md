@@ -42,3 +42,25 @@ Reviewer: miso-reviewer, 2026-10-26. Saved by the coordinator; the reviewer has 
 - **Known edges**:
   - Two shots in the same frame at 1 arrow: the second fires unpaid.
   - The stack icon comes from the first arrow type that landed.
+
+---
+
+# Re-review after fixes (2026-10-26)
+
+**Verdict: APPROVE**
+
+- All five fixes are correct.
+- The only core change is still the reset line. LF, no BOM, no private IDs.
+- The commit units build in order: scripts+tests → reset line → cloners → prefabs/data/wiring tests.
+
+Notes:
+- **Landing with no field:** if `Current` is null the arrow vanishes. Today that only happens at level end or unload. If arrows ever fire outside a `CombatLevel`, return it to the quiver instead.
+- **For C3:** `GroundedArrowField.GroundedCount` reads `_current` without checking the level. Recall's check depends on it.
+- **Still to see in play:**
+  - a kill shot mid-path
+  - pierce through 2
+  - Tempest Bloom
+  - Catch & Return, caught and missed
+  - Crescendo
+  - both Duos
+  - Watch at 0
