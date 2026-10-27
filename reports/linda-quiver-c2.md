@@ -76,9 +76,14 @@ None. (Still open from the text report: whether John's reply may call him "Dad";
 
 ## Proposed commits
 
-Paths under `miso/Assets/_Project/Features/Player/Linda/`.
+Merged units (C1 and C2 share files). Paths under `miso/Assets/_Project/`.
 
-1. `feat(linda): Bergsons pick up Linda's grounded arrows and hand them back`: `Scripts/Quiver/ArrowPickupRules.cs`, `HandBackLines.cs`, `GroundedArrowField.Pickup.cs` (+ `.meta`), the edits to `GroundedArrowField.cs`, `LindaQuiver.cs`, `QuiverArrow.cs`, `Prefabs/Unit_Linda.prefab` (beat values; belongs with the LindaQuiver edit, so it must come after the C1 prefab commit), `Scripts/Quiver/Editor/ArrowPickupRulesTests.cs`, `HandBackLinesTests.cs` (+ `.meta`), `QuiverWiringTests.cs` (the new timing test). Plain, one commit; it builds on the C1 commits and shares their files, so the C1 commits must land first (the C1 report's four units, in its order).
+1. Quiver scripts and tests, C1 and C2: everything in `Features/Player/Linda/Scripts/Quiver.meta` and `Scripts/Quiver/` except `Editor/QuiverWiringTests.cs`.
+2. The `PlayModeStaticReset` line: `Core/Managers/PlayModeStaticReset.cs` (core).
+3. The two cloner scripts: `LucyCycloneProjectileScatter.cs`, `ProjectileCatchAndReturn.cs`.
+4. Prefabs, data and wiring tests: the five Linda prefabs (including the beat values on `Unit_Linda`), the five spawn effect assets, `Editor/QuiverWiringTests.cs` + `.meta`.
+
+Never stage the TMP fallback asset or the two ProjectSettings files.
 
 ## Other branches
 
@@ -95,3 +100,18 @@ Paths under `miso/Assets/_Project/Features/Player/Linda/`.
 7. Have Linda walk onto her own arrow: one line from her, no toss.
 8. Aim an arrow at a tile where John stands: it goes straight back with the beat.
 9. Finish the level and start the next: full quiver, board empty. To silence barks for a check, set `silenceBarks` in the global settings: the toss still plays.
+
+## Review fixes
+
+- **Dead speakers:** `Bark` skips any speaker that is not alive. The toss ends (and its sprite is destroyed) as soon as Linda is dead or destroyed, with no late reply.
+- **Pickup decision is pure and tested:** `ArrowPickupRules.Pickup(...)` now holds the whole decision (living Linda, picker present, alive, same side; lock re-read from whether an enemy stands there now; room cap; leftovers back on the tile if the quiver refuses). `TryPickUp` only gathers the facts, calls it, and plays the beat. New tests: stale lock with the enemy gone, enemy there now, dead Linda, no/dead/other-side picker, quiver refusing some, an arrow landing under a friend taken at once, full quiver and no stack. Renamed `StackUnlocksWhenTheEnemyLeaves_ThenItCanBeTaken` to `LockedStackTakenNothing_ThenOnceUnlockedItIsTaken`.
+- **Timing test:** renamed `Linda_HandBackBeatTimingsAreSane`; it checks only toss > 0, delay and arc >= 0, and reply delay not after the toss end.
+- **Revived unit:** done without core code. The field also listens to `unitBorn` (raised by `Resurrect` and `OnHeal` after the unit is alive again) and runs the pickup on the unit's cell. Not verified in play.
+- Left as is: nothing is picked up while Linda is dead; allied units in another faction do not pick up.
+- Tests: 830 total, 829 passed; the one failure is `AIRegressionTest.Baseline_MatchesCurrentAI`, message unchanged. 32 new tests for C2 in all. LF, no BOM, no IDs, no core code.
+
+### Stale lock look (second review)
+
+- `TryPickUp` now compares the stack's stored lock before and after `Pickup`. If it changed, it redraws the stack and raises `OnChanged` even when nothing was taken.
+- New test `Pickup_ChangesTheStoredLockEvenWhenNothingIsTaken` checks the lock flips both ways with no pickup.
+- Tests: 831 total, 830 passed; the one failure is `AIRegressionTest.Baseline_MatchesCurrentAI`, message unchanged. Not verified in play.

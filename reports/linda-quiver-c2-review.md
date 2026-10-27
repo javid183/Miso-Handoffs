@@ -51,3 +51,9 @@ Clean:
 
 ## Notes
 - A player-faction decoy or summon spawned on a stack picks it up. That is consistent with D-254.
+
+---
+
+# Third pass (2026-10-26)
+
+**Verdict: APPROVE.** The stale-lock fix covers every path, and the new test checks the stored lock. Play-check step: an enemy walks onto a free arrow, and the stack shows the locked look at once.
