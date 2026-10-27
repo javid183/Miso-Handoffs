@@ -14,3 +14,8 @@ Branch thj/linda-quiver. Setup: a level with Linda and Mark, the Mark and Linda 
 10. Catch twice (two turns). The second catch behaves like the first: no stuck frozen arrow, and no leftover hidden LindaAttackArrowReturn(Clone) object in the scene hierarchy after a decline.
 11. Check that the arrow stops at Mark visibly (it may sit at the edge of his collider, not his centre) and that the stop looks acceptable.
 12. Check that the arrow does not open Mark's prompt a second time as it leaves after a decline.
+13. When the return arrow reaches Linda's cell, Linda takes no damage.
+14. While the original arrow is hidden after the apply frame, it stays hidden (its Animator does not show the sprite again).
+15. Balance: the return arrow hits enemies on the way home with falloff starting again at full strength. Note whether the damage feels right.
+16. With a slow-motion effect running (for example the reactive interrupt during Watch), open the catch prompt: the prompt must not change the time scale before or after.
+17. Leave Play mode, or end the level, while the prompt is open or the catch animation plays: no errors in the console.

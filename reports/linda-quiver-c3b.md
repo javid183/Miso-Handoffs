@@ -56,7 +56,7 @@ Run in Test Runner, EditMode: `MISO.Core.Features.Bergsons.EditorTests.CatchFree
 
 ## Proposed commits
 
-1. feat(mark): freeze Linda's arrow at Mark during the catch prompt and fly it home: CatchFreezeRules.cs(+meta), ProjectileCatchAndReturn.cs, Mark Scripts/Editor.meta, Editor/CatchFreezeRulesTests.cs(+meta) (plain)
+1. feat(mark): freeze Linda's arrow at Mark during the catch prompt and fly it home: CatchFreezeRules.cs(+meta), ProjectileCatchAndReturn.cs, Mark Scripts/Editor.meta, Editor/CatchFreezeRulesTests.cs(+meta), Linda Scripts/Quiver/GroundedArrowField.cs (plain)
 2. feat(linda): a return arrow that ends its flight at Linda: LindaAttackArrowReturn.prefab(+meta) (plain)
 3. feat(mark): make the catch a prompt and use the return arrow: Unit_Mark.prefab, Editor/CatchReturnWiringTests.cs(+meta) (plain; needs 1 and 2)
 
@@ -76,3 +76,4 @@ Follow playtests/2026-10-27-mark-catch-qte-play-check.md.
 - The two duplicate rules tests are merged into `ReleasedArrow_NeverStartsAReturnFlight` (now 9 tests in `CatchFreezeRulesTests`).
 - Play check: items 13-15 are the reviewer's, 16-17 cover the time scale and teardown fixes.
 - Still not compiled or run.
+- Re-review fix: `GroundedArrowField.IsOpen` (true until the level ends) added; the disable check now tests `Current is { IsOpen: true }`, since a field stays "current" after the level ends. `GroundedArrowField.cs` goes in commit 1.
