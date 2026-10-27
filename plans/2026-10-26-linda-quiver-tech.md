@@ -89,6 +89,11 @@ Linda's shots spend arrows from a quiver of 4. Arrows land on the board, any Ber
 - Arrow pips under Linda and on her unit panel; the badge's empty-quiver state; zone hidden at 0; Watch prompt "Arrows N → N−1"; "No arrows" tooltip reason on greyed arrow abilities and Duos; landing-tile marker while aiming the bow, Crescendo and Duos; "+N arrows" on the move preview per path (Tab cycling); Recall return lines while aiming.
 - Acceptance: each item seen in play; pure rules (pip state, badge state, preview count) EditMode-tested.
 
+### Added after THJ's play check (2026-10-27)
+
+- **C4 additions (D-258, D-259):** a "+1" return cue on Linda for every return (Mark's catch, any pickup including her own and the instant pickup on landing, Recall); a brighter locked look (today a dark red tint at 0.55/0.3/0.3) with an outline or badge, and a badge even on a single arrow; an arrow landing with the field missing or closed goes back to the quiver.
+- **C3b, Mark's catch with a QTE (D-257, THJ's design):** when Linda's arrow reaches Mark, a QTE offers the catch. If pressed, the arrow stops at Mark, flies back to Linda damaging on the way, and returns to her quiver. If not pressed, it passes on as a normal shot. The blocker is the old sync problem: the arrow keeps flying while the QTE and Mark's animation run. A read-only spike looks for a way to hold the arrow at Mark during the window without core code. The result comes to THJ before C3b is planned.
+
 ### C5. Combat log lines: `sonnet`
 
 - `CombatLog.Quiver.cs` lines for spend, land, pickup, recall, and a declined Watch with its count, enough to compute the playtest signals (design plan, "Playtest signals").
