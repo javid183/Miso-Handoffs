@@ -2,7 +2,7 @@
 
 Size: L    Tier: 3 (Family Roles, a new mechanic; design approved D-241 to D-245)    Assigned to: miso-implementer (chunks below), reviewer, verifier
 Branch: all, built on `thj/linda-quiver` (from `main` @ `a1483f0b9`)
-Status: draft, waiting on THJ (questions TQ1 to TQ3 below)
+Status: approved (THJ, 2026-10-26: TQ1 (a), TQ2 (a), TQ3 play after C3 and C4; D-246 to D-248). Next: C1
 
 ## Why
 
@@ -122,6 +122,8 @@ C1 is used by everything else. C2 and C3 depend on C1. C4 and C5 can follow in e
 - `plans/family-role-chunk.md` items 1 and 10 (Linda's part superseded, D-244), `tech/combat-architecture.md` (quiver + field), `status.md`, `decisions.md`, `build-log.md`, owned by the coordinator.
 
 ## Questions for THJ
+
+Answered by THJ, 2026-10-26: TQ1 keep 1 FTP (D-246); TQ2 non-blocking (D-247); TQ3 play check after C3 and after C4 (D-248).
 
 - **TQ1. Watch's FTP cost in the prototype?** Today Watch costs 1 FTP. D-225 keeps role FTP costs while your FTP rework is elsewhere, but the design's case for the quiver assumes the arrow is her cost. (a) Keep 1 FTP plus 1 arrow: only one variable changes against the current build. (b) Set Linda's `requiredFTP` to 0 (one prefab value): the "declines to save an arrow" signal is clean.
 - **TQ2. Hand-back beat pacing?** (a) Non-blocking: toss and barks play while play continues, about 0.6 s. (b) A short blocking moment (input locked about 0.8 s) so it's seen.
