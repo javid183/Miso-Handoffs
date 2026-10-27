@@ -23,3 +23,16 @@ What passed:
 - Linda isn't hit when the return copy arrives on her cell.
 - The arrow's Animator doesn't re-show the hidden original.
 - Balance: the return re-hits enemies with falloff starting again at 1.0.
+
+---
+
+# Re-review after fixes (2026-10-27)
+
+**Verdict: APPROVE.** All the fixes are correct and nothing new looks like it would fail to compile.
+
+Should fix:
+- `GroundedArrowField.Current` stays non-null after `levelEnded`, so the teardown check needs `IsOpen`. Sent to the implementer as a final tweak.
+
+Notes:
+- The unused `timescale` field may raise warning CS0414.
+- Mark can't catch while Linda is absent in practice: only Linda's arrows are whitelisted, and she always creates the field.

@@ -67,3 +67,12 @@ none
 ## How to see it
 
 Follow playtests/2026-10-27-mark-catch-qte-play-check.md.
+
+## Review fixes
+
+- Time scale: the prompt path no longer touches `Time.timeScale` (slow-mo methods and their state removed). The `timescale` field stays serialized and unused, with a comment, so the prefab is unchanged.
+- Teardown: `RefundShot` guards a null owner and a missing `CombatLevelUIManager`. When Mark is disabled while an arrow is caught, the return flight starts only if a grounded-arrow field is open (the level is running); otherwise the copy is destroyed and the original disposed. Mid-level behaviour is unchanged, so no hang.
+- `CatchReturnWiringTests.cs` converted to LF.
+- The two duplicate rules tests are merged into `ReleasedArrow_NeverStartsAReturnFlight` (now 9 tests in `CatchFreezeRulesTests`).
+- Play check: items 13-15 are the reviewer's, 16-17 cover the time scale and teardown fixes.
+- Still not compiled or run.
