@@ -2018,3 +2018,11 @@ Done. THJ merged `thj/preview-improvements` into `main` on 2026-10-20. The GDD l
 **Findings:** main's alert tracker runs in every sortie (D-199: home-test's copies of main's start-alert levels get the setting). The `Home` tag group's fields are wrong (D-182). There are private plan IDs in `FactionControllerBase.cs` and `HomeFromHomeTags.cs` (pre-existing).
 **Status:** merged, not pushed. Next: the sortie start-alert commit, then the Home tag fix.
 **Follow-ups (same day):** `5d19e30cf`: `LevelAlertSettings.allEnemiesStartAlert` on the three sortie copies of LevelM2-C1 (`LevelM2-C1 1`, `Queen's Chamber`, `Drowned Shrine 2`; THJ kept Shrine 2). `1d91791b7`: the `Home` tag group is now a plain hidden parent. EditMode 1138/1139 (known red only). Report: `reports/home-test-sortie-alert-and-tag-fix.md`. Not play-checked yet: the three levels starting alert.
+
+## 2026-10-27: Linda's Quiver C1–C3 (`thj/linda-quiver`)
+
+**Built:** quiver of 4 (spend per shot, landing on last enemy hit or end of range, never lost), grounded stacks with a locked state, pickup by any squad member with a non-blocking hand-back beat, Recall (1 AP, cooldown 2), Cyclone split and Mark's catch conserving arrows. No core code except one reset line. Plan `plans/2026-10-26-linda-quiver-tech.md`; decisions D-241 to D-256.
+**Verified:** compile clean; EditMode 848/849 (known red only; its message gains one accepted line for the Recall preset, D-255); 106 quiver tests; reviews APPROVE per chunk.
+**Not verified:** readability UI (C4) and combat log (C5) not built.
+**Findings:** THJ play check: working, fun, needs work; a shot arrow sometimes seemed to land nowhere (under investigation).
+**Status:** committed `c6aade3c9`, `502902b38`, `f6dd15a0f`, `dd95002f8`; not pushed.

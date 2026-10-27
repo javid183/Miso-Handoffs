@@ -2,7 +2,7 @@
 
 Size: L    Tier: 3 (Family Roles, a new mechanic; design approved D-241 to D-245)    Assigned to: miso-implementer (chunks below), reviewer, verifier
 Branch: all, built on `thj/linda-quiver` (from `main` @ `a1483f0b9`)
-Status: approved (THJ, 2026-10-26: TQ1 (a), TQ2 (a), TQ3 play after C3 and C4; D-246 to D-248). C1–C3 built, reviewed, verified (uncommitted); waiting on THJ play check
+Status: approved (THJ, 2026-10-26: TQ1 (a), TQ2 (a), TQ3 play after C3 and C4; D-246 to D-248). C1–C3 committed after THJ's play check (2026-10-27); next: vanished-arrow bug, C4, C5
 
 ## Why
 
@@ -131,4 +131,9 @@ Answered by THJ, 2026-10-26: TQ1 keep 1 FTP (D-246); TQ2 non-blocking (D-247); T
 
 ## Commit log
 
-(empty)
+THJ play-checked C1–C3 on 2026-10-27 ("working, seems fun, needs work"; possible vanished arrow under investigation). Committed on `thj/linda-quiver`:
+
+- `c6aade3c9` quiver scripts and logic tests (unit a)
+- `502902b38` PlayModeStaticReset line (unit b, core)
+- `f6dd15a0f` Cyclone scatter + Mark's catch (unit c)
+- `dd95002f8` prefabs, ability data, Recall, wiring test (unit d)
