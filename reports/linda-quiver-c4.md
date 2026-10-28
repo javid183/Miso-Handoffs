@@ -171,3 +171,14 @@ Never stage the TMP fallback asset or the two ProjectSettings files.
   - `WithReason_PutsTheReasonOnItsOwnLine` (checks the tag is stripped).
 - Existing suites untouched: `RoleBadgeRulesTests`, the C1 to C3 quiver tests, `AIRegressionTest` (no new preset).
 - Play: after the hook, hover a move across arrows to see "+N arrow(s)" (How to see it, step 8); the other steps are unchanged except that all on-screen texts show without `[PLACEHOLDER]`.
+
+## Pips draw order
+
+- `QuiverPipsView.cs`: pips moved from "WorldUI" order 49 to "DynamicTop" order -1 (D-280). Linda's body is on Default and the UnitBase HP bar parts are DynamicTop at 0 to 2, so -1 sits above bodies and below every bar. John (99) and the Deev (-9) bodies on DynamicTop do not matter for Linda's pips. No test asserted the old values; not compiled or run (editor open).
+- Play: put an enemy one tile below Linda with arrows in the quiver; the pips draw under that enemy's HP bar, and still over Linda's own sprite.
+
+## PlayerFaction null fix
+
+- New `Quiver/QuiverLevelAccess.cs` (`PlayerControllerOrNull`, `RelationsReady`); used in `QuiverAimPresenter.cs` (2 sites), `QuiverMovePreviewPresenter.cs`, and in the enemy checks of `GroundedArrowField.cs` and `QuiverArrow.cs` (`GetFactionsRelation` hits the same null field). The `.meta` is created when Unity refocuses.
+- CombatLevel has no public ready check, so the helper returns null unless `CombatLevel.Instance`, `GameHandler`, its `GameData` and the player faction's controller all exist; it reads the player faction from `GameData`, not the level. Not compiled or run (editor open).
+- THJ most likely hit it on level load (CombatLevel exists, `Initialize` not yet run) or unload; both leave `_factionRelations` null while Update runs.
