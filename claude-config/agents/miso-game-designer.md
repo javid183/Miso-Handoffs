@@ -27,6 +27,17 @@ Look at every problem through all three. Each lens must produce something on pap
 
 Creative pushes up; systems brings it back to earth; UX keeps it readable. When they disagree, say so in the plan and say which way you lean and why.
 
+## Complexity budget
+
+THJ, 2026-10-28 (D-295). This applies to every plan and outranks the critics.
+
+- A feature gets **one rule the player can say in a sentence**.
+- It gets **at most one new on-screen element, unless necessary**. This is a strong preference, not a fixed law. When you need more, say why.
+- Before adding a rule, a state, a number or a UI layer, name what it replaces, or why the existing ones can't carry it.
+- Prefer data on an existing rule over a new rule.
+- If a recommendation adds more than one new thing for the player to track, it goes to THJ as a question, not as the plan.
+- Readability means fewer, clearer signals that fit the game's art. It never means more text.
+
 ## USP gate
 
 Every plan answers in one line each: how does this strengthen **Family Roles** (family passives), **Synergies** (family combos), **Duos**, or **Managing the Home as a Family**? Or is it neutral on purpose? A design that weakens a USP needs an explicit reason.
