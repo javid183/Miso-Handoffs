@@ -139,7 +139,7 @@ From `reports/mark-catch-play-findings.md` and D-273 to D-276. Four fixes:
 ### Files
 - `Features/Player/Mark/Scripts/ProjectileCatchAndReturn.cs`:
   - (A2) The body of `OnTriggerEnter2D` is now `public bool TryCatch(Projectile)`, with the same checks in the same order. The trigger only fetches the projectile and calls it.
-  - (A2) A one-chance-per-arrow guard, `_lastSeen`. The first call that gets past the "alive" check marks the arrow; every later call for that arrow returns false. That covers the trigger and the sweep both reporting one pass, and an arrow that a decline lets go flying on through Mark.
+  - (A2) A one-chance-per-arrow guard, `_lastSeen`. The first call that gets past the owner and whitelist checks marks the arrow; every later call for that arrow returns false. That covers the trigger and the sweep both reporting one pass, and an arrow that a decline lets go flying on through Mark.
   - (E) `FreezeArrow` saves the arrow's path position, then moves it to `returnSource.position`, keeping the arrow's own z. `ReleaseFrozenArrow` puts it back on the path position before turning the projectile back on (see Decisions).
   - (A1) `PrepareProjectileClone` records the copy's start and end:
     - start: `spawnAt`;
@@ -200,9 +200,10 @@ LucyFactionRoleHandler.cs
 ### Decisions I made
 - **A1, the clamp.** It lives in `ProjectileCatchAndReturn.LateUpdate` (the plan's first option), with the math in a pure class. It mirrors the Occupant rule for the end point, so if the return prefab were set back to Cell, the clamp would still stop the arrow on Linda's body. The wiring test guards Occupant.
 - **E, a decline.** The arrow is put back on its saved path position before it resumes, rather than jumping on the projectile's next Update. The behaviour is the same: it jumps back onto its path. This avoids a one-frame backwards flip: the arrow is `headAxis: Right` and faces from its current position to its next one, and seen from the catch point that next step can point backwards.
-- **A2, the guard.** It marks the arrow on its first evaluation, even when the catch is then refused (wrong owner, off the path, too close). Each pass gets one decision, as with the single trigger enter before.
+- **A2, the guard.** It marks a catchable arrow (right owner, whitelisted) on its first evaluation, even when the catch is then refused (off the path, too close, synergy locked). Each pass gets one decision, as with the single trigger enter before.
   - The early checks (a prompt already open, Mark mid-catch) run before the marking, as they did. So while the arrow still overlaps Mark, the sweep can try again the next frame if another prompt has just closed.
   - Trigger-only behaviour is unchanged.
+  - Review fix: the arrow is now marked only after the owner, `PrefabSource` and whitelist checks. Before, any passing projectile took the slot: a Cyclone copy, the return copy spawning inside Mark's collider, or an enemy shot. That freed the slot, so a declined arrow could get a second prompt. Now only a catchable arrow takes it.
 - **Sweep location.** The sweep is in Mark's Scripts folder: it belongs to his catch and sits next to `ProjectileCatchAndReturn`.
 - **Lucy, edge cases.** An enemy with no HP reading from the action's start counts as not hurt (for example one spawned mid-action). The hit record still matters for rank 2 (`reportedHit && hpDropped`), so an HP drop during the action from something else doesn't count as this action's hit.
 
