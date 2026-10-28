@@ -150,3 +150,12 @@ THJ play-checked C4 on 2026-10-27 (works; most elements too big, sizing left unt
 - `6e3d92517` quiver readability scripts + arrow-with-nowhere-to-land fix
 - `886f32e88` Linda's panel, badge, prompt and reasons
 - `7ad75622c` Encore title + wiring test
+
+C3b (Mark's catch QTE) and its play fixes, committed 2026-10-27 after THJ's play checks:
+
+- `d5919c384` catch freeze-and-press script, rules, tests, field `IsOpen`
+- `53272e30d` return arrow prefab
+- `98f1adf80` per-prompt QTE wait and show speed (core QTE, D-273)
+- `81bd8d584` catch sweep, return clamp, freeze at catch point (D-276)
+- `680bd4726` Mark prefab (QTE on, return arrow, fast prompt) + wiring tests
+- `91f40e903` Lucy follows up on real damage only (core, D-275, D-277)

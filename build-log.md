@@ -2049,3 +2049,26 @@ Core: one additive `PlayerController` hook (D-270). Core never imports Linda (D-
 **Not verified:** sizes; THJ finds most elements too big and leaves it for the final decision.
 
 **Status:** committed `c7081b76c`, `741ac9dd2`, `6e3d92517`, `886f32e88`, `7ad75622c`; not pushed.
+
+## 2026-10-27: Mark's QTE catch and play fixes (`thj/linda-quiver`)
+
+**Built:**
+- Linda's arrow freezes at Mark during a quick-press prompt. A press sends it back to the quiver, and a return arrow stops on Linda. A decline lets the same arrow carry on.
+- The prompt is faster (per-profile wait and show speed, core QTE).
+- A path sweep stops a long frame skipping the catch.
+- Lucy follows up only on real damage (core).
+
+Fixes today's double damage past Mark.
+
+**Verified:**
+- EditMode passes (THJ's Test Runner; known red only).
+- Reviews APPROVE.
+- THJ played every step.
+
+**Not verified:** balance of the return re-hits.
+
+**Findings:**
+- The trail kinks where the arrow snaps up to Mark's catch point.
+- Linda's arrows fly on a slope (pre-existing).
+
+**Status:** committed `d5919c384`, `53272e30d`, `98f1adf80`, `81bd8d584`, `680bd4726`, `91f40e903`; not pushed. Lucy's fix is also needed on `main`.
