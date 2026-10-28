@@ -39,7 +39,7 @@ Options (a) and (b) were not needed: (a) would need a new AttrMod plus a per-arr
 - `Features/Player/Linda/Scripts/Quiver/QuiverLevelAccess.cs`: `SquadControllerOf(GUnit)`, the player's controller when the unit is in the player's faction (null-safe, no `CombatLevel.PlayerFaction`).
 - `Features/Player/Linda/Prefabs/Unit_Linda.prefab`: one YAML line, `distanceTuning` on the `LindaQuiver` component.
 - `Features/Player/Linda/Scripts/Quiver/Editor/FarWatchRulesTests.cs` (+ .meta): 29 cases.
-- `Features/Player/Linda/Scripts/Quiver/Editor/FarWatchLockTests.cs` (+ .meta): 9 tests.
+- `Features/Player/Linda/Scripts/Quiver/Editor/FarWatchLockTests.cs` (+ .meta): 9 tests (12 after the review tweaks).
 - `Features/Player/Linda/Scripts/Quiver/Editor/FarWatchWiringTests.cs` (+ .meta): 13 cases on the data.
 
 All new files are LF with no BOM, like their neighbours. Paths are under `miso/Assets/_Project/`.
@@ -116,6 +116,8 @@ None.
 
 ## Proposed commits
 
+Superseded by the list in "Review tweaks" below.
+
 1. `feat(linda): Far Watch scales Watch damage by distance from the family at End Turn`. Files:
    - `LindaDistanceTuning.cs`, `FarWatchRules.cs`, `FarWatchLock.cs` and `LindaFarState.cs`, each with its .meta;
    - `LindaQuiver.cs`, `QuiverLevelAccess.cs`;
@@ -149,3 +151,43 @@ No Far visuals yet (that is C2), so read damage numbers and the combat log. Let 
 9. **Only Watch:** the bow, Explosive Crescendo and the arrow Duos hit as in step 3 whatever her distance.
 10. **Toggle off:** untick Far Watch on the asset, even in Play. Watch hits X in every case.
 11. The combat log's damage lines show each hit's value. The Far and factor lines come in C5.
+
+## Review tweaks (after APPROVE, same day)
+
+1. **Effective upgrade level.** `LindaFarState.ApplyWatchDamage` now reads the authored multiplier the way the stat set itself does: `entry.upgradeLevels[set.GetEffectiveUpgradeLevel(entry.Attribute)].factor`, where it used `CurrentLevel.factor`. A run bonus on Watch's `Stat_DMG` is kept.
+2. **Turn 1 hardening.**
+   - `FarWatchLock` now records whether any turn event was seen since the level started (`TurnSeen`). It has a new `AssumeOwnTurnIfActing(bool)`: with no turn event seen and her side acting, the phase becomes "her side's turn, live".
+   - `LindaFarState.RefreshNow` calls it on every refresh until a turn event is seen.
+   - "Her side is acting" comes from the new `QuiverLevelAccess.IsSquadTurn(unit)`: the level isn't ended and `CombatLevelRunHandler.Instance.CurrentFactionControllerOrNull` is the squad's controller. That getter is public and read-only, and the quiver's "+N arrows" preview already reads it. No core change.
+   - Before the first turn, the run handler's current controller is the first side to act. So if enemies open the level, Linda still counts as near, as before.
+   - Three new tests in `FarWatchLockTests`:
+     - `MissedFirstTurnStart_OwnSideActing_IsLive`;
+     - `MissedFirstTurnStart_OtherSideActing_StaysNear`;
+     - `AssumeOwnTurn_IgnoredOnceATurnWasSeen`.
+3. **One computed state for everyone.**
+   - `LindaFarState.Reading` is a `FarWatchReading` with `Enabled`, `Far`, `Source` (live, locked or level start), `NearestUnit`, `NearestDistance` and `Factor`. It is set on every refresh: each frame, each turn event, and the Watch prompt and activation.
+   - `IsFar`, `Source`, `WatchFactor`, `NearestUnit` and `NearestDistance` now read from it.
+   - `RefreshNow()` is public: the prompt calls it so the factor it prints is the one Watch will use.
+   - C2's presenters read `Reading`. They evaluate only for hypothetical positions: `EvaluateAt` for Linda's ghost tile, and the new `EvaluateWithMove(mover, origin)` for another unit's ghost.
+
+Also found while building C2: **the per-frame check allocated.** `IsUnitIgnoredForObjectives` goes through `GTagRegistry.Match`, which uses LINQ and builds hash sets. `LindaFarState` now caches each unit's "spawned" answer once per level (the decoy's `EntityState.IgnoreObjective` is a permanent tag) and clears the cache on `levelStarted`. With the cache, the live check, the ghost-tile check and the move-preview check allocate nothing per frame.
+
+**Split for separate commits:**
+- `LindaQuiver` is now `partial`. Its `Start` calls the partial method `AddFarViews()`, which C2 implements in `LindaQuiver.FarViews.cs`; without that file the call compiles to nothing.
+- The two text and font wiring tests went into C2's `FarDisplayWiringTests.cs`.
+- Checked offline (Unity's own Roslyn and `.rsp` files; HEAD copies of the three files C2 modifies):
+  - C1 alone: game assembly and editor assembly, 0 errors;
+  - C1 + C2: both assemblies, 0 errors;
+  - no warnings in either.
+
+**Tests (outside Unity, real test code with Unity's NUnit and CoreModule):** rules 29 and lock 12, all pass (80 of 80 together with C2's display tests). `FarWatchWiringTests` (13) still needs THJ's Test Runner.
+
+### Proposed commits (C1, final)
+
+1. `feat(linda): Far Watch scales Watch damage by distance from the family at End Turn`. Files, under `miso/Assets/_Project/Features/Player/Linda/`:
+   - `Scripts/Quiver/`: `LindaDistanceTuning.cs`, `FarWatchRules.cs`, `FarWatchLock.cs` and `LindaFarState.cs`, each with its .meta; `LindaQuiver.cs` and `QuiverLevelAccess.cs`;
+   - `Data.meta`, `Data/LindaDistanceTuning.asset` and its .meta;
+   - `Prefabs/Unit_Linda.prefab`;
+   - `Scripts/Quiver/Editor/`: `FarWatchRulesTests.cs`, `FarWatchLockTests.cs` and `FarWatchWiringTests.cs`, each with its .meta.
+
+   Kind: risky. C2's commit goes on top of it (see `linda-d1-c2.md`). Both wait for THJ's play check (`playtests/2026-10-28-linda-d1-far-play-check.md`).
