@@ -18,3 +18,13 @@ Reviewer: miso-reviewer. The coordinator saved this file.
 - The Watch prompt line logs the count before the spend, which is right.
 - The hand-written metas: stage them after Unity recompiles.
 - The plan's `CombatLog.Quiver.cs` is really a generic `AddCustom` in Core plus the listener in Features.
+
+---
+
+# Re-review after fixes
+
+**Verdict: APPROVE.**
+
+- The StatAttributesContext route is confirmed for the bow, Watch (its role ability) and Linda's Duo part.
+- All five fixes are correct, and there are no compile risks.
+- Commit order: Core `AddCustom` first, then the merged quiver commit. Stage the metas after Unity recompiles.
