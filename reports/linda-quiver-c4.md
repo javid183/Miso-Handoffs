@@ -182,3 +182,12 @@ Never stage the TMP fallback asset or the two ProjectSettings files.
 - New `Quiver/QuiverLevelAccess.cs` (`PlayerControllerOrNull`, `RelationsReady`); used in `QuiverAimPresenter.cs` (2 sites), `QuiverMovePreviewPresenter.cs`, and in the enemy checks of `GroundedArrowField.cs` and `QuiverArrow.cs` (`GetFactionsRelation` hits the same null field). The `.meta` is created when Unity refocuses.
 - CombatLevel has no public ready check, so the helper returns null unless `CombatLevel.Instance`, `GameHandler`, its `GameData` and the player faction's controller all exist; it reads the player faction from `GameData`, not the level. Not compiled or run (editor open).
 - THJ most likely hit it on level load (CombatLevel exists, `Initialize` not yet run) or unload; both leave `_factionRelations` null while Update runs.
+
+## Restart fix
+
+- Cause confirmed: the field was moved to the level's scene while that was the LoadingScreen scene, so unloading it destroyed the field.
+- `GroundedArrowField.cs`: the field is now parented under `level.transform.root` (no scene move). Scale: `AttachToLevel` keeps world position/rotation and sets the field's localScale to the inverse of the root's lossyScale, so views, presenters and toss sprites keep their world sizes even if the root is scaled.
+- New `GroundedArrowField.Ensure.cs`: `EnsureForRunningLevel()` recreates a missing field only while a level is running and not ended, with a one-time `Debug.LogWarning`. Used in `QuiverArrow.Apply` (before the return-to-quiver fallback) and in `LindaQuiver` on `levelStarted` (new OnEnable/OnDisable, `using MISO.Core.Management`).
+- New `QuiverFieldRules.cs` (pure rule) and `Editor/QuiverFieldRulesTests.cs` (4 tests). Not compiled or run (editor open). All LF. Core untouched.
+- Play: restart a level 2-3 times from the pause menu, and enter a level from the map. Each time: arrows ground on tiles, the count drops and stays down, the landing marker and Encore lines show, pickup works, no "was missing" warning in the console.
+- Review follow-up: scale compensation removed (plain `SetParent(root, true)`; roots are scale 1); `LindaQuiver` subscribes idempotently via a cached bus (OnEnable and Start, removed from the cached bus); `ShouldRecreate` lost its dead `fieldPresent` parameter (3 tests left); stale comments fixed. Still not compiled.
