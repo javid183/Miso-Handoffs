@@ -2091,3 +2091,20 @@ No core code.
 **Findings:** occasional misses during lag (a claw mid-path, a far worm) are the physics-hit weakness, filed as `arrow-hits-by-grid` (main, core). Core follow-ups filed: `combatlevel-playerfaction-before-init`, `level-start-objects-in-loading-scene`.
 
 **Status:** committed `9ba8c9478`, `6d2388bbf`, `921294cbf`, `4a880f27c`; not pushed.
+
+## 2026-10-28: Linda's Quiver C5, combat log lines (`thj/linda-quiver`)
+
+**Built:** "Quiver:" lines for:
+- the count at level and round start
+- spends, with the firing ability
+- landings
+- pickups: who and how
+- Encore
+- catch returns
+- Watch prompts, with the count
+
+Core gets one additive, generic `CombatLog.AddCustom`.
+
+**Verified:** EditMode 947/948 (known red only). Review APPROVE. THJ checked a level's log.
+
+**Status:** committed `9b104608b`, `19e02893a`. The quiver plan's chunks are all done.

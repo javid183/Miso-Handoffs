@@ -166,3 +166,5 @@ Play-fix round 2026-10-27/28 (THJ played each):
 - `6d2388bbf` pips draw under other units' HP bars (D-280)
 - `921294cbf` quiver presenters wait for the level's factions (level-start NRE, D-281)
 - `4a880f27c` arrow board parented under the level; quiver survives restarts and map entry (D-282)
+
+C5 committed 2026-10-28 after THJ's check (log OK, EditMode 947/948 known red only): `9b104608b` generic `CombatLog.AddCustom` (Core, additive), `19e02893a` quiver events + log lines. **All planned chunks (C1–C5, C3b) done.** Follow-on work: `plans/2026-10-28-linda-distance-d1-tech.md`, then Arrow Chase.
