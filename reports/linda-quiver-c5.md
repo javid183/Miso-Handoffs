@@ -108,3 +108,16 @@ none
 2. Test Runner > EditMode: run `MISO.Core.Features.Bergsons.EditorTests.QuiverLogLinesTests` (8 tests) and `MISO.Core.Systems.CombatLogging.EditorTests.CombatLogTests.Tagged_PutsTheCategoryInFrontOfCustomText`; then Run All (only the known red `AIRegressionTest.Baseline_MatchesCurrentAI` may fail).
 3. Play a combat level with Linda, with "combat log to file" on in the global settings (or open the Combat Log window from the Tools menu). Fire the bow, accept a Watch, decline one, walk Bergsons over arrows, use Encore, let Mark catch one.
 4. Search the log for `Quiver:` and compare each line with what happened. Check the round-start line sits under its `-- Player phase` header and spend lines name the right ability (bow, Watch, a Duo).
+
+## Review fixes
+
+1. Start line: `QuiverLogListener` no longer writes "starts with N/4" in the level-started handler. It writes it once (`_startWritten`) at the first turn start after the level starts, so the log has opened its level.
+2. Commit units, replacing "Proposed commits" above:
+   1. `feat(combat-log): AddCustom lets other systems write tagged lines`: `CombatLog.Custom.cs` + .meta, `CombatLogFormat.cs`, `CombatLogTests.cs` (additive, first).
+   2. `feat(linda): quiver events and combat log lines`: `LindaQuiver.cs`, `QuiverArrow.cs`, `GroundedArrowField.cs`, `.Pickup.cs`, `.Recall.cs`, `QuiverLogLines.cs`, `QuiverLogListener.cs`, `Editor/QuiverLogLinesTests.cs`, with their .meta. One commit, since `LindaQuiver` adds the listener.
+   The four new .meta files (`CombatLog.Custom.cs`, `QuiverLogLines.cs`, `QuiverLogListener.cs`, `QuiverLogLinesTests.cs`) were written by hand: stage them only after Unity has recompiled, in case it rewrites them.
+3. Per-frame cost: `Update` removed. The listener rebinds to a replaced field lazily (`ReferenceEquals(GroundedArrowField.Current, _field)`) in `OnSpent` and at each turn start.
+4. Shot naming: `QuiverArrow.Start` reads `_projectile.StatAttributesContext as RuntimeAbility` and calls `LindaQuiver.Spend(RuntimeAbility source = null)` (existing no-argument calls still compile). `OnSpent` is now `Action<LindaQuiver, RuntimeAbility>`. The listener names the shot from that ability's title; the abilityActivationStarted subscription and the "most recent ability" state are gone. Falls back to "a shot" when there is no source. This replaces the earlier decision on shot type. The verifier should still check the Duo and Watch lines.
+5. The core test case uses neutral text ("Tag: some text").
+
+Plan note: the plan names `Core/.../CombatLog.Quiver.cs`; the real split is a generic `CombatLog.AddCustom` in Core (`CombatLog.Custom.cs`) and the quiver's listener and words in `Features/Player/Linda/Scripts/Quiver/`. Still not compiled (editor open).
