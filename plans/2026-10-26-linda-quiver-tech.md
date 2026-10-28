@@ -159,3 +159,10 @@ C3b (Mark's catch QTE) and its play fixes, committed 2026-10-27 after THJ's play
 - `81bd8d584` catch sweep, return clamp, freeze at catch point (D-276)
 - `680bd4726` Mark prefab (QTE on, return arrow, fast prompt) + wiring tests
 - `91f40e903` Lucy follows up on real damage only (core, D-275, D-277)
+
+Play-fix round 2026-10-27/28 (THJ played each):
+
+- `9ba8c9478` caught arrow stops on its own path, return starts there (D-278 catch part; level flight dropped, D-279)
+- `6d2388bbf` pips draw under other units' HP bars (D-280)
+- `921294cbf` quiver presenters wait for the level's factions (level-start NRE, D-281)
+- `4a880f27c` arrow board parented under the level; quiver survives restarts and map entry (D-282)

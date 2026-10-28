@@ -2072,3 +2072,22 @@ Fixes today's double damage past Mark.
 - Linda's arrows fly on a slope (pre-existing).
 
 **Status:** committed `d5919c384`, `53272e30d`, `98f1adf80`, `81bd8d584`, `680bd4726`, `91f40e903`; not pushed. Lucy's fix is also needed on `main`.
+
+## 2026-10-28: Linda's Quiver play-fix round (`thj/linda-quiver`)
+
+**Built:**
+- A caught arrow freezes on its own path (no V).
+- The pips draw under other units' HP bars.
+- The level-start NullReferenceException is gone.
+- The arrow board lives under its level, so the quiver survives restarts and map entry.
+- The level-flight attempt was reverted (D-279).
+
+No core code.
+
+**Verified:** EditMode 938/939 (THJ's Test Runner; known red only). Reviews APPROVE. THJ played restarts, map entry, the catch and the pips.
+
+**Not verified:** -
+
+**Findings:** occasional misses during lag (a claw mid-path, a far worm) are the physics-hit weakness, filed as `arrow-hits-by-grid` (main, core). Core follow-ups filed: `combatlevel-playerfaction-before-init`, `level-start-objects-in-loading-scene`.
+
+**Status:** committed `9ba8c9478`, `6d2388bbf`, `921294cbf`, `4a880f27c`; not pushed.
