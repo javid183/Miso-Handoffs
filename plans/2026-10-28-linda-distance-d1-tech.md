@@ -2,7 +2,7 @@
 
 Size: L    Tier: 3 (Family Roles: Watch damage and a positional rule; design approved D-263, D-266, D-267, D-285, D-286)    Assigned to: miso-implementer (chunks below), reviewer; THJ plays
 Branch: all, built on `thj/linda-quiver` (after C5)
-Status: draft, ready to dispatch (no open Tier 3 questions; see "Decisions I made")
+Status: **cancelled** by THJ 2026-10-28 (D-292). C1 and C2 were built, never committed, and discarded.
 
 ## Why
 
