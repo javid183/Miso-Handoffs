@@ -125,3 +125,161 @@ EditMode > Run All: `QTEPromptTimingTests` (7) and `CatchReturnWiringTests.Marks
 
 ### Play step
 Play a level with Linda and Mark with the synergy active. Shoot an arrow that Mark catches from 2+ tiles. From the arrow touching Mark, the catch prompt should show and be pressable in about 0.3 s (Show animation visibly quicker, finished before input opens). Press it and confirm the catch and return still work, and after it the next QTE is normal. Then trigger a role QTE (any other unit's prompt): it must look and time exactly as before (about 0.65 s to input, normal animation speed). Also check a prompt right after a catch prompt (pooled button) is not sped up.
+
+## Play findings fixes
+
+From `reports/mark-catch-play-findings.md` and D-273 to D-276. Four fixes:
+- A1: the return arrow stops on Linda's body.
+- A2: a long frame can no longer skip Mark.
+- E: the frozen arrow sits in Mark's hand.
+- B: Lucy follows up only on enemies whose HP really dropped.
+
+`Projectile.cs` is untouched. The only core change is Lucy's Family Role handler (D-275, THJ-approved). Not compiled or run: the editor is open, so no batch Unity. Every API used was checked by reading the source (listed under Risks).
+
+### Files
+- `Features/Player/Mark/Scripts/ProjectileCatchAndReturn.cs`:
+  - (A2) The body of `OnTriggerEnter2D` is now `public bool TryCatch(Projectile)`, with the same checks in the same order. The trigger only fetches the projectile and calls it.
+  - (A2) A one-chance-per-arrow guard, `_lastSeen`. The first call that gets past the "alive" check marks the arrow; every later call for that arrow returns false. That covers the trigger and the sweep both reporting one pass, and an arrow that a decline lets go flying on through Mark.
+  - (E) `FreezeArrow` saves the arrow's path position, then moves it to `returnSource.position`, keeping the arrow's own z. `ReleaseFrozenArrow` puts it back on the path position before turning the projectile back on (see Decisions).
+  - (A1) `PrepareProjectileClone` records the copy's start and end:
+    - start: `spawnAt`;
+    - end: `ReturnDestination(cell)`, which is the occupant's `TargetPoint` and otherwise `AnchorPoint` (the same rule `Projectile.Initialize` uses for Occupant).
+  - (A1) `Apply` hands both points to `_inFlight*`. A new `LateUpdate` puts the flying copy on its end once it is at or past it, and stops once the copy is no longer alive.
+- `Features/Player/Mark/Scripts/ReturnFlightClamp.cs` (+meta, new): pure `TryClamp(from, to, position, out clamped)`. It projects onto the line from start to end and clamps at or past the end. A path with no length always counts as at the end.
+- `Features/Player/Mark/Scripts/CatchSweep.cs` (+meta, new), on Linda's arrow:
+  - In `LateUpdate` it runs `Physics2D.CircleCast(from, radius, dir, ContactFilter2D{useTriggers=true}, RaycastHit2D[8], distance)` from the previous position to the current one.
+  - It calls `TryCatch` on the `ProjectileCatchAndReturn` of the hit collider's object or of its attached rigidbody. Mark's root has his box collider and rigidbody.
+  - It skips arrows that are disabled (frozen) or dead, and copies: `QuiverArrow.IsCopy`, or a null `PrefabSource` (the Cyclone splits). It also skips the first frame after enable.
+  - The radius is the arrow's CircleCollider2D radius × scale (0.1), unless set.
+  - It allocates nothing per frame: preallocated buffer, struct filter, `TryGetComponent`.
+- `Features/Player/Mark/Scripts/Editor/ReturnFlightClampTests.cs` (+meta, new): 6 tests.
+- `Features/Player/Linda/Prefabs/LindaAttackArrow.prefab`: adds the `CatchSweep` component (fileID 7547959531454712506, script guid 377bfd22b253484f871d38542a3b6405, `radius: 0`). A 14-line edit.
+- `Features/Player/Linda/Prefabs/LindaAttackArrowReturn.prefab`: `destinationMode: 0` → `1` (Occupant).
+  - In `Projectile.Initialize` (lines 160-168), Occupant aims at `GUnit.TargetPoint` when the target cell's occupant is a unit, and at the cell anchor otherwise.
+  - The return copy's target cell is Linda's cell (`travelEntireRadius: 0`), so the arrow now ends on her body.
+- `Features/Player/Linda/Scripts/Quiver/Editor/CatchReturnWiringTests.cs`: 3 new tests:
+  - `ReturnArrow_EndsOnLindasBody`: destinationMode is 1.
+  - `EveryCatchableArrow_SweepsForTheCatch`: every whitelisted prefab has a CatchSweep.
+  - `ReturnArrow_DoesNotSweep`.
+- Lucy (core, its own unit): `Features/Player/Lucy/Scripts/LucyFactionRoleHandler.cs`, `LucyRoleTargetRanking.cs`, `Editor/LucyRoleHpDropTests.cs` (+meta, new, 7 tests).
+
+### Exact Lucy diff summary
+```
+LucyRoleTargetRanking.cs
+  header comment: ranking only among enemies whose HP actually dropped during the action
++ public static bool HpDropped(float? hpAtActionStart, float hpNow)
++     => hpAtActionStart.HasValue && hpNow < hpAtActionStart.Value;
++ public static Candidate<T> FromAction<T>(T unit, bool isAimedAt, bool reportedHit, bool hpDropped, int distance)
++     => new(unit, isAimedAt && hpDropped, reportedHit && hpDropped, distance);
+  (Pick and Candidate unchanged)
+
+LucyFactionRoleHandler.cs
++ private readonly Dictionary<ActionLogEntry, Dictionary<GUnit, float>> _hpAtActionStart = new();
+  Rebind: also Remove/AddListener abilityActivationStarted -> OnAbilityActivationStarted; clears _hpAtActionStart
++ OnAbilityActivationStarted(RuntimeAbility):
+      entry = ActionsInProgress.LastOrDefault(a => a.Ability == ability); none -> return
+      prune entries no longer in the session log (same rule as _hitsByAction)
+      first activation of an entry only (ContainsKey -> return)
+      snapshot[e] = e.GetHealthAttribute().Value for every AliveUnit of every faction hostile to Lucy
+  PrepareTargets:
++     _hpAtActionStart.TryGetValue(lastAction, out var hpAtStart);
+      per candidate:
++     float? hpBefore = hpAtStart has e ? its HP : null;  hurt = HpDropped(hpBefore, health.Value)
+-     new Candidate(e, namedTarget || onTargetCell, hitByThisAction, distance)
++     LucyRoleTargetRanking.FromAction(e, namedTarget || onTargetCell, hitByThisAction, hurt, distance)
+```
+- **Ordering.** The D-152 ordering is unchanged: aimed target first, then an enemy this action hit, then distance and list order. Both ranks now also need a real HP drop.
+- **Completion echo.** `RuntimeAbility.OnCompletionShared` raises `onAbilityEffectPerformedOn` on the targets, so the aimed occupant is still recorded as hit. Without an HP drop it no longer counts.
+- **Snapshot timing.** The snapshot is taken before any damage.
+  - `abilityActivationStarted` is raised from the activation callback, before `preset.Activate` runs the effects (`RuntimeAbility._ActivateAbility`).
+  - Every path that raises `abilityPerformed` also raises `abilityActivationStarted` first. `abilityPerformed` is what triggers Lucy's role (triggerEvents 4). The paths are: the faction controller; the Linda, Lucy and Mark handlers; John's Shield Dash; Mark's Continuous Attack; the Masher counter.
+  - Lucy reads at completion, and the HP drop is visible by then. `CombatLevelRunHandler.OnAbilityPerformedOn` reads the same live value later in that same completion to work out the damage.
+- **Threads.** Everything runs on the main thread, from bus events. The AI never reads Family Role handlers (only `AIRegressionTest` mentions them). No new statics.
+- **Other branches.** Main and the other branches need this too (D-275). It is self-contained: these three files plus the test.
+
+### Decisions I made
+- **A1, the clamp.** It lives in `ProjectileCatchAndReturn.LateUpdate` (the plan's first option), with the math in a pure class. It mirrors the Occupant rule for the end point, so if the return prefab were set back to Cell, the clamp would still stop the arrow on Linda's body. The wiring test guards Occupant.
+- **E, a decline.** The arrow is put back on its saved path position before it resumes, rather than jumping on the projectile's next Update. The behaviour is the same: it jumps back onto its path. This avoids a one-frame backwards flip: the arrow is `headAxis: Right` and faces from its current position to its next one, and seen from the catch point that next step can point backwards.
+- **A2, the guard.** It marks the arrow on its first evaluation, even when the catch is then refused (wrong owner, off the path, too close). Each pass gets one decision, as with the single trigger enter before.
+  - The early checks (a prompt already open, Mark mid-catch) run before the marking, as they did. So while the arrow still overlaps Mark, the sweep can try again the next frame if another prompt has just closed.
+  - Trigger-only behaviour is unchanged.
+- **Sweep location.** The sweep is in Mark's Scripts folder: it belongs to his catch and sits next to `ProjectileCatchAndReturn`.
+- **Lucy, edge cases.** An enemy with no HP reading from the action's start counts as not hurt (for example one spawned mid-action). The hit record still matters for rank 2 (`reportedHit && hpDropped`), so an HP drop during the action from something else doesn't count as this action's hit.
+
+### Risks and loose ends
+- Not compiled. Signatures checked by reading:
+  - `Physics2D.CircleCast(Vector2, float, Vector2, ContactFilter2D, RaycastHit2D[], float)`, the non-obsolete form of CircleCastNonAlloc;
+  - `ContactFilter2D.useTriggers`, `Collider2D.attachedRigidbody`;
+  - `SpawnableEntity.PrefabSource` (public field), `Projectile.IsAlive`;
+  - `GUnit.TargetPoint` (Vector3), `GridCell.AnchorPoint` (Vector3), `GridCell.OccupantEntity`;
+  - `GUnit.GetHealthAttribute().Value` (float), `Faction.Controller.AliveUnits`, `CombatLevel.GetFactionEnemies`;
+  - `GlobalEventBus.abilityActivationStarted` (UnityEvent<RuntimeAbility>).
+- **Lucy, behaviour change beyond the catch.** An ally attack that lands but does no HP damage no longer gets her follow-up, even on the aimed target. That covers a fully absorbed hit, a status-only hit, and a move whose target takes no damage.
+  - Damage dealt after its action completed would not count either. I found none: a projectile spawn keeps its action open until the projectile is destroyed. Play step 25 checks it.
+- **Skipped enemies on a long frame.** The sweep catches at the arrow's first touch of Mark's box, as the trigger does. Enemies between the previous position and Mark that a long frame skipped are still missed. That is the core projectile's discrete movement, not changed here.
+- **Mark disabled mid-flight.** If Mark is disabled while the return copy is flying, the clamp stops with his LateUpdate. Only at level end.
+- **Hand position.** `returnSource` may sit outside Mark's collider. That is harmless: the guard prevents a re-trigger.
+- **Pre-existing, unchanged.** `Projectile.OnTriggerEnter2D` still runs on a disabled (frozen) projectile.
+
+### Tests for THJ
+EditMode > Run All. New or changed:
+- `MISO.Core.Features.Bergsons.EditorTests.ReturnFlightClampTests` (6).
+- `MISO.Core.Features.Bergsons.EditorTests.LucyRoleHpDropTests` (7):
+  - aimed target not hurt: no follow-up;
+  - aimed target hurt: rank 1;
+  - aimed target not hurt and another enemy hurt: the other is picked;
+  - no HP change anywhere: none;
+  - hit reported without damage: none;
+  - `HpDropped` edge cases;
+  - hurt but not reported as this action's hit: stays out of the fallback.
+- `CatchReturnWiringTests`: the existing four, plus the new `ReturnArrow_EndsOnLindasBody`, `EveryCatchableArrow_SweepsForTheCatch` and `ReturnArrow_DoesNotSweep`.
+- The existing `LucyRoleTargetRankingTests` (14) should still pass unchanged: `Pick` and `Candidate` didn't change.
+
+Everything else should stay green apart from the known `AIRegressionTest.Baseline_MatchesCurrentAI`. After the recompile, check that the console shows no "missing script" warning on `LindaAttackArrow`; if it does, re-add CatchSweep in the Inspector.
+
+Covered by tests:
+- A1: the clamp math, and the return prefab's Occupant mode.
+- A2: the sweep is wired on the arrow.
+- B: Lucy's rule.
+
+Play check only:
+- A2: a real catch at low fps.
+- A1: the end point on Linda's body.
+- E: the hand position.
+- B: Lucy in play.
+
+### Play steps
+Added as steps 18-25 to `playtests/2026-10-27-mark-catch-qte-play-check.md`:
+- low fps via the Profiler's Deep Profile;
+- the return arrow ends on Linda's body;
+- the freeze is in Mark's hand;
+- a decline gives no flip and no second prompt;
+- Lucy after a caught arrow, after a caught arrow whose return hits someone, and after a real hit;
+- Lucy regressions.
+
+### Updated commit units (build order)
+1. **Core QTE**, its own commit (pending, unchanged). feat(qte): let a prompt override its preload and Show speed.
+   - `Core/Interactions/Runtime/QTEProfile.cs`
+   - `Core/Interactions/Runtime/QTEPromptTiming.cs` (+meta)
+   - `Features/UI/Panels/Scripts/QTEButton.cs`
+   - `Core/Interactions/Editor/QTEPromptTimingTests.cs` (+meta)
+2. **Catch fixes** (non-core). fix(mark): catch Linda's arrow even on a long frame, hold it in Mark's hand and stop the return on Linda.
+   - `Features/Player/Mark/Scripts/ProjectileCatchAndReturn.cs`
+   - `Features/Player/Mark/Scripts/CatchSweep.cs` (+meta)
+   - `Features/Player/Mark/Scripts/ReturnFlightClamp.cs` (+meta)
+   - `Features/Player/Mark/Scripts/Editor/ReturnFlightClampTests.cs` (+meta)
+   - `Features/Player/Linda/Prefabs/LindaAttackArrow.prefab`
+   - `Features/Player/Linda/Prefabs/LindaAttackArrowReturn.prefab`
+3. **Mark prefab and wiring tests** (pending, now with more tests). feat(mark): make the catch a fast prompt that uses the return arrow.
+   - `Features/Player/Mark/Prefabs/Unit_Mark.prefab`
+   - `Features/Player/Linda/Scripts/Quiver/Editor/CatchReturnWiringTests.cs` (+meta)
+   - Needs 1, because the prefab names the new profile fields. Needs 2, because the tests reference `CatchSweep` and check the arrow prefabs. That is why it now comes after the catch fixes.
+4. **Lucy**, core, its own commit. fix(lucy): follow up only on enemies the ally's action actually hurt.
+   - `Features/Player/Lucy/Scripts/LucyFactionRoleHandler.cs`
+   - `Features/Player/Lucy/Scripts/LucyRoleTargetRanking.cs`
+   - `Features/Player/Lucy/Scripts/Editor/LucyRoleHpDropTests.cs` (+meta)
+   - Independent of 1-3. Main and the other branches need it too.
+
+Don't stage: the TMP fallback font asset, `ProjectSettings/EditorSettings.asset`, `ProjectSettings/ProjectSettings.asset`.
+
+Save: not reset.

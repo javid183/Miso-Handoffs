@@ -51,3 +51,25 @@ Notes:
 - **Remaining commits:** the core QTE change, then the prefab and wiring test.
 
 Play: check the catch prompt, then a role prompt straight after it on the same pooled button.
+
+---
+
+# Play-findings fixes + Lucy review (2026-10-27)
+
+**Verdict: APPROVE.** No compile risks found.
+
+- **CatchSweep YAML:** valid.
+- **The sweep:** allocates nothing per frame, and there is no double damage beyond Mark: physics never sees the overshot position.
+- **The clamp:** arrival still fires exactly once.
+- **Lucy:**
+  - The snapshot is taken before `abilityActivationStarted` handlers run, then pruned and cleared on rebind.
+  - D-152 ordering is kept.
+  - A status-only hit, a hit reduced to 0, a miss or evade, or net healing gives no follow-up.
+- **Only core change:** Lucy's handler. LF, no BOM, no private IDs.
+- **Commit order builds:** core QTE → catch fixes → Mark prefab + wiring tests → Lucy.
+
+**Should fix (sent to the implementer):** set the one-chance guard `_lastSeen` only after the whitelist check, so a passing non-catchable projectile can't reset it.
+
+**Notes:**
+- The CatchSweep filter has no layer mask; adding one is optional hardening.
+- The frozen arrow at `returnSource` can still trigger on an enemy overlapping Mark's hand.

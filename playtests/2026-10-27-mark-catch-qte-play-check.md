@@ -19,3 +19,16 @@ Branch thj/linda-quiver. Setup: a level with Linda and Mark, the Mark and Linda 
 15. Balance: the return arrow hits enemies on the way home with falloff starting again at full strength. Note whether the damage feels right.
 16. With a slow-motion effect running (for example the reactive interrupt during Watch), open the catch prompt: the prompt must not change the time scale before or after.
 17. Leave Play mode, or end the level, while the prompt is open or the catch animation plays: no errors in the console.
+
+## Play findings fixes (catch at low frame rate, return on Linda's body, freeze at Mark, Lucy)
+
+Setup as above, plus Lucy with an enemy inside her zone that is Linda's aimed target beyond Mark. To get a low frame rate in the editor: Window > Analysis > Profiler, turn on Deep Profile and Record while in Play mode; the Game view's Stats overlay should show well under 15 fps. Turn it off again for the normal-rate steps.
+
+18. Low frame rate: shoot through Mark ten times. Every shot must open the catch prompt at Mark (none flies through him without a prompt). Nothing beyond Mark is hit while the prompt is open.
+19. Low frame rate, press: the return arrow stops on Linda's body (about her chest, her target point), not at her feet and not past her. Repeat at normal frame rate: same end point.
+20. The frozen arrow sits in Mark's hand (the catch point, the same spot the return arrow starts from), not at the edge of his collider. At low frame rate too, even when the arrow had already passed him that frame.
+21. Decline at both frame rates: the arrow jumps back onto its line (a small jump is expected), carries on facing forward (no one-frame flip), hits the enemy beyond Mark and lands. The prompt does not open a second time as it leaves Mark.
+22. Lucy, caught arrow: Linda shoots at an enemy in Lucy's zone beyond Mark; press the catch, with no enemy on the way home. Lucy does not follow up (the aimed enemy took no damage).
+23. Lucy, caught arrow with a hit on the way home: as 22 but with an enemy in Lucy's zone between Linda and Mark, hit by the return flight. Lucy follows up on that enemy.
+24. Lucy, real hit: let the prompt run out (or shoot with no Mark on the line) so the arrow hits the aimed enemy in her zone. Lucy follows up on it, as before.
+25. Lucy, regression: John, Mark and Toba attacks that damage an enemy in Lucy's zone still get her follow-up; an attack that does no damage (fully blocked, or a status only) does not. Note any ally action that used to get a follow-up and no longer does.
