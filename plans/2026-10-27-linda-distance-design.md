@@ -2,7 +2,7 @@
 
 Size: L    Tier: 3 (Family Roles, Synergies, Duos)    Assigned to: game designer
 Branch: all (prototype on `thj/linda-quiver`, after C4 of the [quiver tech plan](2026-10-26-linda-quiver-tech.md))
-Status: rev 3, final. D1 ready for a tech plan; three edge questions below. Arrow Chase has its own plan: [`2026-10-28-arrow-chase-design.md`](2026-10-28-arrow-chase-design.md) (after D1)
+Status: rev 3, final. D1 ready for a tech plan (edge questions answered: D-285, D-286; the Fetch FTP node location is still open). Arrow Chase has its own plan: [`2026-10-28-arrow-chase-design.md`](2026-10-28-arrow-chase-design.md) (after D1)
 
 ## Why
 
@@ -70,13 +70,13 @@ Four items, all non-core where possible. Each lever is a toggle on one config as
 - **Pierce:** falloff applies as usual. Near: 5 → 3 → 1.8. Far: 7.5 → 4.5 → 2.7. Rounding per CR-19.
 - **Multipliers:** Revenge and crits multiply as they do today.
 
-**Who counts for the 2-cell check.** Every *living* unit of the player's squad other than Linda: John, Lucy, Mark, and Toba when he is in the squad.
+**Who counts for the 2-cell check (D-285).** Every *living* unit of the player's squad other than Linda: John, Lucy, Mark, and Toba when he is in the squad.
 - Not counted: decoys (Blink, Hide and Seek), the Cyclone, Toba's wall, allied units of another faction (e.g. `Unit_Toba_Ally`, as in D-254), and dead or removed units.
 - Distance is the footprint distance, radial (diagonals count as 1, like John's zone, FR table). Far = no counted unit at distance ≤ 2, so a 5 × 5 box around Linda must be free of family.
 
 **When the check runs.**
 - **End Turn:** when the family ends its turn, after the last action resolves and before the first enemy acts. The state is **locked** until the next player turn starts. Pushes, pulls, deaths and Commands during the enemy phase never change it.
-- **Player phase:** Watch can trigger on the player's own turn (a push, a Command move, a Masher answer, D-039/D-119). Then Far is checked **live**, at the moment of the trigger (new question 1).
+- **Player phase:** Watch can trigger on the player's own turn (a push, a Command move, a Masher answer, D-039/D-119). Then Far is checked **live**, at the moment of the trigger (D-286).
 - **Level start:** before the family's first End Turn there is no locked state, so an enemy phase can't come first. If a level opens with enemies acting, Linda counts as near.
 
 **What the player sees.**
@@ -186,11 +186,11 @@ Rev 1: three critics run in parallel (Explore agents with critic briefs). The sy
 
 Answered: Q1 (D-266), Q2 (D-267, D-264), Q3 (D-263), Q4 (D-268, D-271), Q5 (D-269). Rev 2's "where does the Fetch FTP node live" is still open; it doesn't block D1.
 
-New edge questions (none blocks the D1 tech plan; recommendations are used if THJ doesn't answer):
+Rev 3's edge questions, answered 2026-10-28: a player-phase Watch uses the live Far state (D-286); Toba and every living squad unit count for "near" (D-285). D1.1 above already follows both.
 
-1. **Far for a player-phase Watch.** *Context:* Watch can fire on the family's turn (pushes, Command, Masher answers); the lock covers only the enemy phase. *Options:* (a) live check at the trigger; (b) reuse the last End Turn's state. *Recommendation:* (a): it matches what the player sees on the board. *Blocks:* D1.1 acceptance item 5.
-2. **Does Toba count for "near"?** *Context:* Toba isn't family yet (D-048), but he stands next to her like anyone else. *Options:* (a) every living squad unit counts, Toba included; (b) only John, Lucy and Mark. *Recommendation:* (a): Far means alone on the board, and that is easy to read. *Blocks:* the D1.1 rule text.
-3. **Where does the Fetch FTP node live?** (from rev 2) *Context:* D-264 made it an upgrade; Linda has no family nodes. *Options:* (a) a Family node on Linda's tree; (b) a run upgrade; (c) on the workshop quiver. *Recommendation:* (a). *Blocks:* progression docs only.
+Still open (it doesn't block D1):
+
+1. **Where does the Fetch FTP node live?** (from rev 2) *Context:* D-264 made it an upgrade; Linda has no family nodes. *Options:* (a) a Family node on Linda's tree; (b) a run upgrade; (c) on the workshop quiver. *Recommendation:* (a). *Blocks:* progression docs only.
 
 ## Docs to update if approved
 

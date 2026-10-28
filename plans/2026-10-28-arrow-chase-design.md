@@ -2,186 +2,218 @@
 
 Size: L    Tier: 3 (Duos; a built Duo in a core script)    Assigned to: game designer
 Branch: all (built on `thj/linda-quiver` **after D1** of the [distance plan](2026-10-27-linda-distance-design.md), and after C3b, Mark's QTE catch)
-Status: waiting on THJ
+Status: rev 3, THJ's shape (D-287 to D-289); five detail questions open
 
 ## Why
 
-The Family Footrace, the Mark–Linda Duo, ends the pair next to each other: the loser stops on `path[^2]` (V: `UnitsCooperationHandler.Mark_Linda_LoserStop`). Catch & Return needs Linda's arrow to reach Mark in line from 2 or more cells (D-274), so the Duo works against the pair's own Synergy. THJ wants Mark and Linda "distant but synced". He chose **Arrow Chase**, Mark racing Linda's arrow, to replace the Footrace (D-268, D-271). If Catch & Return is unlocked, the catch QTE can happen at its end. He accepts that it sits close to the Linda–Lucy Duo.
+The Family Footrace, the Mark–Linda Duo, ends the pair next to each other: the loser stops on `path[^2]` (V: `UnitsCooperationHandler.Mark_Linda_LoserStop`). Catch & Return needs Linda's arrow to reach Mark in line from 2 or more cells (D-274), so the Duo works against their own Synergy. THJ wants them "distant but synced". **Arrow Chase** replaces the Footrace (D-268, D-271).
 
 ## Goal
 
-Rules for Arrow Chase that a tech plan can build:
-- Mark and Linda act in one beat and end far apart.
-- The Duo is different from Catch & Return and from Marks-Sisters.
-- Linda's damage share does not grow.
-- The quiver still binds.
+Write up THJ's chosen shape (D-287 to D-289) as rules a tech plan can build: lane choice, Mark's run and sweep, the automatic catch, the return, and the mash. Include every edge case, the previews, and the trade-offs THJ has accepted.
+
+## History
+
+- **Rev 1:** the designer's "dead heat" (target an enemy; Mark meets the arrow before it). Critics ran.
+- **Rev 2:** THJ's tile click (D-283) and Mark's strike (D-284).
+- **Rev 3:** THJ's own shape, which supersedes both (D-287): Mark runs to the end of the lane, catches automatically, and the arrow flies back. With the unlock, a mash on the return (D-288). Cost and Head Start: D-289.
 
 ## Problem and evidence
 
-- **The Footrace's shape** works against Catch & Return (above). Its rewards are a ×1.5 on the next basic attack and +1 AP for the loser: nothing about distance or arrows.
-- **The Footrace's bonus listener** is added to `abilityPerformed` but removed from `abilityActivationStarted` (lines 1395/1408, V). It is never unhooked; the rework removes it.
-- **What exists to build on:**
-  - The catch (D-260): the arrow freezes at Mark on contact; pressed, it goes to the quiver with a return flight; declined, the same arrow carries on with its range and falloff.
-  - The catch's own fast QTE (D-273).
+- **The Footrace's shape** works against Catch & Return. Its bonus listener is added to `abilityPerformed` but removed from `abilityActivationStarted` (lines 1395/1408, V): it is never unhooked, and the rework removes it.
+- **What exists to build on (V):**
+  - The catch freezes the arrow at Mark and sends a return flight that ends at Linda (D-260, D-261, D-276).
+  - Duo partners already carry a mash QTE profile with min/max factors (`CooperationPartner.qteProfile`, `qteFactor` applied as `CoopQteMod`; `QTEProfile.BehaviorMode.Mashing`; `MashQTE` fill 0–1 with growth and decay curves). Cooperative abilities read the final fill whether the mash succeeds or times out.
   - Pickup on any Duo move (LI-7).
-  - The race code's path, ghost and alternative-path helpers.
-- **Damage share:** Linda deals 46–72% of the family's damage; D1 trades her Watch to 5× near and 7.5× Far (D-266). A Duo that adds Linda damage works against both.
+  - Encore's straight-line return, which ignores locks and walls.
+- **Damage share:** Linda deals 46–72%; D1 trades her Watch to 5× / 7.5× (D-266).
+
+## THJ's "why not the end of the lane?": the honest answer
+
+His shape is the clearest of the options:
+- 4 choices (a lane), no tile hunting.
+- The maximum distance between them, every time.
+- The catch always happens, so the sync never fails.
+
+It has three trade-offs, raised by the rev 1 critics:
+
+1. **Mark ends far out and exposed.** He stands at the far end of Linda's range (4–6 tiles), often past the enemies she just hit, with 15 HP and outside John's zone. *What answers it:* it is the player's choice, shown in the preview (John's cover marker on Mark's ghost, FR-12); Mark keeps his AP to act or retreat; his Counter and barrier still work.
+2. **The arrow is effectively free.** It costs 1 arrow and always comes home, plus everything on the line. *What answers it:* 2 FTP and cooldown 2 (D-289) limit it to every other turn and against the family's Duo budget; the quiver still binds between uses (her bow, Watch, Crescendo).
+3. **The line is hit twice** (D-274), with Linda's arrow both ways. *What answers it:* the cooldown, falloff on both legs, and D1's lower Watch base, which pulls her share down elsewhere.
+
+THJ has accepted all three (D-287). The levers if a playtest shows a problem are listed under Risks.
 
 ## Options compared
 
 | Option | Player experience | Rules complexity | Implementation cost | Risk | USP effect |
 | --- | --- | --- | --- | --- | --- |
-| A. **Chase to the landing**: Linda shoots; Mark runs to where the arrow lands, snatches it even under a living enemy, sweeps stacks; with Catch & Return, a QTE return flight down the lane | Mark jogs after the arrow; the bundle comes home | Medium: a snatch exception to the lock | Medium–high (core handler) | The snatch makes every shot free, so the quiver gains; the return hits the same line twice (≈12×, all Linda's); one click hides two places (where the arrow lands, where Mark ends) | Duos +, Synergies − (the Duo swallows the catch) |
-| B. **Dead heat** (creative critic): Mark sprints to the free cell just before a target enemy on her lane and meets the arrow there. With Catch & Return, a QTE: pressed, he catches it and drives it home by hand; declined, it flies on as a normal shot | A synced, tense beat: his hand closes on the shaft just before it strikes | Medium: one target, one end cell, the catch's own two outcomes | Medium–high (core handler); the catch gains a third outcome, non-core | Free repositioning; QTE density | Duos ++, Synergies + (sets up next turn's catch) |
-| C. **Stack fetch** (rev 2's Fetch Race): Mark runs to a grounded stack and throws it back; no shot | Pure housekeeping | Low | Medium | Dead when no arrows are down; competes with Encore | Duos + |
-| D. **A real race**: if Mark's path is shorter than the arrow's flight he catches it mid-air, otherwise it lands first | Tension, but a hidden rule | High: two outcomes that depend on geometry | High | Unreadable timing rule | Duos + |
-| E. **Footrace, apart**: the loser stops in line, 2 or more cells away | Same Duo, no longer in the way | Low | Low (one function, core) | Adds nothing about distance or arrows | Neutral |
+| **THJ's shape (chosen, D-287)**: a lane; Mark runs to its end; automatic catch; the return hits again and brings the line's arrows; a mash with the unlock | Clear, always synced, maximum distance | Low–medium | Medium–high (core handler) | The three trade-offs above (accepted) | Duos ++, Synergies + |
+| Rev 1 "dead heat" (target an enemy) | Tense, but it needs an enemy | Medium | Same | Narrow targets | Duos ++ |
+| Rev 2 tile click + Mark's strike | Precise | Medium | Same | Two decisions; a strike target rule | Duos + |
+| Footrace, apart | Same Duo, out of the way | Low | Low | Adds nothing | Neutral |
 
-**Recommendation: B.** It is the only option where the race is real, even if staged: the arrow and Mark arrive together, which is the image the name promises. B also answers the strongest point of all three critics:
-- No snatch exception: the arrow follows the lock rule, so the quiver still binds.
-- No return flight, so no double hit.
-- One click, one place: Mark ends where the arrow is met.
-- A decline behaves exactly like the Synergy's decline.
-
-## Recommended rules (Arrow Chase, B)
+## Rules (D-287 to D-289)
 
 **Availability.**
-- A Duo (DU-1, DU-3). Mark or Linda activates it; the activator needs at least 1 AP left; cost 0 AP and 2 FTP (DU-2).
-- Linda needs at least 1 arrow (`HasArrow`).
-- Shared cooldown 2.
-- Mark must be able to move (not Rooted; a Crippled Mark follows the same rule as his walk).
+- A Duo (DU-1, DU-3). Mark or Linda activates it; the activator needs at least 1 AP left.
+- Cost 0 AP, 2 FTP and 1 arrow; shared cooldown 2 (D-289).
+- Linda needs at least 1 arrow (`HasArrow`); Mark must be able to move (not Rooted).
 
-**Targeting (one click).**
-- The player clicks an **enemy** on one of Linda's four lanes, within her bow range (4; 5–6 with Longshot).
-- The **chase cell** is the free, walkable cell just before that enemy on the lane, on Linda's side.
-- The target is valid only if:
-  - the chase cell exists;
-  - the chase cell is at least 2 cells from Linda (the catch's minimum, D-274), so the target stands 3 or more cells from her;
-  - Mark can reach the chase cell (his walk radius + 1, the Footrace's reach today).
-- The chase cell is **fixed at aim time** (systems critic): nothing that happens during the Duo moves it.
+**Targeting: a lane.** The player picks one of Linda's four straight directions (hover or click the lane, like aiming her bow).
 
-**Resolution, in order (reactions wait until the Duo ends).**
-1. Mark sprints to the chase cell along his path. He picks up every **unlocked** grounded stack on it (LI-7, as any Duo move does). The sprint gives **no Pass-by FTP** (otherwise one pass-by refunds the whole Duo).
-2. Linda fires a basic arrow down the lane (spends 1 arrow; 6× bow damage; pierce falloff). It hits every enemy between her and the chase cell as a normal bow shot. Its attacker is Linda.
-3. The arrow reaches Mark at the chase cell (hitstop, the dead heat).
-   - **Catch & Return locked:** no QTE. Mark lets it pass, and it flies on as a normal shot: the target and anything beyond are hit with falloff, and it lands per LI-6 (locked under a living enemy).
-   - **Catch & Return unlocked:** the catch QTE (Mark's profile, D-273).
-     - **Pressed:** Mark catches the arrow and **drives it into the target by hand**: one strike at Fist Blitz's 8× with *Mark's* stats (Focus, Heavy Hands). The attacker is Mark, so the damage counts as his. Nothing beyond the target is hit. The arrow stays in his hand and goes back to Linda's quiver with the bundle. The strike doesn't trigger Continuous Attack, and Mark doesn't step into the cell on a kill.
-     - **Declined or missed:** the same arrow carries on, exactly like a declined catch (D-260).
-4. **Hand-back.** One beat: Mark's throw variant with "+N". N counts the swept arrows, plus the caught arrow if the QTE was pressed. The quiver takes up to its size; extras stay on their tiles (LI-7).
-5. **The Duo ends.** Then any queued reactions run (Masher counter, Lucy's follow-up on real damage, D-275/D-277; Mark's Counter as usual).
+**Mark's end tile** is the furthest tile on that lane that is all of:
+- at least 2 and at most Linda's bow range from Linda (4; 5–6 with Longshot);
+- before the first **blocker** on the lane. Blockers are walls and other cells that stop an arrow, Lucy's Cyclone, Toba's wall, and the grid edge. Holes don't block: the arrow flies over them, though Mark can't stand in one;
+- walkable and unoccupied (enemies and allies on the lane don't end it; Mark needs a free tile to stop on);
+- reachable by Mark (his walk radius + 1, the Footrace's reach today).
 
-**What is returned.**
+If Linda's range is longer than Mark's reach, the end tile is the furthest valid tile he can reach. If no tile from 2 onward qualifies, the lane is greyed (reasons under Previews).
 
-| Arrow | Comes back? |
+**Resolution, in order (reactions deferred until the Duo ends).**
+1. **The run.** Mark runs to the end tile on a normal path. It can step off the lane to go around enemies or allies (CR-16). He picks up every **unlocked** grounded stack on his path (LI-7).
+2. **The shot.** Linda fires her **basic bow arrow** down the lane, spending 1 arrow. It flies to Mark and hits every enemy between them as a bow shot: 6×, pierce falloff ×0.6, attacker Linda. Allies don't stop it (assumed as for her bow; the tech plan checks).
+3. **The catch.** The arrow freezes at Mark (D-260's catch point). The catch is **automatic**: no press QTE. The Synergy's own catch prompt doesn't fire inside the Duo.
+4. **The mash** (only with the Catch & Return unlock, D-288). Mark's mash QTE runs while the arrow is held (spec below). Without the unlock, there is no mash and the factor is ×1.0.
+5. **The return.** The arrow flies back down the lane and ends at Linda (D-261). It hits every enemy between them again: 6× × the mash factor, falloff ×0.6 in the return direction, attacker Linda. As it passes, it **collects every grounded arrow on the lane cells between Mark and Linda** that Mark didn't take, *locked ones included* (Q1).
+6. **Home.** The Duo arrow plus everything collected goes into the quiver, up to its size; the extras stay where they were. One hand-back beat: Mark's throw variant, then the return flight, with "+N" on Linda (D-259).
+7. **The Duo ends.** Then the deferred reactions run once each:
+   - Lucy's follow-up, once for the Duo action, on an enemy whose HP actually dropped (D-275, D-277);
+   - Masher counters (EN-2: a Masher hit twice may answer twice; see Risks);
+   - Mark's Counter as usual.
+
+**Afterwards.** Both keep their AP. Mark stands on Linda's lane 2 or more tiles out, so her next basic arrow along that lane can trigger the Synergy.
+
+**What comes home.**
+
+| Arrow | Home? |
 | --- | --- |
-| Swept stacks on Mark's path (unlocked) | Yes, by the normal pickup |
-| The Duo arrow, pressed | Yes |
-| The Duo arrow, declined or no unlock | No: it lands by LI-6, locked if the target lives |
-| Stacks under living enemies | No (the lock holds) |
+| The Duo arrow | Always |
+| Unlocked stacks on Mark's path (on or off the lane) | Yes, by his pickup |
+| Grounded arrows on the lane between Mark and Linda, locked included | Yes, by the return (Q1) |
+| Arrows off the lane and off his path | No |
+| Anything beyond the quiver's size | Stays where it was |
 
-**After the Duo.**
-- Both keep their AP: Mark stands next to the target, ready for a Fist Blitz.
-- Mark ends on Linda's lane, 2 or more cells away, so her next basic arrow along that lane sets up Catch & Return. The Duo builds the Synergy's geometry instead of using it up (creative critic).
+## The mash (D-288; the existing Mashing mode)
 
-**Skill node.** *Head Start* (Mark's tree, 1 pip) changes from "cooldown −1" to **"+1 sprint reach"**. Cooldown 1 would make it an every-turn free move.
+- **Profile:** `QTEProfile.BehaviorMode.Mashing` on Mark's partner entry in the Duo. Copy the curves of an existing Duo mash (Marks-Sisters) as the starting point. Duration 1.0 s; Mark's fast preload (D-273, about 0.25 s).
+- **Factor:** return damage × (1.0 + 0.5 × fill). Fill is the mash meter at the end (0–1): a full meter ends the mash early at ×1.5. The partner entry's min/max factors are 1.0 and 1.5, so a weak mash never lowers the damage. DU-4's ×0.7 floor isn't used: the unlock should only add (Q4).
+- **Cap:** ×1.5. It applies to the return leg only; the outbound shot is unchanged.
+- **Seen:**
+  - A ring on Mark one beat before the prompt.
+  - The usual mash meter.
+  - When the return starts, the final factor floats over Mark ("×1.4").
+- **Without the unlock:** no prompt, no meter.
+
+## Head Start (D-289)
+
+- **Current:** cooldown −1 (2 → 1), kept for now. That makes Arrow Chase usable every turn, which a playtest must watch.
+- **Options THJ named for later:**
+  - (a) more arrows returned: the return also collects from the cells next to the lane, one on each side;
+  - (b) a longer return reach: it also pulls grounded arrows within 2 tiles of Mark's end tile.
+
+  Both keep the cooldown at 2 (Q3).
 
 ## How it differs
 
 | | Arrow Chase (Duo) | Catch & Return (Synergy) | Marks-Sisters (Linda–Lucy Duo) |
 | --- | --- | --- | --- |
-| Chosen? | Yes, 2 FTP | No: happens when Mark stands in her line | Yes, 2 FTP |
-| Mark moves? | Across the board, to the front | No, he is already there | Not involved |
-| Where the arrow ends | In the target by Mark's hand, or flying on | Back in Linda's hands after a return flight | Lands at the end of the line |
-| Damage | One basic arrow up to Mark; Mark's 8× strike on the target (pressed) | The bounce back hits again | 12× fire arrow down the whole lane |
-| What it's for | Repositioning, arrows home, setting up the catch | A free extra hit | Burst damage |
+| Chosen? | Yes, 2 FTP | No: when Mark is already in her line | Yes, 2 FTP |
+| Mark | Runs to the end of her lane | Stands still | Not involved |
+| The catch | Automatic; a mash with the unlock | A press QTE (D-260) | — |
+| Arrows home | The Duo arrow + everything on the line + his path | Only the caught arrow | None (it lands) |
+| Damage | The line twice: 6× out, 6× × mash back | The return hits again | 12× fire, whole lane, once |
+| What it's for | Mark to the front, arrows home, a double-hit line | A free extra hit | Burst damage |
 
-## Previews and readability (UX critic)
+## Previews and readability
 
-While aiming:
-- **Valid targets:** enemies on Linda's lanes that pass the rules get her target marker. Invalid ones show the reason on hover: "Too far for Mark", "Too close: no room to chase", "No arrows", "Not enough FTP", "Mark can't move".
-- **Mark's ghost on the chase cell,** labelled "Mark ends here", with his path highlighted. Tab cycles his routes when routes differ (as the move preview does), and "+N arrows" updates per route. Locked stacks along a route stay visibly locked and add nothing to "+N".
-- **The arrow path** from Linda to the chase cell, with a damage number on each enemy it hits.
-- **The target,** with two outcomes when Catch & Return is unlocked:
-  - the pressed number (Mark's strike, with a small QTE glyph);
-  - the declined numbers (the arrow flying on), drawn ghosted.
+While aiming (lanes highlighted like her bow):
+- **A greyed lane** gives its reason on hover: "Blocked within 2", "No free tile for Mark", "Too far for Mark", "No arrows", "Not enough FTP", "Mark can't move".
+- **The hovered lane** shows:
+  - Mark's ghost on the end tile, labelled "Mark ends here", with his path. Tab cycles routes when they differ.
+  - John's cover marker on the ghost if it is covered (FR-12). With no marker, the player sees Mark will be exposed.
+  - **"+N arrows"**, split: "+2 run · +3 return". Locked stacks the return will take get a small return arrow on their lock badge (they read as "coming back", not as "stuck").
+  - **Damage per enemy on the line:** two stacked numbers, out and back ("6 + 6"). With the unlock, the back number is a range ("6 + 6–9") with a small mash glyph. The preview never shows a number the action can't produce.
+- **During the Duo:**
+  - The run.
+  - The shot.
+  - The hitstop at the catch.
+  - The ring on Mark, then the mash meter (with the unlock).
+  - The return.
+  - "+N" on Linda.
 
-  Without the unlock, only the flying-on numbers show. The preview never shows a number the action can't produce (CR-17 rule).
-- **The catch icon** on Mark's ghost pulses when the unlock is on, with the hint "Press: Mark strikes · Decline: the arrow flies on". This uses the Synergy's decline wording, so a decline means the same thing everywhere.
-
-During the Duo:
-- A ring flashes on Mark one beat before the prompt (the catch preload is only about 0.25 s, D-273).
-- The prompt reads "Catch".
-- The hand-back shows "+N" on Linda (the D-259 cue).
-
-Likeliest misread: "Mark will punch the enemy without the QTE". The ghosted fly-on numbers and the missing glyph cover it.
+**Likeliest misread:** "the return is a separate hit I must earn". The stacked numbers show it always happens, and that the mash only raises it.
 
 ## Lens notes
 
-- **Creative.** Linda says "Go." and Mark is already running. The arrow and the monk arrive together; his hand closes on the shaft a breath before it strikes, and he drives it home. Calm call-and-response, not trash talk: the creative critic's voice note for Children of Morta's Mark (the disciplined monk) and Linda (the eldest, gently teasing). For example: Linda "Go." / Mark "Early." / Linda "You were late." These go to `miso-narrative`. The memorable moment is the dead heat, so the hitstop is part of the design, not polish.
-- **Systems.** The levers:
-  - cooldown 2 (to 3 if it is used on more than 80% of the turns it's available);
-  - the reach (walk + 1);
-  - the pressed strike (8×; credited to Mark, which moves damage *off* Linda's share);
-  - no Pass-by FTP.
-
-  Interactions: the chase cell is fixed and reactions are deferred, so the Masher can't empty the cell mid-Duo. Arrows aren't duplicated: the Duo arrow returns only when caught. Encore keeps its job, because declined shots and locked arrows stay out. Failure cases: a free move every 2 turns that dominates the turn (watch the use rate); QTE density with Lucy's prompts.
-- **UX.** One click on an enemy; one place where Mark ends; both outcomes previewed; the catch prompt announced.
+- **Creative.** The target experience and moment: Linda says "Go."; Mark runs her lane, scooping her arrows as he goes, turns at the far end, and her arrow is already in his hand. One breath, and it's flying home through the same goblins, and she catches it. They never stand together; they never miss each other. Calm call-and-response for the voice (the rev 1 creative critic's note for the disciplined monk and the gently teasing eldest): Linda "Go." / Mark "Early." / Linda "You were late." These go to `miso-narrative`. The hitstop at the catch is part of the design.
+- **Systems.** The rules: lane, run, shot, catch, mash, return. Interactions: pickup (LI-7), the return borrowing Encore's lock-ignoring rule, Lucy's real-damage rule, Masher counters, Pass-by (Q2). The levers are under Risks.
+- **UX.** One choice out of four; the end tile, the exposure, the arrows and both hits are all in the preview.
 
 ## USP check
 
-- **Duos:** strengthens. The pair act together at a distance; the Footrace's contradiction is gone.
-- **Synergies:** strengthens. The Duo leaves the geometry for Catch & Return, and the unlock adds a choice inside the Duo without consuming the Synergy.
-- **Family Roles:** neutral (Mark's Counter and Lucy's follow-up run as usual afterwards).
+- **Duos:** strengthens. Distant and synced by construction.
+- **Synergies:** strengthens. The Catch & Return unlock adds the mash inside the Duo, and Mark ends in her line for the Synergy.
+- **Family Roles:** neutral (Lucy, the Masher and Mark's Counter answer afterwards as usual).
 - **Home:** neutral on purpose.
 
 ## Critics
 
-Three critics ran in parallel on 2026-10-28 (read-only Explore agents with critic briefs, each blind to the others), against option A.
+Three critics ran on 2026-10-28 against rev 1's option A (read-only Explore agents, each blind to the others). Their concerns that still apply to THJ's shape are the trade-offs above:
+- **Systems:** a free arrow, the double hit, the Masher order, Pass-by.
+- **Creative:** the dead-heat image and the calm voice.
+- **UX:** one place Mark ends, both hits previewed.
 
-| Lens | Strongest point | What I did with it |
-| --- | --- | --- |
-| Systems | The snatch is the usual case, not an exception (LI-6 lands arrows under the enemy hit), so every shot is free and the sweep makes the quiver grow. The return hits the same line twice (≈12×, Linda's). 0 AP for both partners plus a free move is too good. The Masher order is undefined. Pass-by refunds the FTP | **Accepted:** B removes the snatch and the return; the chase cell is fixed and reactions are deferred; no Pass-by FTP; the strike is Mark's damage; Head Start is no longer cooldown 1; cooldown 3 is the lever. **Not accepted:** Mark paying 1 AP (DU-1 says every Duo costs 0 AP, D-219) |
-| Creative | A has no race: Mark jogs after an arrow that always wins. The moment is a dead heat, his hand closing on the shaft. The end QTE uses up the Synergy; the sweep turns the hand-back into a chore; "Too slow, sis" is the wrong voice | **Accepted:** B is the dead heat; the Duo sets up the Synergy; the calm voice. **Partly:** the sweep stays because LI-7 already applies to every Duo move, but it plays one Mark-voiced beat, not a chore list |
-| UX | One click, two commitments: the player expects Mark on the clicked cell. The snatch contradicts the locked look. The second hit isn't previewed. "Decline" means something else here. The 0.25 s prompt needs a warning | **Accepted:** the click is on an enemy, with "Mark ends here"; no snatch; both outcomes previewed; decline matches the Synergy; the pulsing icon and the ring |
+Kept from them: the deferred reactions, a fixed end tile, "Mark ends here", stacked numbers, and the ring before the prompt. Rev 3 was not re-critiqued: the shape is THJ's decision, and the critics' points are written up as accepted trade-offs and levers.
 
 ## Costs and risks
 
-- **Core:** `UnitsCooperationHandler`. The `Mark_Linda_*` targeting, resolution and rewards are replaced: the target is an enemy, the chase cell is computed, the sequence is Mark's move, then the arrow, then the catch outcome. The race rewards and the listener mismatch go. Its own commit. Reusable: `Mark_Linda_Path`, the ghosts, the alternative paths.
+- **Core:** `UnitsCooperationHandler`. The `Mark_Linda_*` targeting (a lane), the resolution (the end tile, the sequence: run, shot, catch, mash, return) and the rewards are replaced; the race rewards and the listener mismatch go. Its own commit. Reusable: `Mark_Linda_Path`, the ghosts, the alternative paths, the partner mash profile and factors.
 - **Non-core:**
-  - `ProjectileCatchAndReturn` gains a "strike" outcome for the Duo next to "return" (the arrow is frozen at Mark, D-260, so the strike reuses that point).
-  - `QuiverArrow` and `LindaQuiver`: the caught arrow returns with the bundle.
-  - Presenters for the previews.
-  - `PlayerController.prefab`'s Duo entry and presets (data).
-  - Mark's strike animation through `EntityAnimationHandler` (art: an arrow in hand, placeholder first).
-- **Sprint without Pass-by:** may need a flag on the Duo move. If the pass-by handler is core and has no such flag, ask THJ (Q5).
-- **Arrow hits by grid** (D-279, on `main` later): the chase cell, the pierce list and the previews must come from one route source (`ArrowLandingRules`, `Projectile.CollectPreviewPathHits`), so the move to grid hits doesn't split them.
-- **`AIRegressionTest`:** new or renamed presets change the known-red message (as D-255). Compare before and after; no re-baseline.
-- **Unlocks and saves:** the Footrace's family-tree entries and Head Start's text change; check saves that bought Head Start.
-- **Size:** L. A tech plan of its own after D1 and C3b.
+  - `ProjectileCatchAndReturn`: an "automatic" catch mode for the Duo (no press); the return carries the mash factor and collects arrows on the line.
+  - `QuiverArrow`, `LindaQuiver`, `GroundedArrowField`: collect along the line, take locked stacks, respect the size.
+  - The presenters.
+  - The `PlayerController.prefab` entry and presets (data).
+- **Pass-by off during the run** may need a flag in the pass-by handler (core); Q2.
+- **Arrow hits by grid** (D-279, on `main` later): the end tile, the out and back hit lists and the line collection must come from one route source (`ArrowLandingRules`, `Projectile.CollectPreviewPathHits`).
+- **The Masher on the line** is hit twice and may counter twice (EN-2 has no limit yet; D-274 notes this is being checked). Watch it in play.
+- **Levers if it's too strong:**
+  - cooldown 3, and Head Start to option (a)/(b) instead of −1;
+  - return base 6× → 4×;
+  - mash cap ×1.5 → ×1.3;
+  - Duo FTP 2 → 3 (DU-5).
+- **`AIRegressionTest`:** new or renamed presets change the known-red message (as D-255). Compare; no re-baseline.
+- **Unlocks and saves:** the Footrace's tree entries; Head Start's text.
+- **Size:** L; its own tech plan after D1 and C3b.
 
 ## Playtest signals (after it is built; M4, M6, full squad)
 
-- Used on 30–70% of the turns it's available. Above 80%: cooldown 3.
-- Mark ends 3 or more cells from Linda after the Duo, in most uses.
-- Catch & Return fires on the turn after an Arrow Chase at least sometimes (the setup works).
-- Catch QTE pressed in more than 60% of attempts (readable and reachable).
-- Encore at least 0.5 per fight, and the quiver below 2 at some point in at least 60% of fights (it still binds).
-- Linda's damage share not above the D1 build; FTP at fight end at most 4 (DU-5).
-- Testers describe the dead heat.
+| Signal | Pass | If it fails |
+| --- | --- | --- |
+| Used on the turns it's available | 30–70% | Above 80%: a lever |
+| Encore per fight; quiver below 2 at some point | ≥ 0.5; in ≥ 60% of fights | The arrow is too free: return base or cooldown |
+| Linda's damage share | Not above the D1 build | Return base 4× |
+| Mark's HP after the Duo; deaths next enemy phase | Deaths under 1 in 3 levels | The exposure is a trap: shorter reach, or a cover rule |
+| Average mash factor (with the unlock) | 1.2–1.45 | Easier or harder curves |
+| FTP at fight end | ≤ 4 | DU-5 |
+| Catch & Return fires the turn after | Sometimes | The setup isn't used |
+| Testers | Describe the run and the catch | — |
 
 ## Questions for THJ
 
-1. **Which shape?** *Context:* D-268 describes A (Mark sprints to where the arrow lands and the bundle goes home). All three critics found problems with A: free arrows, a double hit, one click in two places. *Options:* (a) B, the dead heat: Mark meets the arrow before the target; (b) A as described; (c) C, stack fetch. *Recommendation:* (a). *Blocks:* the Arrow Chase tech plan.
-2. **What does a pressed catch do?** *Context:* the strike should be Mark's, so Linda's share doesn't grow. *Options:* (a) Mark's 8× strike on the target, and the arrow comes home; (b) the arrow's own hit with no falloff, and the arrow comes home; (c) only the arrow comes home, no extra hit. *Recommendation:* (a). *Blocks:* the rule and its preview.
-3. **Without the Catch & Return unlock?** *Context:* D-268 makes the QTE conditional. *Options:* (a) no QTE: the arrow flies on, Mark has still moved and swept; (b) an automatic catch. *Recommendation:* (a): the unlock stays worth buying. *Blocks:* the rule.
-4. **Head Start?** *Context:* a cooldown of 1 makes the Duo an every-turn free move. *Options:* (a) +1 sprint reach; (b) keep cooldown −1. *Recommendation:* (a). *Blocks:* the family-tree data.
-5. **Pass-by during the sprint?** *Context:* one pass-by gives +2 FTP, the Duo's whole cost; turning it off may need a flag in the pass-by handler (core). *Options:* (a) no Pass-by FTP from the sprint; (b) as normal. *Recommendation:* (a), if it needs no core change; otherwise (b) and watch FTP at fight end. *Blocks:* nothing until the tech plan.
+Answered by THJ, 2026-10-28 (D-290): Q1 yes, the return collects locked arrows; Q2 Pass-by **on** like any move; Q3 keep Head Start −1, watch the 80% use signal; Q4 ×1.0–×1.5; Q5 6×, lever 4×. Status: design approved, built after D1.
+
+Answered: shape (D-287), no unlock = always catch + line arrows home (D-288), cost and Head Start for now (D-289). Superseded: D-283, D-284.
+
+1. **Does the return collect locked arrows on the line?** *Context:* your "returns arrows in the line to Linda"; Encore already pulls locked ones. *Options:* (a) yes, every grounded arrow on the lane between them, locked included; (b) unlocked only. *Recommendation:* (a): one simple line rule, and it reads as "the line comes home". *Blocks:* the return rule and the lock badge preview.
+2. **Pass-by during the run?** *Context:* one pass-by gives +2 FTP, the Duo's whole cost; turning it off may need a flag in the pass-by handler (core). *Options:* (a) no Pass-by FTP from the run; (b) as normal. *Recommendation:* (a) if it needs no core change, otherwise (b) and watch FTP at fight end. *Blocks:* nothing until the tech plan.
+3. **Head Start after the first playtest?** *Context:* cooldown −1 makes the Duo usable every turn. *Options:* (a) keep −1; (b) more arrows returned (the cells next to the lane); (c) a longer return reach (within 2 of Mark's end). *Recommendation:* keep (a) for the first build, and switch to (c) if the use rate passes 80% with the node. *Blocks:* nothing now.
+4. **The mash factor.** *Context:* the Duo mashes today use ×0.7–×1.5 (DU-4); here the unlock should only add. *Options:* (a) ×1.0–×1.5; (b) ×0.7–×1.5 as the other Duos. *Recommendation:* (a). *Blocks:* Mark's partner entry data.
+5. **The return's base damage.** *Context:* the line is hit twice with Linda's arrow (accepted, D-287); her share is the quiver's problem. *Options:* (a) 6× like the outbound, with 4× as the lever; (b) start at 4×. *Recommendation:* (a): test your shape as you described it, and watch the share. *Blocks:* the return data.
 
 ## Docs to update if approved
 
-- [`family-systems.md`](../design/gdd/family-systems.md): the Mark–Linda Duo row (Arrow Chase replaces Family Footrace); a Catch & Return note (the strike outcome inside the Duo); the D-220 note on the race reward removed.
-- [`characters/mark.md`](../design/gdd/characters/mark.md): Head Start, MA-3 note.
-- [`characters/linda.md`](../design/gdd/characters/linda.md): the Duos line; LI-4 (the Duo spends 1 arrow).
-- [`progression-economy.md`](../design/gdd/progression-economy.md): the Head Start unlock.
+- [`family-systems.md`](../design/gdd/family-systems.md): the Mark–Linda Duo row (Arrow Chase replaces Family Footrace: lane, run, auto catch, return, mash with the unlock, 2 FTP + 1 arrow, cooldown 2); a Catch & Return note (the mash inside the Duo); DU-4 note (this Duo's mash is ×1.0–×1.5); the D-220 note on the race reward removed.
+- [`characters/mark.md`](../design/gdd/characters/mark.md): Head Start (cooldown −1; later options), MA-3 note.
+- [`characters/linda.md`](../design/gdd/characters/linda.md): the Duos line; LI-4 (the Duo spends 1 arrow and returns it).
+- [`progression-economy.md`](../design/gdd/progression-economy.md): Head Start.
 - `glossary.md` (Arrow Chase; `miso-narrative`), the bark lines, `decisions.md`, `status.md`.
