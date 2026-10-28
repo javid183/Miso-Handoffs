@@ -1,191 +1,202 @@
 # Linda at a distance: rewarding the far game and the fetch
 
-Size: L    Tier: 3 (Family Roles, Synergies, Duos; a built Duo in a core script)    Assigned to: game designer
+Size: L    Tier: 3 (Family Roles, Synergies, Duos)    Assigned to: game designer
 Branch: all (prototype on `thj/linda-quiver`, after C4 of the [quiver tech plan](2026-10-26-linda-quiver-tech.md))
-Status: rev 2, waiting on THJ (rev 1 answered 2026-10-27: D-263 to D-265)
+Status: rev 3, final. D1 ready for a tech plan; three edge questions below. Arrow Chase has its own plan: [`2026-10-28-arrow-chase-design.md`](2026-10-28-arrow-chase-design.md) (after D1)
 
 ## Why
 
-THJ's play check of the quiver prototype (C1–C3, 2026-10-27):
+THJ's play check of the quiver prototype (C1–C3, 2026-10-27) found five things:
+
 - The family packs around John, so arrows land where nobody is.
 - Walking pickup is rare, and Encore (Recall's on-screen name, D-262) is the normal way back.
 - The walk and the hand-back are the best moment, and they happen too rarely.
 - Nothing rewards Linda for playing apart.
-- The Mark–Linda Duo pulls the pair together, against their own Synergy. THJ wants them "distant but synced".
+- The Mark–Linda Duo pulls the pair together, against their own Synergy.
 
 ## Goal
 
-Find the smallest prototype step that makes distance pay off (Linda apart, the family walking out to her arrows) without undoing the quiver's cut to her damage share, and design a distant-but-synced Mark–Linda Duo.
+A first prototype step (D1) that tests whether distance feels rewarded: Linda standing apart, and the family walking out to her arrows. It must not raise her damage share in the way the family plays today.
 
-## Rev 2 changes (THJ, 2026-10-27)
+## History
 
-- Lookout's +1 range is out. THJ: her Watch already covers most of the board; damage from far away is easier to understand. Below: a **Far Watch** comparison, **Big Sister's Eye** described concretely, and a **fetcher reward** comparison.
-- Fetch's +1 FTP becomes a **skill-node upgrade** (D-264). Base fetching gets cues only, unless a fetcher reward replaces them.
-- Encore cooldown 3 in the test, as a toggle (D-263).
-- No Long Pass (D-265). **Fetch Race** is detailed below, with two alternatives. The Duo stays distinct from Mark's QTE catch, approved as its own step C3b (D-260, D-261).
-- John's question (Q5 in rev 1) stays open.
+- **Rev 1:** Lookout (+1 Watch range), Fetch +1 FTP, Long Pass.
+- **Rev 2:** Far Watch, Watched, Fetch Race.
+- **THJ's answers:**
+  - D-263: Encore cooldown 3 as a toggle.
+  - D-264: Fetch FTP is a skill node.
+  - D-265: no Long Pass.
+  - D-266: Far Watch with the trade.
+  - D-267: cues only for fetchers.
+  - D-268, D-271: Arrow Chase replaces the Footrace, after D1.
+  - D-269: John stays as built; a formation review later.
+- **Changes since rev 2 that this plan relies on:**
+  - Mark's catch is a QTE with the arrow frozen on its path (D-260, D-261, D-273 to D-278; D-279 keeps the old arrow slope).
+  - Lucy follows up only on real damage (D-275, D-277).
+  - Arrow hits may move to the grid on `main` (D-279, `arrow-hits-by-grid` in `status.md`).
 
 ## Problem and evidence
 
 V = verified in data or code; A = assumed.
 
-- **R1. Everything good happens up close.** John's relay (2 cells, area hits once since D-120), Papa's Shelter, Mark's Counter (2), Lucy's follow-up (3), Pass-by's +2 FTP for meeting (CR-11), and the Footrace all pay for standing together. Nothing pays for spreading out, and the area relay cancels the usual cost of clumping (V: family-systems.md). This is family-wide (Q5).
-- **R2. Encore beats walking on AP.** One AP brings back every stack, safely. Walking costs 1 AP per stack and means leaving John's cover (CR-6, LI-8) (V). Answered for the test by D-263.
-- **R3. Linda's kit has no distance payoff.** Watch is lanes of range 4; pierce rewards lining enemies up (V).
-- **R4. The Footrace ends the pair adjacent.** The loser stops on `path[^2]`, but Catch & Return needs 2 or more cells (V: `UnitsCooperationHandler.Mark_Linda_LoserStop`, `ProjectileCatchAndReturn.minTileDistance`).
-- **A.** Whether the enemy AI hunts isolated units is unread: `UtilityVariables` has presence terms, and I didn't read the evaluator assets. This sets the real cost of standing apart.
+- **R1. Everything good happens up close.** John's relay (2 cells; area hits once, D-120), Papa's Shelter, Mark's Counter (2), Lucy's follow-up (3), Pass-by +2 FTP (CR-11) and the Footrace all pay for standing together. Nothing pays for spreading out (V: `family-systems.md`). This is family-wide; THJ moved it to a later formation review (D-269).
+- **R2. Encore beats walking on AP.** One AP brings back every stack; walking costs 1 AP per stack and leaves John's cover (CR-6, LI-8) (V). The test answer is D-263.
+- **R3. Linda's kit has no distance payoff** (V: `linda.md`). The test answer is D-266.
+- **R4. The Footrace ends the pair adjacent.** The loser stops on `path[^2]`, but the catch needs 2 or more cells (V: `UnitsCooperationHandler.Mark_Linda_LoserStop`; D-274). The answer is Arrow Chase.
+- **A.** Whether the enemy AI hunts isolated units is unread (`UtilityVariables` has presence terms; the evaluator assets were not read). It sets the real price of Far.
 
-## Q1 study: rewarding Linda's distance with Watch damage
+## Options considered (summary; details in rev 1 and rev 2)
 
-**What distance is measured.**
+| Option | Fate |
+| --- | --- |
+| Lookout: +1 Watch range when apart | Dropped: her lanes already cover most of the board (THJ) |
+| Far Watch with the trade | **D1** (D-266) |
+| Far Watch, additive (9×), or measured from the target | Rejected: raises her share; target distance rewards pierce lines, not standing apart |
+| Fetcher rewards: Watched, +1 move, a free step, +1 FTP | Cues only in D1 (D-267); +1 FTP becomes a node (D-264); the others are later nodes |
+| Big Sister's Eye (her Watch covers fetchers) | Later node: it touches `LindaFactionRoleHandler` (core-listed) |
+| Encore cooldown 3 | **D1** (D-263) |
+| John's relay radius 1 | Not now (D-269) |
+| Long Pass, Fetch Race, Family Gauntlet, Footrace apart | **Arrow Chase** (D-268, D-271): [own plan](2026-10-28-arrow-chase-design.md) |
 
-| Measure | What it rewards | Interaction with pierce (×0.6 per next enemy) | Read | Verdict |
-| --- | --- | --- | --- | --- |
-| From the target (Linda → enemy) | Long shots. Her lanes already reach 4, so most Watch shots are 2–4 cells | Per target, later enemies are farther, so the bonus offsets falloff and the 7/4/3 lines get stronger. Limiting it to the first enemy hit avoids that | Hard: the number depends on where the enemy stops | Rewards the wrong thing (targets far away, not Linda apart) |
-| **From the nearest sibling (Linda → any Bergson)** | Linda standing apart: THJ's goal | One multiplier for the whole shot; falloff unchanged | Easy: one state on Linda, seen on her ghost tile | **Recommended** |
+## D1: the distance pass (ready for a tech plan)
 
-**Steps.** One step reads best: **Far** = no Bergson within 2 cells of Linda (radial, the same reach as John's zone, so "outside Papa's cover"). A second step (≥ 4 cells: ×1.75) would add a number to track and little play.
+Four items, all non-core where possible. Each lever is a toggle on one config asset (`LindaDistanceTuning` or similar; the tech plan names it), so THJ can switch each off in play. With every toggle off, the build plays like C4.
 
-**Locked at End Turn.** The state is set when the family ends its turn and holds until the next player turn, so pushes and Commands in the enemy phase never flip it (UX critic, rev 1). Watch is the only arrow she fires in that window, so the bonus is Watch-only by construction. In code it can be a duration `Stat_DMG` modifier, the same pattern as the Footrace's bonus (V: `Mark_Linda_ApplyBonus`).
+### D1.1 Far Watch (LI-15, D-266)
 
-**The damage share, honestly.** Any Watch damage-up raises Linda's share: the very thing the quiver was meant to cut (46–72%). The quiver bounds the number of shots, not their size. Two ways to run it:
-- **Additive:** Watch 6× near, ×1.5 when Far = 9×. Her share can only go up. It needs the quiver to bind hard.
-- **Trade (recommended):** Watch base 6× → 5× near, ×1.5 when Far = 7.5×. In today's clumped play her share **drops** about 17%; she earns back more than today only by standing apart. Distance becomes a real trade: John's cover for more damage.
+**Rule.**
+- **Base Watch:** 5× damage (was 6×).
+- **Far:** if Linda is Far, her Watch deals 7.5×. Only Watch changes: bow, Explosive Crescendo and the arrow Duos keep their values.
+- **Pierce:** falloff applies as usual. Near: 5 → 3 → 1.8. Far: 7.5 → 4.5 → 2.7. Rounding per CR-19.
+- **Multipliers:** Revenge and crits multiply as they do today.
 
-**Preview.**
-- Linda's ghost tile shows a **Far** mark (her bow-eye icon) when the tile qualifies.
-- Another Bergson's ghost entering her 2-cell radius flashes "Far lost" over Linda.
-- After End Turn, the mark stays on Linda through the enemy phase.
-- The Watch prompt reads "Arrows 3 → 2 · Far ×1.5".
-- Damage numbers and the hover preview include the multiplier (CR-17 rule: what a preview promises, the action does).
+**Who counts for the 2-cell check.** Every *living* unit of the player's squad other than Linda: John, Lucy, Mark, and Toba when he is in the squad.
+- Not counted: decoys (Blink, Hide and Seek), the Cyclone, Toba's wall, allied units of another faction (e.g. `Unit_Toba_Ally`, as in D-254), and dead or removed units.
+- Distance is the footprint distance, radial (diagonals count as 1, like John's zone, FR table). Far = no counted unit at distance ≤ 2, so a 5 × 5 box around Linda must be free of family.
 
-## Q1 study: Big Sister's Eye, concretely
+**When the check runs.**
+- **End Turn:** when the family ends its turn, after the last action resolves and before the first enemy acts. The state is **locked** until the next player turn starts. Pushes, pulls, deaths and Commands during the enemy phase never change it.
+- **Player phase:** Watch can trigger on the player's own turn (a push, a Command move, a Masher answer, D-039/D-119). Then Far is checked **live**, at the moment of the trigger (new question 1).
+- **Level start:** before the family's first End Turn there is no locked state, so an enemy phase can't come first. If a level opens with enemies acting, Linda counts as near.
 
-**What it does.** When a Bergson picks up Linda's arrows by walking, they are **under Linda's eye** until the next player turn. If an enemy ends its move next to them, or starts an attack on them, Linda's Watch triggers on that enemy even outside her lanes, if it is within her range (radial). The shot flies straight to the enemy (no pierce), spends 1 arrow, uses the normal Watch prompt and damage, and lands on the enemy's tile (LI-6). Because it fires before the swing, it protects the fetcher by killing or softening the attacker; it doesn't cancel the attack.
+**What the player sees.**
 
-**How it reads.**
-- A Linda-coloured eye on the fetcher.
-- While the Watch prompt is up, a thin tether from Linda to the covered fetcher, the same look as John's tether (FR-13).
-- The prompt says "Covering Mark".
+| When | Where | What |
+| --- | --- | --- |
+| Player phase, always | Over Linda, next to her arrow pips | A **Far mark** (her `BowArrow` icon with an eye, in her role colour) while she is Far right now; nothing when near |
+| Previewing Linda's move | Her ghost tile | The Far mark if that tile would be Far, with the others where they stand |
+| Previewing another unit's move | Over Linda | "Far lost" (the mark struck through) if that ghost comes within 2 of her while she is Far now; "Far" (the mark) if the move takes the last nearby unit away |
+| Hovering her role badge, or Shift | Grid | Her 2-cell box outlined, faint, in her colour (only the tiles that must stay clear) |
+| After End Turn, enemy phase | Over Linda | The mark stays if she locked Far, with a small lock pip; none if near |
+| Watch prompt | Prompt text | "Arrows 3 → 2 · Far 7.5×" or "Arrows 3 → 2 · 5×" |
+| Watch hits | Damage numbers | Real values. The role badge tooltip: "Watch: 5×. Far (no family within 2 at End Turn): 7.5×." |
 
-**Cost.**
-- A second trigger in `LindaFactionRoleHandler` (on the quiver plan's core-change list), plus an off-lane shot. The Crescendo arrow already flies to any cell, so the projectile exists; the trigger is the new part.
-- Medium–high to build, plus a role-zone question: her zone is no longer only lanes.
+`[PLACEHOLDER]` on all strings (D-272).
 
-**Verdict:** the warmest option ("she stays back so the one who goes out is safe"), but too big for D1. A good **skill node** later. D1 tests its cheap cousin, Watched (below).
+**Implementation notes for the tech plan (A).** Watch spawns an arrow prefab through `Linda_Ability_FactionRole_Effect_Spawn` (V), the same arrow as her bow (A, by GUID). A global `Stat_DMG` modifier would also scale player-phase bow shots, so the factor must apply to Watch arrows only. For example: `QuiverArrow` knows it came from Watch, or a Watch variant of the arrow prefab sets 5× and a Far factor of ×1.5. The tech plan picks one, with no core code. The Far check needs the squad list and footprint distance, both read-only.
 
-## Q1 study: fetcher rewards
+**Acceptance.**
+- [ ] Toggle off: Watch hits as today (6×), no mark, no box.
+- [ ] Toggle on, John 2 cells from Linda at End Turn: Watch hits 5× in the enemy phase; the second pierced enemy takes 3 (before stats).
+- [ ] Toggle on, nobody within 2 at End Turn: Watch hits 7.5× through the whole enemy phase, even after an enemy pushes Mark next to her. The mark and its lock pip stay.
+- [ ] Toba in the squad within 2 at End Turn: near. A Lucy decoy within 2: still Far. A dead Bergson within 2: still Far.
+- [ ] A player-phase Watch (an enemy Commanded into her lane) uses the live state at the trigger.
+- [ ] The ghost mark and "Far lost" match the state End Turn would produce for that position.
+- [ ] The prompt and tooltip show the right factor; the hover damage preview matches the hit (CR-17 rule).
+- [ ] EditMode tests: the Far rule (who counts, radial ≤ 2, footprints), the factor table, the lock-until-player-turn state.
 
-All of them are given only for a walking pickup (not an instant pickup on landing, G3, nor a catch), once per Bergson per turn. Linda fetching her own arrows gets nothing extra (Far Watch covers her).
+### D1.2 Encore cooldown 3 (LI-8 amended, D-263)
 
-| Reward | Feel | Build cost | Read | Note |
-| --- | --- | --- | --- | --- |
-| **Watched**: the fetcher takes ×0.75 damage until the next player turn | "Linda has your back": replaces the cover they left. Answers R1 directly | **Lowest**: one duration modifier from the pickup code (like John's `JFR_DR`, a DR stat) | **Clear**: the eye icon on the unit; hit previews show the reduced damage | John's relay still wins inside his zone; it matters only outside it |
-| +1 movement on the next move | Run out, get back | Low: the same mechanism as Move as One (LI-2) | Clear: the ghost's reach grows | Doesn't help in the enemy phase, which is the real cost |
-| Free 1-tile step after the pickup (0 AP) | "Grab and duck back": the best feel | Medium: a new 0-AP action and an input state. CR-6 says any action needs ≥ 1 AP, so a pickup made with the last AP gets nothing unless a core rule changes | Medium: an extra prompt in the flow | A later node ("Light Feet") |
-| +1 FTP | Feeds Duos | Low (`GUnit.ProduceFTP`, V) | Medium (the FTP bar) | Node upgrade (D-264) |
-| Big Sister's Eye | The warmest | Medium–high | Clear | Later node (above) |
+**Rule.** Encore keeps everything as built (1 AP, usable with ≥ 1 arrow grounded and room in the quiver, D-256), with cooldown 3: used on turn N, it is next usable on turn N+3. Toggle off: cooldown 2. The cooldown shows on the button and in the tooltip as today.
 
-**Cheapest to build and to read: Watched.** It is also the one that answers the root cause: leaving John costs cover, and Linda gives cover back.
+**Acceptance.**
+- [ ] On: used on turn 1, greyed on 2 and 3, usable on 4. Off: usable on 3.
+- [ ] The tooltip and the cooldown counter show the active value.
+- [ ] The known-red `AIRegressionTest` message is unchanged (a value change on an existing preset).
 
-## Q4 study: the Mark–Linda Duo
+### D1.3 Fetcher cues (D-267: cues only)
 
-**Fetch Race (recommended).** Mark races Linda's own arrow.
+**Rules (presentation only; no rule change).**
 
-- **Rules:**
-  - Duo, 0 AP + 2 FTP + 1 arrow, cooldown 2 (Head Start −1 kept).
-  - Linda aims a bow shot down one of her lanes, as her bow: range, pierce, damage, and the landing cell from the C4 marker.
-  - At the same moment Mark sprints toward that landing cell. The target must be a cell Mark can reach (his move radius +1, as the Footrace uses today). He picks up every grounded stack on his path.
-  - He ends on the landing cell, or on the nearest free cell next to it if an enemy stands there, and catches the arrow as it lands.
-  - He tosses the whole bundle to Linda (the hand-back beat, call-out variant). The shot costs her 0 net arrows.
-  - No QTE: the race is the synced moment, and the catch QTE belongs to the Synergy.
-- **Win flavour:** a landing cell out of Mark's reach can't be targeted (greyed with "Too far for Mark"), so there is no random loss.
-- **Why it's distant but synced:** they act in one beat and end far apart. Linda stays at her post; Mark ends at the far end of her lane, next to the enemy she just hit, with his AP ready for a Fist Blitz. Often he ends **in line with Linda and 2 or more cells away**, which sets up next turn's Catch & Return. The Duo builds the Synergy's geometry instead of breaking it (R4).
-- **Distinct from the catch:** in the catch, Mark stands in her line and the arrow comes to him (QTE, back to her hands, D-260/D-261). In the Race, Mark runs after the arrow, anywhere, and ends far out.
-- **How it reads:** one decision (her lane). The preview shows the arrow path with damage, the landing marker, Mark's path and ghost, and "+N arrows" for the stacks he sweeps.
-- **Cost and core touch points:** `UnitsCooperationHandler` (core): new `Mark_Linda` targeting and resolve code replacing the race's; a simultaneous move and projectile; Mark's path reusing `Mark_Linda_Path` and the ghosts. Linda's leg uses her bow as a partner preset, like the arrow Duos. Landing suppression and the bundle hand-back live in the non-core quiver code (`QuiverArrow`, `LindaQuiver`). `PlayerController.prefab` entry and presets are data. Medium–high; its own commit. The old race's bonus listener has a mismatch (added to `abilityPerformed`, removed from `abilityActivationStarted`, lines 1395/1408); the rework removes it.
+- **A hand-back variant per picker.** It replaces the generic toss and lines on a *walking* pickup (the picker's own move, forced moves and Duo moves included):
+  - **John:** an underhand lob; a fatherly line.
+  - **Lucy:** the arrow flicked over with a small spark trail; a teasing line.
+  - **Mark:** a spinning throw Linda catches one-handed (it foreshadows the catch); a bragging line.
+  - **Toba:** a short hand-off arc, wrapped in a leaf; a polite, slightly formal line (he isn't family yet, D-048).
+  - **Linda herself:** no toss; she slips it into the quiver; a quiet line ("One more.").
+- **The call-out.** If the picker is **4 or more cells** from Linda (footprint, radial) when picking up, the picker's line becomes a shout ("Linda! Catch!"), the toss becomes a long high arc, and Linda's reply becomes a catch line. Below 4: the normal variant.
+- **One beat per move.** A move that picks up several stacks plays one hand-back with the total ("+3"). The second hand-back by the same picker in a turn uses a short line (no repeats).
+- **Not affected:**
+  - Instant pickups when an arrow lands on a Bergson (G3) keep today's short beat.
+  - Encore keeps its return flight.
+  - Mark's catch keeps its own animation and cue (D-259 "+1").
+  - While Linda is dead nothing is picked up (D-254).
+- **Optional, only if cheap:** a one-time glint at the start of the player turn on stacks that **some Bergson with AP can reach this turn** (the UX critic: a glint on everything reads as loot). If computing reach is not cheap, skip it in D1.
+- Lines from `miso-narrative`, tagged `[PLACEHOLDER]`. Beat timings stay fields on `LindaQuiver` and non-blocking (D-247, D-253).
 
-**Alternative 1: Family Gauntlet** (name to the narrative pass). Mark and Linda must share a row or column, 3 or more apart. Until the next player turn, the cells between them are a gauntlet: an enemy that ends a move in it is shot by Linda (Watch rules, 1 arrow) and then struck by Mark, who dashes along the line (Fist Blitz). A pincer across the board. Distinct from the catch (a trap, not a bounce). Cost: high (two role handlers, both core-listed); readability needs a drawn corridor.
+**Acceptance.**
+- [ ] Each of the five pickers plays its own toss and lines; Linda's own pickup plays no toss.
+- [ ] A pickup 4 or more cells from Linda plays the shout, the long arc and the catch reply; at 3 cells the normal variant.
+- [ ] A move through two stacks plays one beat with "+N"; no line repeats twice in a row for a picker in one turn.
+- [ ] Instant pickups, Encore and the catch are unchanged.
+- [ ] The beat never blocks input.
 
-**Alternative 2: Footrace, apart.** Keep the race; the loser stops at the furthest cell of their path that is in line with the winner and 2 or more cells away, instead of next to them. The smallest change (`Mark_Linda_LoserStop`, core). It fixes R4 but adds nothing about distance or arrows.
+### D1.4 Log lines (with C5's `CombatLog.Quiver`)
 
-## Proposed rules (IDs proposed; rev 1's LI-13 Lookout is withdrawn and not reused)
+Added to C5's lines (spend, land, pickup, Encore, declined Watch):
 
-- **LI-14. Fetch FTP** (a skill node, D-264): a walking pickup gives +1 FTP, at most once per Bergson per turn, at most +2 per family per round. Not in D1.
-- **LI-15. Far Watch.** If no Bergson stands within 2 cells of Linda when the family ends its turn, her Watch deals ×1.5 until the next player turn. Watch base 6× → 5× (toggle).
-- **LI-16. Watched.** A walking pickup makes the picker take ×0.75 damage until the next player turn, once per Bergson per turn; Linda excluded.
-- **LI-8 (amended).** Encore cooldown 3 (D-263, toggle).
+- **Level start:** the state of each D1 toggle and the Watch factors, so a log says which build it is.
+- **At each End Turn:** Linda's cell; the nearest counted unit and its distance; Far yes/no.
+- **Each Watch shot:** phase; the factor used (5 / 7.5 / 6 when off); Far source (locked / live); damage per target.
+- **Each pickup:** kind (walk / instant / catch / Encore / Duo), picker, number of arrows, the picker's distance to Linda, whether the call-out played.
+- **Linda's damage taken while Far** (for the "Far gets her killed" signal).
 
-## Lens notes
+**Acceptance.**
+- [ ] One level played gives every line above.
+- [ ] `CombatLogTests` covers the End Turn Far line and the pickup kind.
 
-- **Creative.** Linda holds a far post with fewer people near her, and hits harder for it; whoever leaves John's shelter to run her an arrow comes back under her eye. Two protectors: John holds the centre, Linda the edge. The moment designed for: Mark tearing down her lane after her arrow, scooping it up next to the goblin she just hit, and throwing it back across the field ("Too slow, sis!").
-- **Systems.** The levers:
-  - the Far radius (2), multiplier (×1.5) and base (5×);
-  - Watched (×0.75);
-  - the Encore cooldown (3).
+### D1 playtest signals
 
-  Failure cases:
-  - She parks far away and wins on damage. The trade base and the quiver bound this; watch her share.
-  - Watched makes fetchers tanks: it is once per turn and outside John's zone only by accident; ×0.75 is mild.
-  - Fetch Race as a free shot every 2 turns: it costs 2 FTP and needs Mark's AP turn to follow.
-- **UX.** The Far mark and "Far lost" on ghosts, locked at End Turn. Watched's eye on the unit. Fetch Race in one decision with the full preview. Likeliest misread: "her Watch did less damage" when a sibling stood next to her at End Turn. Hence the prompt line and the mark.
+Missions M4 and M6 with a full squad, compared against the C4 build with every toggle off.
+
+| Signal | Pass | Means |
+| --- | --- | --- |
+| Walking pickups as a share of all returns | ≥ 30% | The fetch happens. Below: D1 failed on R2 |
+| Encore uses per level | ≤ 1 | Encore is the backup |
+| Linda's distance to the nearest counted unit at End Turn | Up ≥ 1 cell on average | Players move her out |
+| End Turns with Linda Far | 30–60% | A real choice. Near 0: the reward is too small; near 100: too safe or too strong |
+| Linda's damage share | Not above C4 | The trade holds. Above: Far 7.5× → 7× or base 5× → 4.5× |
+| Watch damage, near vs Far shots | Both appear | Both states are played |
+| Linda deaths or ≤ 25% HP while Far | Under 1 in 3 levels | Far isn't a trap (and answers the AI question A) |
+| Call-outs per level | ≥ 1 | Long fetches happen |
+| THJ and testers | Mention the hand-backs and the call-out unprompted; can say why Watch hit harder | Feel and readability |
 
 ## USP check
 
-- **Family Roles:** strengthens. Watch gains a positional trade; Watched gives her role a protective side.
-- **Synergies:** strengthens. Fetch Race sets up Catch & Return's geometry.
-- **Duos:** strengthens. Mark–Linda becomes distant and synced, distinct from the catch.
+- **Family Roles:** strengthens. Watch gains a positional trade (John's cover, or more damage).
+- **Synergies:** neutral in D1 (Arrow Chase sets up the catch later).
+- **Duos:** neutral in D1; Arrow Chase strengthens them later.
 - **Home:** neutral on purpose (Fetch FTP and the later nodes are progression).
 
 ## Critics
 
-Rev 1: three parallel critics (Explore agents with critic briefs; `miso-design-critic` wasn't available), each blind to the others.
-
-| Lens | Strongest point | What I did with it |
-| --- | --- | --- |
-| Systems | Encore wins on AP (R2); Fetch FTP farmable through instant pickups and into Watch; Long Pass ×1.5 raises her share | Encore cooldown 3 (D-263); no rewards for instant pickups; rev 2 uses the trade base for Far Watch |
-| Creative | A "be alone" reward feels lonely; reward the walker; Big Sister's Eye; cut the Footrace, make it a Fetch Race | Watched as the cheap Big Sister's Eye; the full version as a node; Fetch Race detailed |
-| UX | Range changes are invisible under FR-10/FR-11; state flips mid-phase; Long Pass is three decisions | Far locked at End Turn with marks; Fetch Race is one decision |
-
-Rev 2 was not re-critiqued: the changes follow THJ's answers and the rev 1 critics' points. If THJ wants it, a systems critic on Far Watch's share is the one worth running.
-
-## Recommendation
-
-**Step D1, "distance pass"** (after C4, alongside or after C3b; non-core; each lever a toggle on one config asset):
-1. LI-15 Far Watch: trade base 5×, ×1.5 when Far, locked at End Turn; Far mark, "Far lost", the prompt line.
-2. LI-16 Watched (×0.75) with the eye icon.
-3. Encore cooldown 3 (D-263).
-4. Cues: a hand-back variant per picker (John's lob, Lucy's spark, Mark's spin throw, Toba's leaf, Linda's "One more."); a call-out when the picker is 4 or more cells away; a glint only on stacks reachable this turn. Lines from `miso-narrative`, tagged `[PLACEHOLDER]`.
-5. Log lines (with C5): pickup kind and the picker's distance to Linda; Far on/off at End Turn; Linda's distance to her nearest sibling; Watch damage near/far; Watched hits reduced.
-
-**Step D2:** Fetch Race replaces the Footrace (core, own commit), after C3b, so the catch and the Race can be told apart in play.
-
-**Playtest signals** (M4, M6 with a full squad; against the C4 build):
-- Walking pickups ≥ 30% of returns (below that, D1 failed).
-- Encore at most once per level.
-- Linda's distance to her nearest sibling at End Turn up ≥ 1 cell.
-- Far at ≥ 40% of End Turns.
-- **Linda's damage share not above the C4 build** (over it: drop ×1.5 to ×1.25 or keep the base trade).
-- No Linda death attributable to standing Far in 3 or more levels.
-- Fetchers outside John's zone take a hit at least once per level (Watched matters).
-- THJ and testers mention the hand-backs unprompted.
-- Cold players can say why her Watch hit harder.
+Rev 1: three critics run in parallel (Explore agents with critic briefs). The systems critic named R2, so Encore cooldown 3 went in. The creative critic warned of a lonely reward and pushed for rewarding the walker, which led to the cues and the later nodes. The UX critic flagged invisible state changes, so the state now locks at End Turn and the marks were added. Rev 2 and rev 3 follow THJ's answers. Arrow Chase had its own critics: see its plan.
 
 ## Questions for THJ
 
-Answered 2026-10-27: Encore cooldown 3 (D-263); Fetch FTP is a node (D-264); not Long Pass (D-265).
+Answered: Q1 (D-266), Q2 (D-267, D-264), Q3 (D-263), Q4 (D-268, D-271), Q5 (D-269). Rev 2's "where does the Fetch FTP node live" is still open; it doesn't block D1.
 
-1. **How should Far Watch work?** *Context:* any Watch damage-up raises the share the quiver was cutting. *Options:* (a) Far from the nearest sibling, one step ×1.5, base 6× → 5× (trade); (b) the same without the trade (9× far); (c) distance from the target, first enemy only. *Recommendation:* (a). *Blocks:* D1 item 1.
-2. **Which fetcher reward?** *Context:* fetching costs cover; you asked for something for the fetcher. *Options:* (a) Watched, ×0.75 damage until the next player turn; (b) +1 movement on the next move; (c) a free 1-tile step after the pickup (needs a CR-6 exception); (d) cues only. *Recommendation:* (a) now; Big Sister's Eye and the free step as later nodes. *Blocks:* D1 item 2.
-3. **Which Mark–Linda Duo?** *Context:* the Footrace ends them adjacent (R4); the Duo must differ from the QTE catch (D-260). *Options:* (a) Fetch Race as above; (b) Family Gauntlet; (c) Footrace, apart; (d) keep the Footrace. *Recommendation:* (a), as D2 after C3b. It replaces the race code in `UnitsCooperationHandler` (core). *Blocks:* D2's tech plan.
-4. **Where does the Fetch FTP node live?** *Context:* D-264 makes it an upgrade. *Options:* (a) a Family node on Linda's tree (she has none today); (b) a run upgrade; (c) the Home workshop quiver adds it. *Recommendation:* (a). *Blocks:* nothing in D1; progression docs.
-5. **John's pull (still open).** *Context:* R1 is family-wide; the area relay removes the cost of clumping. *Options:* (a) leave John as built and open a separate formation review of every proximity reward; (b) test relay radius 1 now. *Recommendation:* (a). *Blocks:* nothing in D1.
+New edge questions (none blocks the D1 tech plan; recommendations are used if THJ doesn't answer):
+
+1. **Far for a player-phase Watch.** *Context:* Watch can fire on the family's turn (pushes, Command, Masher answers); the lock covers only the enemy phase. *Options:* (a) live check at the trigger; (b) reuse the last End Turn's state. *Recommendation:* (a): it matches what the player sees on the board. *Blocks:* D1.1 acceptance item 5.
+2. **Does Toba count for "near"?** *Context:* Toba isn't family yet (D-048), but he stands next to her like anyone else. *Options:* (a) every living squad unit counts, Toba included; (b) only John, Lucy and Mark. *Recommendation:* (a): Far means alone on the board, and that is easy to read. *Blocks:* the D1.1 rule text.
+3. **Where does the Fetch FTP node live?** (from rev 2) *Context:* D-264 made it an upgrade; Linda has no family nodes. *Options:* (a) a Family node on Linda's tree; (b) a run upgrade; (c) on the workshop quiver. *Recommendation:* (a). *Blocks:* progression docs only.
 
 ## Docs to update if approved
 
-- [`characters/linda.md`](../design/gdd/characters/linda.md): LI-14 to LI-16, LI-8 cooldown, Encore name (*Planned*).
-- [`family-systems.md`](../design/gdd/family-systems.md): the Mark–Linda Duo row (Fetch Race), the Watch row (Far), Catch & Return note.
-- [`characters/mark.md`](../design/gdd/characters/mark.md): Head Start node wording.
-- [`progression-economy.md`](../design/gdd/progression-economy.md): the Fetch FTP node; later nodes (Big Sister's Eye, Light Feet).
-- `glossary.md` (Far Watch, Watched, Fetch Race; `miso-narrative`).
-- The quiver tech plan (D1, D2), `decisions.md`, `status.md` (coordinator).
+- [`characters/linda.md`](../design/gdd/characters/linda.md): LI-15 Far Watch, LI-8 cooldown 3 (toggle), the Encore name (D-262), the Watch row; *Planned* until played.
+- [`family-systems.md`](../design/gdd/family-systems.md): the Watch row in the Family Roles table (5× / 7.5×, Far).
+- [`progression-economy.md`](../design/gdd/progression-economy.md): the Fetch FTP node (LI-14); later nodes Big Sister's Eye, Watched, a free step.
+- `glossary.md` (Far, Far Watch, Encore; `miso-narrative`) and the hand-back lines.
+- The quiver tech plan (a D1 chunk), `decisions.md`, `status.md` (backlog: formation review, D-269) (coordinator).
+- Arrow Chase's docs: see its plan.
