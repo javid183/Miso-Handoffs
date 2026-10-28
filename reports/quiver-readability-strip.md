@@ -66,6 +66,7 @@ none
 
 ## Risks and loose ends
 
+- Review fix: the panel quiver comments now say that 71 of its 85 px lie over the portrait and the right edge is 14 px past it; unused `using` removed from `QuiverPreviewRules.cs`. Placement unchanged.
 - Nothing compiled. Expect at most small typos.
 - The panel quiver may overlap something in the real HUD; it is built from a guess of the layout. Tunable in `UnitPanelUI.Quiver.cs` (`QuiverOverlapRight`) and `QuiverHudRules`.
 - The rim art is a black shape; I read it as the dark mouth drawn over the lower ends of the arrows. If THJ meant it differently, only the numbers in `QuiverHudRules` change.
