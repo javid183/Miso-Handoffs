@@ -36,3 +36,18 @@ Should fix:
 Notes:
 - The unused `timescale` field may raise warning CS0414.
 - Mark can't catch while Linda is absent in practice: only Linda's arrows are whitelisted, and she always creates the field.
+
+---
+
+# Faster catch prompt review (D-273, 2026-10-27)
+
+**Verdict: APPROVE**
+
+- **Compile risk:** none found.
+- **Defaults:** keep every other QTE identical (-1 and 1, taken from the initializers).
+- **Animator speed:** restored in `Prepare`, after the preload, and in `Finish`, so pooled buttons are safe.
+- **Prefab edit:** minimal.
+- **House rules:** LF, no BOM, no private IDs.
+- **Remaining commits:** the core QTE change, then the prefab and wiring test.
+
+Play: check the catch prompt, then a role prompt straight after it on the same pooled button.

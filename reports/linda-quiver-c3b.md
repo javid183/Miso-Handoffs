@@ -77,3 +77,51 @@ Follow playtests/2026-10-27-mark-catch-qte-play-check.md.
 - Play check: items 13-15 are the reviewer's, 16-17 cover the time scale and teardown fixes.
 - Still not compiled or run.
 - Re-review fix: `GroundedArrowField.IsOpen` (true until the level ends) added; the disable check now tests `Current is { IsOpen: true }`, since a field stays "current" after the level ends. `GroundedArrowField.cs` goes in commit 1.
+
+## Faster catch prompt
+
+THJ found the catch prompt slow. The prompt waited 0.05 s, then played Show, then waited the button's `preloadTime` (0.6 s) before input opened, so about 0.65 s. Now each QTE profile can override both values; Mark's catch uses 0.25 s preload and 2x show speed, so input opens about 0.3 s after the arrow touches Mark. Every other profile keeps the defaults (-1 and 1), so role QTEs are unchanged. Not compiled or run (editor is open).
+
+### Files
+- Core/Interactions/Runtime/QTEProfile.cs: two optional serialized fields, `preloadOverride = -1f`, `showSpeed = 1f` (Min 0.01), with getters `PreloadOverride`, `ShowSpeed`. Unserialized fields on old data take the initializers.
+- Core/Interactions/Runtime/QTEPromptTiming.cs (+meta, new): pure helper `ResolvePreload(override, default)` (negative uses the default; 0 counts as a real value) and `ResolveShowSpeed(speed)` (non-positive falls back to 1).
+- Features/UI/Panels/Scripts/QTEButton.cs: `Prepare` resolves both from the profile. `Initialize` remembers the animator's own speed. `Prepare` resets `animator.speed`; `ProcessIE` sets speed x showSpeed for Show, waits the resolved preload, then restores the speed; `Finish` restores it too, so pooled buttons never carry it over and Notice/Miss play at normal speed. `QuickTimeEventHandler.cs` is untouched (the profile already reaches the button via `Prepare`). `QTEButton.prefab` and the show clip are untouched.
+- Core/Interactions/Editor/QTEPromptTimingTests.cs (+meta, new): 7 tests (negative uses default, 0.25 used, 0 used, speed 1, speed 2, non-positive speed, default profile unchanged).
+- Features/Player/Mark/Prefabs/Unit_Mark.prefab: the profile is inline in the ProjectileCatchAndReturn component; added `preloadOverride: 0.25` and `showSpeed: 2` after `validRange` (2 lines, only that one profile; the other two MarkQTE profiles in the prefab are unchanged).
+- Linda/Scripts/Quiver/Editor/CatchReturnWiringTests.cs: new `MarksCatch_PromptAppearsFast` (preload 0.25, show speed 2).
+
+### Exact core diff
+```
+QTEProfile.cs  (before [NonSerialized] public float InitialHoldTime;)
++ [Header("Prompt timing (optional)")]
++ [Tooltip("Seconds between the prompt showing and input opening. Negative uses the button's own preload time.")]
++ [SerializeField] private float preloadOverride = -1f;
++ [Tooltip("Speed multiplier for the prompt's Show animation. 1 leaves it unchanged.")]
++ [SerializeField, Min(0.01f)] private float showSpeed = 1f;
++ public float PreloadOverride => preloadOverride;
++ public float ShowSpeed => showSpeed;
+
+QTEButton.cs
++ private float _defaultAnimatorSpeed = 1f; private float _preloadTime; private float _showSpeed = 1f;
+Initialize:  + if (animator) _defaultAnimatorSpeed = animator.speed;
+Prepare:     + _preloadTime = QTEPromptTiming.ResolvePreload(profile.PreloadOverride, preloadTime);
+             + _showSpeed = QTEPromptTiming.ResolveShowSpeed(profile.ShowSpeed);
+             + animator.speed = _defaultAnimatorSpeed;   (after updateMode)
+ProcessIE:   + animator.speed = _defaultAnimatorSpeed * _showSpeed;   (before SetTrigger("Show"))
+             - yield return new WaitForSecondsRealtime(preloadTime);
+             + yield return new WaitForSecondsRealtime(_preloadTime);
+             + animator.speed = _defaultAnimatorSpeed;
+Finish:      + animator.speed = _defaultAnimatorSpeed;   (before the Notice/Miss trigger)
+```
+
+### Tests for THJ
+EditMode > Run All: `QTEPromptTimingTests` (7) and `CatchReturnWiringTests.MarksCatch_PromptAppearsFast`. Everything else should stay green apart from the known `AIRegressionTest.Baseline_MatchesCurrentAI`. Check the console for the new `Min` attribute or serialization warnings after recompile.
+
+### Updated commit units (build order)
+0. NEW, own commit, core QTE: feat(qte): let a prompt override its preload and Show speed: Core/Interactions/Runtime/QTEProfile.cs, Core/Interactions/Runtime/QTEPromptTiming.cs(+meta), Features/UI/Panels/Scripts/QTEButton.cs, Core/Interactions/Editor/QTEPromptTimingTests.cs(+meta)
+1. feat(mark): freeze Linda's arrow at Mark during the catch prompt and fly it home (unchanged)
+2. feat(linda): a return arrow that ends its flight at Linda (unchanged)
+3. feat(mark): make the catch a prompt and use the return arrow: Unit_Mark.prefab (now also carries the 0.25 / 2 values), Editor/CatchReturnWiringTests.cs(+meta) (needs 0, 1 and 2, since the prefab keys name fields from 0)
+
+### Play step
+Play a level with Linda and Mark with the synergy active. Shoot an arrow that Mark catches from 2+ tiles. From the arrow touching Mark, the catch prompt should show and be pressable in about 0.3 s (Show animation visibly quicker, finished before input opens). Press it and confirm the catch and return still work, and after it the next QTE is normal. Then trigger a role QTE (any other unit's prompt): it must look and time exactly as before (about 0.65 s to input, normal animation speed). Also check a prompt right after a catch prompt (pooled button) is not sped up.
