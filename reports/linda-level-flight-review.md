@@ -21,3 +21,17 @@ Reviewer: miso-reviewer, 2026-10-27. The coordinator saved this file.
 - The VerticalFactor path equals Direct plus the lift.
 - The sweep overlap holds, the freeze point sits on the drawn path, and there's no retrigger.
 - Play check: up shots reach about 0.19 + overshoot + 0.1 past the anchor. Also watch enemies with a low collider top on horizontal shots.
+
+---
+
+# Re-review after fixes (2026-10-27)
+
+**Verdict: APPROVE.**
+
+- **Landing:** the logical end uses the same radius source and context as `Projectile.Initialize`. `DirectionNormal` equals the sign for every cardinal shot, and copies never land.
+- **Curve tangents:** 69.
+- **Core and compile:** no core change, low compile risk.
+
+Notes:
+- Edge case: if the catch can't prepare a copy, the arrow lands at end of range. Unreachable in practice.
+- How `QuiverArrow` feeds the rule is covered by the play check only.
