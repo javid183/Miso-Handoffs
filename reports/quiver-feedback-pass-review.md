@@ -30,3 +30,19 @@ Reviewer: miso-reviewer, 2026-10-28. The reviewer is read-only, so the coordinat
 - **Loose ends:**
   - The quiver instance in `CharacterHUD` is active by default; `ClearQuiver` hides it on the first unit.
   - Each `xN` label gets its own TMP material copy, as the return cue does.
+
+## Re-review of the three fixes (2026-10-28)
+
+**Verdict: APPROVE.** No must-fix or should-fix items.
+
+- **Lift:** set every frame.
+- **Count format:** one shared `x{0}`.
+- **Panel row lifetime:** the row is a child of Linda's own info panel canvas, destroyed with her. Nothing is pooled, duplicated or orphaned.
+- **Allocations:** none per frame.
+- **World row:** restored when the panel closes.
+- **Empty state:** shown in both rows.
+- **Commit units:** still compile alone.
+
+**Minor play risk:** the row may sit one frame off on the frame the panel opens, because it is placed before the layout rebuild.
+
+**Pre-existing:** the pip count won't follow a quiver size change in the middle of a level.
