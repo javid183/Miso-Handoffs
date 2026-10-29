@@ -279,3 +279,31 @@ None. The quiver exists only on `thj/linda-quiver`. The projectile clamp would a
    - The copy flies back to Linda and damages enemies on the way.
    - Nothing goes into a quiver, and the enemy behind Mark and behind Linda is not hit.
 9. **Toggle between levels:** tick the switch back on and go to the next level. The quiver is back, full at 3.
+
+## Review fixes
+
+Review: APPROVE with three should-fixes. THJ's decisions: Mark's catch stays a QTE with the switch off (no change); hide Encore from Linda's bar when the switch is off; `LevelLindaJohn-C1` will be added later, so it stays out of the tool's list and the tool keeps warning about it. Nothing compiled or run yet (the editor is open).
+
+**Encore hidden from the bar when the switch is off** (commit 4).
+- New pure rule `Features/Player/Linda/Scripts/Quiver/QuiverBarRules.cs` (+ `.meta`): `HidesFromBar(isEncore, quiverInUse)`.
+- `QuiverAbilityInfo.HiddenFromBar(ability)`: Encore whose owner has no quiver in use (`LindaQuiver.Of` returns null).
+- `Features/UI/Panels/Scripts/AbilitiesBarHUDUI.cs` `Populate` skips those abilities. The number-key shortcuts are numbered by button position, so they stay consistent. In the default kit Encore is the 10th button, which has no number key, so no other key moves; in the custom kits it is the last button. Non-core.
+- Encore is now hidden from the bar, not just greyed (this replaces "not castable" under change 4). `HasGroundedArrows` still answers false as a second guard.
+- Test: `QuiverSwitchTests.Bar_LeavesEncoreOutOnlyWhileTheQuiverIsOff`.
+
+**Should-fix 1:** `EncoreKitTool.CopySlot` empties a GameObject or Component reference only when `AssetDatabase.GetAssetPath(obj) == LindaPath`. Every other reference, such as a VFX or SFX prefab, is copied.
+
+**Should-fix 2:** `CopySlot` has an explicit `Generic` case (descended into, nothing to copy) and a `default:` that logs a warning with the property path and type for anything it doesn't copy.
+
+**Should-fix 3:** `QuiverReadabilityTests.MakeQuiver()` calls `quiver.SetActiveForTests(true)`, so those tests don't depend on THJ's local Global Settings (commit 4).
+
+**Commit lists, updated:**
+- Commit 3: unchanged. The size-only `LindaQuiver.cs` patch is unchanged too (`LindaQuiver.cs` was not touched by these fixes).
+- Commit 4 adds:
+  - `miso/Assets/_Project/Features/Player/Linda/Scripts/Quiver/QuiverBarRules.cs` + `.meta`
+  - `miso/Assets/_Project/Features/UI/Panels/Scripts/AbilitiesBarHUDUI.cs`
+  - `miso/Assets/_Project/Features/Player/Linda/Scripts/Quiver/Editor/QuiverReadabilityTests.cs`
+  - (`QuiverAbilityInfo.cs` and `QuiverSwitchTests.cs` were already in commit 4.)
+- Commit 5: `EncoreKitTool.cs` now includes fixes 1 and 2; no new files.
+
+**How to see it, updated step 7:** with the switch off, Encore is not on Linda's bar at all; the rest of her bar matches main.
