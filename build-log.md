@@ -2154,3 +2154,21 @@ Core gets one additive, generic `CombatLog.AddCustom`.
 - Allied Toba doesn't hand back arrows (D-310).
 
 **Status:** committed `661890964`, `51954e2c6`, `45cb29d76`, `d8651dd3c`, `7c6f5e57c`, `99ae9ff09`, `ebbd4fe68`, `e201fb245`, `26371cc8d`, `19f75ff0d`.
+
+## 2026-10-29 · Ability pause-frame skip fix (core, thj/linda-quiver)
+
+**Built:** the animation catch-up stops at the target-selection pause, and the activation frame waits for confirmed targets (D-311).
+
+**Verified:**
+- EditMode 1009/1010 (known red only).
+- Review APPROVE: no turn lock on cancel, hit, restart or replay.
+- THJ played Explosive Arrow at 10 fps: no stray fire.
+
+**Not verified:** the original crash was intermittent, so its absence is weak evidence.
+
+**Findings:** follow-ups for THJ:
+- `_paused` stays set into a later `Play`, so a hurt or death clip played while held can freeze.
+- A long hitch can skip the activation frame for any ability.
+- A held ability stays set across the end of the turn.
+
+**Status:** committed `8293bd358`. Needs porting to main.

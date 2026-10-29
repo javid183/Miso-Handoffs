@@ -43,4 +43,4 @@ Verified in code by the coordinator; the root cause was found by Explore. Not re
 
 ## Commit log
 
-(empty)
+THJ played 2026-10-29 at 10 fps, no repro; EditMode 1009/1010 (known red only). `8293bd358` (core, alone). Port to `main`: the two edited files are identical there.
