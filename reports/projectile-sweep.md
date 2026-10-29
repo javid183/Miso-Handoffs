@@ -7,7 +7,7 @@ Outcome: done (compiled outside the editor; EditMode suite and play check not ru
 
 - `miso/Assets/_Project/Core/Entities/Runtime/Projectile.cs` (core): the trigger body moved into one private `TryHitOnContact(Collider2D)`; `OnTriggerEnter2D` now just calls it. A per-projectile hit set (cleared in `Initialize`) blocks a second hit on the same entity. At the start of each `Update` the projectile sweeps the step it moved during the last frame and sends every collider it passed through `TryHitOnContact`. BOM and LF kept.
 - `miso/Assets/_Project/Core/Entities/Runtime/ProjectileSweep.cs` (+ `.meta`), new: `ProjectileHitLedger<T>` (the dedupe and accept rule), `ProjectileSweepStep` (which step to sweep, if any) and `ProjectileSweep.Cast` (a non-allocating `Physics2D.CircleCast` with a buffer that grows when it fills up). No statics.
-- `miso/Assets/_Project/Core/Entities/Editor/ProjectileSweepTests.cs` (+ `.meta`), new: 16 EditMode tests.
+- `miso/Assets/_Project/Core/Entities/Editor/ProjectileSweepTests.cs` (+ `.meta`), new: 17 EditMode tests.
 
 ### Exact core diff (Projectile.cs, +71 / -7)
 
@@ -27,7 +27,7 @@ Outcome: done (compiled outside the editor; EditMode suite and play check not ru
 - [x] **Frozen projectiles don't sweep.** Mark's catch sets `enabled = false`, so `Update` doesn't run. The guard also passes `enabled && IsAlive`. Test: `NotMoving_NoSweep`. If the catch is declined, the arrow is put back on its path point and switched on again. Its next `Update` then sweeps the step it made before the catch (the catch point is never used as a start), which adds only hits the trigger may have missed.
 - [x] **No sweep on the first frame, and none from the origin or through the owner.** The step is recorded at the start of each move in `Update`, not in `Awake`/`OnEnable` (`AEffectSpawner` instantiates at the prefab's origin and positions afterwards). The first `Update` has no step, so nothing is swept. The first sweep runs from the launch point, and the owner is skipped as before. Tests: `FirstFrame_NothingToSweep`, `NewFlight_ForgetsThePreviousStep`.
 - [x] **End-cell `Activate(_targetCell)` unchanged, and no double hit.** The sweep goes through the same `Occupies(_targetCell)` skip, so the end-cell occupant is never hit on contact (it is claimed and counted for falloff, as today) and only the arrival hits it. Code read; play check: verifier.
-- [x] **Non-arrow projectiles get the same benefit.** All 15 projectile prefabs (5 Linda, 7 Lucy fireballs, Archer Goblin, Dark Shaman, the dev test) have a root trigger `CircleCollider2D` with radius 0.1, offset 0, layer 0, so the sweep radius equals today's collider and `boundingSize`. `TargetReach`-only projectiles skip the cast (they never hit on contact).
+- [x] **Non-arrow projectiles get the same benefit.** Any projectile that hits on contact gets the sweep. Today only four do (all `TargetReachAndHit`): `LindaAttackArrow`, `LindaAttackArrowReturn`, `LindaAttackFireArrow` and `LindaAttackHealArrow`. Every enemy shot, Lucy's fireballs, `LindaExplosiveArrow` and the dev test are `TargetReach`, so they skip the cast and don't change. All of them have a root trigger `CircleCollider2D` with radius 0.1, offset 0, layer 0, so the sweep radius equals today's collider.
 - [x] **Main-thread only.** No AI code reads `Projectile` (grep of `AISystem`: only an asset path string in `AIRegressionTest`). The new code runs in `Initialize`, `Update` and `OnTriggerEnter2D`.
 - [x] **Domain reload.** No new statics (one `const`).
 - [x] **Compiles.** I compiled `Projectile.cs` + `ProjectileSweep.cs` with Unity's Roslyn against `Library/ScriptAssemblies/Assembly-CSharp.dll` and the 6000.3.4f1 engine DLLs: no errors, only warnings that were already there. The test file compiles against the result plus Unity's NUnit. The real editor compile is not checked yet.
@@ -35,7 +35,7 @@ Outcome: done (compiled outside the editor; EditMode suite and play check not ru
 
 ### Why behaviour is unchanged at normal frame rates
 
-- **The sweep runs a frame late on purpose.** It covers the step moved in the *previous* frame, at the start of this frame's `Update`. Physics (50 Hz, `FixedUpdate` mode, auto-sync off) runs before `Update`, so whenever a physics step falls between two frames, the trigger and Mark's catch (trigger and `CatchSweep` in `LateUpdate`) have already seen where the step ended. The sweep then finds only what is already in the hit set, plus what the jump skipped. The order of hits and catches is today's.
+- **The sweep covers the step moved in the previous frame.** It runs from the projectile's first trigger message of the next physics step, or else at the start of the next `Update` (see Review fixes). Physics (50 fps, `FixedUpdate` mode, auto-sync off) runs before `Update`. When the arrow's trigger fires for the body it ended up in, it first sweeps the whole step and hits the bodies it passed in path order; the end body follows, and the hit set stops a second hit. Mark's catch (its trigger, and `CatchSweep` in `LateUpdate`) still sees the step before the arrow's own sweep, unless the arrow's trigger fires first in the same physics step, which is today's arbitrary order too. At normal frame rates nothing is skipped, so the hits and their order are today's.
 - **Frames with no physics step in between** (above 50 fps): the sweep reaches a body the trigger would only have reported at the next physics step, so the hit lands up to one frame earlier. It is the same hit, in path order. Today the trigger at those frame rates can also miss a body it only overlapped between two physics steps; the sweep fixes that too.
 - **Same filter and same data.** The sweep only changes *how a contact is found*: same collider radius, same layer mask and triggers, `GetComponent<GameEntity>` on the same GameObject, then the same method.
 - **Dedupe.** At normal frame rates each unit has one collider (`UnitBase`: one `BoxCollider2D`), so one trigger enter per pass and the dedupe never fires. It only changes something if a body leaves and re-enters one projectile's circle, or the trigger and the sweep both report it.
@@ -47,7 +47,7 @@ No.
 
 ## Decisions I made
 
-- **The sweep runs at the start of the next `Update`, not right after the move.** The brief said "after moving". Sweeping right after the move would run before Mark's `CatchSweep` (`LateUpdate`) and before the physics trigger. On a long frame, that would hit an enemy behind Mark before the arrow is caught: a behaviour change. Sweeping the previous step first lets the catch and the trigger act first, and it is the same set of segments (Tier 2).
+- **The sweep runs at the start of the next `Update`, not right after the move.** The brief said "after moving". Sweeping right after the move would run before Mark's `CatchSweep` (`LateUpdate`) and before the physics trigger. On a long frame, that would hit an enemy behind Mark before the arrow is caught: a behaviour change. Sweeping the previous step first lets the catch and the trigger act first, and it is the same set of segments (Tier 2). (Changed after review: the trigger now drains the pending step first; see Review fixes.)
 - **The sweep goes from where the last move started to where the projectile is now**, not to where it moved to. When Mark's return-flight clamp (`LateUpdate`) puts the return arrow back on Linda, the sweep stops on Linda instead of reaching past her (Tier 2).
 - **`TargetReach` projectiles skip the cast.** They can't hit on contact, so this changes nothing and saves a cast per frame (Tier 1).
 - **The projectile's own collider is skipped** in `TryHitOnContact` (`entity == this`). The trigger never reported it; the cast can (Tier 1).
@@ -60,19 +60,19 @@ None.
 
 ## Docs to update
 
-- `tech/core-systems.md` › Other combat entities: `Projectile` sweeps the step moved during the last frame (circle cast, own collider and layers) and keeps a per-projectile hit set cleared in `Initialize`; new `Core/Entities/Runtime/ProjectileSweep.cs`.
+- `tech/core-systems.md` › Other combat entities: a `Projectile` that hits on contact (today only Linda's four `TargetReachAndHit` arrows) sweeps the step it moved during the last frame (circle cast, own collider and layers). The sweep runs from the trigger first, then from `Update`, so hits follow path order. Each projectile keeps a hit set, cleared in `Initialize`. `TargetReach` projectiles are unaffected. New file: `Core/Entities/Runtime/ProjectileSweep.cs`.
 - `tech/combat-architecture.md` / `mechanics-brief.md`, if they describe projectile hits as "trigger only".
 
 ## Risks and loose ends
 
-- **Sleeping bodies.** A projectile without a Rigidbody2D (enemy shots, Lucy's fireballs, the dev test) moved by transform could miss a sleeping unit's body (see the level-flight findings). The sweep is a query, so it sees sleeping bodies. Those projectiles now hit units they used to fly through even at normal frame rates. This is the fix asked for, and the damage preview already predicted those hits, but it is the most visible change outside Linda. For Archer Goblin and Dark Shaman shots in `Hit` modes, this also means more enemy hits on the player.
+- **Sleeping bodies.** A projectile moved by transform without a Rigidbody2D could miss a sleeping unit's body (see the level-flight findings). The sweep is a query, so it sees sleeping bodies. This matters only for the four contact-hitting Linda arrows, which now carry a Kinematic Rigidbody2D anyway. Enemy shots, Lucy's fireballs and the Explosive arrow are `TargetReach`: they are not swept and don't change, so there is no balance impact on them.
 - **AbilityDamagePreview vs runtime: no new disagreement**, left as is. Both are unchanged and differ as before:
   - the preview's falloff index (`collisionIndex`) goes up for every unique entity it finds, while the runtime's `_hitCount` goes up only for entities the effect targets;
   - the preview lists the end-cell occupant as a path hit (its skip is commented out), while the runtime skips it on contact and hits it on arrival.
   The sweep moves the runtime closer to the preview (no skipped bodies, a dedupe like the preview's `seen` set).
 - **A catch on a long frame**: when `CatchSweep` stops the arrow at Mark, enemies between the launch and Mark in that same frame are not hit by the original arrow. The step isn't swept while frozen, and a caught original is never switched back on. The return copy flies back over them. This is the same as today.
 - **Stale physics poses**: with auto-sync off, a unit that moved this frame is cast against at its last physics pose. This is the same limit as the trigger.
-- The physics tests (`LongStep_…`, `StepThatStopsShort_…`, `FullBuffer_Grows`) query real `Physics2D` in edit mode at (10000, 10000) with a hidden, unsaved GameObject. If edit-mode `Physics2D` behaves differently in this editor, those three fail; the other 13 are pure.
+- The physics tests (`LongStep_…`, `StepThatStopsShort_…`, `FullBuffer_Grows`) query real `Physics2D` in edit mode at (10000, 10000) with a hidden, unsaved GameObject. If edit-mode `Physics2D` behaves differently in this editor, those three fail; the other 14 are pure.
 - `ProjectileSweepStep.TryTake` uses `Mathf.Epsilon` as its "didn't move" cutoff, the same as `CatchSweep`.
 
 ## Proposed commits
@@ -86,7 +86,7 @@ None.
 ## How to see it
 
 Tests (editor open): Window > General > Test Runner > EditMode > Run All. The only accepted red is `AIRegressionTest.Baseline_MatchesCurrentAI`. Worth a look in particular:
-- `MISO.Core.Entities.EditorTests.ProjectileSweepTests` (new, 16);
+- `MISO.Core.Entities.EditorTests.ProjectileSweepTests` (new, 17);
 - `CatchReturnWiringTests`, `QuiverWiringTests` (Linda's projectile prefabs);
 - `CatchFreezeRulesTests`, `CatchPointRulesTests`, `ReturnFlightClampTests` (Mark's catch around a projectile);
 - `DamagePreviewRulesTests` (preview).
@@ -98,4 +98,14 @@ Setting the frame rate: no cheat exists for it. For the check, put a throwaway s
 3. **A column of worms, 10 fps.** Line up 2 or 3 Dark Worms in one column in Linda's range, with an empty or occupied end cell, and shoot along the column. Expected: every worm on the path is hit once, in path order, with the falloff (first full, then lower), and the end-cell worm is hit once on arrival. The HP lines in the combat log show each worm exactly once, and the damage matches the preview.
 4. **The same column at 60 fps.** The same hits and numbers as at 10 fps.
 5. **Mark's catch**, optional at both frame rates: Linda shoots through an enemy toward Mark (2+ tiles). Expected: the enemy is hit on the way out, the catch works as before, and the return flight hits the enemy again (intended). If the catch prompt is declined, the arrow flies on and lands as before.
-6. **Enemy shots**: an Archer Goblin shoots at a unit. The hit is unchanged at 60 fps. At 10 fps a shot no longer passes through a unit in its path.
+6. **Enemy shots and Lucy's fireballs** don't change: they act only on arrival, so the sweep doesn't run for them. A quick sanity shot at 60 fps is enough.
+
+## Review fixes
+
+The reviewer returned FIX. Changes:
+
+- **Hit order on a long frame (must fix).** Physics runs before `Update`. On a frame with a physics step, the trigger reported the body at the end position first, and the next-frame sweep then added the nearer skipped bodies. That reversed the falloff (at 10 fps, worm 2 got the full hit and worm 1 the reduced one). Fix: `OnTriggerEnter2D` now drains the pending step first (`if (enabled && IsAlive) SweepLastStep();`) and then handles its own contact, so every hit on a step lands in path order. A body the sweep already hit is skipped by the hit set. The `enabled` guard stays: a frozen arrow still gets trigger messages, but must keep its pre-catch step for a declined catch.
+- **The step survives while the projectile isn't moving.** `ProjectileSweepStep.TryTake` no longer discards the step when called with `moving: false`; it keeps it until the projectile moves again. New test: `NotMoving_StepKept_SweptOnceMovingAgain`.
+- **Which projectiles are affected (report corrected).** Only Linda's four `TargetReachAndHit` arrows are swept (`LindaAttackArrow`, `LindaAttackArrowReturn`, `LindaAttackFireArrow`, `LindaAttackHealArrow`). Every enemy shot, Lucy's fireballs, `LindaExplosiveArrow` and the dev test are `TargetReach` (I checked the prefabs), so they skip the cast and don't change. I corrected the "Non-arrow" criterion, Risks, play step 6 and the core-systems note.
+- **Test coverage of the trigger-versus-sweep order:** no EditMode test (it needs physics callbacks in Play mode). It is covered by the 10 fps worm-column play check (How to see it, steps 3 and 4): the first worm on the path must take the full hit and later worms the reduced ones, matching the damage preview.
+- I recompiled offline (Unity's Roslyn against `Library/ScriptAssemblies`): `Projectile.cs` and `ProjectileSweep.cs` have no errors, and the tests compile. `Projectile.cs` keeps its BOM and LF. The EditMode suite is still to be run in the open editor.

@@ -17,3 +17,14 @@ Reviewer: miso-reviewer. The coordinator saved this file.
 - No statics, no AI path; BOM and LF are kept.
 - New preview difference: a glancing contact between preview samples now counts as a hit at runtime.
 - With the sweep in place, the kinematic bodies on Linda's arrows are no longer needed for sleeping bodies. Keeping them or not is THJ's call.
+
+---
+
+# Re-review after fixes
+
+**Verdict: APPROVE.**
+
+- Hits now follow path order on a long frame.
+- No double hits.
+- The freeze keeps the pending step, so a declined catch still sweeps it.
+- The order is checked only in play: the 10 fps worm column.
