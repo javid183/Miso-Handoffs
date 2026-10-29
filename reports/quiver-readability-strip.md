@@ -93,3 +93,66 @@ none
 1. Focus the Unity editor, wait for the compile, fix any error the Console shows.
 2. Test Runner > EditMode > Run All.
 3. Open a level with Linda, enter Play, select Linda, and follow `playtests/2026-10-28-quiver-strip-play-check.md`.
+
+## Play-check tweaks
+
+Not compiled and not run: the editor is open and the Unity MCP connection is down (ECONNREFUSED). THJ must focus the editor, fix any typo the Console shows, and run EditMode.
+
+### Values (before -> after)
+
+- Pips under Linda (`QuiverPipsView`): `PipHeight` 0.26 -> 0.13, `PipSpacing` 0.16 -> 0.08, `BelowFeet` 0.14 -> 0.12 (all in cells; half size, so they sit a little closer to her feet).
+- "+1" cue (`QuiverReturnCue`): `IconHeightCells` 0.3 -> 0.15, `FontCells` 4 -> 2, `SideCells` 0.32 -> 0.2, `SlotStepCells` 0.3 -> 0.2. The rise (0.5) and the catch flash are unchanged.
+- HUD quiver (`UnitPanelUI.Quiver.cs`): now at the portrait's top-left. The quiver's pivot is its top-left corner; that corner sits `QuiverOverlapLeft` (renamed from `QuiverOverlapRight`, still 14 px) left of the portrait's top-left corner, so 71 of its 85 px lie over the portrait. Same sibling order and arrows-inside look. Header and placement comments updated. Unverified in the real HUD: whether 14 px to the left clips or collides with anything.
+
+### Combat log: how it works
+
+The "Quiver:" lines are gone (spend, land, pickup, round start, level start, Watch prompt, return, recall). The quiver count is added to the line of the action that changed it, as one suffix after " · ". Sample lines:
+
+- `[R2 Player] Linda (7,1) › Bow Attack → Goblin (9,1) · quiver 1/4`
+- `[R2 Player] Linda (6,1) › Watch → Goblin (9,1) · quiver 0/4` (her Watch shot; the family-role line gets the suffix)
+- `[R2 Player] John (5,1) › Move → (6,1) · +2 arrows, quiver 2/4` (pickup on someone's move; works for any unit)
+- `[R3 Player] Linda (7,1) › Recall · +3 arrows, quiver 4/4`
+- Mark's catch: `... · +1 arrow, quiver 4/4` on the action it happens in.
+
+One suffix per action: a later annotation replaces the earlier one, so the final count wins (a shot whose arrow is then picked up in the same action shows only the "+N" text). A Watch decline now writes nothing.
+
+### Core change (needs its own commit): generic, additive log annotation
+
+Core, `Core/Systems/CombatLogging` (not on the core list). Imports nothing from Linda.
+- `CombatLogEntry.Suffix` (new string).
+- `CombatLogFormat.Compose`: action lines append ` · <Suffix>` when set; `ToJson` gains a `suffix` field.
+- `CombatLog.Custom.cs` rewritten: `AddCustom` (and its Note lines) removed; new public `AnnotateAction(string text)`. For the note to reach a line, the newest action line is now held back until the next entry is written or its action closes (`AddAction`, `WritePendingAction`; `Add` in `CombatLog.cs`, three call sites in `CombatLog.Actions.cs`). Line order and text are unchanged for lines without a note; the only visible effect is that an action line reaches the UI and the file sinks a moment later (when the next entry or the action's end comes).
+- `CombatLogFormat.Tagged` is now unused by game code (only its own test). Left in place; delete if you want.
+- Test: `ActionSuffix_ReadsAfterTheLineAndIsInTheJson` in `CombatLogTests.cs`.
+- Risk: if a quiver change happens after another entry was already written under the same action (for instance a damage row before the arrow is spent), the note is dropped, not moved. Spend happens at launch, before hits, so I expect that to be rare. Check in the play check, especially Watch (the role line may be followed by a result row before the shot spends).
+
+### Quiver files
+
+- `QuiverLogLines.cs`: now only `Spent(count, size)` and `Returned(amount, count, size)`; `Category` and the other builders deleted.
+- `QuiverLogListener.cs`: rewritten to listen to `OnSpent` and `OnReturned` (all kinds, since pickups and Recall add through `Add`) and call `AnnotateAction`. The level, turn, field and role-outcome hooks are gone.
+- `Editor/QuiverLogLinesTests.cs`: rewritten for the two builders and a composed line.
+- Left alone though now without log subscribers: the field's `OnArrowLanded`, `OnArrowsPickedUp`, `OnRecalled` events and `ArrowPickupMoment` (public API; delete in a later pass if you want).
+
+### Files changed in this round
+
+- `Features/Player/Linda/Scripts/Quiver/QuiverPipsView.cs`, `QuiverReturnCue.cs`
+- `Features/UI/Panels/Scripts/UnitPanelUI.Quiver.cs`
+- `Features/Player/Linda/Scripts/Quiver/QuiverLogLines.cs`, `QuiverLogListener.cs`, `Editor/QuiverLogLinesTests.cs`
+- `Core/Systems/CombatLogging/Runtime/CombatLogEntry.cs`, `CombatLogFormat.cs`, `CombatLog.cs`, `CombatLog.Actions.cs`, `CombatLog.Custom.cs`
+- `Core/Systems/CombatLogging/Editor/CombatLogTests.cs`
+
+LF kept everywhere. No save reset. Not touched: art folder, TMP asset, ProjectSettings, prefabs.
+
+### Updated commit units
+
+1. (new, Core, own commit, first of the log pair) `feat(log): let features annotate the running action's log line`: the five Core Runtime files above and `CombatLogTests.cs`. Replaces the committed `AddCustom`, so it must go before unit 2 and after the commits that still use `AddCustom` (`19e02893a` and earlier).
+2. (new) `feat(linda): show the quiver count on the combat log's action lines instead of separate lines`: `QuiverLogLines.cs`, `QuiverLogListener.cs`, `QuiverLogLinesTests.cs`. Does not compile before unit 1.
+3. Units 1 to 4 of the earlier list (strip-down) keep their contents, except: unit 4 (panel) now also carries the top-left placement, and the pip and cue size changes go with the draw-art unit (earlier unit 3, or its own small `tweak(linda): halve the pips under Linda and the +1 cue` commit with `QuiverPipsView.cs` and `QuiverReturnCue.cs`; they are separate files, so a split is easy).
+Suggested order: log unit 1, log unit 2, then the strip-down commits, then the pip and cue tweak. The arrow prefab Rigidbody2D commit stays separate as before.
+
+### How to see it
+
+1. Focus the editor, wait for the compile, run EditMode.
+2. Play a level with Linda: pips under her are about half size; a "+1" cue is smaller.
+3. Select Linda: the quiver sits at the top-left of her portrait.
+4. Open the combat log: no "Quiver:" lines; shots, Watch, a pickup on a move and Recall show the count after " · ".
