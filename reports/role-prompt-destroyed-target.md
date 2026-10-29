@@ -125,3 +125,21 @@ None.
 4. Expected: no exception and no lock. The Console shows "Family Role of 'Unit_Linda…' skipped at the press: …", the camera returns, and you can keep acting and end the turn. No silence is applied.
 5. Press the prompt quickly instead: the role fires as normal. If the worm splits during the notice steps, the role is skipped with "skipped after the press" and control still returns.
 6. Check that the usual roles play the same as before: a normal Linda Watch on a living enemy, John's role covering an ally, and Lucy's role.
+
+## Review fix
+
+The review found one must-fix: `UISpotlightHandler.Update()` read `_spotlights[i].target.position` every frame. If a target was destroyed after it got its spotlight (a split worm during the roughly 0.8 s execution visual and the fade), this threw `MissingReferenceException` every frame and froze the mask.
+
+- `Features/UI/Spotlight/Scripts/UISpotlightHandler.cs`: `Update()` now skips destroyed targets and packs the rest at the front of the arrays (write index `n`), then calls `SetInt(MatSpotCount, n)`, so no empty entry draws a spotlight at the screen origin. The existing per-frame `Vector4[16]` allocations are left as they were. The file stays LF with no BOM.
+- Tests: none added. No pure helper came out of this naturally; the packing is a few lines inside `Update`. **Play check:** in step 5 of "How to see it", the mask stays smooth and the Console shows no per-frame errors when the worm vanishes during the notice steps.
+
+Updated commit 1 (core), 7 files:
+- `miso/Assets/_Project/Core/Interactions/Runtime/PlayerController.cs`
+- `miso/Assets/_Project/Core/Camera/Runtime/CameraHandler.cs`
+- `miso/Assets/_Project/Core/Systems/AbilitySystem/Abilities/Runtime/FactionRoleHandlerBase.cs`
+- `miso/Assets/_Project/Core/Systems/AbilitySystem/Abilities/Runtime/FactionRoleRules.cs`
+- `miso/Assets/_Project/Features/UI/Spotlight/Scripts/UISpotlightHandler.cs`
+- `miso/Assets/_Project/Core/Systems/AbilitySystem/Abilities/Editor/FactionRoleLivingTargetsTests.cs`
+- `miso/Assets/_Project/Core/Systems/AbilitySystem/Abilities/Editor/FactionRoleLivingTargetsTests.cs.meta`
+
+The hands-off list now also includes `LevelLindaJohn-C1.prefab`.
