@@ -145,3 +145,15 @@ None.
 7. Land arrows under an enemy and kill it with Linda's bow, Lucy or a hazard: the stack turns bright (unlocked) and stays on the tile until someone steps on it.
 8. With the bow selected, hover an enemy outside her range that she can reach by walking. The walk path shows, and the ghost arrow sits on the tile where the arrow will land as fired from the end of the walk. Click and check that the arrow lands on that tile.
 9. Look at the HUD quiver on her portrait: a thin dark contour around body, rim and arrows. Check it during the lift, the punch, the empty tint and an arrow returning. To compare, untick `QuiverUI › Outline` on the `LindaQuiver` HUD prefab, or set the width in the same section.
+
+## Review fix
+
+- **Should-fix applied:** in `QuiverAimPresenter.cs`, `ShotCellAfterMove` keeps the `active.Owner == shooter` guard and a non-self occupant check. The old `IsBasicAttack`, `AutoMoveAllowed` and living-target checks are now one call to `player.CanApproachAttackTarget(target)`.
+  - That call is public and read-only. It checks the aimed ability's basic-attack, auto-move and Targeted flags, the faction relation, the selection conditions and tag query, and whether an approach cell exists.
+  - `TryFindApproachCell` then gives the shot cell, and the result is still cached per aim.
+  - No test covers this wiring. The pure rule tests in `ArrowLandingAfterMoveTests` are unaffected.
+- **Is `Unit_Toba_Ally` in the player's faction?** No. Its prefab overrides `factionRef.entityID` to `Neutral`, while Linda and the playable `Unit_Toba` are `Bergsons`.
+  - Kill hand-back requires `killer.Faction == ` Linda's faction, so kills by the Neutral ally Toba's axe will **not** hand arrows back.
+  - Kills by the playable `Unit_Toba` will. Both prefabs share the axe preset, so the list itself is fine.
+  - Nothing changed. If ally Toba should count too, the rule needs to accept allied factions (relation Ally instead of same faction). That is a decision for THJ or the coordinator.
+- Commit unit 4 is unchanged in its files: `QuiverAimPresenter.cs` carries the fix.
