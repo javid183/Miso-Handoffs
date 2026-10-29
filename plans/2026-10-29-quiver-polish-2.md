@@ -2,7 +2,7 @@
 
 Size: M    Tier: 2 for presentation (D-308); point 3 is a rule THJ decided (D-307)    Assigned to: miso-implementer (opus), miso-reviewer; THJ plays
 Branch: all, built on `thj/linda-quiver` (after `7c6f5e57c`)
-Status: dispatched 2026-10-29
+Status: done 2026-10-29
 
 ## Why
 
@@ -59,4 +59,4 @@ These come from THJ's play check of the feedback pass (2026-10-29): "All work gr
 
 ## Commit log
 
-(empty)
+THJ play-checked 2026-10-29, EditMode 994/995 (known red only). `99ae9ff09` arrow-ability feedback; `ebbd4fe68` xN nudge; `e201fb245` melee kill hand-back; `26371cc8d` move-then-shoot ghost; `19f75ff0d` HUD outline.

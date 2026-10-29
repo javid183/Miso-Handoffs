@@ -2125,3 +2125,32 @@ Core gets one additive, generic `CombatLog.AddCustom`.
 **Findings:** THJ wants deeper feedback in the same layer. See `plans/2026-10-28-quiver-feedback-pass.md` (D-301 to D-303).
 
 **Status:** committed `d2a377569`, `3fdbb08f1`, `ff739b5ae`, `018b1e5a1`, `039697fe2`, `79ca381e8`. `main` still needs the sweep, the bodies and Lucy's fix ported (THJ's call).
+
+## 2026-10-29 · Quiver feedback pass and polish 2 (thj/linda-quiver)
+
+**Built:**
+- **Feedback pass:**
+  - Encore costs 2 AP.
+  - The HUD quiver comes from THJ's hand-placed prefab, with the empty tint, the lift, the punch at 0 and the gain glow.
+  - Her arrow row shows on her Shift panel, and a crossed arrow appears at 0.
+  - One grounded arrow per tile, with `xN`.
+  - Thinner Encore lines with the threat-line shine.
+- **Polish 2:**
+  - Every arrow ability drives the HUD feedback.
+  - `xN` moved closer to its arrow.
+  - John's and Toba's primary kills hand the arrows back.
+  - The move-then-shoot ghost.
+  - A dark outline on the HUD quiver.
+
+**Verified:**
+- EditMode 980/981 for the feedback pass, then 994/995 for polish 2 (known red only).
+- Review APPROVE on both rounds.
+- THJ played both rounds.
+
+**Not verified:** none.
+
+**Findings:**
+- In PerUnit mode any ability can be cast at 1 AP (`ap-overspend-perunit`, D-304).
+- Allied Toba doesn't hand back arrows (D-310).
+
+**Status:** committed `661890964`, `51954e2c6`, `45cb29d76`, `d8651dd3c`, `7c6f5e57c`, `99ae9ff09`, `ebbd4fe68`, `e201fb245`, `26371cc8d`, `19f75ff0d`.
