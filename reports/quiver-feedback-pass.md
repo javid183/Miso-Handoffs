@@ -147,3 +147,21 @@ None. This is branch work on `thj/linda-quiver`.
    3. Aim the bow: the faint ghost sits exactly where the grounded arrow will.
 5. **Encore:** with stacks down, hover Encore on the bar. The gold lines are thinner and see-through, and a shine runs along each from the stack to Linda, like an enemy's threat line. The AP preview shows 2.
 6. EditMode in the Test Runner: everything green except `AIRegressionTest.Baseline_MatchesCurrentAI`.
+
+## Review fixes (2026-10-28, after the APPROVE)
+
+1. **The lift recovers by itself.** `UnitPanelUI.Quiver.cs` `UpdateQuiverReach` now calls `UpdateQuiverLift()` every frame after the change check. `SetLifted` still does nothing while the state is unchanged, so if anything else disables and re-enables the quiver, the lift comes back the next frame.
+2. **One format for the count.** `GroundedArrowLook.CountFormat = "x{0}"` is the single format. The view writes it with `SetText(CountFormat, count)` (no allocations), the rule uses `string.Format(CountFormat, ...)`, and `GroundedArrowStackLookTests.Label_CountsFromTwo` checks the constant.
+3. **Shift row sorting: the row now draws only with her own panel.**
+   - **What I chose:** while her info panel is open, the row is shown as **UI images inside her panel's own canvas**, as its first child, placed on the panel's top edge and centred on Linda. The sprite row under her feet is hidden meanwhile.
+   - **Why it works:** as part of that canvas, the row sorts exactly with her panel. Wherever another unit's panel is drawn over hers, it also covers her row, so the row can never sit over another panel or HP bar. Being the first child, it is drawn before her panel's own parts and tooltips, and it sits outside her panel's rectangle anyway.
+   - **Why not the other option:** matching her panel's order (Overlay 1) inside a sorting group would tie with every other panel at the same order. The project's transparency sort is the default (axis z), so who wins that tie isn't deterministic.
+   - **Allocations:** the images are built once with the row (`BuildPanelRow`), sized in canvas units from the canvas scale. Following the panel each frame allocates nothing.
+   - **What went away:** `QuiverPipRules.OrderAbove` and its test are removed; nothing else used them.
+   - **No core code.**
+   - **Still to check in Play:** the size and position of the panel row.
+4. **Tests:** EditMode **980 run, 979 passed, 1 failed** = the known red `AIRegressionTest.Baseline_MatchesCurrentAI`, with the message still identical to the pre-change baseline. The count is one lower because the `OrderAbove` test was removed. Unity was closed and no `Temp` was left behind.
+
+The commit units are unchanged; no file moved between them. Commit 3 is `QuiverPipsView.cs`, `QuiverPipRules.cs`, `QuiverSprites.cs` and `QuiverEmptyRowTests.cs` (and `.meta`). Commit 4 now also covers the `CountFormat` edits in its own files `GroundedArrowLook.cs`, `GroundedArrowField.cs` and `GroundedArrowStackLookTests.cs`. Commit 2 also covers the `UnitPanelUI.Quiver.cs` change.
+
+How to see fix 3: hold Shift with a unit standing on the tile north of Linda. Her row sits on her panel's top edge, and the neighbour's HP bar is never covered by her pips.
