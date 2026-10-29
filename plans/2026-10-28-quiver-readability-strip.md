@@ -66,4 +66,10 @@ THJ compiles and tests in the open editor. Review, then THJ plays. Commits only 
 
 ## Commit log
 
-(empty)
+Committed on `thj/linda-quiver` 2026-10-28 after THJ's play check (EditMode 955/956, known red only):
+- `d2a377569` core `Projectile` per-frame sweep and hit set (D-300)
+- `3fdbb08f1` combat log holds the action line; features annotate it; quiver count suffixes (D-299)
+- `ff739b5ae` strip-down to one quiet layer (D-293, D-297, D-298)
+- `018b1e5a1` smaller pips and +1 cues (D-299)
+- `039697fe2` kinematic bodies on Linda's arrow prefabs (D-296)
+- `79ca381e8` arrow and quiver art, wired on Linda, wiring tests

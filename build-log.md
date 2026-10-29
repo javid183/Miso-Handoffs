@@ -2108,3 +2108,20 @@ Core gets one additive, generic `CombatLog.AddCustom`.
 **Verified:** EditMode 947/948 (known red only). Review APPROVE. THJ checked a level's log.
 
 **Status:** committed `9b104608b`, `19e02893a`. The quiver plan's chunks are all done.
+
+## 2026-10-28 · Quiver strip-down round (thj/linda-quiver)
+
+**Built:**
+- the strip-down to one quiet layer: no arrow text, a HUD quiver on her portrait, grounded arrows in the new art, a ghost arrow when aiming, curved Encore lines;
+- smaller pips and +1 cues;
+- kinematic bodies on Linda's arrows;
+- a core `Projectile` sweep with a per-projectile hit set;
+- combat log annotation (a quiver count suffix on action lines).
+
+**Verified:** EditMode 955/956 (known red only). Each part had review APPROVE. THJ played the round check ("think they work").
+
+**Not verified:** a 10 fps column test as a separate step (THJ's overall OK covers the round).
+
+**Findings:** THJ wants deeper feedback in the same layer. See `plans/2026-10-28-quiver-feedback-pass.md` (D-301 to D-303).
+
+**Status:** committed `d2a377569`, `3fdbb08f1`, `ff739b5ae`, `018b1e5a1`, `039697fe2`, `79ca381e8`. `main` still needs the sweep, the bodies and Lucy's fix ported (THJ's call).
