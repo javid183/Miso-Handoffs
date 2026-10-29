@@ -71,4 +71,4 @@ THJ's play check of the strip-down (2026-10-28): the single layer works, but it 
 
 ## Commit log
 
-(empty)
+THJ play-checked 2026-10-29. `661890964` Encore 2 AP; `51954e2c6` HUD prefab + feedback; `45cb29d76` arrow row on panel + empty; `d8651dd3c` single arrow + xN; `7c6f5e57c` Encore lines.
