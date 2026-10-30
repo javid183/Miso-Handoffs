@@ -79,6 +79,8 @@ One implementer run each, in this order, each play-checked by THJ before its com
 
 ### C3 — Memory levels and sequences (levels per T3, then sequences) · sonnet
 
+**Level workflow for C3 and C4 (D-338):** the implementer loads the `miso-level-chunks` skill (grid format, legend, paper-level tables, `level_to_grid.py` reads), builds each level from its block in `plans/onboarding/2026-10-26-onboarding-levels.md` with the grid-to-level tool (`plans/2026-10-26-grid-to-level-tech.md`, which also adds its build section to that skill), checks the round trip with `level_to_grid.py`, then wires sequences and data; THJ edits after.
+
 - Four segments as one mission, levels from the paper plans. Cutaways between segments as `DialogNodeSequence` image nodes over a placeholder still; Home state at the open and close (`homeState` of the Hearth; the open state is the new-game Home).
 - Narrator interruptions: `LevelSequenceTrigger` / objective stage → `SequentialSequence` (dialogue, camera, `LSBExecutionSequence` with `GUnitSpawn`). Always freeze and show the change.
 - Placeholder text from `plans/onboarding/onboarding-narrative-draft.md`.
