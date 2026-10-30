@@ -2206,3 +2206,15 @@ Core gets one additive, generic `CombatLog.AddCustom`.
 **Findings:** Papa's Shelter now refreshes when Lucy or John is swapped (was missed). The header comment in `EnemyAlertTracker.Events.cs` doesn't list the swap yet.
 
 **Status:** committed `e76b5da70`. Needs porting to main.
+
+## 2026-10-29 · Encore in LevelLindaJohn-C1
+
+**Built:** the level added to `EncoreKitTool.Levels`; THJ ran the tool.
+
+**Verified:** EditMode 1045/1046 (known red only); EncoreKitTests pass.
+
+**Not verified:** none.
+
+**Findings:** none.
+
+**Status:** committed `8c2e8617c`. Every level that overrides Linda's kit now has Encore.
