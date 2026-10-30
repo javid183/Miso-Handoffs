@@ -78,4 +78,4 @@ Branch: all, built on `thj/linda-quiver` (HEAD `3482eedf5`)
 
 ## Commit log
 
-(empty)
+THJ ran the Encore tool (8 levels) and played the check 2026-10-29; EditMode 1045/1046 (known red only, CHECKS 710 FAILURES 39, unchanged). `0424e80b8` projectile cap (core); `012790d11` switch field (core); `8070b76a0` size stat; `214d8325e` switch gating, Encore hidden, catch fallback; `55cde5ce5` Encore tool + 8 level kits. `LevelLindaJohn-C1` still waits on THJ's local edits.

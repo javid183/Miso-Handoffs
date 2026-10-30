@@ -2172,3 +2172,22 @@ Core gets one additive, generic `CombatLog.AddCustom`.
 - A held ability stays set across the end of the turn.
 
 **Status:** committed `8293bd358`. Needs porting to main.
+
+## 2026-10-29 · Quiver switch, size stat, Encore in kits, projectile cap (thj/linda-quiver)
+
+**Built:**
+- Core: `Projectile` caps flight progress at 1 (D-317); `GlobalSettingsSO.lindaQuiverEnabled`, default on (D-314).
+- Quiver size from the new `Stat_LQuiverSize` attribute on Linda, base 3, fallback serialized 3 (D-316, D-319).
+- Switch off: no quiver at all, Encore hidden from her bar, Mark's catch sends a damaging copy back (D-315, D-320).
+- Editor tool Tools > Levels > Linda > Add Encore To Custom Kits; run on 8 levels.
+
+**Verified:**
+- EditMode 1045/1046 (known red only, message unchanged: CHECKS 710 FAILURES 39).
+- Review APPROVE.
+- THJ played the 9-step check: all fine.
+
+**Not verified:** none.
+
+**Findings:** `LevelLindaJohn-C1` still lacks Encore (THJ's local edits). A Workshop quiver item would be an `EquipmentSO` with an Additive +1 modifier on `Stat_LQuiverSize`.
+
+**Status:** committed 0424e80b8, 012790d11, 8070b76a0, 214d8325e, 55cde5ce5. The projectile cap needs porting to main.
