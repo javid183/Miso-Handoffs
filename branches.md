@@ -24,7 +24,7 @@ Owner: coordinator; THJ approves. `claude-handoff/` doesn't change when the shar
 
 ## `thj/onboarding`
 
-- Created by THJ around 2026-10-30 from `main` @ `e8cb8a3d7` (before `e5506c1e8`, so 1 behind `main`). Purpose not yet given to the coordinator.
+- Created by THJ around 2026-10-30 from `main` @ `e8cb8a3d7` (before `e5506c1e8`, so 1 behind `main`). Purpose not yet given to the coordinator. Lacks `main`'s `e5506c1e8` (Encore text) and `194bd566b` (its test fix); take both together.
 - Combat resource and AP: same as `main`.
 
 ## `thj/linda-quiver`
@@ -59,7 +59,7 @@ Owner: coordinator; THJ approves. `claude-handoff/` doesn't change when the shar
 - New Home rules apply (see `design/demo-spec.md`).
 - AP: PerUnit, same as `main`.
 - Merges `origin/main` periodically through Claude Code; THJ commits. Merges so far: Step J `59a4f5cde` (Oct 3), Step K `182201e82` (Oct 4), Step L `5c8476822` (Oct 11), and `ee126a407` (Oct 26: `main` @ `a1483f0b9`: everything listed under `main` above through the enemy alert state, plus THJ's Unity MCP package; D-181, D-198). Since that merge, all `main` work through `a1483f0b9` is also on home-test, and the earlier "home-test will need this" notes are done. Then `93d414dd5` (2026-10-30: `main` @ `e5506c1e8`, the Linda's Quiver merge and its core fixes, the swap fix, THJ's enemy-alert and FPS-limiter commits; clean merge, 6 files changed on both sides auto-merged; D-331). The quiver is on by the code default here too.
-- Committed, not pushed. Last commit `93d414dd5` (Oct 30, merge of main). Compile and EditMode on it: waiting on THJ.
+- Committed, not pushed. Last commit `93d414dd5` (Oct 30, merge of main). Then `cfa297659` (Encore test fix). EditMode 1441/1442 (known red only).
 - Home scene fallback after a merge: take `main`'s scene and re-run the builders (order in `CLAUDE.md`).
 - FTP wins on merge (D-036 to D-042). **[THJ]** Still open: how and when is this expected to merge into `main`?
 

@@ -2237,7 +2237,9 @@ Core gets one additive, generic `CombatLog.AddCustom`.
 
 **Verified:** clean merge; uncommitted files carried over unchanged.
 
-**Not verified:** compile, EditMode, play on home-test (THJ).
+**Verified (later):** EditMode 1441/1442 after `cfa297659`, the Encore description test fix (the test still required the placeholder tag); cherry-picked to `main` as `194bd566b`.
+
+**Not verified:** a play smoke test on home-test.
 
 **Findings:** the quiver is on in home-test by the code default.
 
