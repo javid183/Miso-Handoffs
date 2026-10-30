@@ -24,7 +24,8 @@ Owner: coordinator; THJ approves. `claude-handoff/` doesn't change when the shar
 
 ## `thj/onboarding`
 
-- Created by THJ around 2026-10-30 from `main` @ `e8cb8a3d7` (before `e5506c1e8`, so 1 behind `main`). Purpose not yet given to the coordinator. Lacks `main`'s `e5506c1e8` (Encore text) and `194bd566b` (its test fix); take both together.
+- Created by THJ around 2026-10-30 from `main` @ `e8cb8a3d7`. Checked 2026-10-30: now at `194bd566b`, same as `main` (0 ahead, 0 behind), so it has the Encore text and its test fix.
+- **Purpose (2026-10-30, THJ asked to start the onboarding implementation here):** the onboarding greybox, `plans/onboarding/` (structure C1 first). Uncommitted in the tree: THJ's AI restore-race diagnostic (`AIFactionBrain.cs`, `AIUnitBrain.cs`), `ProjectSettings/` and the TMP fallback font; agents leave them alone.
 - Combat resource and AP: same as `main`.
 
 ## `thj/linda-quiver`
