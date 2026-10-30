@@ -10,6 +10,7 @@ The demo is a short prologue of 3 tutorial missions, then one 7-day moon cycle e
 
 Assumptions this spec makes (flagged in Open questions if they need your call):
 
+- **Linda's quiver** (on `main` since 2026-10-29, D-326): her arrow shots spend arrows from a quiver of 3 (`Stat_LQuiverSize`); arrows land on the board and come back by pickup, a John or Toba primary kill, Mark's catch, or Encore (2 AP). A global switch (`lindaQuiverEnabled`, default on) turns it off. Details: GDD Linda page.
 - **Roster:** John, Linda, Lucy, Toba and Mark are playable. Mary (Kitchen) and Uncle Ben (Workshop) are non-playable station owners. Toba's healing in combat scales with his Bond to the target.
 - **Squad size is set per mission** (3 seats for every side mission in the demo), shown on the map table. The dungeon takes 4. With 5 characters, 2 always stay home on sortie days.
 - **AP/FTP:** effects are written against FTP and AP. Decided 2026-10-16 (D-036, D-037): AP is Fixed, FTP pays Duos only (2 each), and Family Roles cost no FTP but have per-round limits (Linda 2, Lucy 3, Mark 1, John unlimited; D-041, D-042). ATB is dropped, so Swift and Spirited effects stay as written. The role-limit code is built later on `main`, not on `thj/home-test` (D-042); until it merges, roles on this branch still cost 1 FTP as built.
