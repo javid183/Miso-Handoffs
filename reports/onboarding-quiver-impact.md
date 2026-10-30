@@ -1,6 +1,6 @@
 # Onboarding vs Linda's Quiver (2026-10-29)
 
-Check of the onboarding plans against Linda's Quiver, now on `main` (D-326; GDD Linda LI-3 to LI-14, Mark MA-3). By the coordinator (tech plans), the game designer (levels and design) and the narrative agent (texts). Nothing edited yet: every change below is Tier 3 and waits for THJ.
+Check of the onboarding plans against Linda's Quiver, now on `main` (D-326; GDD Linda LI-3 to LI-14, Mark MA-3). By the coordinator (tech plans), the game designer (levels and design) and the narrative agent (texts). THJ's answers 2026-10-29: fix 1 option A (D-331); fix 6 reversed, **no AP refund at all** (D-332, reverses D-228; the node's effect is open again); fix 5 through play (D-333); fix 3 the alternative, route B is Encore's lesson (D-334). Fix 2 (the Ridge) and 4 need no call: the designer folds them in. Plan edits are not made yet.
 
 ## No change
 

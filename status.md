@@ -36,7 +36,7 @@ Owner: coordinator. Every item has a scope: `all` or a branch. Started 2026-10-1
 - Design Q4 (keep a single combined search mission as the fallback?) and Q5 (the Hearth painting: who paints it, is one still enough?).
 - Glossary and lore rows proposed in `plans/onboarding/onboarding-narrative-draft.md` (Ryker, Caeldippo caves, the Hearth, mission titles, sisters' tally, Toba's traces): approve for the narrative agent to add.
 - `thj/onboarding` into `branches.md`.
-- **Quiver impact (2026-10-29):** memory 1, the Ridge, M2 route B, the quiver teaching and Return to Sender need THJ's calls (`reports/onboarding-quiver-impact.md`). `thj/onboarding` is behind `main` (no quiver): merge `main` in before any dispatch.
+- **Quiver impact (2026-10-29):** answered D-331 to D-334 (`reports/onboarding-quiver-impact.md`); designer and narrator to fold them into the levels plan and draft. Open: what Catch & Return's Family-tree node upgrades now that there is no refund (D-332). `thj/onboarding` is behind `main` (no quiver): merge `main` in before any dispatch.
 
 **Linda's Quiver text (2026-10-26)** — scope all; Tier 3 (names, canon); proposals in `reports/linda-quiver-text.md`; not blocking C1
 
