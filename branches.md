@@ -24,6 +24,8 @@ Owner: coordinator; THJ approves. `claude-handoff/` doesn't change when the shar
 
 ## `thj/linda-quiver`
 
+**Merged into `main` on 2026-10-29** (fast-forward in place with `git fetch . thj/linda-quiver:main`, `a1483f0b9..8c2e8617c`, 47 commits: the quiver, its core fixes, the swap fix). `main` and `thj/linda-quiver` point at the same commit; THJ is still checked out on `thj/linda-quiver`. Not pushed. The quiver is on in `main` by the code default (`lindaQuiverEnabled`); `GlobalSettings.asset` doesn't store it. Items scoped to this branch now count as `all`.
+
 - **Purpose:** the Linda's Quiver prototype (`linda-quiver`; design `plans/2026-10-26-linda-quiver-design.md`, D-241 to D-245; tech plan `plans/2026-10-26-linda-quiver-tech.md`).
 - Created by THJ on 2026-10-26 from `main` @ `a1483f0b9` (0 ahead, 0 behind at creation). THJ's working branch.
 - Combat resource and AP: same as `main` (FTP, PerUnit). No differences from `main` yet.

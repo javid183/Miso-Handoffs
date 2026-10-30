@@ -2218,3 +2218,15 @@ Core gets one additive, generic `CombatLog.AddCustom`.
 **Findings:** none.
 
 **Status:** committed `8c2e8617c`. Every level that overrides Linda's kit now has Encore.
+
+## 2026-10-29 · thj/linda-quiver merged into main
+
+**Built:** `main` fast-forwarded in place to `8c2e8617c` (47 commits). No checkout, no working-tree change, not pushed.
+
+**Verified:** last EditMode on that commit 1045/1046 (known red only). `main` = `thj/linda-quiver` (0 files differ).
+
+**Not verified:** no fresh run after the merge (no files changed).
+
+**Findings:** the quiver is on in `main` by the code default.
+
+**Status:** merged locally; pushing is THJ's.
