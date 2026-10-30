@@ -134,9 +134,8 @@ Other references to the old opening that remain by design: `WorldMapPanel.prefab
 In dependency order:
 
 1. `feat(missions): add placeholder opening missions (Hearth, River, Ridge, Trail)` (plain): the four `.asset` files and their four `.meta` files in `miso/Assets/_Project/Content/Levels/`.
-2. `feat(missions): rewire the mission graph and recruits to the new opening` (risky: changes what a new game starts and who unlocks when): `miso/Assets/_Project/Resources/Game Data.asset`, `miso/Assets/_Project/Features/Player/Mark/Prefabs/Unit_Mark.prefab`, `miso/Assets/_Project/Scenes/IntroScreen.unity`, `miso/Assets/_Project/Scenes/MainMenuScene.unity`. Needs commit 1.
-3. `feat(home): world map pins and Mark's unlock for the new opening` (scene): `miso/Assets/_Project/Features/Home - Imported/___Khashayar/Home - Scene.unity`. Needs commit 1.
-4. `test(missions): check the opening mission graph, rosters and recruit unlocks` (plain): `miso/Assets/_Project/Core/Levels/Editor/OnboardingMissionGraphTests.cs` and its `.meta`. Needs commits 1 and 2.
+2. `feat(missions): rewire the mission graph, recruits and world map to the new opening` (risky: changes what a new game starts, who unlocks when, and the Home scene): `miso/Assets/_Project/Resources/Game Data.asset`, `miso/Assets/_Project/Features/Player/Mark/Prefabs/Unit_Mark.prefab`, `miso/Assets/_Project/Scenes/IntroScreen.unity`, `miso/Assets/_Project/Scenes/MainMenuScene.unity`, `miso/Assets/_Project/Features/Home - Imported/___Khashayar/Home - Scene.unity`. Needs commit 1.
+3. `test(missions): check the opening mission graph, rosters and recruit unlocks` (plain): `miso/Assets/_Project/Core/Levels/Editor/OnboardingMissionGraphTests.cs` and its `.meta`. Needs commits 1 and 2.
 
 Do not stage the four files that were already modified before this task.
 
@@ -150,3 +149,18 @@ Do not stage the four files that were already modified before this task.
 2. Run the tests: Test Runner > EditMode > `OnboardingMissionGraphTests` (10 tests).
 3. In Play, from a reset save: Main Menu > Start. The Hearth (three Level1 levels) should start. When done, Home loads; open the world map: River and Ridge pins show as new, no other pin except the Hearth (completed). Complete one: the Trail stays hidden. Complete both: the Trail pin appears. Pick it: Lucy and Linda are locked in, Toba is greyed out, John and Mark are the free pick (Mark appears because the Hearth is done). Finish it: M4's pin appears.
 4. Expect Home stations (Bookshelf, Cooking Cabinet, Training Field, Grandma Table, Equipments Cabinet) to stay locked in this chunk.
+
+## Play check (for THJ)
+
+1. Reset the game save first.
+2. Main Menu > Start: the Hearth starts. After it, on the world map only the Hearth pin shows.
+3. River and Ridge pins appear, both marked new.
+4. Complete one of them: The Trail stays hidden/locked. Complete both: The Trail appears.
+5. Pick The Trail: Lucy and Linda locked in, Toba greyed out, free slot offers only John or Mark.
+6. Finish The Trail: M4 opens.
+7. Mark is selectable once the Hearth is complete.
+
+## Fix round (review)
+
+- Test `Hearth_IsTheOnlyOpenMissionOnAFreshSave` now loops over every mission in the graph and asserts all but the Hearth are locked.
+- Ridge level: searched every level prefab under Content/Levels for exactly 2 placeholder slots, or 0 slots placing Linda and Mark. Only `Test_Level_ABK_01` matched (0 slots, but it places all five heroes, a test level), so it does not fit. Left `LevelE3-C1` (3 slots, 2 heroes; the third slot stays unfilled).
