@@ -1,6 +1,6 @@
 # Toba
 
-Owner: game designer (THJ approves) · Scope: `all` · Checked against assets: `main` @ `92853a5a9`, 2026-10-16 (ability presets read from the live project) · Mirror: Claude Doc "Miso — Game Design", tab Characters › Toba · Up: [Overview](../overview.md)
+Owner: game designer (THJ approves) · Scope: `all` · Checked against assets: `main` @ `92853a5a9`, 2026-10-16 (ability presets read from the live project); the swap's Watch trigger from `main` @ `8c2e8617c`, 2026-10-29 (`AEffectSwapper.cs` read) · Mirror: Claude Doc "Miso — Game Design", tab Characters › Toba · Up: [Overview](../overview.md)
 
 Toba is the healer and nature lover, and the family's newcomer: he was not in Children of Morta, and the roster shows it. He supports with heals, shields, swaps and taunts rather than damage. He joins after M4 "Into the Rootwell". Formerly called Dom: assets and folders may still say Dom, but the name is always Toba ([Glossary](../../../glossary.md)).
 
@@ -22,14 +22,14 @@ Source: `Features/Player/Dom/Prefabs/Unit_Toba.prefab`.
 | --- | --- | --- | --- | --- | --- |
 | Axe Dance | Basic attack | Melee: 10 × damage | 1 | 0 | Built |
 | Healing Wind | Heal | One ally within 3, himself included, heals 10 × `Stat_WIS` (×1.5 or ×2 with the Healing Wind node) | 1 | 0 | Built |
-| Nature's Gambit (swap) | Utility | Two units within 4 (5 or 6 with the Nature's Gambit node), of either side, trade cells; Toba isn't one of them | 1 | 1 | Built |
+| Nature's Gambit (swap) | Utility | Two units within 4 (5 or 6 with the Nature's Gambit node), of either side, trade cells; Toba isn't one of them. A swap counts as a move ending for both units, so an enemy swapped into Linda's lines can trigger her Watch ([Family systems](../family-systems.md#family-roles), D-322 to D-324) | 1 | 1 | Built |
 | Provoking Presence (taunt) | Utility | Every enemy within 3 (4 with the node) is pulled up to 2 cells toward him, Immovable ones excepted; a Crippled enemy takes 4 × damage per cell. +1 FTP | 1 | 2 | Built |
 | Protective Shell | Signature (1 SP to unlock) | One ally within 3 (4 with Guardian's Reach), himself included, takes no damage from the next hit | 1 | 2 | Built |
 | Wall | Area | A 3-cell wall (it can be rotated) on empty cells, centre within 3. It lasts 3 turns, blocks walking and can't be targeted | 1 | 0 | Built |
 
 Damage is a base factor × `Stat_DMG`, healing a base factor × `Stat_WIS` ([Combat rules](../combat-rules.md) CR-19). Cooldown 1 means once per turn, 2 every other turn. No ability ends the turn by itself.
 
-Duo trigger on his bar: Linda–Toba ([Family systems](../family-systems.md#duos)). Only Provoking Presence fills FTP ([Combat rules](../combat-rules.md) CR-11). He has no Cleanse.
+Duo trigger on his bar: Linda–Toba ([Family systems](../family-systems.md#duos)). Only Provoking Presence fills FTP ([Combat rules](../combat-rules.md) CR-11). He has no Cleanse. When his Axe Dance kills an enemy standing on Linda's arrows, they go back to her quiver at once; the allied Toba's kills don't ([Linda](linda.md) LI-13).
 
 Source: `abilityOrchestrator` on `Unit_Toba.prefab`; presets in `Resources/UnitSpecific/Player/Dom/` (`Attack/Primary/Dom_Ability_Attack_Axe.asset`, `Abilities/Heal/Dom_Ability_Heal.asset`, `Abilities/Swap/Dom_Ability_Swap.asset`, `Abilities/Taunt/Dom_Ability_Taunt.asset`, `Abilities/Barrier/Dom_Ability_Barrier.asset`, `Abilities/WallAbility/Toba_Ability_Wall.asset`).
 
@@ -57,7 +57,7 @@ Source: `skillTree` on `Unit_Toba.prefab` (Nature's Rhythm targets `StatUB_AP`).
 
 ## Revenge
 
-None: Toba neither takes nor causes Revenge (both flags off). Q1.
+None yet: Toba neither takes nor causes Revenge (both flags off). He earns it, with his Family Role and Pass-by, as Bond grows (D-224).
 
 ## Gear
 
@@ -82,7 +82,7 @@ Source: `Resources/RunUpgrades/TobaShellRadius/RU_TobaShellRadius.asset`.
 
 ## Open questions
 
-1. **Q1.** Toba has no Revenge and no ATB gauge, and carries one item where the others carry two. Deliberate for the same reason as his missing Family Role and Pass-by (not family yet, D-048), or missing?
+1. **Q1.** Toba has no Revenge and no ATB gauge, and carries one item where the others carry two. Deliberate for the same reason as his missing Family Role and Pass-by (not family yet, D-048), or missing? **Answered:** deliberate at first: he earns them (Family Role, Pass-by, Revenge and the rest) as Bond grows; ATB no longer matters (D-224).
 2. **Q2.** The Stone Axe and Tribal Necklace descriptions still say "Dom". Rename to Toba?
 3. **Q3.** Where should Bond-scaled healing live (TO-2)?
 4. **Q4.** Nature's Rhythm only raises his AP cap. Should it give him a third action every turn?

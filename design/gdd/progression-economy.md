@@ -23,9 +23,9 @@ The data titles FSP "Bergson Skill Point"; the glossary name is Family Skill Poi
 ## Experience and levels
 
 - **PR-4.** XP comes from kills and from completing a mission. A kill pays the enemy's kill XP only when an ability lands the killing blow ([Enemies](enemies.md#roster)). *Built*
-- **PR-5.** XP is split evenly, rounded up, among family members: kill XP among everyone who started the level (members who fell included), completion XP among those in the final level. The killer gets no extra share, and members who stayed out of the mission get nothing. *Built* (Q3)
+- **PR-5.** XP is split evenly, rounded up, among family members: kill XP among everyone who started the level (members who fell included), completion XP among those in the final level. The killer gets no extra share, and members who stayed out of the mission get nothing. Characters a level places themselves (Linda in M1, Toba in M4 before he joins) share as members do. *Built*, intended (D-183)
 - **PR-6.** Each XP threshold reached gives 1 SP. The first threshold is 0, so a character's first XP of any amount gives 1 SP. There are 10 thresholds, so 10 SP is the cap. *Built*
-- **PR-7.** A character's level is the number of SP spent in their tree. Nodes unlock at 0, 0, 2, 2, 3 and 5 SP spent; the trees are on the character sheets ([Characters](characters/README.md)). Each tree costs 8 SP, which leaves 2 SP spare at the cap. *Built, differs* (tier levels, Q2)
+- **PR-7.** A character's level is the number of SP spent in their tree. Nodes unlock at 0, 0, 2, 2, 3 and 5 SP spent; the trees are on the character sheets ([Characters](characters/README.md)). Each tree costs 8 SP, which leaves 2 SP spare at the cap. *Built*, intended (D-222)
 
 | SP earned | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -35,8 +35,8 @@ Source: `Resources/Game Data.asset` (`xpLevelThresholds`), `FactionTracker.cs` (
 
 ## Family Skill Points and family level
 
-- **PR-8.** A character's tree also earns the family 1 FSP each time the SP spent in it reaches 2, 3 and 5 (its unlock levels): 3 per character, 15 in all, which is exactly what the family nodes cost. Only purchases in the skill-tree panel count. FSP buy the family nodes, which sit on the characters' trees and upgrade Duos and Synergies ([Family systems](family-systems.md)). *Built, differs* (the design said a character's first 3 SP; Q1)
-- **PR-9.** There is no family level. A hidden family level fed by Bond level-ups was proposed in the Home readability pass ([`m9-readability.md`](../m9-readability.md)). *Open* (Q1)
+- **PR-8.** A character's tree also earns the family 1 FSP each time the SP spent in it reaches 2, 3 and 5 (its unlock levels): 3 per character, 15 in all, which is exactly what the family nodes cost. Only purchases in the skill-tree panel count. FSP buy the family nodes, which sit on the characters' trees and upgrade Duos and Synergies ([Family systems](family-systems.md)). *Built*, intended (D-221; the first design said a character's first 3 SP)
+- **PR-9.** There is no family level. A hidden family level fed by Bond level-ups was proposed in the Home readability pass ([`m9-readability.md`](../m9-readability.md)). *Deferred* (D-221)
 - **PR-10.** **On `thj/home-test`:** the family earns 1 FSP after its second side mission and spends it on the Picnic ([Home](home.md)). *Demo*
 
 Source: `Core/UI/Runtime/Home/UpgradePanel/AbilityUpgradePanelUI.cs` (FSP grants), `SkillTree.cs` (`GetNodeState`), `FactionTracker.cs` (`UnitLevels`), `Resources/Unlockables/UnlockableSet.asset` (FSP costs); design rules in `design/player-skill-trees.md`.
@@ -58,7 +58,7 @@ Source: `Core/UI/Runtime/Home/UpgradePanel/AbilityUpgradePanelUI.cs` (FSP grants
 | Critical chance (`Stat_CRC`) | Chance of a ×1.5 hit | +7.5% / +11% / +15% | 15 / 20 / 40 | Training Ground |
 | Family Point (`Stat_FP`) | Added to every roster member's FP value, so the FTP maximum (full family 14 → 19 → 20 → 24; level 2 adds little because of rounding) | +1 / +1.5 / +2 | 20 / 30 / 50 | Family Room |
 | FP gain (`Stat_FPG`) | FTP regained at each new level, share of max | 18% / 27% / 35% | 15 / 20 / 40 | Family Room |
-| Trinket potency (`Stat_FPP`) | Nothing: no code reads it; the Family Trinket always gives +5 FTP (Q10) | ×1.2 / ×1.35 / ×1.5 | 10 / 15 / 40 | Family Room |
+| Trinket potency (`Stat_FPP`) | Family Trinket FTP: +5 base, then +6 / +7 / +8. *Planned* (D-190): today no code reads it and the Trinket always gives +5 | +1 / +2 / +3 (authored ×1.2 / ×1.35 / ×1.5) | 10 / 15 / 40 | Family Room |
 | Wisdom (`Stat_WIS`) | Healing done | ×1.2 / ×1.3 / ×1.4 | 15 / 20 / 40 | All three |
 
 All eleven at level 3 cost 905 Gold. Source: `Resources/Factions/BergsonsFaction.asset` (`statAttributes`), `Features/Home - Imported/___Khashayar/HomeManager.cs`.
@@ -67,7 +67,7 @@ All eleven at level 3 cost 905 Gold. Source: `Resources/Factions/BergsonsFaction
 
 - **PR-14.** Gear sits in sockets: head, chest, legs, ring, left hand, right hand, necklace. A character wears only items for sockets they have, one item per socket. Most items belong to one character; shared items fit anyone. *Built*
 - **PR-15.** Every item exists once: equipping it on one character takes it off another. *Built*
-- **PR-16.** Every item has 3 upgrade levels, paid in Gold and materials from the wallet. The level belongs to the item, not to whoever wears it. Gear bonuses are flat and added after every multiplier ([Combat rules](combat-rules.md) CR-19), so the Vitality Brooch adds exactly its listed HP. *Built*
+- **PR-16.** Every item has 3 upgrade levels, paid in Gold and materials from the wallet. The level belongs to the item, not to whoever wears it. Gear bonuses are flat and added after every multiplier ([Combat rules](combat-rules.md) CR-19), so the Vitality Brooch adds exactly its listed HP. *Built*, intended (D-189)
 - **PR-17.** Each character starts with their own items equipped; the shared items start owned but unequipped. *Built* (Mark: [Mark](characters/mark.md#open-questions) Q3)
 - **PR-18.** **On `thj/home-test`:** only the five weapons can be upgraded, as Workshop orders that Ben finishes in 2 Dawns ([Home](home.md)). *Demo*
 
@@ -76,7 +76,7 @@ Each character's own gear is on their sheet. The shared items:
 | Item | Socket | Stat | Base | Level 1 | Level 2 | Level 3 |
 | --- | --- | --- | --- | --- | --- | --- |
 | Vitality Brooch | Head | Max HP | +3 | +5 (10 Gold, 1 Fabric, 1 Steel) | +10 (20 Gold, 3 Fabric, 3 Steel) | +15 (40 Gold, 3 Fabric, 3 Steel, 3 Stone) |
-| Shin Armor | Chest | Evasion | 0.03 | 0.05 (10 Gold, 1 Fabric, 1 Timber) | 0.075 (20 Gold, 3 Fabric, 3 Timber) | 0.1 (40 Gold, 5 Fabric, 5 Timber) |
+| Shin Armor (to rename for the chest, D-185) | Chest | Evasion | 0.03 | 0.05 (10 Gold, 1 Fabric, 1 Timber) | 0.075 (20 Gold, 3 Fabric, 3 Timber) | 0.1 (40 Gold, 5 Fabric, 5 Timber) |
 
 All 12 items at level 3 cost 845 Gold, 56 Fabric, 34 Steel, 22 Timber and 15 Stone. Source: `Core/Data/Runtime/EquipmentSO.cs`, `EquipmentManager.cs`, `Resources/Unit Equipments/*/*.asset`.
 
@@ -94,8 +94,8 @@ All 12 items at level 3 cost 845 Gold, 56 Fabric, 34 Steel, 22 Timber and 15 Sto
 | Lingering Embers | 1 SP | Lucy's tree | Lingering Embers |
 | Sapping Order | 1 SP | Mark's tree | Sapping Order |
 | Stunning Vault | 1 SP | Mark's tree | Vault Stun |
-| Cyclone Weak | 1 SP | No node | Howling Gale |
-| `JohnResolve` | 1 SP | Not used anywhere | — |
+| Cyclone Weak | 1 SP | No node: run upgrade only, by design (D-188) | Howling Gale |
+| `JohnResolve` | 1 SP | Not used anywhere; to cut (D-188) | — |
 
 Source: `Resources/Unlockables/UnlockableSet.asset`; references on `Unit_*.prefab` (`skillTree`, passive components) and `Resources/RunUpgrades/*/RU_*.asset`.
 
@@ -103,7 +103,8 @@ Source: `Resources/Unlockables/UnlockableSet.asset`; references on `Unit_*.prefa
 
 - **PR-20.** Completing a mission pays its XP and Gold, plus a material pick: a set number of different entries drawn at random from the mission's list, each rolled in its range. Amounts per mission are in [Missions and structure](missions-structure.md#missions). *Built*
 - **PR-21.** Winning a level that isn't the last pays only for the kills made in it. *Built*
-- **PR-22.** Losing a mission drops the gold collected in it and keeps the XP. The family then gets 20% of the mission's XP and 50% of its Gold, unless the loss came on the first level ([Combat rules](combat-rules.md) CR-34). In the opening mission, before its first completion, a loss restarts the level and pays nothing (CR-35). *Built*
+- **PR-22.** Losing a mission drops the gold collected in it and keeps the XP. The family then gets 20% of the mission's XP and 50% of its Gold, unless the loss came on the first level ([Combat rules](combat-rules.md) CR-34). In the opening mission, before its first completion, a loss restarts the level and pays nothing (CR-35). *Built*. This share is intentional: a loss pays a percentage, never the full reward (D-184).
+- **PR-22a.** Restarting a level, giving up or returning early is not a loss: XP and gold go back to what the family had when the level started. *Planned* (D-184; today a restart keeps what the failed attempt collected)
 - **PR-23.** Completed missions stay open and pay full rewards every time. There is no first-clear bonus. *Built*
 - **PR-24.** Gold comes only from completion and kills; material picks hold materials only. *Built, differs:* M8–M14 and MX still list Gold in their picks, where it displaces materials (not rebalanced yet).
 - **PR-25.** **On `thj/home-test`:** the game starts with 100 Gold, 1 Steel and 1 Timber. Drops are paid per cleared level and kept after a loss; a lost sortie loses only its completion reward. Side missions pay 20 XP (30 for Drowned Shrine and Deev Burrow, 60 for the Warren) ([Home](home.md)). *Demo*
@@ -119,7 +120,7 @@ Kill gold per enemy is in [Enemies](enemies.md#roster). Source: `Core/Levels/Run
 ## Run upgrades
 
 - **PR-26.** A run upgrade is a boost that lasts one mission. All run upgrades are cleared when a mission starts and when it ends. *Built*
-- **PR-27.** The Run Upgrade room's altar lays out up to 3 run upgrades, drawn at random with equal odds. The player takes one for free; the others disappear. The pool is every run upgrade, with none excluded. *Built*
+- **PR-27.** The Run Upgrade room's altar lays out up to 3 run upgrades, drawn at random with equal odds. The player takes one for free; the others disappear. The pool is every run upgrade, with none excluded. *Built*. Always Ready leaves the pool (it needs ATB); a Mark upgrade that works with FTP replaces it, to design (D-187). *Planned*
 - **PR-28.** An upgrade is offered only when it can do something: its owner is in the squad (both partners for a Duo's), its ability is available, the family doesn't already have it (an unlock already bought counts), and its ability can still level up. Any member can pick an upgrade up; it applies to its owner. *Built*
 - **PR-29.** There are three kinds: runes (raise an ability's level or add to a stat), new abilities or unlocks, and passives. A fourth kind, relic, exists in code with no upgrades of that kind. *Built*
 
@@ -130,16 +131,16 @@ Kill gold per enemy is in [Enemies](enemies.md#roster). Source: `Core/Levels/Run
 | Linda | Power-Piercing Arrows, Louder Crescendo, Echoing Retreat, Diminishing Blow ([Linda](characters/linda.md#run-upgrades)) |
 | Lucy | Stoked Embers, Lingering Embers, Howling Gale, Tempest Bloom (needs Linda in the squad) ([Lucy](characters/lucy.md#run-upgrades)) |
 | Linda and Lucy | Sisters' Bond: Linda–Lucy Duo damage +1 level |
-| Mark | Iron Knuckles, Long Vault, Vault Stun, Sapping Order, Always Ready ([Mark](characters/mark.md#run-upgrades); Q7) |
+| Mark | Iron Knuckles, Long Vault, Vault Stun, Sapping Order, Always Ready (out of the pool, D-187) ([Mark](characters/mark.md#run-upgrades)) |
 | Toba | Guardian's Reach ([Toba](characters/toba.md#run-upgrades)) |
 
 Source: `Core/Systems/RunUpgrades/Runtime/RunUpgradeSO.cs`, `RunUpgradeTracker.cs` (`CanGrant`), `Core/Entities/Runtime/RunUpgradeAltar.cs`, `Resources/RunUpgrades/*/RU_*.asset`.
 
 ## Divine Relics
 
-- **PR-30.** A Divine Relic is an item lying in a level; walking onto it takes it. Every family member gets the relic's button, and its 3 uses are shared. Picking up the same relic again adds uses. *Built*
+- **PR-30.** A Divine Relic is an item lying in a level; walking onto it takes it. Every family member gets the relic's button, and its 3 uses are shared. Picking up the same relic again adds uses. *Built*. A relic room offers a choice: it holds 2 relics (Heavenly Sword and Black Despair) and taking one removes the other. *Planned* (D-186)
 - **PR-31.** A relic lasts the mission. Restarting a level loses a relic picked up in it. *Built*
-- **PR-32.** Two relics exist. **Heavenly Sword:** drops a sword on a cell within 5; every enemy in the 3 × 3 around it takes 10 × damage (cooldown 2). It lies in the Divine Relic rooms of M6 and M4 and in the first level of "No More Waiting". **Black Despair:** pulls enemies within 2 cells of a target cell 2 cells inward (not Immovable ones), no damage; no level places it, so it can't be found on `main`. Using a relic is free but needs 1 AP left. *Built* (Q6)
+- **PR-32.** Two relics exist. **Heavenly Sword:** drops a sword on a cell within 5; every enemy in the 3 × 3 around it takes 10 × damage (cooldown 2). It lies in the Divine Relic rooms of M6 and M4 and in the first level of "No More Waiting". **Black Despair:** pulls enemies within 2 cells of a target cell 2 cells inward (not Immovable ones), no damage; no level places it, so it can't be found on `main`; it becomes the second choice in every relic room (D-186). Using a relic is free but needs 1 AP left. *Built*
 
 Source: `Core/Entities/Runtime/DivineRelics/DivineRelicPickUp.cs`, `Features/Player/Shared/DivineRelics/DivineRelicPickUp.prefab` (`numberOfUses` 3), `FactionTracker.cs` (`AddUsableItem`), relic presets `DR_Ability_HeavenlySword.asset` and `DR_Ability_BlackDespair.asset` and their pickups.
 
@@ -166,16 +167,16 @@ Source: `Features/Home - Imported/___Khashayar/HomeManager.cs`; `Home - Scene.un
 
 ## Open questions
 
-1. **Q1.** How should FSP and a family level work? As built, a character's tree earns 1 FSP at 2, 3 and 5 SP spent (the design said the first 3 SP). Keep that? And should the hidden family level fed by Bond be built?
-2. **Q2.** Skill-tree tiers: the data unlocks nodes at 0, 0, 2, 2, 3 and 5 SP spent; [`player-skill-trees.md`](../player-skill-trees.md) says one tier per SP spent (0, 1, 2, 3). Which is intended?
-3. **Q3.** Kill XP goes to the whole squad, fallen members included, and completion XP only to the final level's squad. Characters a level places themselves share it too: Linda in M1, Toba in every level of M4 after his duel, before he joins. Intended?
-4. **Q4.** Restarting a level keeps the XP and gold collected in the failed attempt. Close it?
-5. **Q5.** Shin Armor is authored in the chest socket, where Lucy's Robe and Mark's Tunic also go. Legs intended?
-6. **Q6.** Divine Relics: keep the walk-on pickup (3 shared uses, no choice) or move relics to run upgrades (the relic kind)? Black Despair is in no level; place it or cut it?
-7. **Q7.** Always Ready only works with ATB but is still offered on `main`. Remove it from the altar?
-8. **Q8.** The unlock `JohnResolve` is used nowhere, and Cyclone Weak (Howling Gale) exists only as a run upgrade. Keep both?
-9. **Q9.** Answered from the code: flat gear bonuses are added after every multiplier, so the Vitality Brooch adds exactly +3 to +15 max HP and the family Health stat doesn't scale it. Close, or should gear scale?
-10. **Q10.** The Trinket potency stat (`Stat_FPP`) is sold for 10 / 15 / 40 Gold, but nothing reads it: the Family Trinket always gives +5 FTP. Wire it up, or remove it from the Family Room?
+1. **Q1.** How should FSP and a family level work? As built, a character's tree earns 1 FSP at 2, 3 and 5 SP spent (the design said the first 3 SP). Keep that? And should the hidden family level fed by Bond be built? **Answered:** keep FSP at 2, 3 and 5 SP spent; defer the hidden family level fed by Bond (D-221).
+2. **Q2.** Skill-tree tiers: the data unlocks nodes at 0, 0, 2, 2, 3 and 5 SP spent; [`player-skill-trees.md`](../player-skill-trees.md) says one tier per SP spent (0, 1, 2, 3). Which is intended? **Answered:** the data is intended: 0, 0, 2, 2, 3 and 5 SP spent; `player-skill-trees.md` updated (D-222).
+3. **Q3.** Kill XP goes to the whole squad, fallen members included, and completion XP only to the final level's squad. Characters a level places themselves share it too: Linda in M1, Toba in every level of M4 after his duel, before he joins. Intended? **Answered:** keep as built, placed characters included (D-183).
+4. **Q4.** Restarting a level keeps the XP and gold collected in the failed attempt. Close it? **Answered:** a loss (the squad falls and returns Home) keeps a percentage, as PR-22 does; restarting, giving up or returning early resets XP and gold to the level's start (D-184, PR-22a).
+5. **Q5.** Shin Armor is authored in the chest socket, where Lucy's Robe and Mark's Tunic also go. Legs intended? **Answered:** keep it in the chest socket and rename it to fit; new name not set (D-185).
+6. **Q6.** Divine Relics: keep the walk-on pickup (3 shared uses, no choice) or move relics to run upgrades (the relic kind)? Black Despair is in no level; place it or cut it? **Answered:** keep the pickup room, but with a choice of 2 relics; Black Despair is the second choice (D-186).
+7. **Q7.** Always Ready only works with ATB but is still offered on `main`. Remove it from the altar? **Answered:** keep the item, take it out of the altar pool, and add a Mark run upgrade that works with FTP (D-187).
+8. **Q8.** The unlock `JohnResolve` is used nowhere, and Cyclone Weak (Howling Gale) exists only as a run upgrade. Keep both? **Answered:** cut `JohnResolve`; keep Howling Gale as a run upgrade only (D-188).
+9. **Q9.** Answered from the code: flat gear bonuses are added after every multiplier, so the Vitality Brooch adds exactly +3 to +15 max HP and the family Health stat doesn't scale it. Close, or should gear scale? **Answered:** close; flat stays flat (D-189).
+10. **Q10.** The Trinket potency stat (`Stat_FPP`) is sold for 10 / 15 / 40 Gold, but nothing reads it: the Family Trinket always gives +5 FTP. Wire it up, or remove it from the Family Room? **Answered:** wire it with flat steps, +6 / +7 / +8 FTP (D-190).
 
 ## Related
 

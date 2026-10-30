@@ -1,6 +1,6 @@
 # Lucy
 
-Owner: game designer (THJ approves) · Scope: `all` · Checked against assets: `main` @ `92853a5a9`, 2026-10-16 (ability presets read from the live project) · Mirror: Claude Doc "Miso — Game Design", tab Characters › Lucy · Up: [Overview](../overview.md)
+Owner: game designer (THJ approves) · Scope: `all` · Checked against assets: `main` @ `92853a5a9`, 2026-10-16 (ability presets read from the live project); Family Role line from `main` @ `8c2e8617c`, 2026-10-29 (`LucyFactionRoleHandler.cs` read) · Mirror: Claude Doc "Miso — Game Design", tab Characters › Lucy · Up: [Overview](../overview.md)
 
 Lucy is the daughter and the family's fire mage: a fragile skirmisher whose embers chase targets, whose Cyclone reshapes the board, and whose Family Role follows up every attack the others make. Many of the family's combos run through her (Papa's Shelter, Shield Flare, Tempest Bloom, Sisters' Rivalry).
 
@@ -10,7 +10,7 @@ Lucy is the daughter and the family's fire mage: a fragile skirmisher whose embe
 | AP per turn | 2 (family default) | Built |
 | FP value (adds to the FTP maximum) | 3 | Built |
 | Joins | From the start | Built |
-| Family Role | Follow-up: hits an enemy right after a family member's action ([Family systems](../family-systems.md#family-roles)); no limit yet | Built, differs |
+| Family Role | Follow-up: hits an enemy right after a family member's action did it real HP damage ([Family systems](../family-systems.md#family-roles); real-damage rule D-277, on `main` since 2026-10-29); no limit yet | Built, differs |
 | Duos | John–Lucy, Linda–Lucy, Mark–Lucy | Built |
 | Synergies | Sisters' Rivalry, Tempest Bloom (with Linda), Papa's Shelter, Shield Flare (with John) | Built |
 

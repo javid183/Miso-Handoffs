@@ -59,7 +59,7 @@ The Demo Spec keeps the full list (Demo Spec › Open questions for this spec). 
 2. **Q2.** Does the full game keep resetting Lessons, Home Upgrades and weapon levels at each new cycle?
 3. **Q3.** Should the dungeon take 4 of the 5 characters, or the whole family?
 4. **Q4.** HP bonuses from Lessons and Home Upgrades multiply each other. Intended, or should they add?
-5. **Q5.** The FTP values at Home assume a small FTP cap; they need the real cap ([Combat rules](combat-rules.md#open-questions) Q2).
+5. **Q5.** The FTP values at Home assume a small FTP cap; they need the real cap ([Combat rules](combat-rules.md#open-questions) Q2). **Answered:** see Combat rules Q2: 3 × heroes plus Home upgrades, and a character can raise the base (D-205).
 
 ## Related
 

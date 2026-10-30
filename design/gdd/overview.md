@@ -88,7 +88,8 @@ Where each part is designed: [Missions and structure](missions-structure.md) · 
 | Squad size | Set per mission: 2 to 4 | Built |
 | AP | Fixed, per unit (D-037) | Built |
 | FTP | A family pool; pays Duos only, 2 each (D-035, D-036); see [Family systems](family-systems.md) | Built, differs |
-| Family Roles | Free, with a limit per round: Linda 2, Lucy 3, Mark 1, John unlimited (D-036, D-042) | Planned |
+| Family Roles | Free, with a limit per round: Lucy 3, Mark 1, John unlimited (D-036, D-042) | Planned |
+| Linda's Quiver | Her shots spend arrows (3; `Stat_LQuiverSize`); the family picks them up, Encore calls them back; it is Watch's limit (D-244). A global switch turns it off ([Linda](characters/linda.md#lindas-quiver)) | Built |
 | Campaign | 16 mission assets: M1–M14 (two M3s) and MX | Built |
 | Character levels | 10 XP thresholds, one skill point each | Built |
 | Home cycle | Prologue, then 7 days ending in the Warren | Demo |
@@ -99,9 +100,9 @@ Source: `Resources/Game Data.asset`, `Resources/GlobalSettings.asset`, `Content/
 
 | Area | Sub-doc | Design state | Branch | Checked | Notes |
 | --- | --- | --- | --- | --- | --- |
-| Combat rules | [combat-rules](combat-rules.md) | Built | both | `main` @ `92853a5a9` (presets read); Combat feedback from `thj/quick-wins` @ `403de3bf8` (CR-53 @ `ec664b5fc`), on `main` since 2026-10-23 (`f4e9d9158`); CR-54 @ `af04281a7`, 2026-10-24 | |
-| Family systems | [family-systems](family-systems.md) | Built, differs | both | `main` @ `92853a5a9` (presets read) | Role limits planned |
-| Characters | [john](characters/john.md) · [linda](characters/linda.md) · [lucy](characters/lucy.md) · [mark](characters/mark.md) · [toba](characters/toba.md) | Built | both | `main` @ `92853a5a9` (presets read) | |
+| Combat rules | [combat-rules](combat-rules.md) | Built | both | `main` @ `92853a5a9` (presets read); Combat feedback from `thj/quick-wins` @ `403de3bf8` (CR-53 @ `ec664b5fc`), on `main` since 2026-10-23 (`f4e9d9158`); CR-54 @ `af04281a7`, 2026-10-24; CR-55 and the quiver notes @ `8c2e8617c`, 2026-10-29 | |
+| Family systems | [family-systems](family-systems.md) | Built, differs | both | `main` @ `92853a5a9` (presets read); Linda's and Lucy's roles, Catch & Return @ `8c2e8617c`, 2026-10-29 | Role limits planned; Linda's replaced by her quiver |
+| Characters | [john](characters/john.md) · [linda](characters/linda.md) · [lucy](characters/lucy.md) · [mark](characters/mark.md) · [toba](characters/toba.md) | Built | both | `main` @ `92853a5a9` (presets read); Linda's Quiver, Mark's catch, Toba's swap @ `8c2e8617c`, 2026-10-29 | Linda's Quiver is on `main` only, not on `thj/home-test` (D-326) |
 | Enemies | [enemies](enemies.md) | Built | both | `main` @ `92853a5a9` (presets read); EN-11 (Dark Shaman heal) on `main` since 2026-10-23 (`f4e9d9158`), from the build reports; EN-12 to EN-17 (alert state) on `main` @ `dc64f974a`, 2026-10-24 | Alert-state previews and sound planned (Q8) |
 | Progression and economy | [progression-economy](progression-economy.md) | Built | both | `main` @ `92853a5a9` (presets read) | Skill-tree values not play-checked |
 | Missions and structure | [missions-structure](missions-structure.md) | Built | both | `main` @ `92853a5a9` (level prefabs read); MI-27 @ `dc64f974a`, 2026-10-24 | M8–M14 unreachable, not rebalanced |
@@ -118,6 +119,7 @@ The questions live in each sub-doc's "Open questions"; this list only points to 
 - Whether Trio is a system of its own → [Family systems](family-systems.md#open-questions)
 - How Family level and Family Skill Points are earned → [Progression and economy](progression-economy.md#open-questions)
 - What else the Fireside can reward → [Home](home.md#open-questions)
+- Linda's Quiver: growth, the Fireside arrow, and Watch's limit with the quiver off → [Linda](characters/linda.md#open-questions)
 - Children of Morta canon to confirm → [Narrative and world](narrative-world.md#open-questions)
 
 ## Document map

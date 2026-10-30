@@ -10,7 +10,7 @@ The campaign is a graph of missions. Each mission is one or more combat levels p
 - **MI-2.** Completed missions stay open and can be replayed for full rewards ([Progression and economy](progression-economy.md) PR-23). The order of completion is saved. *Built*
 - **MI-3.** Two characters join through missions: Mark after "No More Waiting", Toba after "Into the Rootwell". John, Linda and Lucy are there from the start. A mission's fixed members, and characters a level places itself, play even before they have joined (Mark in his intro; Toba in M9 and in every level of "Into the Rootwell" after his duel). *Built*
 - **MI-4.** The design's loop: each chapter sets a main dungeon (a multi-level mission done in one run) and a deadline; side missions are optional preparation ([`vision.md`](../../vision.md)). *Planned* (on `main`; no chapters or deadlines there). **On `thj/home-test`:** built as the moon cycle and the Warren ([Home](home.md)). *Demo*
-- **MI-5.** M8 to M14 are unreachable on `main`: the unlock check never passes a gate with no input, so M8, M9 and M11 never open, and M10 and M12–M14 need M9. MX is not in the graph at all. *Built, differs* (Q1)
+- **MI-5.** M8 to M14 are unreachable on `main`: the unlock check never passes a gate with no input, so M8, M9 and M11 never open, and M10 and M12–M14 need M9. MX is not in the graph at all. Intended for now: they are a later chapter, left unwired and *Planned* until it is designed; their levels stay as maps and chunks (D-196)
 
 ```
  M1 John's Map
@@ -53,13 +53,13 @@ Source: `Resources/Game Data.asset` (`missionDependencyGraph`), `Core/Managers/G
 
 | # | Levels, in order | Enemy tier | Deploy slots | Notes |
 | --- | --- | --- | --- | --- |
-| M1 | Level1-C1_TArtEx → Level1-C1-2 → Level1-C2 | Tutorial | 0 | Level 2 places Linda alone (Q3) |
+| M1 | Level1-C1_TArtEx → Level1-C1-2 → Level1-C2 | Tutorial | 0 | Level 2 places Linda alone. M1's story is cut; the levels stay as maps (D-169) |
 | M2 | LevelLucyJohn-C1 → C2 → C3 | Early | 0 | John and Lucy against Archers and Dark Claws; enemies act first in C2 |
 | M5 | LevelE1-C1 → C2 | Early | 0 | John, Linda and Lucy |
 | M3 Wolf | LevelLindaJohn-C1 → C2 | Early | 0 | John and Linda; enemies act first in C1; C2 adds Dark Worms |
 | M3 Mark Intro | LevelMarkIntro-C1 → C2 → C3 | Early | 0 | C1: Lucy alone takes the Heavenly Sword relic to an altar, then survives 3 turns of Dark Claw waves. C2: Mark alone reaches an exit (or defeats every enemy). C3: both, defeat all |
-| M4 | LevelDomFight → Level2-C1-TArtEx → Divine Relic room (copy) → Level2-C2 → Level2-C3-1 → Level2-C3-2 → Level3-C1 | Standard | 0 | Toba's duel first (MI-25), then Toba fights with the family. C1-TArtEx: defeat all and reach the 4 exit tiles. C2 and C3-1: the Whitemother stag must survive (C2 has no loss when every hero is down, Q12). C3-2: escort the new Pathmother to an exit. The Goblin Queen last (MI-23); Q4 |
-| M6 | LevelE2-C1 → Divine Relic room *or* Run Upgrade room → LevelE2-C2 → Healing Room → LevelE2-C3 | Standard | 3 | The only route choice (MI-14). C3 keeps 1 of 2 Archers and 1 of 2 Dark Claws (MI-19); Q5 |
+| M4 | LevelDomFight → Level2-C1-TArtEx → Divine Relic room (copy) → Level2-C2 → Level2-C3-1 → Level2-C3-2 → Level3-C1 | Standard | 0 | Toba's duel first (MI-25), then Toba fights with the family. C1-TArtEx: defeat all and reach the 4 exit tiles. C2 and C3-1: the Whitemother stag must survive (C2 has no loss when every hero is down, Q12). C3-2: escort the new Pathmother to an exit. The Goblin Queen last (MI-23). Labels to fix to (1/6)–(6/6); the relic room becomes the 2-relic choice room (D-197, D-186) |
+| M6 | LevelE2-C1 → Divine Relic room *or* Run Upgrade room → LevelE2-C2 → Healing Room → LevelE2-C3 | Standard | 3 | The only route choice (MI-14). C3 keeps 1 of 2 Archers and 1 of 2 Dark Claws (MI-19). Cut as a mission; the levels stay as maps (D-169) |
 | M7 | LevelE3-C1 | Standard | 3 | Archers, Dark Claws and a Masher |
 | M8 | LevelM1-C1 → C2 → C3 | Standard | 4 | Up to 11 enemies a level, with Shamans, Black Claws and a Masher |
 | M9 | LevelDomLinda-C1 → C2 | Standard | 0 | Linda and Toba; a Masher in each |
@@ -172,11 +172,11 @@ Source: `Content/Levels/Level3/Level3-C1.prefab`, `Generic Levels/Medium/M2/Leve
 
 ## Open questions
 
-1. **Q1.** M8 to M14 can't be reached on `main` (the gate before M8, M9 and M11 has no input), and MX is outside the graph. Cut content, a later chapter, or a wiring slip?
-2. **Q2.** "No More Waiting" is required for M4 and M6 (both M3s feed one AND gate); [`reward-balance.md`](../reward-balance.md) says Mark's intro gates nothing. Which is intended?
-3. **Q3.** M1's roster is John and Lucy, but its second level places Linda alone (no deploy slots) and its third places all three. Is this Linda's introduction? It also gives Linda a share of M1's XP (PR-5).
-4. **Q4.** "Into the Rootwell" has 6 fights and a copy of the Divine Relic room (a second Heavenly Sword). Its labels run (1/5) to (5/5) with a "(4.5/5)" in between. Fix the labels, and keep the relic room?
-5. **Q5.** M6: the map shows LevelE2-C2 twice (a false choice), and the Healing Room is forced. `reward-balance.md` describes a different route. Which is intended?
+1. **Q1.** M8 to M14 can't be reached on `main` (the gate before M8, M9 and M11 has no input), and MX is outside the graph. Cut content, a later chapter, or a wiring slip? **Answered:** a later chapter; leave unwired, mark Planned (D-196).
+2. **Q2.** "No More Waiting" is required for M4 and M6 (both M3s feed one AND gate); [`reward-balance.md`](../reward-balance.md) says Mark's intro gates nothing. Which is intended? **Answered:** superseded: No More Waiting is cut as a mission (D-169); the opening graph is D-170's.
+3. **Q3.** M1's roster is John and Lucy, but its second level places Linda alone (no deploy slots) and its third places all three. Is this Linda's introduction? It also gives Linda a share of M1's XP (PR-5). **Answered:** superseded: M1's story is cut; the opening is the Hearth prologue, then The River and The Ridge (D-169, D-170).
+4. **Q4.** "Into the Rootwell" has 6 fights and a copy of the Divine Relic room (a second Heavenly Sword). Its labels run (1/5) to (5/5) with a "(4.5/5)" in between. Fix the labels, and keep the relic room? **Answered:** fix the labels to (1/6)–(6/6); the relic room becomes the 2-relic choice room (D-197, D-186).
+5. **Q5.** M6: the map shows LevelE2-C2 twice (a false choice), and the Healing Room is forced. `reward-balance.md` describes a different route. Which is intended? **Answered:** superseded: M6 is cut as a mission (D-169).
 6. **Q6.** M11's levels have no links, so only the first plays; MX lists the same level twice, and it ends after one. Fix?
 7. **Q7.** Text slips: the M2 file says "Ryler" and the title "Ryker"; "No More Waiting" ends with a space (it is also the save key); the M12–M14 titles include the file prefix ("M12 - The Mountain Deev"); M12–M14 reuse other missions' descriptions; M9's description says "Dom"; mission number 3 is used twice and MX is −1. Level labels don't match the routes (LevelE2-C3 says "(2/3)", MX's level "(1/2)"), and C3 of "No More Waiting" shows a literal "{0}" in its objective.
 8. **Q8.** Most levels place a fixed cast instead of using deploy slots, so the roster and who actually plays can differ ("No More Waiting", M13, M14). Should levels use deploy slots, as many as the largest squad that can reach them?

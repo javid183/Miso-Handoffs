@@ -1,6 +1,6 @@
 # Combat rules
 
-Owner: game designer (THJ approves) · Scope: `all` · Checked against assets: `main` @ `92853a5a9`, 2026-10-16 (ability presets and core scripts read from the live project); [Grid previews and the Shift view](#grid-previews-and-the-shift-view) read from `thj/preview-improvements` @ `f5d263743`, 2026-10-20, now merged into `main`; [Combat feedback](#combat-feedback) from `thj/quick-wins` @ `403de3bf8`, 2026-10-23 (build reports, `pace-timings.md` and the damage-preview rules read); CR-54 read from `main` @ `dc64f974a`, 2026-10-24 · Mirror: Claude Doc "Miso — Game Design", tab Combat rules · Up: [Overview](overview.md)
+Owner: game designer (THJ approves) · Scope: `all` · Checked against assets: `main` @ `92853a5a9`, 2026-10-16 (ability presets and core scripts read from the live project); [Grid previews and the Shift view](#grid-previews-and-the-shift-view) read from `thj/preview-improvements` @ `f5d263743`, 2026-10-20, now merged into `main`; [Combat feedback](#combat-feedback) from `thj/quick-wins` @ `403de3bf8`, 2026-10-23 (build reports, `pace-timings.md` and the damage-preview rules read); CR-54 read from `main` @ `dc64f974a`, 2026-10-24; CR-6's exception, CR-28's catch and CR-55 from `main` @ `8c2e8617c`, 2026-10-29 (decisions and plans of the `thj/linda-quiver` merge; `Projectile.cs` read) · Mirror: Claude Doc "Miso — Game Design", tab Combat rules · Up: [Overview](overview.md)
 
 A level is a grid fight played in rounds: the family takes its turn, then each other faction takes its own. Every unit acts with its own AP. The family shares one pool of FTP, which pays for Duos. Reactions (Family Roles, QTEs) happen on both turns, so the player is never just watching. Lines marked "(to check in play)" are read from the data but not yet confirmed in a playtest.
 
@@ -16,9 +16,9 @@ Source: `Core/Managers/CombatLevelRunHandler.cs`, `Core/Interactions/Runtime/Fac
 ## Action points (AP)
 
 - **CR-5.** AP is fixed and per unit (D-037): every unit has its own AP for the turn. Family members have 2 AP; enemies have 2. *Built*
-- **CR-6.** Each action has one of three costs: free (items, Family Roles, Pass-by), 1 AP (every family move and ability) or all the AP left, which ends the unit's turn (every enemy basic attack). Any action, even a free one, needs at least 1 AP left. No hero ability ends the turn by itself. *Built*
+- **CR-6.** Each action has one of three costs: free (items, Family Roles, Pass-by), 1 AP (every family move and ability) or all the AP left, which ends the unit's turn (every enemy basic attack). Any action, even a free one, needs at least 1 AP left. No hero ability ends the turn by itself. *Built.* One exception: Linda's Encore costs 2 AP (D-302). Known limit: in the PerUnit mode the check before use ignores the cost, so a 2-AP ability can be cast with 1 AP left (D-304, backlog `ap-overspend-perunit`).
 - **CR-7.** Clicking an enemy out of reach walks into range, then attacks, if the unit has AP for both. *Built*
-- **CR-8.** AP left at the end of the family's turn is lost. (In code it still turns into ATB steps that nothing spends; see Q3.) *Built*
+- **CR-8.** AP left at the end of the family's turn is lost. It doesn't feed FTP (D-206). (In code it still turns into ATB steps that nothing spends.) *Built*
 - **CR-9.** **On `thj/home-test`:** the Quickberry Tart meal gives +1 AP on turn 1 of the sortie ([Home](home.md)). *Demo*
 
 | Faction | AP per turn | AP cap |
@@ -30,11 +30,11 @@ A global cap of 3 also applies: an AP gain that would take a unit above 3 is ref
 
 ## Family Time Points (FTP)
 
-- **CR-10.** FTP is one pool the family shares. It is created when a mission starts, from the mission's roster (not from who a level deploys), and it starts full. Its maximum is the sum of each roster member's FP value: their base (table below) plus the family's `Stat_FP` level, each rounded (halves to even). When a member dies, the maximum stays, but until the next level the pool is capped at the FP of the roster members still alive in that level (so in a level that doesn't place the whole roster, the first death also drops the absent members' share); points above the new cap are lost. *Built* (Q2, Q9)
-- **CR-11.** FTP fills during the fight: +1 for each unit in a Pass-by (+2 when two of John, Linda, Lucy and Mark pass each other, +1 when Toba is one of the pair), +1 when John uses Shield Up, Linda Harmonic Slam, Lucy Blink or Toba Provoking Presence, and +5 from the Family Trinket. Some levels also add 3 or 5 FTP when they load ([Missions and structure](missions-structure.md#missions)). It does not refill each turn. *Built* (Pass-by and Trinket to check in play, Q7)
+- **CR-10.** FTP is one pool the family shares. It is created when a mission starts, from the mission's roster (not from who a level deploys), and it starts full. Its maximum is the sum of each roster member's FP value: their base (table below) plus the family's `Stat_FP` level, each rounded (halves to even). When a member dies, the maximum stays, but until the next level the pool is capped at the FP of the roster members still alive in that level (so in a level that doesn't place the whole roster, the first death also drops the absent members' share); points above the new cap are lost. *Built, differs.* **Planned (D-205, D-212):** the maximum is 3 × the heroes in the mission, plus what Home upgrades add; like HP, a character can raise their own base above 3 (as John's higher FP does today; extras to set). A death no longer lowers it: the maximum stays at what the mission started with.
+- **CR-11.** FTP fills during the fight: +1 for each unit in a Pass-by (+2 when two of John, Linda, Lucy and Mark pass each other, +1 when Toba is one of the pair), +1 when John uses Shield Up, Linda Harmonic Slam, Lucy Blink or Toba Provoking Presence, and +5 from the Family Trinket. Some levels also add 3 or 5 FTP when they load ([Missions and structure](missions-structure.md#missions)). It does not refill each turn. *Built* (Pass-by and Trinket: check the Console in play for "Failed to call function ProduceFTP", then fix the call to pass a whole number, D-210)
 - **CR-12.** Between levels of the same mission, FTP carries over and grows by `Stat_FPG` × the maximum (0 until upgraded). The first level gets no growth. Restarting the mission's first level refills the pool; restarting a later level keeps the FTP of the failed attempt. It is cleared when the mission ends. *Built*
 - **CR-13.** FTP pays for Duos (2 each; the check before use tests only 1 per partner). Today it also pays for Family Roles (1 each, free by design) and Mark's Continuous Attack (1, then +1 per use in the same turn). See [Family systems](family-systems.md). *Built, differs*
-- **CR-14.** Family Super Time: every living member with a Family Role runs a special action at once. It costs no FTP. On `main` the player can't trigger it: the only ability that does (1 AP, needs a full pool) is carried by the enemy Toba of the duel, and the game fires it once when the Goblin Queen dies in M4. *Built, differs* (Q4)
+- **CR-14.** Family Super Time: every living member with a Family Role runs a special action at once. It costs no FTP. On `main` the player can't trigger it: the only ability that does (1 AP, needs a full pool) is carried by the enemy Toba of the duel, and the game fires it once when the Goblin Queen dies in M4. *Deferred* (D-207): like Bergson Time, the code stays but it is out of the design for now ([Family systems](family-systems.md#deferred-and-dropped)).
 
 | Member | FP value (`Specs_FP` base; + family `Stat_FP` level) |
 | --- | --- |
@@ -53,7 +53,7 @@ Source: `Core/Units/Runtime/Factions/FactionTracker.cs` (`InitializePoints`, `On
 - **CR-15.** The board is a square grid. "Adjacent" counts steps in four directions; "radial" counts in eight (diagonals cost one step). *Built*
 - **CR-16.** Units path around obstacles and other factions' units. Large units can take several cells. Hazards can raise a cell's move cost; other terrain costs are not built yet. *Built*
 - **CR-17.** The player can cycle up to 8 alternative move paths, including paths through allies that trigger Pass-by. *Built*
-- **CR-18.** Pushes and pulls move units along the grid. Immovable units can't be pushed, pulled, swapped or moved by Mark's Command, except by John's Family Super Time pull, which ignores it, and probably Mark's Vault push (to check in play). *Built* (Q8)
+- **CR-18.** Pushes and pulls move units along the grid. Immovable units can't be pushed, pulled, swapped or moved by Mark's Command, except by John's Family Super Time pull, which ignores it, and probably Mark's Vault push (to check in play). *Built, differs.* **Planned (D-211):** Immovable blocks every forced move, Family Super Time and Duo moves included.
 
 Source: `Core/Systems/GridSystem/Runtime/GridCell.cs` (distances, `GetCellCost`), `GridActions.cs` (`FindAlternativePathsTo`), the push effects in `Resources/UnitSpecific/Player/**`.
 
@@ -102,14 +102,15 @@ Source: `Features/UI/Panels/Scripts/DamagePreviewRules.cs` (`DecideLethalMark`),
 - **CR-20.** Health is a whole number; each hit is rounded (halves to even). The hover preview uses the same rounding, so it shows exact damage and kills. *Built*
 - **CR-21.** Crit and evasion are rolled once per target per hit. A critical hit (the attacker's `Stat_CRC` chance) deals ×1.5. Then evasion (the target's `Stat_EVA` chance) cancels the HP loss, but not the hit's pushes or statuses. Otherwise damage taken is × the target's `Stat_DR`: 1 is full damage, 0.8 is 20% less. Burn ticks and push damage can also be evaded and reduced; push damage can crit, Burn can't. The damage preview leaves crit out. *Built*
 - **CR-22.** Some area attacks hit both sides (the Masher's slam). A kill caused by something other than an ability (burn, a push, friendly fire) gives no XP or gold. *Built*
+- **CR-55.** A projectile that hits on contact (Linda's straight arrows) hits each unit at most once and never skips a unit on its path however long a frame lasts; every projectile stops on its target instead of overshooting it (D-300, D-317; Linda's arrows also carry a kinematic body so still units always register, D-296). Hits still come from physics overlaps; deciding them on the grid is a backlog task (D-279, `arrow-hits-by-grid`). *Built* (on `main` since 2026-10-29, D-326)
 
-Source: `Core/Systems/StatsResourcesSystem/Runtime/StatEvaluation.cs` (`StatResolver.Resolve`), `StatAttributes/StatBackedValue.cs`, `AAttributeModifier.cs`, `RuntimeAAttributeBase.cs` (`ApplyModifiers`), `Features/_Common/Prefabs/UnitBase.prefab` (health modifiers, stat profiles).
+Source: `Core/Entities/Runtime/Projectile.cs` (per-frame sweep, hit set, progress clamp) for CR-55; `Core/Systems/StatsResourcesSystem/Runtime/StatEvaluation.cs` (`StatResolver.Resolve`), `StatAttributes/StatBackedValue.cs`, `AAttributeModifier.cs`, `RuntimeAAttributeBase.cs` (`ApplyModifiers`), `Features/_Common/Prefabs/UnitBase.prefab` (health modifiers, stat profiles).
 
 ## Health, death and revenge
 
 - **CR-23.** A unit at 0 HP dies and leaves the board. *Built*
 - **CR-24.** HP carries over between levels of a mission. At the next level, a family member starts at their saved HP, at least 20% of max, plus `Stat_HPG` × max (0 until upgraded). The floor also brings back members who fell in a won level, at 20%. *Built*
-- **CR-25.** When a family member dies, each other living member takes Revenge after a short beat: for 2 turns, ×1.5 damage, +20% crit chance, +1 AP and +1 to the AP cap, plus a ready basic attack (which adds nothing on `main`: basic attacks have no cooldown). The values are the same for John, Linda, Lucy and Mark; Toba neither gives nor takes Revenge. *Built* (Q5)
+- **CR-25.** Revenge on an ally's death is a designed family mechanic. Its rule lives in [Family systems](family-systems.md#revenge) (RV-1, D-208).
 - **CR-26.** **On `thj/home-test`:** the first member downed in a sortie comes home Wounded ([Home](home.md)). *Demo*
 
 Source: `Core/Units/Runtime/GUnit.cs`, `Core/Units/Runtime/Factions/FactionTracker.cs`, `Core/Interactions/Runtime/PlayerController.cs` (revenge), `Resources/GlobalSettings.asset` (`persistHealthsThroughMission` on).
@@ -122,7 +123,7 @@ Source: `Core/Units/Runtime/GUnit.cs`, `Core/Units/Runtime/Factions/FactionTrack
 | Weak | Weak | Deals 40% less damage (`Stat_DMG` ×0.6) for 2 turns | Built |
 | Burnt | Burnt | Loses 3 HP at the start of its turn, twice (6 in all); not scaled by damage, can't crit | Built |
 | Crippled | Crippled | Can't walk for 1 turn; takes 4 × the mover's damage for each cell it is pushed or pulled. Applied by Linda's Harmonic Slam | Built |
-| Stunned | Stunned | Skips its next turn (enemies). Applied by Mark's Vault with Stunning Vault (Q6) | Built |
+| Stunned | Stunned | Skips its next turn. Applied by Mark's Vault with Stunning Vault. Family members aren't skipped today, a bug: Stunned skips their turn too (D-209) | Built, differs |
 | Taunted | Taunted | Must target the taunter, through its next turn. No ability read so far applies it (to check) | Built |
 | Sheltered | Sheltered by John | Lucy next to John: her Fire Embers gain one ember (Papa's Shelter) | Built |
 | Shield Up | (hidden) | John's Shield Up is active | Built |
@@ -138,7 +139,7 @@ Durations count the affected unit's own turns. Source: `Resources/Tags/GTagSet.a
 ## QTEs
 
 - **CR-27.** A QTE is a timed prompt. There are four types: Press (any press in time), Mash (fill a meter that drains), Time window (press inside the marked band; a press outside fails) and Time-window mash. *Built*
-- **CR-28.** QTEs appear on both turns: Family Roles (press, 1 s), Duo partners (mash for 2 s, or a time window of 2 × 1 s), Command Shield Dash (press) and Continuous Attack (press). *Built*
+- **CR-28.** QTEs appear on both turns: Family Roles (press, 1 s), Duo partners (mash for 2 s, or a time window of 2 × 1 s), Command Shield Dash (press), Continuous Attack (press) and Mark's Catch & Return (press, with a shorter wait before the prompt, D-273; [Mark](characters/mark.md) MA-3). *Built*
 - **CR-29.** Only one QTE is up at a time. The click used for a QTE never also clicks the board. *Built*
 
 Source: `Core/Interactions/Runtime/QTEProfile.cs`, `QTEBehavior.cs`, `QuickTimeEventHandler.cs`, `Content/Controllers/PlayerController.prefab`.
@@ -191,18 +192,19 @@ Source: `Core/Managers/CombatLevelRunHandler.cs`, `Core/Managers/GameHandler.cs`
 - **On `main`:** FTP since `92853a5a9` (2026-10-16); before that, ATB.
 - **On `thj/home-test`:** FTP. Home adds per-sortie effects at level start: the send-off meal, Omens, Wounded members at 50% HP in the dungeon, and a "From Home" banner ([Home](home.md)).
 - the feedback pass (CR-47 to CR-52: kill beat, shake priority, mini HP bar, low HP), committed `07f4e44fe` to `403de3bf8`, merged into `main` on 2026-10-23 (`f4e9d9158`). `thj/home-test` takes it with `main`.
+- `thj/linda-quiver` (Linda's Quiver, Encore's 2 AP, the catch QTE, CR-55) fast-forwarded into `main` on 2026-10-29 (`8c2e8617c`, D-326). `thj/home-test` doesn't have it yet.
 
 ## Open questions
 
-1. **Q1.** FTP's on-screen name: FTP, FP, Family Points (the stat descriptions), Family Time Points (the code) or Family Passive Points (the glossary)?
-2. **Q2.** How should the FTP maximum be set? Today it is the sum of the mission roster's FP values (John 5, Linda 2, Lucy 3, Mark 3, Toba 1, plus the family stat), and the pool starts full. The Demo Spec describes 3 × (heroes − 1) on `thj/home-test`.
-3. **Q3.** Leftover AP is lost at the end of the turn. Should it do something with FTP (for example, fill FTP)?
-4. **Q4.** Family Super Time: on `main` only the Goblin Queen's death triggers it, and it costs nothing. Keep it as a feature? What should it cost, and how should the player trigger it?
-5. **Q5.** Revenge on an ally's death: a designed family mechanic, or legacy? Where should it live in this document?
-6. **Q6.** Family members tagged Stunned are not skipped (only Inactive skips their turn). Intended?
-7. **Q7.** Pass-by and the Family Trinket add FTP through a message that passes a decimal number to a whole-number function. Unity may reject such a call, in which case both add nothing. Check the Console in play ("Failed to call function ProduceFTP").
-8. **Q8.** John's Family Super Time pull, and probably Mark's Vault push, move Immovable units (the Masher, the Deev). Fix?
-9. **Q9.** After a death, FTP is capped below its maximum until the next level, so the pool can't be full and Family Super Time can't fire for the rest of that level. Intended?
+1. **Q1.** FTP's on-screen name: FTP, FP, Family Points (the stat descriptions), Family Time Points (the code) or Family Passive Points (the glossary)? **Answered:** "Family Points (FP)" on screen; the code keeps `FamilyTimePoints` (D-204).
+2. **Q2.** How should the FTP maximum be set? Today it is the sum of the mission roster's FP values (John 5, Linda 2, Lucy 3, Mark 3, Toba 1, plus the family stat), and the pool starts full. The Demo Spec describes 3 × (heroes − 1) on `thj/home-test`. **Answered:** 3 × heroes, plus what Home upgrades add; like HP, a character can raise the base (D-205).
+3. **Q3.** Leftover AP is lost at the end of the turn. Should it do something with FTP (for example, fill FTP)? **Answered:** no; leftover AP stays lost (D-206).
+4. **Q4.** Family Super Time: on `main` only the Goblin Queen's death triggers it, and it costs nothing. Keep it as a feature? What should it cost, and how should the player trigger it? **Answered:** defer, like Bergson Time: the code stays, out of the design for now (D-207).
+5. **Q5.** Revenge on an ally's death: a designed family mechanic, or legacy? Where should it live in this document? **Answered:** a designed family mechanic; it lives in Family systems, RV-1 (D-208).
+6. **Q6.** Family members tagged Stunned are not skipped (only Inactive skips their turn). Intended? **Answered:** a bug: Stunned skips the turn (D-209).
+7. **Q7.** Pass-by and the Family Trinket add FTP through a message that passes a decimal number to a whole-number function. Unity may reject such a call, in which case both add nothing. Check the Console in play ("Failed to call function ProduceFTP"). **Answered:** check the Console in play first, then fix the call to pass a whole number (D-210).
+8. **Q8.** John's Family Super Time pull, and probably Mark's Vault push, move Immovable units (the Masher, the Deev). Fix? **Answered:** fix: Immovable blocks all forced moves, Family Super Time and Duo moves included (D-211).
+9. **Q9.** After a death, FTP is capped below its maximum until the next level, so the pool can't be full and Family Super Time can't fire for the rest of that level. Intended? **Answered:** old design, to change: the FTP maximum stays at what the mission started with after a death (D-212).
 10. **Q10.** Answered by THJ (D-090): the threat arcs count attacks ready on the enemy's next turn (`cooldownTicksAhead: 1`), like the Shift danger zone, so the two agree (CR-39). Built in `d1254f7c8`, on `main` since the 2026-10-20 merge.
 11. **Q11.** "Danger zone" is a working name. It needs a player-facing name only if it ever appears as text (tutorial, tooltip). Glossary, narrative agent.
 12. **Q12.** ~~The low-HP state (CR-50) has no player-facing name.~~ **Answered (D-153):** plain "low HP" in descriptions and player text; "Bloodied" only if a tag or a forced name is needed; never "Wounded" (a Home term).

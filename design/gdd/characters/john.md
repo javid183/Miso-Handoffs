@@ -90,7 +90,7 @@ Source: `Resources/RunUpgrades/John*/RU_*.asset`. Rules: [Progression and econom
 ## Open questions
 
 1. **Q1.** Wrath: +35% per stack in the asset, +40% in the 2026-10-08 notes. Which is intended?
-2. **Q2.** His Shield role takes the hit at a factor of 0.5; the notes say 0.4 ([Family systems](../family-systems.md#open-questions) Q8).
+2. **Q2.** His Shield role takes the hit at a factor of 0.5; the notes say 0.4 ([Family systems](../family-systems.md#open-questions) Q8). **Answered:** ×0.5 base, lowered by tree upgrades (D-217).
 3. **Q3.** The shared ability on every member but Toba is titled Cleanse in the data, while its sounds say Dedication ([Characters](README.md)). Which name should players see?
 
 ## Related

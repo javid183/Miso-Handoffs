@@ -1,6 +1,6 @@
 # Mark
 
-Owner: game designer (THJ approves) · Scope: `all` · Checked against assets: `main` @ `92853a5a9`, 2026-10-16 (ability presets read from the live project) · Mirror: Claude Doc "Miso — Game Design", tab Characters › Mark · Up: [Overview](../overview.md)
+Owner: game designer (THJ approves) · Scope: `all` · Checked against assets: `main` @ `92853a5a9`, 2026-10-16 (ability presets read from the live project); MA-3 from `main` @ `8c2e8617c`, 2026-10-29 (`ProjectileCatchAndReturn.cs`, `Unit_Mark.prefab` read) · Mirror: Claude Doc "Miso — Game Design", tab Characters › Mark · Up: [Overview](../overview.md)
 
 Mark is the monk and Zen master: a fast melee fighter who chains kills, builds Focus into a barrier, commands allies across the board, and strikes back at anyone who hurts the family. He joins after "No More Waiting" (M3) and has a Duo with every sibling and John.
 
@@ -34,10 +34,13 @@ Source: `abilityOrchestrator` on `Unit_Mark.prefab`; presets in `Resources/UnitS
 ## Passives
 
 - **MA-1. Atman's Focus.** Each basic attack he lands adds 1 Focus (max 5). Focus adds damage (+1 to +5) and a barrier that soaks incoming damage before health (3, 5, 7, 8, 9). A hit costs 2 Focus; a hit bigger than the barrier breaks it. *Built* (the tooltip says Focus comes from kills; Q1)
-- **MA-2. Continuous Attack.** When his Fist Blitz kills, a press QTE swings again at the lowest-health enemy in range. It costs 1 FTP, then +1 for each further use in the same turn. *Built, differs* ([Family systems](../family-systems.md#open-questions) Q7)
-- **MA-3. Catch & Return.** Once bought, he catches Linda's basic arrows that reach him from 2 or more cells away and sends them back. *Built* (Q2)
+- **MA-2. Continuous Attack.** When his Fist Blitz kills, a press QTE swings again at the lowest-health enemy in range. It costs 1 FTP, then +1 for each further use in the same turn. *Built, differs.* **Planned (D-216):** free, with a per-turn limit (value not set); FTP pays for Duos only.
+- **MA-3. Catch & Return.** Once bought, when Linda's bow or Watch arrow reaches him from 2 or more cells away along its line, the arrow stops at Mark and a press QTE offers the catch (D-257, D-260; a shorter prompt wait than other QTEs, D-273). *Built* (on `main` since 2026-10-29, D-326):
+  - **Pressed:** the arrow is caught at Mark and never reaches the enemy behind him. A return copy flies from Mark back to Linda, damaging enemies on the way, and ends at her (D-261, D-276). An enemy between them is hit on the way out and again on the way back (D-274). With the quiver on, the arrow goes straight back into her quiver ([Linda](linda.md) LI-9); with it off, no arrow is involved and the damaging return is all (D-315, D-320).
+  - **Not pressed:** the same arrow carries on with its remaining range and falloff, and lands as usual.
+  - No refund: bounce only; the node text that promises a refund gets fixed (D-218). **Planned (D-228):** the node becomes "Return to Sender", once per turn refunding Linda's shot (+1 AP).
 
-Source: `Features/Player/Mark/Scripts/MarkPassiveAbility_AtmanFocus.cs`, `MarkPassiveAbility_ContinuousAttack.cs`, `ProjectileCatchAndReturn.cs` and their components on `Unit_Mark.prefab`. (`MarkPassiveAbility_AtmanBarrier.cs` exists but is not on the prefab.)
+Source: `Features/Player/Mark/Scripts/MarkPassiveAbility_AtmanFocus.cs`, `MarkPassiveAbility_ContinuousAttack.cs`, `ProjectileCatchAndReturn.cs` (with `CatchSweep.cs`) and their components on `Unit_Mark.prefab` (catch: `returnMode` BounceBack, `triggerWithQTE` on, `minTileDistance` 2, one whitelisted arrow, `returnPrefab` `LindaAttackArrowReturn`, unlock `_MarkLindaSynergy`). (`MarkPassiveAbility_AtmanBarrier.cs` exists but is not on the prefab.)
 
 ## Skill tree
 
@@ -77,7 +80,7 @@ Mark starts with no gear equipped, and he has no weapon slot for the Wrist Wrap 
 | Long Vault | Vault range +1 level |
 | Vault Stun | Vault stuns (same as the skill node; title is a placeholder) |
 | Sapping Order | Command applies Weak for 2 turns (same as the skill node) |
-| Always Ready | Starts each turn with at least 1 ATB step (ATB only, so inactive with FTP) |
+| Always Ready | Starts each turn with at least 1 ATB step (ATB only, so inactive with FTP). Kept, but out of the altar pool; an FTP replacement is to design (D-187) |
 
 Source: `Resources/RunUpgrades/Mark*/RU_*.asset`.
 
@@ -88,10 +91,10 @@ Source: `Resources/RunUpgrades/Mark*/RU_*.asset`.
 ## Open questions
 
 1. **Q1.** Atman's Focus: the tooltip says kills give Focus; the code gives it on every basic attack that lands. Which is intended?
-2. **Q2.** Catch & Return's node says it refunds his attack; the data only bounces the arrow back ([Family systems](../family-systems.md#open-questions) Q9).
+2. **Q2.** Catch & Return's node says it refunds his attack; the data only bounces the arrow back ([Family systems](../family-systems.md#open-questions) Q9). **Answered:** bounce only; fix the node text (D-218).
 3. **Q3.** The Wrist Wrap of Power uses a weapon slot Mark doesn't have, so it can't be equipped on `main`. The Demo Spec lists it as his Workshop weapon.
 4. **Q4.** Data copied from Lucy: his role and Continuous Attack QTEs use Lucy's input binding (`LucyQTE`), his hit sound is Lucy's, and his revenge line ("Noooo!") is hers. Fix?
-5. **Q5.** The Mark–Lucy Duo and its node are Chained Assault for now (THJ); the skill-tree notes say "Sidewinder Blitz" and the glossary says "Fist Blitz". Not final: Duo names wait for a narrative pass ([Family systems](../family-systems.md#open-questions) Q2).
+5. **Q5.** The Mark–Lucy Duo and its node are Chained Assault for now (THJ); the skill-tree notes say "Sidewinder Blitz" and the glossary says "Fist Blitz". Not final: Duo names wait for a narrative pass ([Family systems](../family-systems.md#open-questions) Q2). **Answered:** Chained Assault for now (D-223).
 
 ## Related
 
