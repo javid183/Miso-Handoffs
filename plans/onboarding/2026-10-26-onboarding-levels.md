@@ -1,8 +1,8 @@
 # Onboarding: paper level plans (step A2)
 
 Size: L    Tier: 3 (level content and dramatic moments; one Family-tree node change)    Assigned to: miso-game-designer
-Branch: all (built on `thj/onboarding`, cut from `main` @ `dc64f974a`); nothing here differs on `thj/home-test`
-Status: answered by THJ 2026-10-26: Q1 Return to Sender (D-228), Q2 Mark's weapon slot, Tunic fallback (D-229), Q3 punchlines + trailhead (D-226), Q4 roles keep 1 FTP, data stopgap only if needed (D-225). Grids rendered in `onboarding-levels/` (`index.html`). The levels are created by the implementer from this plan and edited by THJ (D-235)
+Branch: all (built on `thj/onboarding`, cut from `main` @ `dc64f974a`); nothing here differs on `thj/home-test`. **The plan's base is pre-quiver:** `thj/onboarding` does not have Linda's Quiver (on `main` since D-326) and needs `main` merged in (or the branch recut) before any chunk is built from this plan (THJ's yes needed)
+Status: answered by THJ 2026-10-26: Q1 Return to Sender (D-228, since reversed by D-332: Q5 reopens the node), Q2 Mark's weapon slot, Tunic fallback (D-229), Q3 punchlines + trailhead (D-226), Q4 roles keep 1 FTP, data stopgap only if needed (D-225). Quiver folded in 2026-10-30 (D-331 to D-334; findings in `reports/onboarding-quiver-impact.md`): segment 1, the Ridge, Catch & Return's node, M2 route B, play checks for segments 3 and 4. Grids rendered in `onboarding-levels/` (`index.html`); **segment 1's grid changed 2026-10-30 and needs a re-render**. The levels are created by the implementer from this plan and edited by THJ (D-235)
 
 Feeds: [`2026-10-25-onboarding-first-hour-design.md`](2026-10-25-onboarding-first-hour-design.md) (D-168 to D-176) and its [work plan](2026-10-25-onboarding-first-hour-workplan.md) (step A2; D-177 to D-180). This file does not change that design; where it has to bend it, the [contradictions](#where-this-bends-the-design) say so.
 
@@ -50,7 +50,7 @@ Docs: see [Docs to update](#docs-to-update).
 | `FamilyTimePoints.Produce(n)` clamps to 0…cap, so a negative `fpAmountToFill` drains | `FamilyTimePoints.cs:51,71`, `LevelStartFPFiller.cs` | M2's low start is data |
 | `SignalSequence` → `SignalAction` invokes any UnityEvent | `SignalSequence.cs`, `SignalAction.cs` | A refill on cue (memory) is data: the event calls `LevelStartFPFiller.OnLevelStarted()` |
 | Family Roles still cost 1 FTP (`requiredFTP` constant 1 on all four) | `Unit_Linda.prefab:2439` and the other three | The Ridge (FTP max 5) runs dry by turn 2; see Q4 |
-| Catch & Return is gated by `_MarkLindaSynergy`, mode BounceBack, no QTE, min distance 2; the code already has a Refund mode | `ProjectileCatchAndReturn.cs`, `Unit_Mark.prefab:2962-2976` | Open by default is data; the node's upgrade can use the Refund path |
+| Catch & Return is gated by `_MarkLindaSynergy`, mode BounceBack, min distance 2. Read 2026-10-26 it had no QTE; since the quiver merge (D-326) the arrow stops at Mark and a **press QTE** offers the catch, and a caught arrow goes back into her quiver (GDD Mark MA-3, Linda LI-9) | `ProjectileCatchAndReturn.cs`, `Unit_Mark.prefab:2962-2976` | Open by default is data. The code's Refund mode is not used: no AP refund, ever (D-332) |
 | Vault moves by jump (`moveMode` 2, `ignorePathCost` 1) | `Mark_Ability_Attack_Vault_Effect_UnitTransport.asset` | Likely leaps over units (the Ridge uses it); to confirm in play |
 | `LevelSequenceTrigger` locks the enemy faction until a family unit walks into its collider | `LevelSequenceTrigger.cs` | Level1-C1-2 has one: remove it for segment 1 |
 | A new game starts with an empty wallet; the first XP gives 1 SP | GDD PR-2, PR-6 | The pair missions must pay ≥ 20 Gold; the memory's kill XP must be off |
@@ -84,7 +84,7 @@ Grids use [`tools/grid_render.py`](../../tools/grid_render.py) (x from the left,
 
 (Not run in this session: the designer has no shell. The coordinator runs it once; the image links below point to its output.)
 
-HP values are **in-play HP** (after the tier), Dark Claw damage at Tutorial ≈ 3, at Early ≈ 4–5. Family numbers are the GDD's: Linda arrow 6 (×0.6 per next enemy, range 4), Lucy main ember 4 + 1 sidewinder 3 (range 3), Cyclone 7 on contact, John sword 8, Wrath +35% a stack (max 3), Mark Fist Blitz 8 within 2, Chained Assault 3 + 8 per target, Marks-Sisters 12 × (QTE 0.7–1.5).
+HP values are **in-play HP** (after the tier), Dark Claw damage at Tutorial ≈ 3, at Early ≈ 4–5. Family numbers are the GDD's: Linda arrow 6 (×0.6 per next enemy, range 4; each bow, Watch or Duo arrow spends one of her 3 arrows and lands on the last enemy it hit, GDD Linda LI-3 to LI-6; Watch pierces like her bow shot and units in between don't block its lane), Lucy main ember 4 + 1 sidewinder 3 (range 3), Cyclone 7 on contact, John sword 8, Wrath +35% a stack (max 3), Mark Fist Blitz 8 within 2, Chained Assault 3 + 8 per target, Marks-Sisters 12 × (QTE 0.7–1.5).
 
 ## Source maps, as read (2026-10-26)
 
@@ -154,42 +154,52 @@ a . _ _ _ . . a
 
 **Mission rules (all four segments).** Roster: John, Linda, Lucy, Mark fixed (FTP maximum 13; levels place their own heroes). Tier: Tutorial. **All enemies start alert** (`LevelAlertSettings.allEnemiesStartAlert` on every segment; spawns arrive alert too). FTP: `LevelStartFPFiller` +13 at each segment start (clamped to full). No XP: completion XP 0 **and** kill XP suppressed (A3 to check how; otherwise every Bergson gets its first SP in the memory, PR-6). Abilities used here don't count as seen (D-175, A3). Each segment's win is a **punchline stage** in an any-group with a turn cap, so it can't drag. Each segment's end sequence ends with `OutroCutsceneKeepGridHidden` (see [grid fade](#the-grid-fade-rule-d-131-re-placed)), then the Hearth cutaway (painted still + 2–4 lines).
 
-### Segment 1 · Linda's telling: "Three claws, one arrow"
+### Segment 1 · Linda's telling: "Three Claws, my last arrow"
 
 ![m1-linda](onboarding-levels/m1-linda.svg)
 
-```grid id=m1-linda title="Memory 1 · Linda: three claws, one arrow"
-# c . c #
+```grid id=m1-linda title="Memory 1 · Linda: three Claws, her last arrow"
+# # c # #
+# # . # #
+# . c . #
 # . c . #
 # . . . #
 # # . # #
 # # . # #
 # # . # #
-# . . . #
+# # . # #
 # L . . #
 --
-zone 2,2 2,5 linda her lane from 2,1
-arrow 1,0 2,0 2,1 linda one step
-arrow 2,6 2,5 2,4 2,3 2,2 enemy
-step 2,1 1
-note 2,4 Watch Shots
+zone 2,1 2,4 linda her lane from 2,0
+arrow 1,0 2,0 linda one step
+arrow 2,6 2,5 2,4 2,3 2,2 enemy dx=-12
+arrow 2,7 2,6 2,5 2,4 2,3 enemy dx=-4
+arrow 2,9 2,8 2,7 2,6 2,5 enemy dx=4
+arrow 2,1 2,5 linda dx=12 turn 2 last arrow
+step 2,0 1
+step 2,1 2
+note 2,3 2 Watch shots
+note 2,9 the deep Claw
 ```
+
+The throat is now 1 wide and 4 long (2,1 to 2,4), and the den has a back niche (2,8 to 2,9) for the third Claw (D-331). Claw letters below: **A** 2,6 (front), **B** 2,7, **C** 2,9 (deep).
 
 | Item | Plan |
 |---|---|
 | Source | Level1-C1-2, reworked (above) |
-| Teaches | Basics (select, move, attack, 2 AP, end turn), the pierce, **Linda's Family Role** (Watch) |
+| Teaches | Basics (select, move, attack, 2 AP, end turn), the pierce, **Linda's Family Role** (Watch), and that **each shot spends an arrow**: her turn-2 shot is her last (D-331, D-333) |
 | Twist | None beyond the role itself (segment 1 is pure lesson) |
-| Squad | Linda |
-| Enemies | 3 Dark Claws, Tutorial, **in-play HP 8** (per-instance; default would be 10) |
+| Squad | Linda (quiver 3, full at level start, LI-3, LI-10) |
+| Enemies | 3 Dark Claws, Tutorial, per-instance in-play HP: **A 14, B 6, C 2** (default 10). Starting values from the maths below; retuned in play (D-331). C's near-empty bar reads as a Claw already hurt |
 | Turn budget | 2 (cap 3) |
-| First trigger | Watch on **enemy turn 1**. Nothing is in reach from 1,0, so the only useful action is a step into the throat (2,0 or 2,1); the ghost's sword icons draw the lane up the throat (CR-37). The Claws can only come down the throat, so every one ends its move in her column: up to 3 Watch Shots (6 each → 2 HP left). If she doesn't step, they arrive on turn 2 beside her (both neighbours of 1,0 are in her row or column), so the QTE comes on enemy turn 2 at the latest |
-| The punchline | Turn 2: one arrow up the throat: 6 / 3.6→4 / 2 on three Claws at 2 HP: three kills. **Win stage:** all enemies dead **or** turn 3 reached |
-| Cues | Level start: Hearth line (Margaret hands Linda the telling); two panels (move and AP; Watch and its QTE key). End: "Three claws. One arrow." No spawn |
+| First trigger | Watch on **enemy turn 1**. Nothing is in reach from 1,0, so the only useful action is the step into the lane at the throat's foot (2,0); the ghost's sword icons draw the lane up the throat (CR-37). Enemy turn 1, in turn order A, B, C (each moves 4): A ends at 2,2 (2 from her) → **Watch shot 1**: A 6. B ends at 2,3 → **Watch shot 2**: the arrow pierces A first (6, A at 12) then B (3.6); units in between don't block. C, from the niche, ends at 2,5: 5 from her, out of range, **no Watch**. Quiver 3 → 1; both spent arrows lie locked under A and B (LI-6, LI-7). If she doesn't step, the Claws stop on 2,2 to 2,5, out of her lanes, and the QTE comes on enemy turn 2 |
+| The punchline | Turn 2: she steps to 2,1 (A, B and C are now 1, 2 and 4 away) and fires **her last arrow** up the throat: A 6 (18 ≥ 14), B 3.6 (7.2 ≥ 6), C 2.16 (≥ 2): three kills. The arrow lands on C's tile. **Win stage:** all enemies dead **or** turn 3 reached |
+| Cues | Level start: Hearth line (Margaret hands Linda the telling); two panels (move and AP; Watch and its QTE key, which now also says **"Each shot spends an arrow"**, D-333). End: **"Three Claws. My last arrow."** (placeholder text, the narrator's proposal). No spawn |
 | Alert | All start alert |
 | FTP | Topped up (13) |
 | Drops / clue | None |
-| Fallback | None expected. With the planned Watch limit (FR-4, 2 a round) only two Claws are softened: the arrow kills two and the second AP finishes the third (still 2 turns) |
+| Fallback | **If she's empty, step onto a fallen Claw's arrow and shoot; cap 3 holds.** Example: she walks up to 2,2 on turn 1 and shoots A early; the two Watch shots then kill A and empty her. On turn 2 she steps onto A's tile (2,3), picks up its arrow (LI-7) and shoots: B and C die. If she walks on into the throat on turn 1 (2,1), A ends beside her and C ends 4 away and a **third** Watch shot fires: it pierces all three (A 18, B 7.2, C 2.16) and the triple kill lands on the Watch, with her last arrow, on enemy turn 1. Same punchline, lesson carried by the Watch. If she never steps, the cap ends it on turn 3 |
+| To check | Enemy turn order follows the level's unit order (`AIFactionBrain` walks the faction controller's `AllUnits`; the plan needs A, B, C, front to back). If B moves first, the front Claw takes 12 and the second 3.6, so HP must be retuned. Damage rounding (2.16 against HP 2). Encore is on her bar and not pointed at here |
 | Time | ~1.75 min |
 
 ### Segment 2 · Lucy's telling: "There were at least ten!"
@@ -260,7 +270,7 @@ step 4,1 1
 | Alert | All start alert |
 | FTP | Topped up |
 | Fallback | **Guided action: plan on it** (the UX critic: a player's instinct is to attack). Add a "do this here" prompt on Shield Up on turn 1 (new tech, small, the design's fallback). The sisters' Role QTEs (Lucy's follow-up, Linda's Watch) will also fire during John's lesson. If the play check shows they pull attention off the Wrath panel, add a per-level switch that mutes the other Roles (new tech, small). Layout can't prevent it, because a Claw that lands beside a sister is always in her row or column |
-| To check | John's move range (the plan assumes ≤ 4, so 6 tiles is out of reach) |
+| To check | John's move range (the plan assumes ≤ 4, so 6 tiles is out of reach). **Quiver (play check):** Watch may empty Linda in this segment (every Claw that lands in her row or column costs an arrow); fine if the punish still lands, since Linda isn't the lesson. John's Wrath kill on a Claw standing on her arrows plays the hand-back (LI-13) in the middle of the punish beat: check it doesn't step on the Wrath read |
 | Time | ~2.75 min (+0.4 cutaway) |
 
 ### Segment 4 · Mark's telling: "And then I arrived"
@@ -306,7 +316,7 @@ step 12,2 1
 | FTP | Topped up (13). Optional refill at stage 1 via `SignalSequence` → `SignalAction` → the filler |
 | Fallback | **Guided action for the Duo: plan on it.** Highlight the Duo button and a target on turn 2, as in segment 3. Tempest Bloom has no fallback because it is scripted |
 | Assets | The mother: no adult wolf combat unit exists; `Home - Imported/Entities/Characters/Wolf/Wolf.prefab` as a placeholder (art call for THJ). The cub: `NPCs/Ryker/Ryker.prefab` |
-| To check | Does a Bloom copy fly 2 tiles past the Cyclone (chunk 13 assumes so)? Can a sequence fire an ability? Is Chained Assault's "within 4" measured from Mark, Lucy or the activator (level-chunks To check 16)? Does Mark's Counter fire when he himself is hit? |
+| To check | Does a Bloom copy fly 2 tiles past the Cyclone (chunk 13 assumes so)? Can a sequence fire an ability? Is Chained Assault's "within 4" measured from Mark, Lucy or the activator (level-chunks To check 16)? Does Mark's Counter fire when he himself is hit? **Quiver:** the scripted Bloom spends one of Linda's arrows (LI-4); does a scripted cast respect `HasArrow` (if she's at 0, does it fail, or fire anyway)? She starts full (LI-10), so it only matters if the script runs after she has shot |
 | Time | ~4 min (+0.4 cutaway) |
 
 ### Hearth time
@@ -402,17 +412,17 @@ note 13,1 clue
 | Teaches | **Mark's Family Role** (Counter): an enemy hits Linda, Mark (within 2 of the attacker) strikes back with Fist Blitz (8). Catch & Return is **discovered** (open by default, D-177) |
 | Twist | **The rush:** this pack is awake from the start (no "before", unlike the River): Dark Claws move 4 and land beside their target this turn |
 | Squad | Linda, Mark (side by side) |
-| Enemies | Rush pack 3 Dark Claws (2,4 is 3 from Linda, so it starts Alerted and its spread wakes 1,5 and 3,5: EN-12, EN-15). Gauntlet 2 Dark Claws asleep in the 1-wide ridge path (7,1 / 8,1). Tutorial |
+| Enemies | Rush pack 3 Dark Claws (2,4 is 3 from Linda, so it starts Alerted and its spread wakes 1,5 and 3,5: EN-12, EN-15). Gauntlet 2 Dark Claws asleep in the 1-wide ridge path (7,1 / 8,1), **per-instance in-play HP 8** (default 10: the catch's out-and-back 9.6 must kill). Tutorial |
 | Turn budget | 5. The gauntlet set-up wakes the queue: Linda on 5,1 is 2 from 7,1. So the step, Vault and shoot sequence can spill into a second turn with a Claw already on Mark (systems critic) |
-| First trigger | **Mark's role, enemy turn 1.** Turn 1: Linda shoots 2,4 up her column (two arrows kill it). Enemy turn 1: 1,5 runs to 1,1 (4 steps) and strikes Linda; 1,1 is 2 from Mark → Counter QTE → framed beat. Its stop on 1,1 is in Linda's row: a Watch Shot first. 3,5 lands on 3,2 or 2,2: another Counter or Watch chance |
-| Catch & Return | The gauntlet: Linda steps to 5,1, Mark to 6,1 and Vaults over the queue to 9,1 (3 tiles), Linda shoots: 6 and 4 out, Mark catches (4 tiles away, ≥ 2), the arrow comes back: each Claw takes ~10, both die. Discovery: Mark's bark when he stands in Linda's line with enemies between ("Send one my way."). The obvious play (Blitz them one by one) works |
+| First trigger | **Mark's role, enemy turn 1.** Turn 1: Linda shoots 2,4 up her column (two arrows kill it). Enemy turn 1: 1,5 runs to 1,1 (4 steps) and strikes Linda; 1,1 is 2 from Mark → Counter QTE → framed beat. Its stop on 1,1 is in Linda's row: a Watch shot first. 3,5 lands on 3,2 or 2,2: another Counter or Watch chance |
+| Catch & Return | The gauntlet: Linda steps to 5,1, Mark to 6,1 and Vaults over the queue to 9,1 (3 tiles), Linda shoots: 7,1 takes 6 and 8,1 takes 3.6 on the way out. The arrow stops at Mark (4 tiles away, ≥ 2) and a **press QTE** offers the catch (MA-3, CR-28). **Pressed:** the return copy flies back and hits 8,1 (6) then 7,1 (3.6): 9.6 each against HP 8, both die. The catch is **arrow-neutral**: the arrow she spent goes straight back into her quiver (LI-9), and no AP comes back (D-332). **Missed:** the arrow has no range left past Mark and lands on the last enemy it hit, **locked under 8,1** (LI-6, LI-7) until that Claw moves or dies. Discovery: Mark's bark when he stands in Linda's line with enemies between ("Send one my way."); optionally gated on Linda having ≥ 1 arrow, so it never asks for a shot she can't fire. The obvious play (Blitz them one by one) works |
 | Alert | Default (Unaware); the rush pack wakes at level start by sight, the gauntlet sleeps until someone stops within 3 |
 | FTP | Starts full: **5** (Linda 2 + Mark 3). With roles at 1 FTP each, 3–4 role uses empty it by turn 2, and the Counter stops answering. See Q4 |
 | Drops | Completion: **Gold 20**, **Steel 2** (fixed), XP 30 |
 | Clue | At the ridge's end (13,1): a man's deep tracks, as if carrying something; crushed healing herbs; a poultice wrapper |
 | Win | Defeat all |
 | Fallback | Catch & Return: none (optional). If the Vault can't cross units, Mark walks round: add a 3-tile ledge loop above the path (costs a turn) |
-| To check | Vault over units; a push into a unit; the returned arrow's damage (assumed the arrow's own, 6 then ×0.6) |
+| To check | Vault over units; a push into a unit; the returned arrow's damage (assumed the arrow's own, 6 then ×0.6). **Arrow budget:** turn 1's two shots at 2,4 plus one Watch shot on enemy turn 1 can empty her quiver before the gauntlet. Pickups (walking onto the rush's fallen arrows, LI-7) and Encore (2 AP, LI-8) recover it, but a player who doesn't use them reaches the gauntlet with nothing to fire and the catch never happens. Watch for it in play; if it happens, gate the bark (above) and consider dropping a rush Claw's HP so one arrow kills |
 | Time | ~5 min |
 
 ### Rigged drops
@@ -484,14 +494,15 @@ note 2,1 or Mark
 
 | Item | Plan |
 |---|---|
-| Teaches | The same: **FTP and Pass-by** (only one route is played) |
+| Teaches | **FTP and Pass-by**, as route A (only one route is played), **and Encore**: this route is its first use (D-334). Route A teaches no Encore |
 | Twist | **Outranged:** two Archers on a ledge across a ravine; nobody can walk up or down. Row 1 is out of their reach (range 3), and inside Linda's (4) |
 | Squad | As route A |
 | Enemies | 2 Archer Goblins stacked in column 4 (4,5 / 4,6), 1 Dark Claw (7,3). Early |
 | Turn budget | 3 |
-| First trigger | As route A: pass-by twice, Marks-Sisters up column 4 from 4,1, through the gap, both Archers (12 each); Linda's arrows from row 1 finish them |
+| First trigger | As route A: pass-by twice, Marks-Sisters up column 4 from 4,1, through the gap, both Archers (12 each); Linda's arrows from row 1 finish them. **Every one of those arrows lands on the ledge** (the Duo arrow at the end of its line, 4,6; a bow arrow on the last Archer it hit, LI-6), where nobody can walk: no pickup, no hand-back. By the time the Archers fall she has 0–1 arrows left and the Claw (7,3) is coming. **Encore (2 AP)** brings every grounded arrow home through the ravine (LI-8): the route's second lesson, and the first time the player needs it |
+| Encore cue (placement) | On the objective stage "both Archers dead" (`LevelObjectives` stage → `OnCompleteSequence`, data): the camera rests a beat on the arrows on the ledge, then Linda's first Encore line (narrative). No panel: Encore's tooltip carries the rule (D-333). If she still has arrows to spare, the line still plays; Encore stays usable while any arrow is grounded and the quiver has room. To check: a pass-by or Duo can't move anyone onto the ledge, and the cue doesn't fire on top of the Duo's framed first-trigger beat (queue it after) |
 | Alert | Default; 4,1 is 4 from 4,5, so the Duo can be set up unseen |
-| Time | ~4 min |
+| Time | ~4.5 min (+0.5 for the Encore turn and its line) |
 
 #### The pile
 
@@ -525,7 +536,7 @@ note 2,5 or Mark
 | Win | Defeat all |
 | Time | ~6.75 min (incl. the pile reveal and the tally beat) |
 
-M2 total ≈ 12 min (squad pick 0.5, trailhead 0.5, map 0.3, route 4, pile 6.75).
+M2 total ≈ 12 min (squad pick 0.5, trailhead 0.5, map 0.3, route 4 (B 4.5), pile 6.75).
 
 ---
 
@@ -556,15 +567,21 @@ D-131 kept the grid hidden at the end of M1 level 2 (`Level1C1-2`), which become
 
 ## Catch & Return: what the Family-tree node upgrades (D-177)
 
-Open by default means the `_MarkLindaSynergy` unlockable starts on (data). The node then needs a new effect:
+Open by default means the `_MarkLindaSynergy` unlockable starts on (data). The node then needs a new effect.
 
-| Option | What it does | Cost | Risk |
+**The rule now (D-332, reverses D-228):** a catch never refunds AP, for bow and Watch arrows alike. The caught arrow goes back into her quiver as its return copy damages on the way back (MA-3, LI-9): the catch is arrow-neutral and AP-neutral. **Return to Sender is withdrawn**: an AP refund loops (Linda spends an AP, Mark gives it back), and on a Watch arrow, which costs no AP, it would be free AP. The node's effect is open again (Q5). Its text must not promise a refund.
+
+A new effect must add no AP and no arrow (the arrow already comes back), so it can't feed the next shot. Candidates (2026-10-30):
+
+| Option | What it does (one sentence) | Cost | Risk |
 |---|---|---|---|
-| **1. Return to Sender (recommended)** | Once per turn, a caught arrow also gives Linda her shot back (+1 AP, arrow ready) | Small code in Mark's feature script: the node switches `returnMode` to the existing BounceBackAndRefund, plus a once-per-turn limit | Without the limit it loops (each refund pays the next shot): the limit is required. Matches what the node's text already promises (Family Q9, Mark Q2) |
-| 2. Wide Catch | Catches from 1 tile (`minTileDistance` 2 → 1) and also Linda's Watch arrows | Data (if the Watch arrow is the same prefab) | Weak as a reward; point-blank bounces read poorly |
-| 3. Heavy Return | The returned arrow hits harder (for example +50%) | Code (clone damage; what the clone deals today was not read) | Nearly a dead choice: only a number, no new decision (systems critic) |
+| ~~Return to Sender~~ | ~~Once per turn, +1 AP to Linda~~ | — | **Withdrawn (D-332)**: loops |
+| **A. Focus Catch (recommended)** | Each catch also gives Mark 1 Atman's Focus (MA-1) | Small code: the catch calls Mark's Focus gain (to check: whether `MarkPassiveAbility_AtmanFocus` exposes an add method) | Bounded by Focus's cap of 5, and each catch still costs Linda 1 AP. No loop: Focus pays damage and barrier, never AP or arrows. Mild risk that a Mark parked in Linda's lane hits 5 Focus early; he still has to stand 2+ cells behind the enemies, inside their reach |
+| B. Marking Return | Enemies the return copy hits become Vulnerable for 1 turn (the status the Mark–John Duo applies) | Small code: apply the existing status from the return copy | Stacks with Family Watchers (same status, no stack, to check) and helps the whole family, so it is the strongest; it also spreads the reward off the pair |
+| C. Wide Catch | Mark catches from 1 cell away (`minTileDistance` 2 → 1) | Data | Weak as a reward; a point-blank bounce reads poorly. Watch arrows are already caught (MA-3), so that half of the old option is gone |
+| ~~Heavy Return~~ | The return hits harder | Code | Kept out: only a number, no new decision (systems critic) |
 
-Option 1 makes it a two-person reward (Mark's catch pays Linda), which is the USP. The systems critic checked option 1: with the once-per-turn limit it is strong but narrow, because Mark has to stand 2 or more tiles back in Linda's line, behind the enemies. That is a positioning choice, not a loop. Option 2 must never be combined with the refund: a Watch arrow costs no AP, so refunding it would give free AP.
+**Recommendation: A, Focus Catch.** It keeps the node a two-person reward, now in the other direction: Linda's arrow fuels Mark's fists and barrier, which is the reason he stands in her line behind the enemies. That is a positioning choice and the risk he accepts, not a loop. It adds no new state: Focus already exists (MA-1; how it shows on screen was not checked for this plan). B is the fallback if A reads as too small in play: stronger and family-wide, but it pulls the reward away from the pair.
 
 ---
 
@@ -581,15 +598,15 @@ Secondary moments: the triple arrow (segment 1), Linda's "Three." over Lucy's "t
 ### Systems
 
 - **Levers:** per-instance enemy HP in the memory (6 / 8 / 10), tier per mission (Tutorial for the memory and pairs, Early for M2), turn caps per segment, FTP fill/drain, item counts (Potion 2, Trinket 1), completion rewards (Gold 20 each pair).
-- **Interactions:** Role costs (FTP 1 today) vs small FTP pools (the Ridge's 5, M2's 0) is the biggest one: see Q4. Watch limit (FR-4, planned) shifts segment 1's triple to a double (still 2 turns). Alert spread groups (River clearing, Ridge rush, route A noise) are placed at exactly 2 apart, so they wake as one.
+- **Interactions:** Role costs (FTP 1 today) vs small FTP pools (the Ridge's 5, M2's 0) is the biggest one: see Q4. Linda's quiver (3 arrows, LI-3) replaces the planned Watch limit (FR-4, LI-11): segment 1 is built around it (2 Watch shots, then her last arrow), and the Ridge and route B rely on pickup and Encore to refill her. Alert spread groups (River clearing, Ridge rush, route A noise) are placed at exactly 2 apart, so they wake as one.
 - **Failure cases:** a player who never steps into the throat (segment 1: still 2 turns); never casts Shield Up (segment 3: fallback prompt); never finds the Cyclone (segment 2: still wins); finds no Duo with 4 FTP (M2: wins with arrows, slower); runs the Ridge's FTP dry (roles go silent with no explanation: Q4).
-- **Dominant strategy check:** none new; Option 1's refund needs its once-per-turn cap or it becomes the dominant loop.
+- **Dominant strategy check:** none new. The AP refund that could loop is gone (D-332); the node candidates add no AP or arrows (Q5).
 
 ### UX
 
 | Moment | Shown | The player clicks | Likeliest misread |
 |---|---|---|---|
-| Segment 1 turn 1 | Move/AP panel, sword icons up the throat on the ghost | Linda, a throat tile, End turn | Ends turn without moving (fine: QTE comes a turn later) |
+| Segment 1 turn 1 | Move/AP panel, sword icons up the throat on the ghost; her 3 arrows on her portrait | Linda, the throat's foot (2,0), End turn | Ends turn without moving (fine: QTE comes a turn later). Doesn't link the arrow count dropping to the Watch shots: the Watch panel's "Each shot spends an arrow" and the turn-2 "last arrow" line carry it |
 | First QTE ever | "Activate Passive" + the Watch panel shown at level start | The QTE key | Misses the window (1 s): no cost, the role skips; the next Claw gives another try |
 | Segment 3 turn 1 | One panel (Shield Up → Wrath), John's tether during his prompt, stack counter | Shield Up, then the QTE | Thinks the hit was lost (John's HP drops instead): the tether and "×0.5" sell it |
 | First Unaware enemy (River or Ridge, whichever comes first) | The marker over sleeping enemies | — | Thinks they're dead or decorative. **Required (not optional):** one shared "first sleeping enemy" panel, shown once in whichever pair mission comes first ("Asleep: they act once they see you, 3 tiles, or are hit; Shift shows their sight"), with the nearest sleeper's sight tiles shown for one beat. New tech, small; whether `AbilityIntroductionTracker`'s seen-set can hold it is to check |
@@ -602,7 +619,7 @@ Readability rule held: interruptions always freeze and show the change with the 
 ## USP check
 
 - **Family Roles:** strengthened. Every Role fires in the memory (Watch first, at ~2 min); each pair mission gives one Role its real first trigger and framed beat; the Ridge is built on Linda's fragility so Mark's answer means something.
-- **Synergies:** strengthened. Tempest Bloom as the unearned boast (~9.5 min), Papa's Shelter shown at River start, Shield Flare and Catch & Return discovered by layout, and Catch & Return's node becomes a two-person reward (Option 1).
+- **Synergies:** strengthened. Tempest Bloom as the unearned boast (~9.5 min), Papa's Shelter shown at River start, Shield Flare and Catch & Return discovered by layout, and Catch & Return's node stays a two-person reward (Q5: Focus Catch, Linda's arrow fuels Mark).
 - **Duos:** strengthened. Chained Assault in the memory (~11 min); the first real Duo is earned through Pass-by in M2, so the cost and the act of filling it are learned together.
 - **Managing the Home as a Family:** neutral on purpose here; the rigged drops make visit 1's Workshop decision pay off in the next mission whichever order is played.
 
@@ -621,7 +638,7 @@ Two `miso-design-critic` agents ran in parallel on the draft, one on UX and one 
 | Systems | Duo kills depend on the mash roll (Chained Assault on 10 HP, Marks-Sisters on 16 HP) | Hall Claws set to HP 8 and route A's gully Claws to HP 12 |
 | Systems | Route A and the Ridge gauntlet wake their targets at set-up | Text corrected. The Ridge budget is now 5 turns. Route A keeps the wake, because the Duo fires before they act |
 | Systems | FTP: the Ridge runs dry; the Duo's pre-check bug (DU-2) can make the greyed button lie | Q4 recommendation unchanged. Added the minimum fallback below. M2: no filler on the route levels (the drained 0 carries, CR-12, growth 0) |
-| Systems | Heavy Return is nearly dead; Wide Catch plus refund is an exploit | Took it in the option table |
+| Systems | Heavy Return is nearly dead; Wide Catch plus refund is an exploit | Took it in the option table (the refund itself was later withdrawn, D-332) |
 
 ## Where this bends the design
 
@@ -644,7 +661,8 @@ None of these touches core systems. Each one is small, and each is a fallback un
 | "Do this here" guided action | Segment 3 (Shield Up), segment 4 (Duo); later the Ridge or River if needed | Planned on for segments 3 and 4 |
 | Per-level mute for other Roles | Segment 3 | Fallback |
 | Sequence that fires a unit's ability (scripted Bloom) | Segment 4 | To check: may already exist |
-| Catch & Return node: mode switch + once-per-turn limit | Mark's feature script | If Q1 = option 1 |
+| Catch & Return node: its new effect (Q5; Focus Catch is a call into Mark's Focus on a catch) | Mark's feature script | After Q5 (the old mode switch is withdrawn, D-332) |
+| Encore cue on route B's "both Archers dead" stage | M2 route B (data: stage sequence) | Required (D-334) |
 | "No FTP: role skipped" text | Combat UI | Only if FR-3 slips (Q4) |
 | Post-mission combo tip | Results or Map Table | Nice to have |
 | Mission-start map (instead of the trailhead) | Missions core (**Tier 3**, core) | Not recommended |
@@ -652,7 +670,7 @@ None of these touches core systems. Each one is small, and each is a fallback un
 
 ## Questions for THJ
 
-**Q1. What does Catch & Return's Family-tree node upgrade?**
+**Q1. What does Catch & Return's Family-tree node upgrade?** *Answered (1), D-228; reversed by D-332 (no AP refund, ever). Reopened as Q5.*
 - Context: D-177 opens Catch & Return by default; the node needs a new effect. The code already has a refund mode.
 - Options: (1) Return to Sender: once per turn, the catch also refunds Linda's shot (+1 AP); (2) Wide Catch: from 1 tile and Watch arrows; (3) Heavy Return: no damage falloff on the return.
 - Recommendation: (1), with the once-per-turn limit. It's what the node's text already says and it makes Mark's catch pay Linda.
@@ -676,11 +694,17 @@ None of these touches core systems. Each one is small, and each is a fallback un
 - Recommendation: (a). The onboarding is designed around roles that answer every time. If FR-3 slips past the check, the minimum is a "No FTP: role skipped" floating text when a Role can't pay (new tech, small), so the silence has a reason on screen.
 - Blocked: the Ridge's play check result, M2's FTP lesson (with free roles, M2 teaches FTP through the Duo only, which is cleaner).
 
+**Q5. Catch & Return's node, again: what does it upgrade now that there is no refund? (open, 2026-10-30)**
+- Context: D-332 reverses D-228: a catch never refunds AP, for bow and Watch arrows alike; the arrow already returns to her quiver (LI-9). The node (1 FSP, Mark's tree) needs an effect that adds no AP and no arrow, so it can't loop. Details in [Catch & Return](#catch--return-what-the-family-tree-node-upgrades-d-177).
+- Options: (A) Focus Catch: each catch also gives Mark 1 Atman's Focus (small code); (B) Marking Return: enemies the return hits become Vulnerable for 1 turn (small code, existing status); (C) Wide Catch: catches from 1 cell (data).
+- Recommendation: (A). It keeps the node a two-person reward (Linda's arrow fuels Mark's fists and barrier), adds no state, and is capped by Focus's own limit. (B) if (A) feels too small in play.
+- Blocked: the node's data and text; GDD Mark MA-3 and the Family systems SY row. The Ridge is not blocked (the catch is open by default).
+
 ## Docs to update (if approved)
 
 - `design/gdd/missions-structure.md`: the Missions and Levels tables (Hearth, The River, The Ridge, M2 The Trail with trailhead and routes; rosters, tiers, rewards, items, FTP fill/drain); **MI-27's table** (add the four memory segments as "all enemies start alert"); MI-14 (M2 becomes the second route choice); M1's row (its levels reused: Level1-C1-2 as segment 1).
-- `design/gdd/family-systems.md`: SY table, Catch & Return Unlock → Open (D-177), Notes → the node's upgrade (Q1); Q9 answered by Q1.
-- `design/gdd/characters/mark.md`: MA-3 ("Once bought" → open), family nodes list; Q2 and Q3 per answers.
+- `design/gdd/family-systems.md`: SY table, Catch & Return Unlock → Open (D-177), Notes → drop "Return to Sender planned (D-228)", add "no AP refund for bow or Watch arrows (D-332)" and the node's effect (Q5).
+- `design/gdd/characters/mark.md`: MA-3 ("Once bought" → open; the "Planned (D-228)" sub-bullet → no refund ever, D-332, node effect per Q5), family nodes list; Q2 and Q3 per answers.
 - `design/gdd/progression-economy.md`: Unlocks table (Catch & Return row); PR-20 rewards for the pair missions (rigged picks).
 - `design/gdd/narrative-world.md`: the clues per level (River, Ridge, pile).
 - `design/level-chunks.md`: link this plan from chunks 1, 5, 6, 13, 14, 24 ("used in onboarding").

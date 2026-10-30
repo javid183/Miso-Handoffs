@@ -40,7 +40,7 @@ Docs: `design/gdd/missions-structure.md`, `narrative-world.md`, `family-systems.
 | # | Step | Squad | Teaches (the one new thing) | Story beat |
 |---|---|---|---|---|
 | 0 | **Hearth** (Home state) | — | — | Ryker's anniversary. The family gathers to retell the rescue in the Caeldippo caves; Ryker lies by the fire |
-| 1 | Memory: Linda's version | Linda | Basics (move, attack, AP, end turn), piercing lines, **Linda's Family Role** (works solo: first enemy-turn QTE) | "Three claws, one arrow." The Claws line up for her |
+| 1 | Memory: Linda's version | Linda | Basics (move, attack, AP, end turn), piercing lines, **Linda's Family Role** (works solo: first enemy-turn QTE); each shot spends an arrow (D-331, D-333) | "Three Claws. My last arrow." (placeholder) The Claws line up for her |
 | 2 | Memory: Lucy's version | Lucy | Fire Embers (sidewinders), **Cyclone** | "There were at least ten!" More enemies walk in; her fire is bigger |
 | 3 | Memory: John's version | John, Linda, Lucy | **John's loop: Family Role → Wrath** (protect, then punish) | The sisters steal kills and bicker in barks. John: "You both did." Neither accepts |
 | 4 | Memory: Mark's version (Mark walks in late) | All four | Atman's Focus, Continuous Attack, **Mark–Lucy Duo (Chained Assault)**; every role firing (showcase) | The epic rescue. Tempest Bloom "happens" once. Ends on the cub saved and the mother lost: the one part nobody exaggerates |
@@ -81,7 +81,7 @@ Rough length: Hearth ~12–15 min (4 short segments, each 2–4 turns; cutaways 
 
 | Segment | Map source (to confirm on paper) | Notes |
 |---|---|---|
-| 1 Linda | `Level1-C1-2` (Linda alone, 4 Dark Claws, cave) | Lanes laid out so Claws end moves in her row: first Watch QTE on turn 1 or 2 |
+| 1 Linda | `Level1-C1-2` (Linda alone, 4 Dark Claws, cave) | Lanes laid out so Claws end moves in her row: first Watch QTE on turn 1 or 2. Only two Watch shots on enemy turn 1, so her turn-2 shot is her last arrow (D-331) |
 | 2 Lucy | Showcase draft A "Lucy's Telling"; chunk 1 (sidewinders, Cyclone) | Spawn-on-cue for "ten of them" |
 | 3 John | `Level1-C2` (three, cave) or showcase draft B "Papa's Telling"; chunk 3 (the gallery) | Turn 1 Shield Up + role prompt on a lunge at a sister; turn 2 Wrath-charged Shield Dash. One panel, a readable stack counter |
 | 4 Mark | New level (cave, larger); chunks 13 (prism) and 21 (Chained Assault) as parts | Showcase, few new rules; the mother's death staged in-engine |
@@ -95,7 +95,7 @@ Rough length: Hearth ~12–15 min (4 short segments, each 2–4 turns; cutaways 
 - **Mark stays** after the Hearth, so the family searches in pairs. *A Wolf's Blood* (John and Linda keeping a secret from Lucy) is cut: the family shares the worry openly (Q2-1).
 - **The River** (John, Lucy): forest; source maps `LevelLucyJohn-C1`, chunks 4 (alcoves), 5 (chorus), 6 (pockets, Shield Flare).
 - **The Ridge** (Linda, Mark): forest/ridge; source maps `LevelLindaJohn-C1`, chunks 14 (the gauntlet, Catch & Return), 24 (the nook). Mark's role is taught by Linda's fragility (20 HP): an enemy hits her, Mark answers. **Catch & Return is a Family-tree node on `main` (1 FSP)**, so for discovery here it must be open for this mission (a one-mission run-upgrade-style grant, or open by default like Shield Flare). THJ to pick.
-- **M2 · The Trail** (Lucy, Linda + John or Mark): a route choice on the mission map ("follow the blood" or "follow the tracks", both short), then the animal pile (from `LevelLucyJohn-C3`). Teaches FTP under pressure: starts low, pass-by refills it, the Health Potion and the Family Trinket. The one left behind "stays home in case she comes back"; write that line for John and for Mark.
+- **M2 · The Trail** (Lucy, Linda + John or Mark): a route choice on the mission map ("follow the blood" or "follow the tracks", both short), then the animal pile (from `LevelLucyJohn-C3`). Teaches FTP under pressure: starts low, pass-by refills it, the Health Potion and the Family Trinket. "Follow the tracks" is also Encore's first use: its arrows land on an unreachable ledge (D-334). The one left behind "stays home in case she comes back"; write that line for John and for Mark.
 - **Rigged rewards.** The River drops the materials for the next pair's weapons (Linda: Timber; Mark: Fabric), not the random pick. Neither trip is framed as a supply run; materials are ordinary rewards.
 
 ## Home visits
@@ -158,7 +158,7 @@ Rough length: Hearth ~12–15 min (4 short segments, each 2–4 turns; cutaways 
 
 ## Open questions for THJ
 
-Answered 2026-10-25: 1 → open by default, the node upgrades it (D-177); 2 → alive, she hosts (D-178); 3 → yes (D-179). Build order: structure first (D-180, `plans/onboarding/2026-10-25-onboarding-first-hour-workplan.md`).
+Answered 2026-10-25: 1 → open by default, the node upgrades it (D-177; the node's effect is open again since D-332: no AP refund, see the levels plan's Q5); 2 → alive, she hosts (D-178); 3 → yes (D-179). Build order: structure first (D-180, `plans/onboarding/2026-10-25-onboarding-first-hour-workplan.md`).
 
 1. Catch & Return in The Ridge: open by default on `main`, or a one-mission grant?
 2. Margaret: alive or dead in Miso's timeline (canon)? It decides the Hearth teller and the `MargaretStoryNight` idle.

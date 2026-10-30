@@ -4,6 +4,7 @@ Narrative agent, 2026-10-26. Step **A5** of `plans/onboarding/2026-10-25-onboard
 
 **Answered 2026-10-26 (D-234):** open questions 1–8 all as recommended (one year; Bloom is Mark's claim; Lucy's line at Toba in M4; Linda asks "Still counting?"; stone axe and leaf wrapper; "Dad"/"Father"; scoped barks later, level sequences in the greybox; Mark's line without Grandma). The glossary and lore rows still wait on THJ.
 
+**Quiver folded in 2026-10-30 (D-331 to D-334).** M1-1 now ends on her last arrow (D-331); segment 1's Watch panel says each shot spends an arrow, and no other quiver panel (D-333); route B is Encore's first use, with Linda's line and cue (D-334, rows T11-B1 to T11-B4); the Ridge catch line is in as a proposal, with no AP refund anywhere (D-332). The other quiver beats wait in [Proposed quiver beats, THJ to pick](#proposed-quiver-beats-thj-to-pick). Source: `reports/onboarding-quiver-impact.md`.
 
 **Grade (D-180).** Greybox text: one short line per beat, 2–4 for a cutaway, enough to play and time the flow. Every line here goes in as `[PLACEHOLDER] ` until THJ approves it. All of it is Tier 3 (story beats, lore). Where a line matters, options are given with the recommended one first.
 
@@ -28,7 +29,8 @@ Narrative agent, 2026-10-26. Step **A5** of `plans/onboarding/2026-10-25-onboard
 
 | ID | Speaker | Line | Where | Notes |
 |---|---|---|---|---|
-| M1-1 | Linda (off) | The Caeldippo caves. Three Claws, one arrow. That's the whole story. | Level dialogue (start) | Her joke: modest words, impossible claim |
+| M1-1 | Linda (off) | The Caeldippo caves. Three Claws. My last arrow. That's the whole story. | Level dialogue (start) | Her joke: modest words, impossible claim. Changed 2026-10-30 (D-331): only 2 Watch shots fire on enemy turn 1, so the turn-2 shot really is her last arrow; the line becomes the quiver's first lesson. Was "Three Claws, one arrow." Note: the levels plan places this line at the level **end** ("Three claws. One arrow."); placement and capital C to settle with the designer |
+| P1-1 | Panel | **Watch.** When an enemy ends its move in Linda's row or column, press [key] to shoot it. Each shot spends an arrow. | Level start, the Watch panel (second of the two segment 1 panels) | D-333. Ability text in the established voice, `[PLACEHOLDER]` until signed off. "[key]" is the QTE key glyph. No first-empty-quiver panel: arrows, pickup and Encore are taught through play |
 | M1-2 | Linda | Walk into my line. | Bark (scoped: memory), first Watch QTE | The story beat for her Family Role's first use (S8, joke form). Doesn't count as seen (D-175) |
 | M1-3 | Lucy (off) | They did *not* line up for you. | Interruption (on the first Watch trigger) | Freeze on the Claws standing in her row |
 | M1-4 | Linda (off) | They were very polite Claws. | Interruption | Resume |
@@ -186,6 +188,7 @@ Narrative agent, 2026-10-26. Step **A5** of `plans/onboarding/2026-10-25-onboard
 | G9-6 | Mark | Linda. Shoot at me. | Level dialogue or bark (scoped), first time Linda has a line on Mark from 2+ cells | Invites Catch & Return (open by default, D-177) |
 | G9-7 | Linda | Gladly. | (same) | |
 | G9-8 | Mark | From a distance. | (same) | |
+| G9-8a | Mark / Linda | "Yours." / "Show-off." | Bark (scoped), first Catch & Return catch (the arrow lands back in her hands) | **Proposed** (THJ to approve). Mark's quiet show-off (D-291), Linda answers in kind. The catch returns the arrow to her quiver and that is all: no AP refund (D-332), so no "shot back" or "Return to Sender" wording |
 | G9-9 | Linda | Tell Lucy I'm ahead. | Bark (scoped), on a Linda kill | **Key line** (design) |
 | G9-10 | Mark | I'm not keeping score. | Bark (scoped) | |
 | G9-11 | Linda | Yes, you are. | Bark (scoped) | |
@@ -225,6 +228,15 @@ Narrative agent, 2026-10-26. Step **A5** of `plans/onboarding/2026-10-25-onboard
 |---|---|---|---|---|
 | T11-1 | Lucy | Her blood. | Mission map, "follow the blood" node select | Optional flavour; node names are placeholders |
 | T11-2 | Linda | His tracks. | Mission map, "follow the tracks" node select | |
+
+**Route B "Follow the tracks": Encore's first use** (D-334; Linda's arrows land on the Archers' ledge, which nobody can reach)
+
+| ID | Speaker | Line | Where | Notes |
+|---|---|---|---|---|
+| T11-B1 | Lucy | Your arrows are up there with them. | Bark (scoped: route B), first time a Linda arrow is grounded on the ledge | The cue: says the problem, not the answer. Option B: "Sis. Your arrows." (shorter, if the bark box is tight) |
+| T11-B2 | Linda | Not for long. | (same) | Promises Encore without naming it |
+| T11-B3 | Linda | Come home. | Bark (scoped: route B), first Encore cast | **Key line.** A (rec.): plain, and it carries the whole act (they are bringing Ryker home); it is already one of Encore's cast barks (`RecallLines`). B: "Back to me." (plain, no echo). C: "Once more, from the top." (the musician, matching the name Encore; lighter) |
+| T11-B4 | (UI) | Encore button pulses when Linda has 0 arrows and grounded arrows exist | Route B, once | Cue, not text: the empty-quiver hint ("No arrows; walk over them or use Encore.") and Encore's final tooltip (D-327) do the teaching. Tech to check (pulse may not exist); fine to drop if T11-B1/B2 land |
 | T11-3 | Lucy | Linda… what if she's in there? | Level dialogue (pile level start) | **Key beat.** The rivalry barks stop from here (scoped bark suppression cue) |
 | T11-4 | Linda | Then we find her. Together. | Level dialogue | The turn: back to back |
 | T11-5 | Linda | Still counting? | Level dialogue (end), tally fades on this line | **Key lines** (design). Linda asks, Lucy answers (open question 4) |
@@ -276,6 +288,19 @@ Narrative agent, 2026-10-26. Step **A5** of `plans/onboarding/2026-10-25-onboard
 | `Mission 4/Level1C3/Level1C3_End_DialogNodeSequence.asset` node 22 | Put Ryker down, Lucy. | Keep. Softer option (old Q2-1): "Lucy. Let her choose. We stay right beside her." | Set her down, Lucy. Let her choose. | Node 19, Linda: "Father... Ryker protected him." → "Mark… Ryker protected him."; node 20 narration "John looked at the wolf cub…" → "Mark looked…"; node 23 Lucy "Dad!" → "Mark!" |
 | `Mission 4/Level2C2/Level2C2_EndDialogNodeSequence.asset` (after Linda "I will. Father?") | We came together. We continue together. | Keep | We came in together. We go on together. | Linda's "I will. Father?" → "I will. Mark?"; narration "John looked at the wounded hind…" → "Mark looked…" |
 | `Mission 4/Level3C1/Level3C1_EndDialogNodeSequence.asset` | She stays at our house until we find a way. | Keep | She comes home with us. We'll find a way. | Option B (Mark): "She stays with us. Grandma will know what to do." Adds a lore hint about Margaret (open question 8) |
+
+---
+
+## Proposed quiver beats, THJ to pick
+
+Not approved; none of these is in the scenes above. Each teaches pickup or the hand-back through play (D-333). Pick any, all or none.
+
+| ID | Speaker | Line | Where | Notes |
+|---|---|---|---|---|
+| Q-1 | Lucy (off) / Linda (off) | "And then?" / "And then I walked over and picked them up." | Level dialogue (end of segment 1) | M1 close: her deadpan teaches pickup, and the joke stays hers |
+| Q-2 | John / Linda | "Dropped these." / "Thank you, Father." | Hand-back (scoped: segment 3), first time John's kill hands her arrows back (D-307) | Segment 3 hand-back: the protect half of his loop, in small. Only fires if his Wrath kill lands on her arrows (designer finding 4) |
+| Q-3 | Lucy / Linda | "Here." / "Thanks." | Hand-back lines (scoped: the pile), replacing the teasing ones | The pile: the rivalry barks stop (T11-3), so the hand-backs go quiet too. Her quiver starts full there (LI-10), so this only plays if a sister picks one up |
+| Q-4 | Lucy / Linda / Lucy | "You'll want this back." / "It's singed." / "It's *better*." | Home scene, Yard, after Y12-6 (Lucy hands back an arrow from a burnt straw target) | The Yard: the first friendly hand-back between them, before Margaret's line |
 
 ---
 
