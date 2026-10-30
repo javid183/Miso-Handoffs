@@ -2230,3 +2230,15 @@ Core gets one additive, generic `CombatLog.AddCustom`.
 **Findings:** the quiver is on in `main` by the code default.
 
 **Status:** merged locally; pushing is THJ's.
+
+## 2026-10-30 · main merged into thj/home-test
+
+**Built:** merge commit `93d414dd5` (`main` @ `e5506c1e8` into `thj/home-test` @ `1d91791b7`). No conflicts; files changed on both sides and auto-merged: `CameraHandler.cs`, `GlobalSettingsSO.cs`, `PlayModeStaticReset.cs`, `FactionRoleHandlerBase.cs`, `Unit_Linda.prefab`, `Unit_Mark.prefab` (stat override indices checked: main appends at the end, home-test edits index 2/3).
+
+**Verified:** clean merge; uncommitted files carried over unchanged.
+
+**Not verified:** compile, EditMode, play on home-test (THJ).
+
+**Findings:** the quiver is on in home-test by the code default.
+
+**Status:** merged locally, not pushed.

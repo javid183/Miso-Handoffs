@@ -22,6 +22,11 @@ Owner: coordinator; THJ approves. `claude-handoff/` doesn't change when the shar
 - 2026-10-23: `thj/quick-wins` fast-forwarded in again (in place, `main` @ `f4e9d9158`, 21 commits): bundle P pace (non-blocking banner, player input locked during the banner, turn-start pause, end-of-level fields, values, banner side; D-141 to D-144), the feedback pass (shake priority, kill flash and shake, mini HP bars, low-HP state and heartbeat, HUD low-HP signs; D-145 to D-149), the Dark Shaman heal with the `Kin.Dark` tag, heal "+N" numbers and the next-targets filter (D-150, D-151), the Lucy role targeting fix with the ordered attacker memory in `GUnit` (D-152), and THJ's balance tweaks `6ef6313bf`. Every value: `tech/pace-timings.md`. `main` matches `origin/main` minus these 21 (not pushed). `thj/home-test` will need this when it takes `main`.
 - The GDD reads its values from here (`main` @ `92853a5a9`), and its Home values from `thj/home-test` (D-046).
 
+## `thj/onboarding`
+
+- Created by THJ around 2026-10-30 from `main` @ `e8cb8a3d7` (before `e5506c1e8`, so 1 behind `main`). Purpose not yet given to the coordinator.
+- Combat resource and AP: same as `main`.
+
 ## `thj/linda-quiver`
 
 **Merged into `main` on 2026-10-29** (fast-forward in place with `git fetch . thj/linda-quiver:main`, `a1483f0b9..8c2e8617c`, 47 commits: the quiver, its core fixes, the swap fix). Afterwards THJ committed `341ac3d0d` (enemy alert on 4 levels), `c3ca01367` and `a94240034` (EditorFPSLimiter in PreloadScreen) on the branch, and is switching to `main` to merge those himself. Not pushed. The quiver is on in `main` by the code default (`lindaQuiverEnabled`); `GlobalSettings.asset` doesn't store it. Items scoped to this branch now count as `all`.
@@ -53,8 +58,8 @@ Owner: coordinator; THJ approves. `claude-handoff/` doesn't change when the shar
 - Combat resource: **FTP** (`pointConsumptionMode: 0`), because the Home demo writes its effects against FTP.
 - New Home rules apply (see `design/demo-spec.md`).
 - AP: PerUnit, same as `main`.
-- Merges `origin/main` periodically through Claude Code; THJ commits. Merges so far: Step J `59a4f5cde` (Oct 3), Step K `182201e82` (Oct 4), Step L `5c8476822` (Oct 11), and `ee126a407` (Oct 26: `main` @ `a1483f0b9`: everything listed under `main` above through the enemy alert state, plus THJ's Unity MCP package; D-181, D-198). Since that merge, all `main` work through `a1483f0b9` is also on home-test, and the earlier "home-test will need this" notes are done.
-- Committed, not pushed. Last commit `ee126a407` (Oct 26, merge of main).
+- Merges `origin/main` periodically through Claude Code; THJ commits. Merges so far: Step J `59a4f5cde` (Oct 3), Step K `182201e82` (Oct 4), Step L `5c8476822` (Oct 11), and `ee126a407` (Oct 26: `main` @ `a1483f0b9`: everything listed under `main` above through the enemy alert state, plus THJ's Unity MCP package; D-181, D-198). Since that merge, all `main` work through `a1483f0b9` is also on home-test, and the earlier "home-test will need this" notes are done. Then `93d414dd5` (2026-10-30: `main` @ `e5506c1e8`, the Linda's Quiver merge and its core fixes, the swap fix, THJ's enemy-alert and FPS-limiter commits; clean merge, 6 files changed on both sides auto-merged; D-331). The quiver is on by the code default here too.
+- Committed, not pushed. Last commit `93d414dd5` (Oct 30, merge of main). Compile and EditMode on it: waiting on THJ.
 - Home scene fallback after a merge: take `main`'s scene and re-run the builders (order in `CLAUDE.md`).
 - FTP wins on merge (D-036 to D-042). **[THJ]** Still open: how and when is this expected to merge into `main`?
 
