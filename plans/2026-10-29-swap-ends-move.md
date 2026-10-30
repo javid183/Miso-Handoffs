@@ -42,4 +42,4 @@ In `Core/Systems/AbilitySystem/Effects/Runtime/AEffectSwapper.cs`, `SwapIE`, rig
 
 ## Commit log
 
-(empty)
+THJ play-checked 2026-10-29 (all steps pass), EditMode 1045/1046 (known red only, unchanged). `e76b5da70`.

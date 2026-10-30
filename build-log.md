@@ -2191,3 +2191,18 @@ Core gets one additive, generic `CombatLog.AddCustom`.
 **Findings:** `LevelLindaJohn-C1` still lacks Encore (THJ's local edits). A Workshop quiver item would be an `EquipmentSO` with an Additive +1 modifier on `Stat_LQuiverSize`.
 
 **Status:** committed 0424e80b8, 012790d11, 8070b76a0, 214d8325e, 55cde5ce5. The projectile cap needs porting to main.
+
+## 2026-10-29 · Swap ends a move (core, thj/linda-quiver)
+
+**Built:** `AEffectSwapper` raises `unitEndMoving` for both live swapped units after a successful swap (D-322), so Toba's swap can trigger Linda's Watch. Edges allowed: two Watches from one swap, and Watch on an enemy swapped with Linda (D-323).
+
+**Verified:**
+- EditMode 1045/1046 (known red only, unchanged).
+- Review APPROVE.
+- THJ played the 7-step check: all pass.
+
+**Not verified:** no EditMode test (the swap coroutine needs a grid, VFX and the event bus).
+
+**Findings:** Papa's Shelter now refreshes when Lucy or John is swapped (was missed). The header comment in `EnemyAlertTracker.Events.cs` doesn't list the swap yet.
+
+**Status:** committed `e76b5da70`. Needs porting to main.

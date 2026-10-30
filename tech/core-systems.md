@@ -11,7 +11,7 @@ Owner: coordinator; THJ approves additions and removals. Paths are under `miso/A
 | System | Main files | Why it's core |
 | --- | --- | --- |
 | Ability data and runtime | `Core/Systems/AbilitySystem/Abilities/Runtime/AbilityPreset.cs`, `RuntimeAbility.cs`, `AbilityOrchestrator.cs` | Every unit action goes through them |
-| Effects | `Core/Systems/AbilitySystem/Effects/Runtime/AEffectBase.cs`, `AEffectCompound.cs` (and the `AEffect*` family, 20 files; since 2026-10-21, D-123: `AEffectCompound.ApplyUnguarded` applies John's per-action relay record from `Abilities/Runtime/FamilyRoleRelay.cs`, a static registry reset in `PlayModeStaticReset`, a no-op when no record exists) | Every ability's result; compounds carry shapes, unlocks and sub-effects |
+| Effects | `Core/Systems/AbilitySystem/Effects/Runtime/AEffectBase.cs`, `AEffectCompound.cs` (and the `AEffect*` family, 20 files; since 2026-10-21, D-123: `AEffectCompound.ApplyUnguarded` applies John's per-action relay record from `Abilities/Runtime/FamilyRoleRelay.cs`, a static registry reset in `PlayModeStaticReset`, a no-op when no record exists) | Every ability's result; compounds carry shapes, unlocks and sub-effects. 2026-10-29 (D-322, `e76b5da70`): `AEffectSwapper` raises `unitEndMoving` for both swapped units, like the pusher. |
 | Area shapes *(added in setup)* | `Abilities/Runtime/AreaShapeDefinition.cs`, `Effects/Runtime/IAffectedAreaProvider.cs` | Where an ability lands; the interface is read in 7 files |
 | Duos (cooperation) | `Abilities/Runtime/UnitsCooperationHandler.cs`, `Effects/Runtime/AEffectCoOpTrigger.cs` | USP: Duos |
 | Pass-by | `Abilities/Runtime/UnitsPassByHandler.cs` | Tag mechanic; fills FTP/ATB; Synergies |
