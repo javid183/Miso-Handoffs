@@ -2,7 +2,7 @@
 
 Size: M    Tier: 3 (new tool)    Assigned to: miso-implementer (C1 opus, C2–C3 sonnet), then miso-reviewer and miso-verifier
 Branch: all (editor-only code; built on the current branch, `thj/onboarding`)
-Status: approved by THJ 2026-10-26 (D-236 to D-239); checked against the onboarding levels 2026-10-26 (round-trip criterion corrected, D-240; see [Onboarding fit](#onboarding-fit)); C1 dispatched 2026-10-31 on `thj/onboarding` (D-337)
+Status: approved by THJ 2026-10-26 (D-236 to D-239); checked against the onboarding levels 2026-10-26 (round-trip criterion corrected, D-240; see [Onboarding fit](#onboarding-fit)); C1 committed `81897bb7c` 2026-10-31 (review APPROVE); C2 dispatched
 
 ## Why
 
@@ -42,7 +42,7 @@ Docs: `claude-config/skills/miso-level-chunks/SKILL.md` (new section), `tech/lev
 | Fact | Where |
 | --- | --- |
 | A level prefab nests `LevelBase.prefab` (Grid with `GridManager`, Tilemap, camera, the `Level` component with objectives, `EnemyAlertTracker`, faction relations) and an environment prefab (caves: `Content/LevelEnvironments/Cave/TestLevel/Prefabs/TestLevel.prefab`) | `Content/Levels/LevelBase.prefab`; every cave level |
-| GridCells are instances of `Content/Levels/_Common/Prefabs/GridCell.prefab`, children of the LevelBase Grid transform, named `GridCell - (x, y)`, at `x × 0.5 + 0.25, y × 0.5 + 0.25` | e.g. `LevelLucyJohn-C1.prefab`; `GridManager` maps cells by `grid.WorldToCell(position)` |
+| GridCells are instances of `Content/Levels/_Common/Prefabs/GridCell.prefab`, children of the LevelBase Grid's Tilemap (`GridManager.GatherCells`; corrected after C1), named `GridCell - (x, y)`, at `x × 0.5 + 0.25, y × 0.5 + 0.25` | e.g. `LevelLucyJohn-C1.prefab`; `GridManager` maps cells by `grid.WorldToCell(position)` |
 | Units **and** hazards (`CP_Spawner`, spikes, webs) are children of their cell's `occupantRoot` (a serialized field on `GridCell`) | `LevelM1-C1.prefab`; `GridCell.cs:65` |
 | The editor drag tool places an entity exactly this way: parent to `occupantRoot`, position = `GridPluggableEntity.Centroid(footprint)` | `Core/Systems/GridSystem/Editor/GridEntityDragTool.cs:303-331` |
 | Footprints grow up and right from the anchor | `GridPluggableEntity.FootprintCoords` |
@@ -100,7 +100,8 @@ Acceptance for C1: building chunk 24 (`24-nook`) in a test gives 37 GridCells an
 ### C2 · Palette asset, level settings, camera bounds (sonnet; two commits)
 
 - **Commit 1, camera tool refactor:** extract `public static bool AssignBoundary(string prefabPath)` from `CameraBoundaryBatchTool` (the body of its per-prefab loop); both menu items call it. Behaviour unchanged; its own commit, so it can be reverted alone.
-- **Also in commit 2 (D-342):** rebind the template's `LevelStartFPFiller.units` (if present) to the family units the block places, or an empty list when it places none; never save a null entry.
+- **From the C1 review (`reports/grid-to-level-c1-review.md`), in commit 2:** the outside-cell strip destroys only the entity's own prefab root (else just the entity, with a warning); create the output folder just before saving; `level template` values get the `Assets/_Project/` prefix; a block with no `level tier` line gets Standard (the block alone decides, D-343); reword the `claude-handoff/` path in `GridPalette.cs`'s comment.
+- **Also in commit 2 (D-342):** rebind the template's `LevelStartFPFiller.units` (if present) to the placed units of the level's player faction (so `units[0]` is a player unit; not by palette character), or an empty list when there are none; do it after the grid is built and before the missing-reference check; list the filler's carried values (`fpAmountToFill`, `atbGaugeAmountToFill`, `heal`) as a build warning; never save a null entry.
 - **Commit 2:** `GridLevelPalette` ScriptableObject (D-239) at `Content/Levels/Greybox/GridLevelPalette.asset`: character → prefab, the default template, the strip toggles, the output folder. "Reset to defaults" fills it with the C1 table. Settings from `level` lines: `levelName` and `enemyTier` on the level component; `level alert all` adds `LevelAlertSettings` to the level root with `allEnemiesStartAlert` on; `level origin` shifts every tile; `level template` overrides the default. After saving, `CameraBoundaryBatchTool.AssignBoundary(path)`.
 
 Acceptance for C2: a block with `level tier tutorial` and `level alert all` builds a level whose `level_to_grid.py` summary reads "enemy tier Tutorial; all enemies start alert: yes"; camera bounds are set.

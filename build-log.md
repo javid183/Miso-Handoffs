@@ -2268,3 +2268,15 @@ Core gets one additive, generic `CombatLog.AddCustom`.
 **Findings:** home-test adds 8 sortie nodes with no edges (open from the start); its Home-mode world map shows the Home sim's missions instead of the pins; its Family tab has no unlock mission. All in `tech/onboarding-merge.md`.
 
 **Status:** committed, not pushed. Next: the grid-to-level tool (D-337).
+
+## 2026-10-31 · Grid-to-level C1: parser and builder core (thj/onboarding)
+
+**Built:** editor-only `Core/Levels/Editor/GridToLevel/`: grid-block parser, code palette (the `level_to_grid.py` table; default template `LevelM1-C2`), builder (template loaded and saved to the output path, template grid content and extras stripped, cells under the Grid's Tilemap, units under each cell's occupant root at the footprint centroid), 20 tests. Commit `81897bb7c`.
+
+**Verified:** chunk 24 builds 37 cells and 6 units on the right tiles, no trigger left, no missing references, round trip matches; all 48 blocks in the catalogue and the onboarding levels plan parse; review APPROVE (`reports/grid-to-level-c1-review.md`); EditMode 1083/1084 (known red only).
+
+**Not verified:** a built level played (C3 adds Play; the verification set comes after C3).
+
+**Findings:** three onboarding templates carry a `LevelStartFPFiller` pointing at their own heroes (would throw at level start once stripped): C2 rebinds it (D-342). The plan's round-trip and cell-parent wording corrected.
+
+**Status:** committed, not pushed. Next: C2.
