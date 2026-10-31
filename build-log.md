@@ -2280,3 +2280,15 @@ Core gets one additive, generic `CombatLog.AddCustom`.
 **Findings:** three onboarding templates carry a `LevelStartFPFiller` pointing at their own heroes (would throw at level start once stripped): C2 rebinds it (D-342). The plan's round-trip and cell-parent wording corrected.
 
 **Status:** committed, not pushed. Next: C2.
+
+## 2026-10-31 · Grid-to-level C2: level settings, palette asset, camera bounds (thj/onboarding)
+
+**Built:** camera boundary tool's per-prefab step extracted (`eb40ebcd5`, behaviour unchanged); `GridLevelPalette.asset` with the code table as fallback; `level` lines applied (tier, Standard when unset; all-start-alert; origin; template); camera bounds after save; a template's level-start FP filler pointed at the placed player units (D-342); C1 review fixes (`459f41428`).
+
+**Verified:** a tier-tutorial, alert-all probe reads back "enemy tier Tutorial; all enemies start alert: yes"; bounds match the boundary tool; review APPROVE (`reports/grid-to-level-c2-review.md`); EditMode 1094/1095 (known red only).
+
+**Not verified:** a built level played.
+
+**Findings:** three small should-fixes go to C3.
+
+**Status:** committed, not pushed. Next: C3.

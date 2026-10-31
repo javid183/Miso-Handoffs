@@ -2,7 +2,7 @@
 
 Size: M    Tier: 3 (new tool)    Assigned to: miso-implementer (C1 opus, C2–C3 sonnet), then miso-reviewer and miso-verifier
 Branch: all (editor-only code; built on the current branch, `thj/onboarding`)
-Status: approved by THJ 2026-10-26 (D-236 to D-239); checked against the onboarding levels 2026-10-26 (round-trip criterion corrected, D-240; see [Onboarding fit](#onboarding-fit)); C1 committed `81897bb7c` 2026-10-31 (review APPROVE); C2 dispatched
+Status: approved by THJ 2026-10-26 (D-236 to D-239); checked against the onboarding levels 2026-10-26 (round-trip criterion corrected, D-240; see [Onboarding fit](#onboarding-fit)); C1 committed `81897bb7c`, C2 `eb40ebcd5` + `459f41428` (reviews APPROVE); C3 dispatched 2026-10-31
 
 ## Why
 
