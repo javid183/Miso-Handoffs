@@ -2244,3 +2244,15 @@ Core gets one additive, generic `CombatLog.AddCustom`.
 **Findings:** the quiver is on in home-test by the code default.
 
 **Status:** merged locally, not pushed.
+
+## 2026-10-31 · Onboarding structure C1: opening mission graph (thj/onboarding)
+
+**Built:** four placeholder missions (the Hearth, The River, The Ridge, The Trail) on existing levels; mission graph Hearth (initial) → River, Ridge → AND → Trail → M4, with M1, old M2, both M3s and M5–M7 removed from the graph (assets kept); New Game starts the Hearth; Mark unlocks after it; four world-map pins re-pointed, the M3 Mark Intro, M6 and M7 pins hidden; 10 graph tests. Commits `38bc7db73`, `bb9982c87`, `f36da02f8`.
+
+**Verified:** review FIX then fixed (`reports/onboarding-c1-review.md`); EditMode 1055/1056 (known red only); THJ's play check after a save reset: all confirmed.
+
+**Not verified:** nothing open from the C1 list.
+
+**Findings:** five Home stations, the Family tab and M4's HomeState idles stay locked until C5; old-mission tutorials unreachable; The Ridge's placeholder level has one spare placeholder; graph-reading editor tools (Quick Level Loader, the level's Load Level button) no longer list the removed missions' levels. Dry-run merge with `thj/home-test` conflicts on `Game Data.asset` and the Home scene (`tech/onboarding-merge.md`).
+
+**Status:** committed, not pushed. Next: C1b merge-safety builder (D-339), then the grid-to-level tool.

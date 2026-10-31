@@ -26,6 +26,7 @@ Owner: coordinator; THJ approves. `claude-handoff/` doesn't change when the shar
 
 - Created by THJ around 2026-10-30 from `main` @ `e8cb8a3d7`. Checked 2026-10-30: now at `194bd566b`, same as `main` (0 ahead, 0 behind), so it has the Encore text and its test fix.
 - **Purpose (2026-10-30, THJ asked to start the onboarding implementation here):** the onboarding greybox, `plans/onboarding/` (structure C1 first). Uncommitted in the tree: THJ's AI restore-race diagnostic (`AIFactionBrain.cs`, `AIUnitBrain.cs`), `ProjectSettings/` and the TMP fallback font; agents leave them alone.
+- Commits so far: C1 `38bc7db73`, `bb9982c87`, `f36da02f8` (opening mission graph). Merging with `thj/home-test` conflicts on `Game Data.asset` and the Home scene: recipe and every shared-file edit in `tech/onboarding-merge.md` (D-339).
 - Combat resource and AP: same as `main`.
 
 ## `thj/linda-quiver`
