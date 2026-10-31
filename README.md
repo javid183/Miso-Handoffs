@@ -31,6 +31,7 @@ THJ's private working folder for Claude on Miso. It is **excluded from the share
 | Editor checks (compile, logs, tests, play checks) | `tech/editor-checks.md` | Coordinator; the verifier reports corrections | A check turns out wrong, or the setup changes |
 | Combat pace timings (every wait, where to change it, what it affects) | `tech/pace-timings.md` | Coordinator | A timing is added, moved or retuned |
 | Core systems list | `tech/core-systems.md` | Coordinator; THJ approves additions and removals | A class becomes something combat relies on, or stops being one |
+| Level tools (grid ↔ prefab: renderer, reader, Build Level From Grid) | `tech/level-tools.md` | Coordinator | A level tool changes |
 | Onboarding ↔ home-test merge notes (shared-file edits, recipe) | `tech/onboarding-merge.md` | Coordinator | An onboarding chunk edits a file `thj/home-test` also changes |
 | Linda's quiver code map | `tech/linda-quiver.md` | Coordinator | The quiver's code or contract changes |
 | Technical notes | `tech/` | Coordinator | A system is added or its contract changes |

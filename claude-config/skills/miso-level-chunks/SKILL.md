@@ -14,6 +14,7 @@ Everything here rests on one format: a fenced `grid` block in a markdown doc, dr
 - **A chunk or a pattern.** A small piece of a level (up to about 11 × 11) that asks the player one question. It goes in the catalogue, `claude-handoff/design/level-chunks.md`, which is also the reference for the legend, the patterns, the knobs and what has been checked.
 - **A paper level** (or a mission's set of levels) that a builder can greybox without asking a design question. It goes in a design plan under `claude-handoff/plans/`. `plans/onboarding/2026-10-26-onboarding-levels.md` is the worked example.
 - **Reading an existing level.** Turn a level prefab into a grid block with `claude-handoff/tools/level_to_grid.py` (below).
+- **Building a level from a block.** Turn a paper grid into a playable greybox prefab with **Build Level From Grid** in Unity (below).
 
 Real work often uses all three: read the source level, reuse catalogue chunks, write the paper level.
 
@@ -97,6 +98,17 @@ Paths are relative to `miso/Assets/_Project`, as the GDD's Source lines write th
 - Units are placed by following their parent to the GridCell they sit under. Anything placed by position instead is listed: check those in the editor.
 - Deploy slots, story units and the Goblin Queen come out as `note` lines.
 - If a GUID is missing, rebuild the map with `claude-handoff/reward-tools/build_guidmap.py`. If a prefab has no GridCells, it nests another level: run the tool on that one.
+
+## Building a level from a grid
+
+In Unity, **Tools › Levels › Build Level From Grid…** turns one block into `Content/Levels/Greybox/GB_<id>.prefab`, playable at once from the level toolbar (sandbox mission). Full reference: `claude-handoff/tech/level-tools.md`.
+
+- **When:** a paper level is ready to greybox. Build first, then wire the mission, sequences and data; THJ edits after.
+- **`level` lines** after `--` set what the grid can't: `level name <text>`, `level tier standard|early|tutorial|late` (no line = Standard), `level alert all`, `level origin x,y`, `level template <path under Assets/_Project/>`. The drawing tool ignores them.
+- **Template:** a copy of `LevelM1-C2` by default; it keeps the environment, camera, faction relations and **objectives** (the window warns when they aren't "defeat every enemy / lose when the family is down"), and strips the template's grid, triggers, sequences, turn-order override, variant groups and alert settings.
+- **Check after building:** read it back with `level_to_grid.py`; the rows should match the block once `#` → `_`, drawing aids → `.`, cropped to the cells.
+- **Rebuild rule:** a rebuild replaces the prefab whole (it asks first). Once a level has been edited by hand, the prefab is the master; read it back instead of rebuilding.
+- **Not from the block yet:** objectives, per-unit HP, deploy slots, sequences and cues, Mission wiring, matching scenery.
 
 ## Drawing
 

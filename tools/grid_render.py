@@ -45,6 +45,7 @@ Annotations, one per line after a `--` line inside the block:
                                                (four-way, like most ranges in the game)
     step  X,Y N                                a numbered badge
     note  X,Y text                             a short label on a tile
+    level ...                                  (name, tier, alert, origin, template) read by the Unity builder, not drawn
 Colours: john linda lucy mark toba enemy heal shaman note, or #rrggbb.
 
 No dependencies beyond the Python standard library.

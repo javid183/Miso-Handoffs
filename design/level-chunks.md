@@ -8,6 +8,7 @@ A chunk is a small piece of a level (up to about 11 × 11 tiles) that asks the p
 - **Coordinates:** x counts from 0 at the left, y from 0 at the **bottom**, as in Unity's grid. Every tile shows its `x,y`, so "the Cyclone on 3,3" means the same thing in the text, the drawing and the prefab.
 - **Run it:** `python claude-handoff/tools/grid_render.py claude-handoff/design/level-chunks.md`
 - **Existing levels:** `python claude-handoff/tools/level_to_grid.py "Content/Levels/<...>.prefab"` prints a level as a ready-to-paste grid block (cells, units, hazards, offset, tier, alert, objectives). Rock props are scenery: they block nothing, and the playable map is exactly the set of GridCells.
+- **Build a level:** in Unity, **Tools › Levels › Build Level From Grid…** turns a block into a playable `GB_<id>` greybox prefab (`tech/level-tools.md`).
 - **How to work with this page:** the `miso-level-chunks` skill (`claude-config/skills/miso-level-chunks/SKILL.md`).
 
 ```
