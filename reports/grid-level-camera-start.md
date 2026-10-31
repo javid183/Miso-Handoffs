@@ -76,3 +76,22 @@ Not touched: `AIFactionBrain.cs`, `AIUnitBrain.cs`, `ProjectSettings/*`, the TMP
 ## How to see it
 
 Tools > Levels > Place Camera Start with a level prefab selected (or open in Prefab Mode); the console logs the position. Or build a block with `level camera 3,1` in its notes and check the info box in Build Level From Grid.
+
+## Fix round (after review)
+
+Done, all in `.../Core/Levels/Editor/GridToLevel/`:
+- Must-fix: removed `AssetDatabase.SaveAssets()` from the menu path (`CameraStartTool.cs`); `SaveAsPrefabAsset` saves the prefab itself.
+- Prefab Mode / nested-instance edits: `Undo.RecordObject` on the locator before the move, `RecordPrefabInstancePropertyModifications` after (also on the handler when a locator is created), `Undo.RegisterCreatedObjectUndo` for a created locator.
+- A created locator is now parented beside the `CameraHandler` (the handler's parent, falling back to the handler); the test asserts it.
+- The grid is read from the level's `GridManager` serialized `grid`, falling back to the first `Grid`.
+- `level camera` test now asserts the exact position (tile 0,0's centre kept inside the boundary) on the result and on the saved locator.
+- `level camera X,Y` on a tile that is not one of the block's floor tiles gives a warning (new parser test).
+
+Verification:
+- Recompiled clean. `GridToLevelCameraStartTests`: 17/17 pass. Full EditMode suite: 1127 total, 1126 pass, only `AIRegressionTest.Baseline_MatchesCurrentAI` red.
+- Prefab Mode path: with `GB_24-nook` open in Prefab Mode I moved the locator by (+3, +3), ran Place Camera Start, and saved the stage. The log reported 2.25, 1.50, and the prefab file holds the override x 2.25 / y 1.5 (no moved value). I did not do a separate close-and-reopen check: the editor stopped answering MCP for a few minutes right after that script (it also called `GoToMainStage`; it recovered on its own). Please ignore any Prefab Mode tab left open on `GB_24-nook`.
+- The five GB levels: not re-placed by the tool (they already have locators; results unchanged). `GB_24-nook.prefab` was re-saved by the Prefab Mode check above (same locator values, so content-equal apart from serialization); the others are untouched since the first run.
+
+Final files for the two commits:
+1. Tool + tests: `CameraStartRule.cs`, `CameraStartTool.cs`, `GridToLevelCameraStartTests.cs` (each + `.meta`), and edited `GridBlock.cs`, `GridBlockParser.cs`, `GridToLevelBuilder.cs`, `GridToLevelWindow.cs`.
+2. The five levels (each `.prefab` + `.prefab.meta`) in `miso/Assets/_Project/Content/Levels/Greybox/`: `GB_11-spread-pools`, `GB_24-nook`, `GB_27-snare`, `GB_33-deev-wave`, `GB_m1-linda`.

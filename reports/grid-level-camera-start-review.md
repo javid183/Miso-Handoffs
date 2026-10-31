@@ -18,3 +18,7 @@ Reviewer: `miso-reviewer` (read-only; saved by the coordinator), 2026-10-31. Pla
 - GB prefab values check out (parents at 0,0,0, z kept, values match the report; m1-linda recomputed by hand).
 - Stale boundary overrides on a removed component come from the template; harmless, pre-existing.
 - No core file, no statics, LF/no BOM, no private IDs; both commits stand alone. 16:9 aspect and the preview limit accepted.
+
+## Fix round check (coordinator, 2026-10-31): done
+
+Must-fix and five should-fixes in (spot-checked: no `SaveAssets`, Undo + `RecordPrefabInstancePropertyModifications`, created locator beside the handler). EditMode 1126/1127 known red only; camera-start tests 17/17. Prefab Mode run on `GB_24-nook` saved the same values; close-and-reopen not checked separately.
