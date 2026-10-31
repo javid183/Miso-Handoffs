@@ -8,7 +8,7 @@ Branch: `thj/onboarding` (editor-only code + docs). Status: dispatched 2026-10-3
 C1 (`38bc7db73`, `bb9982c87`, `f36da02f8`) edits files that `thj/home-test` also edits. A dry run (`git merge-tree HEAD thj/home-test`, 2026-10-31) already conflicts on:
 
 - `Home - Scene.unity`: home-test changed ~9.8k lines, including the WorldMapPanel instance's override list where C1's pin overrides sit.
-- `Game Data.asset`: home-test added 4 graph nodes (Home sorties: GoblinCamp, OldWatchtower, MossyHollow, DrownedShrine); C1 removed the old missions' nodes from the same list.
+- `Game Data.asset`: home-test added 8 edge-less graph nodes (Home sorties; corrected from 4 by the review); C1 removed the old missions' nodes from the same list.
 - `Unit_Mark.prefab` auto-merges (different lines).
 
 C5 (Home visits) will add more Home-scene edits. Hand-merging Unity YAML twice per chunk is the risk.

@@ -13,7 +13,7 @@ Owner: coordinator. Every edit `thj/onboarding` makes to a file `thj/home-test` 
 
 | File | Onboarding edit | Commit | home-test changes it? | Dry run 2026-10-31 | Builder re-applies |
 |---|---|---|---|---|---|
-| `Resources/Game Data.asset` | Opening graph: Hearth initial → River, Ridge → AND → Trail → M4; old M1, M2, M3 ×2, M5–M7 nodes removed | `bb9982c87` | Yes: +4 Home sortie nodes | **Conflict** | Yes (keeps unknown nodes) |
+| `Resources/Game Data.asset` | Opening graph: Hearth initial → River, Ridge → AND → Trail → M4; old M1, M2, M3 ×2, M5–M7 nodes removed | `bb9982c87` | Yes: +8 Home sortie nodes, no edges | **Conflict** | Yes (keeps unknown nodes) |
 | `Home - Scene.unity` | 4 world-map pins re-pointed (Hearth, River, Ridge, Trail) and renamed; M3 Mark Intro, M6, M7 pins hidden; Mark's select button and Upgrades tab unlock after the Hearth | `bb9982c87` | Yes: ~9.8k lines | **Conflict** | Yes (finds pins by mission, not name) |
 | `Unit_Mark.prefab` | `unlockedAfterMission` → Hearth | `bb9982c87` | Yes: stat attribute lines | Auto-merges | Yes |
 | `Scenes/IntroScreen.unity`, `Scenes/MainMenuScene.unity` | `initialMission` → Hearth | `bb9982c87` | No | Clean | Yes |
@@ -22,7 +22,7 @@ New onboarding-only files (no conflict): the 4 Mission assets (`38bc7db73`), `On
 
 ## What the builder does not re-apply (C1b report)
 
-- Home station unlock lists, the Family tab (`UpgradesPanel` `characters[5]`) and the `HomeStates-Idles` M4–M7 requirements: C1 didn't change them; C5 re-homes them and adds them to the builder's table.
+- Home station unlock lists, the Family tab (`UpgradesPanel` `characters[5]`; home-test sets its `requiredMissionToUnlock` to null, onboarding still has M3 Wolf) and the `HomeStates-Idles` M4–M7 requirements: C1 didn't change them; C5 re-homes them and adds them to the builder's table.
 - Home-test's sortie nodes: kept as they are, not gated (see below).
 - Apply on a scene that really changes re-adds Unity's nine empty `GlobalEventBus` UnityEvent fields: strip or accept that noise in the diff.
 - `Unit_Mark.prefab` is rewritten through prefab contents (a 4-line diff in the proof run): check its diff after the first real merge run.
@@ -30,5 +30,6 @@ New onboarding-only files (no conflict): the 4 Mission assets (`38bc7db73`), `On
 
 ## Design questions the merge raises (THJ)
 
-- home-test's Home sorties are graph nodes with no incoming edge, so they are open from the start; with the onboarding graph they would be open before the Hearth. Gate them behind the Hearth (or a later mission)?
+- home-test's 8 Home sorties (GoblinCamp, OldWatchtower, MossyHollow, DrownedShrine, DeevBurrow, GoblinQueensWarren, GoblinScoutPost, ShamansCircle) are graph nodes with no incoming edge, so they are open from the start; with the onboarding graph they would be open before the Hearth. Gate them behind the Hearth (or a later mission)?
+- home-test's world map in Home mode (`WorldMapPanelUI.RefreshHomeMode`, when a `HomeDayRunner` is present) hides every pin and shows clones bound to the Home sim's missions (prologue: `PrologueMapMission`). So the pins the builder restores only show outside Home mode; which mission the map offers first comes from the Home sim.
 - home-test's prologue and day loop vs the Hearth memory: which opening wins on the merged branch.
