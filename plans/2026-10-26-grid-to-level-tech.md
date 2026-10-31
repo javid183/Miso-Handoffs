@@ -189,3 +189,4 @@ Compile clean / EditMode suite green except the known red / review: yes (editor 
 
 
 **C3 committed 2026-10-31:** `24bfcea3e` (window, objectives warning, builder fixes, tests). The five `GB_` levels wait for the camera start (`plans/2026-10-31-grid-level-camera-start.md`) and are committed with it.
+**Camera start committed 2026-10-31:** `9d3ac5623`; the five `GB_` levels `652f2075e`. The tool is done.

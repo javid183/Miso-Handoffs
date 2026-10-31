@@ -2304,3 +2304,13 @@ Core gets one additive, generic `CombatLog.AddCustom`.
 **Findings:** built levels kept the template's `InitialCameraPosition`, so the opening view was off; fixed in the camera start step (in progress). The five `GB_` levels are not committed yet (they wait for it).
 
 **Status:** camera start with `miso-implementer`.
+
+## 2026-10-31 · Grid-to-level camera start (thj/onboarding)
+
+**Built:** builds place the Camera's `InitialCameraPosition` (whole level if it fits one screen at the default zoom, else pulled toward the player units, clamped in the boundary); `level camera x,y` override; **Tools › Levels › Place Camera Start** for existing prefabs. Placed on the five `GB_` levels. Commits `9d3ac5623` (tool + tests), `652f2075e` (levels).
+
+**Verified:** EditMode 1126/1127 (known red only); 17 camera-start tests. Review FIX (global `SaveAssets`, Undo, locator parent, grid source, test precision, camera-tile warning), fixed. THJ played the opening views: good.
+
+**Not verified:** Place Camera Start's Prefab Mode close-and-reopen round trip (saved values checked only).
+
+**Status:** grid-to-level tool done. Next per D-337: structure C2.

@@ -1,7 +1,7 @@
 # Grid-to-level: place the camera start
 
 Size: S    Tier: 2 (editor tool, non-core; THJ asked for it 2026-10-31)    Assigned to: `miso-implementer` → `miso-reviewer` → THJ play check
-Branch: `thj/onboarding`. Status: **in progress**
+Branch: `thj/onboarding`. Status: **done 2026-10-31**, committed `9d3ac5623` (tool + tests), `652f2075e` (the five `GB_` levels). Review FIX, fix round done (coordinator check); EditMode 1126/1127 known red only; THJ play-checked the opening views OK
 
 ## Why
 
