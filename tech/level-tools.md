@@ -22,9 +22,12 @@ level tier tutorial          (standard | early | tutorial | late; no line = Stan
 level alert all
 level origin 11,-10
 level template Content/Levels/Generic Levels/Medium/M1/LevelM1-C2.prefab   (relative to Assets/_Project/)
+level camera 6,3             (tile the opening view centres on; overrides the rule below)
 ```
 
 **Template.** Default `LevelM1-C2` (set in `Content/Levels/Greybox/GridLevelPalette.asset`, which also holds the character → prefab table; empty slots fall back to the built-in table). Kept: environment, lighting, music, camera, faction relations, objectives. Stripped: every GridCell and everything on the grid, `LevelSequenceTrigger`s, intro and outro sequences, the turn-order override, variant groups, `LevelAlertSettings` (re-added by `level alert all`). A template's `LevelStartFPFiller` is pointed at the placed player units (empty if none); the build warns with the values it keeps. Camera bounds are set on every build.
+
+**Camera start.** `CameraHandler.initialLocator` (the Camera's `InitialCameraPosition` child; created if the template has none) is placed on every build: centre of the built tiles if they fit one view at the template's default zoom (height 2 × `defaultZoom`, 16:9); otherwise shifted the least needed to keep the player units' footprints in view (half a tile margin), or centred on them if even they don't fit; then clamped inside the camera boundary like the runtime. `level camera x,y` overrides it. **Tools › Levels › Place Camera Start** applies the same rule to the selected level prefab or the open Prefab Mode stage (plan `plans/2026-10-31-grid-level-camera-start.md`).
 
 **Coordinates.** Tile `x,y` → `GridCell - (x, y)` at `(x × 0.5 + 0.25, y × 0.5 + 0.25)`, plus the origin; cells sit under the Grid's Tilemap; units and hazards under their cell's occupant root at the footprint centroid (big units on their bottom-left tile).
 
