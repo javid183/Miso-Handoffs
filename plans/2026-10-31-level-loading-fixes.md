@@ -1,7 +1,7 @@
 # Level loading fixes and the level toolbar dropdown
 
 Size: M    Tier: 3 (touches `LevelBase.cs`, core list), approved by THJ 2026-10-31 ("Fix them all. 1 your way by playing it through the sandbox mission")    Assigned to: `miso-implementer` → `miso-reviewer` → THJ play check
-Branch: `thj/onboarding`. Status: **in progress**
+Branch: `thj/onboarding`. Status: **done 2026-10-31**, committed `32f532e49` (loading fix + `LevelLoadingTests`), `29cad27cb` (dropdown + `LevelToolbarMenuTests`). Review FIX, fix round APPROVE; EditMode 1109/1110 known red only; THJ play-checked OK. Open follow-up: write the fast-forward prefs directly in `EnterPlay` (scripted load right after a play-stop can lose the handler; review note)
 
 Found during the grid-to-level C3 play check. All three are older than this branch (the quick-load flow is the SEN-2103 commit `50558f9e1`).
 

@@ -2292,3 +2292,15 @@ Core gets one additive, generic `CombatLog.AddCustom`.
 **Findings:** three small should-fixes go to C3.
 
 **Status:** committed, not pushed. Next: C3.
+
+## 2026-10-31 · Grid-to-level C3 and level loading fixes (thj/onboarding)
+
+**Built:** Build Level From Grid window (preview, rebuild confirm, Open, Play; `24bfcea3e`). Level loading fixes (`32f532e49`): the loader read the level's id and prefab path after opening the preload scene, which unloaded the prefab asset, so toolbar/inspector/window Play fell to the main menu; now captured first; `UnpackID` null-safe; unlisted levels play in a sandbox; a Prefab Mode copy loads as its saved asset. Level toolbar dropdown (`29cad27cb`): folder submenus, ★ favourites, `Recent/` (5), per machine.
+
+**Verified:** EditMode 1109/1110 (known red only). Reviews: C3 APPROVE; loading fixes FIX → APPROVE. THJ played `GB_24-nook` and the paths: all good.
+
+**Not verified:** a scripted load right after a play-stop once lost the handler and went to the main menu (pre-existing subscribe pattern; hardening is a follow-up).
+
+**Findings:** built levels kept the template's `InitialCameraPosition`, so the opening view was off; fixed in the camera start step (in progress). The five `GB_` levels are not committed yet (they wait for it).
+
+**Status:** camera start with `miso-implementer`.

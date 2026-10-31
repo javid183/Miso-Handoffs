@@ -186,3 +186,6 @@ Compile clean / EditMode suite green except the known red / review: yes (editor 
 - `README.md`: `tools/` and the greybox folder (coordinator).
 - `plans/onboarding/2026-10-26-onboarding-structure-tech.md`: C3 and C4 start from this tool (coordinator).
 - `build-log.md`: a dated section per chunk.
+
+
+**C3 committed 2026-10-31:** `24bfcea3e` (window, objectives warning, builder fixes, tests). The five `GB_` levels wait for the camera start (`plans/2026-10-31-grid-level-camera-start.md`) and are committed with it.
