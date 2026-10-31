@@ -20,6 +20,14 @@ Owner: coordinator. Every edit `thj/onboarding` makes to a file `thj/home-test` 
 
 New onboarding-only files (no conflict): the 4 Mission assets (`38bc7db73`), `OnboardingMissionGraphTests.cs` (`f36da02f8`).
 
+## What the builder does not re-apply (C1b report)
+
+- Home station unlock lists, the Family tab (`UpgradesPanel` `characters[5]`) and the `HomeStates-Idles` M4–M7 requirements: C1 didn't change them; C5 re-homes them and adds them to the builder's table.
+- Home-test's sortie nodes: kept as they are, not gated (see below).
+- Apply on a scene that really changes re-adds Unity's nine empty `GlobalEventBus` UnityEvent fields: strip or accept that noise in the diff.
+- `Unit_Mark.prefab` is rewritten through prefab contents (a 4-line diff in the proof run): check its diff after the first real merge run.
+- Apply stops before writing if a target scene is open with unsaved changes: save or close it first.
+
 ## Design questions the merge raises (THJ)
 
 - home-test's Home sorties are graph nodes with no incoming edge, so they are open from the start; with the onboarding graph they would be open before the Hearth. Gate them behind the Hearth (or a later mission)?
