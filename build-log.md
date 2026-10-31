@@ -2256,3 +2256,15 @@ Core gets one additive, generic `CombatLog.AddCustom`.
 **Findings:** five Home stations, the Family tab and M4's HomeState idles stay locked until C5; old-mission tutorials unreachable; The Ridge's placeholder level has one spare placeholder; graph-reading editor tools (Quick Level Loader, the level's Load Level button) no longer list the removed missions' levels. Dry-run merge with `thj/home-test` conflicts on `Game Data.asset` and the Home scene (`tech/onboarding-merge.md`).
 
 **Status:** committed, not pushed. Next: C1b merge-safety builder (D-339), then the grid-to-level tool.
+
+## 2026-10-31 · Onboarding C1b: merge-safety builder (thj/onboarding)
+
+**Built:** `Tools › Onboarding › Apply / Check Opening Setup` (editor-only, `Features/Onboarding/Editor/`): one table of mappings; re-applies the opening graph (keeps nodes it doesn't own, clears other start flags, warns on missions left without prerequisites), New Game's first mission, Mark's unlock, the world-map pins (by mission) and Mark's select button and Upgrades tab; stops before writing over unsaved edits. 8 tests. Commit `509a634dc`.
+
+**Verified:** run on the pre-C1 copies of the five files, it reproduced C1 (36 changes, a second run 0); Apply on the project is a no-op; review FIX then fixed (`reports/onboarding-c1b-review.md`); EditMode 1063/1064 (known red only).
+
+**Not verified:** a run on `thj/home-test`'s real files (only reasoned through by the reviewer); the proof wasn't re-run after the fix round.
+
+**Findings:** home-test adds 8 sortie nodes with no edges (open from the start); its Home-mode world map shows the Home sim's missions instead of the pins; its Family tab has no unlock mission. All in `tech/onboarding-merge.md`.
+
+**Status:** committed, not pushed. Next: the grid-to-level tool (D-337).

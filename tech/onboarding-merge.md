@@ -5,7 +5,7 @@ Owner: coordinator. Every edit `thj/onboarding` makes to a file `thj/home-test` 
 ## Recipe
 
 1. Merge as usual. For each conflicted file in the table: take `thj/home-test`'s version whole (`git checkout --theirs` or `--ours`, whichever side is home-test).
-2. Open Unity, run **Tools › Onboarding › Apply Opening Setup** (built in C1b, `plans/onboarding/2026-10-31-onboarding-merge-safety.md`), save.
+2. Open Unity, run **Tools › Onboarding › Apply Opening Setup** (commit `509a634dc`, `Features/Onboarding/Editor/`; plan `plans/onboarding/2026-10-31-onboarding-merge-safety.md`). Save or close any target first: Apply stops if a target scene, `Game Data.asset` or Mark's prefab has unsaved changes. Read its report lines, not just the problem count: the scene, pin and prefab steps are proved only on this branch's files.
 3. Run EditMode: `OnboardingMissionGraphTests` and `OnboardingOpeningSetupTests` must pass.
 4. Then the design-level questions below.
 
@@ -26,7 +26,7 @@ New onboarding-only files (no conflict): the 4 Mission assets (`38bc7db73`), `On
 - Home-test's sortie nodes: kept as they are, not gated (see below).
 - Apply on a scene that really changes re-adds Unity's nine empty `GlobalEventBus` UnityEvent fields: strip or accept that noise in the diff.
 - `Unit_Mark.prefab` is rewritten through prefab contents (a 4-line diff in the proof run): check its diff after the first real merge run.
-- Apply stops before writing if a target scene is open with unsaved changes: save or close it first.
+- Check and Apply list a Problem when a mission it keeps lost its only prerequisite (it would open from the start).
 
 ## Design questions the merge raises (THJ)
 

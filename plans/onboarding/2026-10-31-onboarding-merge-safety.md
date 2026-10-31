@@ -1,7 +1,7 @@
 # Onboarding: keep the `thj/home-test` merge safe (C1b)
 
 Size: M    Tier: 3, approved by THJ 2026-10-31 (D-339: "anything that can be done to keep the future merge safe and easier ... do it and log")    Assigned to: `miso-implementer` (sonnet) → `miso-reviewer` → coordinator check
-Branch: `thj/onboarding` (editor-only code + docs). Status: dispatched 2026-10-31
+Branch: `thj/onboarding` (editor-only code + docs). Status: **done 2026-10-31**, committed `509a634dc` (review FIX, fix round done; EditMode 1063/1064 known red only; Apply on the project is a no-op)
 
 ## Why
 

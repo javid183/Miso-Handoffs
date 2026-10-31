@@ -9,7 +9,7 @@ New, all under `miso/Assets/_Project/Features/Onboarding/Editor/` (editor-only, 
 - `OnboardingOpeningSetup.cs`: the table at the top (missions by asset GUID, graph nodes and links, removed missions, pin re-points old to new with the new pin name, pins to hide, recruits by character data GUID with their unit prefab path, scenes whose `initialMission` is set), the target-path redirect (`SetupTargets`), the report type, the two menu items `Tools/Onboarding/Apply Opening Setup` and `Tools/Onboarding/Check Opening Setup` (report only), and `Run(targets, apply)`.
 - `OnboardingOpeningSetup.Graph.cs`: mission graph step. Works on a copy of the graph's nodes and edges and writes it back only if something changed. Removes the old missions' nodes and edges, then removes a gate only if it lost an input (or output) to a removal and has none left on that side. Adds the four nodes, sets the Hearth initial, adds the links (River AND Ridge through one gate, found by its exact input set, else created). Every other node stays.
 - `OnboardingOpeningSetup.Scenes.cs`: scene and prefab steps. `initialMission` on any component of IntroScreen / MainMenuScene; `unlockedAfterMission` on the Mark unit; Home scene: world map pins found by their mission (`WorldMap_Button.mission`, re-point + rename, hide), Mark's `CharacterSelectButton` and `UpgradesPanel` entry found by `Mark_DialogueCharacter`. Scenes are opened additively, saved only if a change was made, closed if the step opened them. If a target scene is already open with unsaved changes, the run stops before writing anything.
-- `OnboardingOpeningSetupTests.cs`: 5 EditMode tests (below).
+- `OnboardingOpeningSetupTests.cs`: 8 EditMode tests after the fix round (below).
 
 No edits to existing files. No new statics that hold state: the table is `static readonly` immutable data inside an editor-only class, so no `PlayModeStaticReset` hook is needed.
 
@@ -34,6 +34,19 @@ Copied `Game Data.asset`, `Home - Scene.unity`, `Unit_Mark.prefab`, `IntroScreen
   - IntroScreen and MainMenuScene: `initialMission` = The Hearth, identical. Mark prefab: `unlockedAfterMission` = The Hearth, identical.
 - Raw text diff of rebuilt copy vs committed (ignoring CR): Game Data 44 lines (new node GUID/order only), Home scene 27 (the nine empty `GlobalEventBus` UnityEvent fields Unity re-adds when it saves the scene; the same noise C1 stripped by hand), Unit_Mark 4, IntroScreen 0, MainMenuScene 6 (override ordering). No semantic difference.
 - Cleanup: `Assets/_ScratchMergeProof` and its meta deleted through the AssetDatabase; verified gone from disk and from `git status`. The proof script lived in that folder and went with it.
+
+## Fix round (review)
+
+All seven items from `onboarding-c1b-review.md` done:
+- Must 1: removed `AssetDatabase.SaveAssets()`; each step saves only its own target.
+- Should 1: Apply (not Check) also stops before writing if `Game Data.asset` is dirty in memory, or the Mark prefab is dirty in memory or open in Prefab Mode with unsaved changes (`Preflight`).
+- Should 2: `EditScene` tracks "in the Hierarchy" separately from "loaded" and closes with `removeScene: false` when the scene was already listed but unloaded.
+- Should 3: `CloneNode` is now a JsonUtility round trip with the payload re-pointed. Test `ApplyOnTheGraph_ForeignNodeKeepsEveryField` sets every NodeData field on a foreign node and compares its JSON before and after Apply.
+- Should 4: the initial row clears `isInitialLevel` on every other entity node, reported as "no longer flagged as the initial mission". Test `ApplyOnTheGraph_OnlyTheHearthStaysFlaggedInitial`.
+- Should 5: after removals and links, a surviving entity node that lost its incoming edges and has none gets a Problem line (counted in Check and Apply). Test `ApplyOnTheGraph_WarnsAboutAMissionLeftWithoutPrerequisites`.
+- Should 6: `ApplyOnTheGraph_ReplacesTheOldOpening` now asserts the old gate is gone, exactly one AND gate joins River and Ridge with exactly those two inputs and the Trail as its only output, and the Rootwell follows the Trail.
+- Re-ran Apply on the real project: "nothing to change", `git status` unchanged (new Onboarding files plus THJ's four dirty files).
+- EditMode suite: 1064 total, 1063 passed, 1 failed (the known `AIRegressionTest.Baseline_MatchesCurrentAI`). The onboarding builder tests are now 8 (3 more than before). The earlier proof run was before these edits; the clone and flag changes are covered by the new tests and the real-project no-op.
 
 ## Save reset
 
