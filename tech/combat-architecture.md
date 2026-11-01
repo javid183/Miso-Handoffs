@@ -50,3 +50,7 @@ Design and inventory of all 23 previews: `plans/2026-10-19-preview-pass-design.m
 - **Role-zone layer:** `GridCell.RoleZone.cs` holds one entry per owner (sprite, quadrant, colour, scale). It is fed by `RoleZonePresenter` (selected unit, Shift, badge hover via `GlobalEventBus.onFamilyRoleBadgeHover`, focus, the D-080 hide) and by `MovePreviewCoverPresenter` (follow zones from the ghost tile for all four Bergsons, and the cover markers). The two presenters sit on one GameObject added by `ShowStatsHoverPreview`. All four role handlers have `GetCellsInRange(GridCell origin)`.
 - **Shift preview layer:** `GridCell.ShiftPreview.cs`, with Bergson and enemy kinds. `ShiftPreviewRules` decides by relation: a unit hostile to the player gets the danger zone; any other unit gets current-tile reach.
 - **Arcs:** `Core/Utilities/ArcLine.cs` (a quadratic Bézier) draws John's tether. `GUnit.ShowThreatLineTo` still has its own copy (switching it is a later core commit).
+
+## Level start run upgrade grant (2026-11-01, `thj/onboarding`)
+
+`Features/Onboarding/LevelStartRunUpgradeGrant` (non-core MonoBehaviour on a level): a list of `RunUpgradeSO`; subscribes itself to the level's `GlobalEventBus.levelStarted` (caches that bus) and grants each through the player faction's `RunUpgrades.TryGrant`. Mission lifetime: `FactionTracker.EnterMission`/`QuitMission` clear it; a restart is refused by `Has`. Warns when fewer were granted than listed (no mission, unit not in squad). Used on memory segment 4 for Tempest Bloom (C3). Commit `c772bbf34`.

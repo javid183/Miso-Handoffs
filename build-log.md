@@ -2324,3 +2324,15 @@ Core gets one additive, generic `CombatLog.AddCustom`.
 **Not verified:** a Play Unity refuses, and a load right after a play-stop (both rare, couldn't be forced).
 
 **Status:** committed, not pushed. Next per D-337: structure C2.
+
+## 2026-11-01 · Onboarding structure C2: memory rules (thj/onboarding)
+
+**Built:** `LevelStartRunUpgradeGrant` (a level grants run upgrades at level start; mission lifetime; `c772bbf34`). `LevelXpChecker` (every XP source of a level or mission), grid tool lines `level xp none` (zero placed enemies' XP as instance overrides, warn on what's left) and `level fp full` (add or set a start filler to full) (`16eee4aad`). Per D-344 the old M1 placeholder levels are untouched; C3 applies the rules to the real memory levels.
+
+**Verified:** EditMode 1155/1156 (known red only). Review FIX (checker missed spawning hazards, nested summons, reward/pickup XP; `fp full` was skipped; Unity null check) → fixed → APPROVE, plus three small fixes. THJ checked a build with both lines: good.
+
+**Not verified:** the grant firing in a real level in Play.
+
+**Findings:** spawned enemies' XP can't be zeroed per spawn without core code (plain `Instantiate`); the default template has no FP filler, so FP carried over between segments without `level fp full`.
+
+**Status:** committed, not pushed. Next: structure C3 (memory levels and sequences); THJ's spawn call first.

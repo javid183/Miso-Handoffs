@@ -1,7 +1,7 @@
 # Onboarding structure C2: memory rules (tool + component)
 
 Size: S–M    Tier: 2 (editor tool + one new non-core component; THJ: "Start C2", scope D-344)    Assigned to: `miso-implementer` (sonnet) → `miso-reviewer` → THJ check
-Branch: `thj/onboarding`. Status: **built, waiting on THJ check**. Review FIX → fix round → APPROVE (+3 small fixes done); EditMode 1155/1156 known red only. Added `level fp full` (template `LevelM1-C2` has no filler; FP carries over between segments). Open for C3: spawned enemies can't be zeroed per spawn (no-spawn memory levels vs zero-XP prefab variants)
+Branch: `thj/onboarding`. Status: **done 2026-11-01**, committed `c772bbf34` (grant), `16eee4aad` (XP checker, `level xp none`, `level fp full`). THJ checked OK. Review FIX → fix round → APPROVE (+3 small fixes done); EditMode 1155/1156 known red only. Added `level fp full` (template `LevelM1-C2` has no filler; FP carries over between segments). Open for C3: spawned enemies can't be zeroed per spawn (no-spawn memory levels vs zero-XP prefab variants)
 
 Parent: `plans/onboarding/2026-10-26-onboarding-structure-tech.md` § C2 (T1 = data only, D-200). Level rules per segment: `plans/onboarding/2026-10-26-onboarding-levels.md` (segment 4 = Tempest Bloom).
 
