@@ -25,6 +25,7 @@ level template Content/Levels/Generic Levels/Medium/M1/LevelM1-C2.prefab   (rela
 level camera 6,3             (tile the opening view centres on; overrides the rule below)
 level xp none                (placed enemies give no XP: instance overrides, prefabs unchanged; warns on any XP left)
 level fp full                (adds a LevelStartFPFiller if the template has none, or sets the existing one, to fill the family time points to full at level start)
+level hidden 9,3 10,2        (units on these tiles start switched off; optional group name first, e.g. level hidden mother 9,9 9,8; adds HiddenLevelUnits to the level root; a RevealUnitsSequence brings a group in)
 ```
 
 **Template.** Default `LevelM1-C2` (set in `Content/Levels/Greybox/GridLevelPalette.asset`, which also holds the character → prefab table; empty slots fall back to the built-in table). Kept: environment, lighting, music, camera, faction relations, objectives. Stripped: every GridCell and everything on the grid, `LevelSequenceTrigger`s, intro and outro sequences, the turn-order override, variant groups, `LevelAlertSettings` (re-added by `level alert all`). A template's `LevelStartFPFiller` is pointed at the placed player units (empty if none); the build warns with the values it keeps. Camera bounds are set on every build.

@@ -2336,3 +2336,15 @@ Core gets one additive, generic `CombatLog.AddCustom`.
 **Findings:** spawned enemies' XP can't be zeroed per spawn without core code (plain `Instantiate`); the default template has no FP filler, so FP carried over between segments without `level fp full`.
 
 **Status:** committed, not pushed. Next: structure C3 (memory levels and sequences); THJ's spawn call first.
+
+## 2026-11-01 · Onboarding structure C3a: the Hearth memory levels (thj/onboarding)
+
+**Built:** `HiddenLevelUnits` + `RevealUnitsSequence` (placed units start out of play; a level sequence reveals a group the way a spawn does) and the grid line `level hidden [group] x,y …` (`3c99b3ee6`). The four memory levels `GB_m1-linda`, `GB_m2-lucy`, `GB_m3-john`, `GB_m4-mark` from their blocks (tutorial tier, alert, no XP, full FP; per-unit HP by hand; hidden cue Claws in segments 2 and 4; Wolf/Ryker scenery for the mother and cub) (`a161e0956`). The Hearth plays them in order with no completion XP, plus a mission-wide no-XP test (`9ace80c28`). D-345: no spawned enemies; D-346: reveal route.
+
+**Verified:** EditMode 1172/1173 (known red only). Review FIX (a second reveal could revive dead Claws; deactivate the unit's own object; no-cell/no-faction guard; parser edge cases) → fixed → APPROVE. THJ play-checked the four levels and a new game into the Hearth: good.
+
+**Not verified:** a reveal at runtime (no reveal sequence asset until C3b).
+
+**Findings:** "defeat every enemy" counts only units in play, so segments 2 and 4 can be won before their reveal until C3b gives them their stages. Hand edits after the build (HP factors, Wolf/Ryker) live in the prefabs; a rebuild loses them.
+
+**Status:** committed, not pushed. Next: C3b (sequences and stages); open: segment 4's revealed Claws after the mother falls.
