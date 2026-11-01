@@ -38,3 +38,10 @@ New game into the Hearth, segment 1: Margaret line, then the two panels, then pl
 
 ## Proposed commits
 1. `feat(onboarding): wire the first Hearth memory level's start, end and win stage`: HearthMemoryWiring.Linda.cs(+meta), HearthMemoryLindaTests.cs(+meta), Resources/Sequences/Hearth/** (with metas), GB_m1-linda.prefab.
+
+## Fix round
+- HUD line now "Turns left in the memory: {remaining_0}." (prefab re-wired by re-running the menu item; the diff shows the new text).
+- The wiring reuses an existing `TurnReachedLOCondition` in the slot and only sets `turn`; the managed-reference id stayed the same on the re-run.
+- Test asserts the punchline index is >= 0 before indexing.
+- `SpriteByGuid` logs a warning when a panel image is missing.
+- EditMode re-run: only `AIRegressionTest.Baseline_MatchesCurrentAI` red. GB_m2/m3/m4 reimport diffs left alone.

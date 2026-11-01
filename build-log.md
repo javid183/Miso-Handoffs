@@ -2348,3 +2348,15 @@ Core gets one additive, generic `CombatLog.AddCustom`.
 **Findings:** "defeat every enemy" counts only units in play, so segments 2 and 4 can be won before their reveal until C3b gives them their stages. Hand edits after the build (HP factors, Wolf/Ryker) live in the prefabs; a rebuild loses them.
 
 **Status:** committed, not pushed. Next: C3b (sequences and stages); open: segment 4's revealed Claws after the mother falls.
+
+## 2026-11-01 · Onboarding structure C3b segment 1: Linda's memory scenes (thj/onboarding)
+
+**Built:** `GB_m1-linda`: Margaret's opening line and two panels (move and AP; Watch, "Each shot spends an arrow."), one win stage (all enemies dead or `TurnReachedLOCondition` turn 2, so it ends as turn 3 starts; HUD "Turns left in the memory"), end = punchline → `FadeOutGridSequence` → Hearth cutaway over a placeholder still → `OutroCutsceneKeepGridHidden`. Assets in `Resources/Sequences/Hearth/`; Tools > Onboarding > Wire Memory 1 (Linda) re-applies the wiring after a grid-tool rebuild (HP untouched). Commit `848a67fd2`. D-347: segment 4's revealed Claws stay and fight.
+
+**Verified:** EditMode 1175/1176 (known red only, checked by name). Review APPROVE + four small fixes. THJ play-checked: good.
+
+**Not verified:** —
+
+**Findings:** `[PLACEHOLDER]` shows on screen (only barks strip it; `conventions.md` says otherwise). Margaret has no character asset (Narrator + "Margaret:"). Each memory level is its own scene, so segment 2 needs a hide-then-fade-in start for the grid fade-in. Home open/close states wait for a HomeState asset. Unity reimport wrote small diffs on `GB_m2/m3/m4` (left unstaged).
+
+**Status:** committed, not pushed. Next: segments 2-4.

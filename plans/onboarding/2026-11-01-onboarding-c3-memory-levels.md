@@ -1,7 +1,7 @@
 # Onboarding structure C3: the Hearth memory levels and sequences
 
 Size: L (two chunks)    Tier: 2 (content + editor tool; THJ: "Start C3"; any core change found → stop, Tier 3)    Assigned to: `miso-game-designer` (block lines) → `miso-implementer` (C3a, C3b) → `miso-reviewer` → THJ play check per chunk
-Branch: `thj/onboarding`. Status: **C3a done 2026-11-01**, committed `3c99b3ee6` (component, sequence, `level hidden`, tests), `a161e0956` (four levels), `9ace80c28` (Hearth wiring + XP test); review FIX → fixed → APPROVE; EditMode 1172/1173 known red only; THJ play-checked OK; reveal route D-346. C3b not started; segment 4's revealed Claws stay and fight after the mother falls (D-347)
+Branch: `thj/onboarding`. Status: **C3a done 2026-11-01**, committed `3c99b3ee6` (component, sequence, `level hidden`, tests), `a161e0956` (four levels), `9ace80c28` (Hearth wiring + XP test); review FIX → fixed → APPROVE; EditMode 1172/1173 known red only; THJ play-checked OK; reveal route D-346. C3b: **segment 1 done**, committed `848a67fd2` (start line + panels, win all dead or turn 3, punchline, grid fade, Hearth cutaway; re-wire menu item; review APPROVE + fix round; EditMode 1175/1176 known red only; THJ play-checked OK). Open: `[PLACEHOLDER]` tag shows on screen in dialogue and panels (strip in Core UI, THJ's OK, or keep it out of asset text); punchline plays on a turn-cap win; narrative placement of M1-1/H0-4 (designer); segment 2 needs a hide-then-fade-in start; Home open/close states wait for the Home run (no HomeState asset). Segments 2-4 next; segment 4's revealed Claws stay and fight (D-347)
 
 ## Why
 
