@@ -35,7 +35,7 @@ Checked against the assets on 2026-10-15 (setup session). Follow these for new d
 
 ## Text
 
-- Unfinished player-facing text is tagged `[PLACEHOLDER] ` (stripped on screen).
+- Unfinished player-facing text is not tagged in the asset (only barks strip `[PLACEHOLDER] `; dialogue and panels show it). List placeholder lines in the plan or report that owns them (D-348).
 - Use `glossary.md`'s term for every mechanic and name.
 
 ## `claude-handoff/` files
