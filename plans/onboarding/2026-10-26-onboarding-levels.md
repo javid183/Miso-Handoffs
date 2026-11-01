@@ -152,7 +152,7 @@ a . _ _ _ . . a
 
 ## The Hearth memory (one mission, four levels)
 
-**Mission rules (all four segments).** Roster: John, Linda, Lucy, Mark fixed (FTP maximum 13; levels place their own heroes). Tier: Tutorial. **All enemies start alert** (`LevelAlertSettings.allEnemiesStartAlert` on every segment; spawns arrive alert too). FTP: `LevelStartFPFiller` +13 at each segment start (clamped to full). No XP: completion XP 0 **and** kill XP suppressed (A3 to check how; otherwise every Bergson gets its first SP in the memory, PR-6). Abilities used here don't count as seen (D-175, A3). Each segment's win is a **punchline stage** in an any-group with a turn cap, so it can't drag. Each segment's end sequence ends with `OutroCutsceneKeepGridHidden` (see [grid fade](#the-grid-fade-rule-d-131-re-placed)), then the Hearth cutaway (painted still + 2–4 lines).
+**Mission rules (all four segments).** Roster: John, Linda, Lucy, Mark fixed (FTP maximum 13; levels place their own heroes). Tier: Tutorial. **All enemies start alert** (`LevelAlertSettings.allEnemiesStartAlert` on every segment; no spawns, D-345: cue enemies are placed hidden and come in alert when revealed). FTP: `LevelStartFPFiller` +13 at each segment start (clamped to full). No XP: completion XP 0 **and** kill XP suppressed (A3 to check how; otherwise every Bergson gets its first SP in the memory, PR-6). Abilities used here don't count as seen (D-175, A3). Each segment's win is a **punchline stage** in an any-group with a turn cap, so it can't drag. Each segment's end sequence ends with `OutroCutsceneKeepGridHidden` (see [grid fade](#the-grid-fade-rule-d-131-re-placed)), then the Hearth cutaway (painted still + 2–4 lines).
 
 ### Segment 1 · Linda's telling: "Three Claws, my last arrow"
 
@@ -180,7 +180,14 @@ step 2,0 1
 step 2,1 2
 note 2,3 2 Watch shots
 note 2,9 the deep Claw
+level name Memory 1 · Linda
+level tier tutorial
+level alert all
+level xp none
+level fp full
 ```
+
+Build lines (C3 step 0): no `level camera`. The tiles (10 high) don't fit one view at the template's default zoom 2 (8 tiles high, assumed: `LevelBase` value, not overridden in `LevelM1-C2`), so the rule pulls the view down onto Linda: it shows the throat and Claws A and B; the deep Claw C at 2,9 sits just above the top edge until the camera follows the fight.
 
 The throat is now 1 wide and 4 long (2,1 to 2,4), and the den has a back niche (2,8 to 2,9) for the third Claw (D-331). Claw letters below: **A** 2,6 (front), **B** 2,7, **C** 2,9 (deep).
 
@@ -208,17 +215,25 @@ The throat is now 1 wide and 4 long (2,1 to 2,4), and the den has a back niche (
 
 ```grid id=m2-lucy title="Memory 2 · Lucy: there were at least ten"
 # # # # # # # # # # # #
-# . . c # . . . . . . #
-# U . . c . . . . . . #
-# . . . # . . . . . . #
+# . . c # . . . . c . #
+# U . . c . . . . . c #
+# . . . # . . . . c . #
 # # # # # # # # # # # #
 --
 arrow 1,2 3,3 lucy ember
 arrow 1,2 4,2 lucy dy=8 sidewinder
-cells 9,3 10,2 9,1 enemy spawn on cue
+cells 9,3 10,2 9,1 enemy hidden until the cue
 step 4,2 2
 note 4,2 Cyclone turn 2
+level name Memory 2 · Lucy
+level tier tutorial
+level alert all
+level xp none
+level fp full
+level hidden 9,3 10,2 9,1
 ```
+
+Build lines (C3 step 0): no `level camera` (the 10 × 3 tiles fit one view, so it centres on the whole level). **`level hidden x,y …` is proposed:** the grid tool gains it in C3a; until then the builder doesn't know it. It marks the placed units on those tiles as out of play until a sequence reveals them (C3 plan, acceptance C3a).
 
 | Item | Plan |
 |---|---|
@@ -226,12 +241,12 @@ note 4,2 Cyclone turn 2
 | Teaches | **Fire Embers** (the sidewinder picks its own target) and **Cyclone** (blocks walking, drifts, 7 on contact). One kit, two halves of one lesson: "stay out of reach" |
 | Twist | The narrator's "ten": more enemies appear on cue |
 | Squad | Lucy |
-| Enemies | 2 Dark Claws placed (in-play HP 6), 3 spawned on cue (default Tutorial HP 10) |
+| Enemies | 2 Dark Claws in play (3,3 and 4,2; in-play HP 6), 3 placed hidden on 9,3 / 10,2 / 9,1 and revealed on cue (default Tutorial HP 10; D-345: no spawns) |
 | Turn budget | 3 (cap 4) |
 | First trigger | No Role, Synergy or Duo (she's alone). Turn 1: two Fire Embers on 3,3: main ember + sidewinder on 4,2, twice → both dead |
 | Interruption | **Stage 1** (2 enemies dead, or turn 2 reached) → `SequentialSequence`: freeze, camera to room 2, reveal 3 Claws placed hidden on 9,3 / 10,2 / 9,1 (D-345: no spawns in the memory; was `GUnitSpawn`), two lines (Lucy: "Then ten more!" · Linda, at the hearth: "Three."), camera back. They're 7+ tiles from her, so they reach the throat's far mouth on enemy turn 1 |
 | Turn 2 | Cyclone in the throat (4,2): nothing passes; it drifts into them (7 each); embers finish. **Win stage 2:** all dead or turn 4 reached |
-| Alert | All start alert (spawns too) |
+| Alert | All start alert (the hidden three come in alert when revealed) |
 | FTP | Topped up |
 | Fallback | If the Cyclone isn't found by turn 3, the Claws come through; she still wins at Tutorial damage. No guided action |
 | To check | Does an ember fly over a Cyclone? What does the Cyclone drift toward (level-chunks To check 2)? |
@@ -254,7 +269,14 @@ range 4,1 2 john Shield reach
 arrow 1,5 1,4 1,3 1,2 2,2 enemy
 arrow 7,5 7,4 7,3 7,2 6,2 enemy
 step 4,1 1
+level name Memory 3 · John
+level tier tutorial
+level alert all
+level xp none
+level fp full
 ```
+
+Build lines (C3 step 0): no `level camera` (the 7 × 6 tiles fit one view).
 
 | Item | Plan |
 |---|---|
@@ -279,8 +301,8 @@ step 4,1 1
 
 ```grid id=m4-mark title="Memory 4 · Mark: the rescue"
 # # # # # # # R . # # # # # #
-# # # # # # . . . . # # # # #
-# # # # # # . . c . . # # # #
+# # # # # # . . . c # # # # #
+# # # # # # . . c c . # # # #
 # # # # # # . . . c . # # # #
 # # # c # # . . . . . # # # #
 # # # . # # . . . . . # # # #
@@ -296,11 +318,20 @@ arrow 3,4 5,4 linda
 arrow 3,4 3,6 linda
 arrow 14,2 12,2 10,2 mark dy=-8 Blitz chain
 cells 6,9 7,9 8,9 note reach the cub
-note 8,10 mother
-note 7,10 cub
+cells 9,9 9,8 enemy hidden
+note 8,10 mother (by hand)
+note 7,10 cub (by hand)
 step 3,4 1
 step 12,2 1
+level name Memory 4 · Mark
+level tier tutorial
+level alert all
+level xp none
+level fp full
+level hidden 9,9 9,8
 ```
+
+Build lines (C3 step 0): no `level camera`. The 15 × 11 tiles don't fit one view at default zoom 2 (about 14 × 8 tiles, assumed as in segment 1), so the rule keeps the four Bergsons in view (Lucy 2,2 to Mark 14,2) and sits low: by the count it shows x ≈ 1–15, y ≈ 0.5–8.5, i.e. the prism, the gallery, Mark and the hall's lower part. That is the opening the scripted Bloom needs; the ledge (y 9–10) comes in with the stage-1 camera move. **`level hidden` is proposed** (as in segment 2). **The mother and the cub have no unit character.** The cub is drawn `R` (protectee) on 7,10, which the builder turns into plain floor with a warning; the mother is a note on 8,10, whose tile is floor. Both are placed by hand after the build (C3a step 2) with the placeholder prefabs in Assets below, and the hand edit is logged. The two cue Claws sit on 9,9 (diagonal to the mother, beside 8,9) and 9,8, so the walk-in cells 6,9 / 7,9 / 8,9 and the left approach (6,8, 7,8) stay free.
 
 | Item | Plan |
 |---|---|
@@ -308,10 +339,10 @@ step 12,2 1
 | Teaches | **The Mark–Lucy Duo (Chained Assault)**: the one thing the player does on purpose. Fist Blitz + Continuous Attack is the second, short act: a two-link chain. Atman's Focus isn't pointed at (critic: too much at once). This segment is the showcase |
 | Twist | Unearned power: **Tempest Bloom once, scripted.** It's the narrators' claim, played as a cutscene when the segment opens, so the player has nothing to discover. Prefer a sequence that has Lucy cast and Linda shoot. If sequences can't fire abilities (to check), use the one-mission grant of `RU_LindaLucyCycloneSpreadUnlock` plus a guided action on the crossing |
 | Squad | All four. Mark is placed at 14,2 and walks in after the Bloom (`MoveUnitSequence` from the edge): the late entrance |
-| Enemies | **7 Dark Claws**, Tutorial. Prism 3: in-play HP 6, killed by the scripted Bloom. Gallery 2 (12,2 and 10,2; drop 8,2): HP 8, so each Blitz kills and the chain takes two. Hall 2 (drop 6,7): **HP 8**, so Chained Assault kills even on a poor mash. At ×0.7 it does 2 + 6 = 8, where 10 HP would need ×0.91 or better (systems critic) |
+| Enemies | **7 Dark Claws in play** + **2 cue Claws placed hidden on 9,9 and 9,8** (revealed in the mother's scene; default Tutorial HP 10, not tuned), Tutorial. Prism 3 (1,4 / 5,4 / 3,6): in-play HP 6, killed by the scripted Bloom. Gallery 2 (12,2 and 10,2; drop 8,2): HP 8, so each Blitz kills and the chain takes two. Hall 2 (8,8 and 9,7; drop 6,7): **HP 8**, so Chained Assault kills even on a poor mash. At ×0.7 it does 2 + 6 = 8, where 10 HP would need ×0.91 or better (systems critic) |
 | Turn budget | 2 (cap 3) + the scene and a short walk |
 | First triggers | **Synergy: Tempest Bloom, at the open** (scripted, ≈ 9.5 min). **Continuous Attack, turn 1:** Mark Blitzes 12,2 and the QTE takes 10,2 (FTP 1). **Duo: Chained Assault, turn 2,** on the hall Claws. They start alert, so they come wherever the AI sends them, not on a schedule (critic). Within 4 of Mark or Lucy by turn 2 is likely, not certain |
-| Cues | **Stage 1** (all placed enemies dead **or** turn 3 reached) starts the mother's scene. The camera goes to the ledge and the narrators fall silent. 2–3 Claws, placed hidden beside the mother, are revealed (D-345: no spawns in the memory); she fights and she falls (`UnitAnimationSequence`, LSB); the cub cries. **Stage 2:** a Bergson reaches 6,9, 7,9 or 8,9 (`Unit on tiles`, any) → win. The player walks to the cub, a marker on the cub shows where to go, and nobody jokes. **The grid fades out on the win, after the walk** (the UX critic: no blind clicks) |
+| Cues | **Stage 1** (all seven in-play enemies dead **or** turn 3 reached; the hidden two don't count) starts the mother's scene. The camera goes to the ledge and the narrators fall silent. 2 Claws, placed hidden on 9,9 and 9,8 beside the mother, are revealed (D-345: no spawns in the memory); she fights and she falls (`UnitAnimationSequence`, LSB); the cub cries. **Stage 2:** a Bergson reaches 6,9, 7,9 or 8,9 (`Unit on tiles`, any) → win. The player walks to the cub, a marker on the cub shows where to go, and nobody jokes. **The grid fades out on the win, after the walk** (the UX critic: no blind clicks) |
 | Alert | All start alert |
 | FTP | Topped up (13). Optional refill at stage 1 via `SignalSequence` → `SignalAction` → the filler |
 | Fallback | **Guided action for the Duo: plan on it.** Highlight the Duo button and a target on turn 2, as in segment 3. Tempest Bloom has no fallback because it is scripted |
