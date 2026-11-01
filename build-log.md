@@ -2314,3 +2314,13 @@ Core gets one additive, generic `CombatLog.AddCustom`.
 **Not verified:** Place Camera Start's Prefab Mode close-and-reopen round trip (saved values checked only).
 
 **Status:** grid-to-level tool done. Next per D-337: structure C2.
+
+## 2026-10-31 · FP 0/0 in sandbox levels and Play hardening (thj/onboarding)
+
+**Built:** a level played outside any mission got an empty sandbox roster, so the family time points pool was 0/0 and Roles and pass-by did nothing (exposed by `32f532e49`, which made unlisted levels play in a sandbox). The sandbox roster now holds the placed player units plus the placeholder picks (`fa6af3fab`, with `LevelFastForwardRosterTests`). Play hardening (`08cdf7035`): the quick-load keys are written right before Play starts and cleared after an edit-mode recompile; the stale stop handler can't unsubscribe a new run.
+
+**Verified:** EditMode 1130/1131 (known red only). Review APPROVE, fix round done. Implementer: `GB_24-nook` 10/10 for John, Lucy, Linda; keys cleared after stop; plain Play reaches the main menu. THJ played the GB levels and a normal mission: all good.
+
+**Not verified:** a Play Unity refuses, and a load right after a play-stop (both rare, couldn't be forced).
+
+**Status:** committed, not pushed. Next per D-337: structure C2.

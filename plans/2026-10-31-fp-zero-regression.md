@@ -1,7 +1,7 @@
 # FP 0/0, Roles and pass-by dead in every level (and Play hardening)
 
 Size: S–M (unknown until the cause is found)    Tier: 2 for a fix in this branch's own changes; Tier 3 (THJ) if the fix needs a core change beyond the hardening    Assigned to: `miso-implementer` → `miso-reviewer` → THJ play check
-Branch: `thj/onboarding`. Status: **in progress**
+Branch: `thj/onboarding`. Status: **done 2026-10-31**, committed `fa6af3fab` (sandbox roster fix + `LevelFastForwardRosterTests`), `08cdf7035` (Play hardening). Review APPROVE + fix round; EditMode 1130/1131 known red only; THJ play-checked OK (GB levels and a normal mission)
 
 ## Report (THJ, 2026-10-31, latest playtest)
 
