@@ -229,7 +229,7 @@ note 4,2 Cyclone turn 2
 | Enemies | 2 Dark Claws placed (in-play HP 6), 3 spawned on cue (default Tutorial HP 10) |
 | Turn budget | 3 (cap 4) |
 | First trigger | No Role, Synergy or Duo (she's alone). Turn 1: two Fire Embers on 3,3: main ember + sidewinder on 4,2, twice → both dead |
-| Interruption | **Stage 1** (2 enemies dead, or turn 2 reached) → `SequentialSequence`: freeze, camera to room 2, `LSBExecutionSequence` + `GUnitSpawn` 3 Claws on 9,3 / 10,2 / 9,1, two lines (Lucy: "Then ten more!" · Linda, at the hearth: "Three."), camera back. They're 7+ tiles from her, so they reach the throat's far mouth on enemy turn 1 |
+| Interruption | **Stage 1** (2 enemies dead, or turn 2 reached) → `SequentialSequence`: freeze, camera to room 2, reveal 3 Claws placed hidden on 9,3 / 10,2 / 9,1 (D-345: no spawns in the memory; was `GUnitSpawn`), two lines (Lucy: "Then ten more!" · Linda, at the hearth: "Three."), camera back. They're 7+ tiles from her, so they reach the throat's far mouth on enemy turn 1 |
 | Turn 2 | Cyclone in the throat (4,2): nothing passes; it drifts into them (7 each); embers finish. **Win stage 2:** all dead or turn 4 reached |
 | Alert | All start alert (spawns too) |
 | FTP | Topped up |
@@ -311,7 +311,7 @@ step 12,2 1
 | Enemies | **7 Dark Claws**, Tutorial. Prism 3: in-play HP 6, killed by the scripted Bloom. Gallery 2 (12,2 and 10,2; drop 8,2): HP 8, so each Blitz kills and the chain takes two. Hall 2 (drop 6,7): **HP 8**, so Chained Assault kills even on a poor mash. At ×0.7 it does 2 + 6 = 8, where 10 HP would need ×0.91 or better (systems critic) |
 | Turn budget | 2 (cap 3) + the scene and a short walk |
 | First triggers | **Synergy: Tempest Bloom, at the open** (scripted, ≈ 9.5 min). **Continuous Attack, turn 1:** Mark Blitzes 12,2 and the QTE takes 10,2 (FTP 1). **Duo: Chained Assault, turn 2,** on the hall Claws. They start alert, so they come wherever the AI sends them, not on a schedule (critic). Within 4 of Mark or Lucy by turn 2 is likely, not certain |
-| Cues | **Stage 1** (all placed enemies dead **or** turn 3 reached) starts the mother's scene. The camera goes to the ledge and the narrators fall silent. 2–3 Claws spawn beside the mother; she fights and she falls (`UnitAnimationSequence`, LSB); the cub cries. **Stage 2:** a Bergson reaches 6,9, 7,9 or 8,9 (`Unit on tiles`, any) → win. The player walks to the cub, a marker on the cub shows where to go, and nobody jokes. **The grid fades out on the win, after the walk** (the UX critic: no blind clicks) |
+| Cues | **Stage 1** (all placed enemies dead **or** turn 3 reached) starts the mother's scene. The camera goes to the ledge and the narrators fall silent. 2–3 Claws, placed hidden beside the mother, are revealed (D-345: no spawns in the memory); she fights and she falls (`UnitAnimationSequence`, LSB); the cub cries. **Stage 2:** a Bergson reaches 6,9, 7,9 or 8,9 (`Unit on tiles`, any) → win. The player walks to the cub, a marker on the cub shows where to go, and nobody jokes. **The grid fades out on the win, after the walk** (the UX critic: no blind clicks) |
 | Alert | All start alert |
 | FTP | Topped up (13). Optional refill at stage 1 via `SignalSequence` → `SignalAction` → the filler |
 | Fallback | **Guided action for the Duo: plan on it.** Highlight the Duo button and a target on turn 2, as in segment 3. Tempest Bloom has no fallback because it is scripted |
