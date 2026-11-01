@@ -15,7 +15,9 @@ What it reads, from the prefab YAML only (no Unity needed):
     transform parent to the GridCell it is placed under (or, failing that, its position);
   - big units' footprints (placementSize), drawn up and right from the anchor tile, as
     the game does (GridPluggableEntity.FootprintCoords);
-  - the level's objective texts, enemy tier and "all enemies start alert" setting.
+  - the level's objective texts, enemy tier and "all enemies start alert" setting;
+  - units kept out of play until a sequence reveals them (inactive, and listed by group on the
+    level's HiddenLevelUnits), written back as `level hidden [group] x,y ...` lines.
 Props with no script (Cave_Obstacle_Rock_01, BecStatue and other scenery) are listed but
 not drawn: they block nothing, and the playable map is exactly the set of GridCells.
 
@@ -42,6 +44,8 @@ GUIDMAP = os.path.join(HANDOFF, 'reward-tools', 'guidmap.json')
 
 TILE = 0.5
 GRIDCELL_PATH = 'Content/Levels/_Common/Prefabs/GridCell.prefab'
+HIDDEN_UNITS_SCRIPT = 'Features/Onboarding/HiddenLevelUnits.cs'
+HIDDEN_DEFAULT_GROUP = 'hidden'
 
 # Source prefab file name -> grid character (see grid_render.py for the legend)
 UNIT_CHARS = {
@@ -140,6 +144,37 @@ def base_placement_size(gmap, path, cache={}):
     return size
 
 
+def script_guid(path):
+    """The GUID of a script, from its .meta file (None if it isn't there)."""
+    meta = os.path.join(PROJECT, path + '.meta')
+    if not os.path.exists(meta):
+        return None
+    m = re.search(r'guid: (\w+)', read(meta))
+    return m.group(1) if m else None
+
+
+def hidden_groups(docs, guid):
+    """[(group id, [unit fileID, ...])] from the level's HiddenLevelUnits, in order."""
+    if not guid:
+        return []
+    for cls, body in docs.values():
+        if cls != '114' or f'guid: {guid}' not in body:
+            continue
+        groups = []
+        section = re.search(r'\n  groups:\n((?:  [- ].*\n?)*)', body)
+        if not section:
+            return []
+        for chunk in re.split(r'\n  - ', '\n' + section.group(1)):
+            m = re.match(r'id: ?(.*)', chunk)
+            if not m:
+                continue
+            gid = m.group(1).strip().strip('"') or HIDDEN_DEFAULT_GROUP
+            units = re.findall(r'\n    - \{fileID: (-?\d+)', '\n' + chunk)
+            groups.append((gid, units))
+        return groups
+    return []
+
+
 def parse_level(path, gmap, debug=False):
     text = read(path)
     docs = split_docs(text)
@@ -200,6 +235,8 @@ def parse_level(path, gmap, debug=False):
         return None
 
     placed, notes, unplaced, unknown = [], [], [], {}
+    tile_of_instance = {}   # placed unit's instance fileID -> its tile
+    inactive_instances = set()
     off_grid = 0
     decor = {}
     for fid, inst in instances.items():
@@ -244,6 +281,10 @@ def parse_level(path, gmap, debug=False):
             m = inst['mods']
             size = (int(m.get('placementSize.x', size[0])), int(m.get('placementSize.y', size[1])))
         placed.append((tile, kind, stem, size, how, inst['mods']))
+        if kind[0] == 'unit':
+            tile_of_instance[fid] = tile
+            if inst['mods'].get('m_IsActive') == '0':
+                inactive_instances.add(fid)
 
     # level settings
     texts = [v.strip() for k, v in re.findall(r'(displayTextTemplate): (.*)', text)]
@@ -266,6 +307,24 @@ def parse_level(path, gmap, debug=False):
     alert = setting('allEnemiesStartAlert')
     level_name = setting('levelName', r'(.*)')
     starts_alert = [p for p in placed if any(k.lower().endswith('startsalert') and v == '1' for k, v in p[5].items())]
+
+    # Hidden units: listed on HiddenLevelUnits (a unit reference is a stripped component of its instance).
+    hidden, listed = [], set()
+    hidden_problems = []
+    for gid, unit_fids in hidden_groups(docs, script_guid(HIDDEN_UNITS_SCRIPT)):
+        tiles = []
+        for ufid in unit_fids:
+            inst = stripped_to_instance.get(ufid, ufid)
+            if inst not in tile_of_instance:
+                hidden_problems.append(f'group {gid}: a listed unit that is not a placed unit (fileID {ufid})')
+                continue
+            listed.add(inst)
+            if inst not in inactive_instances:
+                hidden_problems.append(f'group {gid}: the unit on {tile_of_instance[inst]} is listed but active, so it starts in play')
+            tiles.append(tile_of_instance[inst])
+        hidden.append((gid, tiles))
+    for inst in sorted(inactive_instances - listed):
+        hidden_problems.append(f'the unit on {tile_of_instance[inst]} is inactive but in no hidden group, so nothing ever brings it in')
     return {
         'cells': cells, 'placed': placed, 'unplaced': unplaced, 'unknown': unknown, 'off_grid': off_grid,
         'decor': decor,
@@ -273,6 +332,8 @@ def parse_level(path, gmap, debug=False):
         'tier': tier,
         'alert': alert,
         'starts_alert': starts_alert,
+        'hidden': hidden,
+        'hidden_problems': hidden_problems,
         'name': level_name,
     }
 
@@ -327,9 +388,16 @@ def to_block(path, lv, block_id, shift=True):
     off = f'offset x{ox:+d}, y{oy:+d}' if shift else 'prefab coordinates'
     out = [f'```grid id={block_id or "src-" + stem.lower()} title="Source: {stem} ({off})"']
     out += rows
-    if notes:
+    level_lines = []
+    for gid, tiles in lv.get('hidden', []):
+        if not tiles:
+            continue
+        name = '' if gid == HIDDEN_DEFAULT_GROUP else gid + ' '
+        level_lines.append('level hidden ' + name + ' '.join(f'{x + ox},{y + oy}' for x, y in tiles))
+    if notes or level_lines:
         out.append('--')
         out += sorted(set(notes))
+        out += level_lines
     out.append('```')
     return '\n'.join(out), (ox, oy)
 
@@ -347,6 +415,8 @@ def summary(path, lv, offset):
         counts[stem] = counts.get(stem, 0) + 1
     if counts:
         lines.append('- Placed: ' + ', '.join(f'{n} × {s}' for s, n in sorted(counts.items())))
+    for problem in lv.get('hidden_problems', []):
+        lines.append('- Hidden units: ' + problem)
     if lv['starts_alert']:
         lines.append('- Starts alert (per unit): ' + ', '.join(p[2] for p in lv['starts_alert']))
     by_pos = {}

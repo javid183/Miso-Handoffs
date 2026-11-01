@@ -1,7 +1,7 @@
 # Onboarding structure C3: the Hearth memory levels and sequences
 
 Size: L (two chunks)    Tier: 2 (content + editor tool; THJ: "Start C3"; any core change found → stop, Tier 3)    Assigned to: `miso-game-designer` (block lines) → `miso-implementer` (C3a, C3b) → `miso-reviewer` → THJ play check per chunk
-Branch: `thj/onboarding`. Status: **in progress**
+Branch: `thj/onboarding`. Status: **C3a built, waiting on THJ play check** (review FIX → fixed → APPROVE; EditMode 1172/1173 known red only; reveal route D-346). C3b not started; open: what segment 4's revealed Claws do after the mother falls
 
 ## Why
 
