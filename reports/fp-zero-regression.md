@@ -64,3 +64,18 @@ THJ's uncommitted files (`AIFactionBrain.cs`, `AIUnitBrain.cs`, `ProjectSettings
 - A sandbox level with a placed player unit and a placeholder pick of the same name counts once.
 - Placed enemies or allies of other factions are not added; only the player faction.
 - `level-tools.md` says the sandbox roster is "whoever the level places"; that is now true. No doc edit made.
+
+## Fix round (after review)
+
+Changes, all from the review:
+1. Stale keys: `LevelBase.cs` has an `[InitializeOnLoadMethod]` that deletes the two fast-forward keys when Play is not starting or running, so a refused Play or a recompile can't leave them for the next ordinary Play.
+2. Test seam: `LevelFastForwardRoster.ApplyToMission(Mission, placed, picked)` is public; the old one-argument form calls it with the sandbox's placed units and the pending picks. The test now calls the seam on a sandbox mission with nothing picked (replaces the hand-written assign test).
+3. Placed units are found with `GetComponentsInChildren<GUnit>(false)`, so inactive ones don't count.
+(a) `OnPlayModeChange` skips the `EnteredEditMode` teardown and unsubscribe when `EditorApplication.isPlayingOrWillChangePlaymode` is true.
+(b) `LevelFastForwardRosterTests.cs` is now LF.
+
+Verified: recompiled clean; EditMode 1131 run, 1130 passed, only `AIRegressionTest.Baseline_MatchesCurrentAI` red. Play: `GB_24-nook` from the loader shows John, Lucy, Linda 10/10; after stopping, the keys are empty and the PreloadScreen is open; an ordinary Play then reached the main menu (no fast-forward). Not verified: forcing the stale `EnteredEditMode` race, and a refused-Play recompile.
+
+Final files (paths under `miso/Assets/_Project/`):
+- Commit 1 (`fix(levels): sandbox levels size the family time points from the player units they place`): `Core/Levels/Runtime/LevelFastForwardRoster.cs`, `Core/Levels/Editor/LevelFastForwardRosterTests.cs`, `Core/Levels/Editor/LevelFastForwardRosterTests.cs.meta`
+- Commit 2 (`fix(levels): write the quick-load keys right before entering Play`): `Core/Levels/Runtime/LevelBase.cs`

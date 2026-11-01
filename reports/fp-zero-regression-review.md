@@ -13,3 +13,7 @@ Root cause confirmed (`Mission.CreateSandbox` roster empty; old `ApplyToMission`
 - The early write doesn't cover a stale `EnteredEditMode` arriving after `EnterPlay`; sturdier: skip `Teardown` when `isPlayingOrWillChangePlaymode`. (Coordinator: included, as part of the approved hardening.)
 - New test file is CRLF; folder is LF (coordinator: normalise).
 - "All levels" unresolved: THJ's check on a listed level and the main-menu flow decides.
+
+## Fix round check (coordinator, 2026-10-31): done
+
+All three should-fixes, the race guard and LF in. EditMode 1130/1131 known red only; GB_24-nook 10/10; ordinary Play after a load reaches the main menu (keys cleared). Refused-Play recompile and the stale EnteredEditMode race not forced.
