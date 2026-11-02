@@ -130,3 +130,51 @@ None.
 2. Select `Content/Levels/MS1 - The River.asset`: XP 30, three drops, and the graph button shows one level.
 3. Play from the world map's The River pin, or use the level toolbar's dropdown and **Play** on `GB_s1-river` for a sandbox run (the sandbox has no mission drops). Then follow the play check above.
 4. After any rebuild of the level: **Tools › Onboarding › Wire Search: River**.
+
+## Fix round (after review)
+
+Compiles. Full EditMode: 1223 run, 1222 pass, and the only failure is `MISO.Core.Systems.AI.EditorTests.AIRegressionTest.Baseline_MatchesCurrentAI`. I re-ran **Wire Search: River** twice. The second run left `GB_s1-river.prefab` byte-identical, so the wiring is stable on re-runs. Not play-checked, and the save was not reset. Every touched file is LF without a BOM (CR count 0).
+
+1. **Clue sorting** (`SearchWiring.River.cs`, `BuildClueProps`, `ClawLook`, `VerticalLayerIndex`). The pieces now sort the way units do on the clue's row. `GridPluggableEntity.Plug` gives each unit an order within its row plus 10 × the row's index. That index is the highest row's y minus the tile's y, as `GridManager` computes it; the wiring reads it from the cell names, which gives 3 for 16,3.
+   - Layer: `Default`, the same as the Claw's `Body`.
+   - The ground marks (Prints, Blood, Fur) take order 30, the units' shadow slot. The fallen Claws take 31, the Claw body's slot (1).
+   - Both draw over the cell art, which sits at −11 to −6 on `Default`, and the Claws draw over the marks. A unit standing on 16,3 draws at the same level as the props (no deliberate overlap rule).
+2. **Re-runs reuse the scenery.** `Search Scenery`, `Clue (placeholder)` and the five pieces are found by name and only their values are reset. Nothing is destroyed, so no new fileIDs appear. The first re-run changed only the five `m_SortingOrder` values on the existing objects (checked with a diff).
+3. **"First sleeping enemy" panel** (new, `SearchWiring.Shared.cs`, class `SearchWiringShared`, for C4b to reuse):
+   - **Assets** in `Resources/Sequences/Search/Shared/`: `Search_FirstSleepingEnemy_Panels` (title "Asleep"), `…_TutorialSequence`, and `…_SequentialSequence` with **`PlayJustOnce` on**.
+   - **Once per save.** `PlayedSequencesTracker` keeps the played set in the save under `PlayedSequences`, keyed by the sequence's asset name, across missions. It is marked when the sequence ends (`SequencePlayer.Play`/`HandleSequencePlayEnded`, `Core/Levels/Runtime/SequencePlayer.cs:21-41`). The flag is only checked when the level's `SequencePlayer.Play` is called on that sequence; a step inside a `SequentialSequence` plays straight through and ignores it (`SequentialSequence.PlaySequence`). So the panel is **not** in the intro.
+   - **How it's started.** The level root gets an existing `SequencePlayHandle` component (sequence player = the level's own; sequence = the shared one). The level's event bus `levelStarted` calls `SequencePlayHandle.StartSequence`, the same way the grid tool wires the FTP filler. It plays right after the intro (Lucy's call, the clue pan, the role panel, "Stay by me."), as turn 1 begins.
+   - **Ridge:** C4b calls `SearchWiringShared.EnsureFirstSleeperSequence()` and `WireFirstSleeper(root, seq)` on `GB_s2-ridge`. Whichever pair mission is played first shows the panel.
+   - `AbilityIntroductionTracker` doesn't fit: its seen-set is keyed by ability presets, and making an enemy ability "introducible" would fire it in the Hearth memory too.
+   - **Sight beat: not built.** It can't be triggered as data. The Shift sight preview (`Core/Interactions/Runtime/ShowStatsHoverPreview.cs:155-185`) only reacts to the bus events `toggleShowStats(bool)` and `gridCellEntityHovered(entity, bool)`. Those can't be raised from a sequence or a persistent UnityEvent with a unit argument, and `SignalSequence` only broadcasts a string.
+   - **What the sight beat would take:** a small new sequence in `Features/Onboarding`, about 40 lines plus a test, with no core change:
+     - Find the Unaware enemy nearest the family.
+     - Call the public `EnemyAlertTracker.TryGetUnawareRangeTiles` (`EnemyAlertTracker.cs:455`).
+     - Set `GridCell.SetShiftPreview(ShiftPreviewLayer.EnemyMove, true)` on its sight tiles (`GridCell.ShiftPreview.cs:68`), wait about 1.5 s, then clear them.
+     - Put it as a second step of the shared once-only sequence.
+     - Possible clash: the player holding Shift at the same moment, because both write the same preview layer.
+   - **Wording** (placeholder, untagged): "Asleep" / "• A sleeping enemy does nothing until it wakes. • It wakes when it sees you (3 tiles) or when it is hit. • Hold Shift over it to see its sight."
+   - **Image:** placeholder. It reuses `Tut-FR-1.png`; no existing shot shows the sleeping marker.
+4. **Lucy's role panel image.** `Tut-FR-1.png` is not Linda's Watch. It is the generic "Activate Passive [F]" prompt shot: John, a highlighted Lucy and Claws. The page now plays the existing clip of Lucy's follow-up, `Resources/Tutorials/Tut-FR-2.mp4`, the one the old `Tutorial_FR_Lucy` asset uses on its "Lucy's Family Passive" page (page type Video). `Tut-FR-1` stays as the page's still.
+
+**Tests:** 3 new in `SearchRiverTests`, 12 in all:
+- the clue's sorting (layer, row band, marks under the Claws);
+- Lucy's panel is the video page with `Tut-FR-2`;
+- the first-sleeper panel: the shared asset, `PlayJustOnce`, the handle on the level, a single `levelStarted` call, and not in the intro.
+
+**Files added this round:**
+- `Features/Onboarding/Editor/SearchWiring.Shared.cs` + `.meta`
+- `Resources/Sequences/Search/Shared.meta`
+- `Resources/Sequences/Search/Shared/` (3 assets + `.meta`s)
+
+**Changed this round:** `SearchWiring.River.cs`, `SearchRiverTests.cs`, `GB_s1-river.prefab`, `River_Start_Panels.asset`.
+
+**Commit split:** unchanged, one content commit. Add the shared file and folder to it. `SearchWiringShared` belongs with the River, its first user.
+
+**Play check, added steps:**
+- After the River's intro, the "Asleep" panel shows once, as turn 1 begins.
+- Restart the level, or play the Ridge later: it doesn't show again. To see it again, reset the save.
+- The clue props draw over the ground and under or level with units.
+- Lucy's role panel plays the clip.
+
+**Risk:** the panel opens as turn 1 starts. Check it doesn't fight the phase banner or open while input is live.

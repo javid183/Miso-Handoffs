@@ -1,7 +1,7 @@
 # Onboarding structure C4: The River, The Ridge, The Trail
 
 Size: L (one risk check + three chunks)    Tier: 2 (content + editor tool; THJ: "Start C4"; any core change found → stop, Tier 3)    Assigned to: `miso-implementer` (C4-0 check, C4a, C4b, C4c) → `miso-reviewer` → THJ play check per chunk
-Branch: `thj/onboarding`. Status: **approved 2026-11-01** (D-351: `level deploy` grid line; order River → Ridge → Trail). C4-0 done (`reports/onboarding-c4-0-check.md`); C4a in progress; C4b starts with D-352 (Catch & Return open by default, its own commit); C4c: `level deploy` replaces a drawn hero with a warning
+Branch: `thj/onboarding`. Status: **approved 2026-11-01** (D-351: `level deploy` grid line; order River → Ridge → Trail). C4-0 done (`reports/onboarding-c4-0-check.md`); **C4a done**, committed `3289158db` (River level, wiring, shared sleeping-enemy panel, MS1 data; review APPROVE + fix round; EditMode 1222/1223 known red only; THJ play-checked OK); open: the panel's sight-tile beat (small non-core sequence, ~40 lines, proposed for C4b start); C4b starts with D-352 (Catch & Return open by default, its own commit); C4c: `level deploy` replaces a drawn hero with a warning
 
 ## Why
 

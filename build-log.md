@@ -2396,3 +2396,15 @@ Core gets one additive, generic `CombatLog.AddCustom`.
 **Findings:** Chained Assault's radius is 5 in data (plan said 4). The Wolf placeholder has only Stand/Move. Not done: Home open/close states, M4-4 to M4-7, optional FTP refill.
 
 **Status:** committed, not pushed. **Structure C3 done.** Next: C4.
+
+## 2026-11-02 · Onboarding structure C4a: The River (thj/onboarding)
+
+**Built:** C4-0 risk check (`reports/onboarding-c4-0-check.md`). `GB_s1-river` from the `s1-river` block (Tutorial, default alert): sleeping clearing Claws, Archers on sealed islands. Wire Search: River: start (Lucy's line, pan to the clue and back, Lucy's Role panel with her follow-up clip, "Stay by me."), placeholder clue props, end close-up; shared once-per-save "first sleeping enemy" panel via `SequencePlayHandle` on `levelStarted` (`PlayJustOnce` persists in the save only when played directly). `MS1 - The River`: initial level, Gold 20 + Timber 1 + Fabric 1 fixed, XP 30, completion gold 0. Commit `3289158db`. Decisions D-351, D-352.
+
+**Verified:** EditMode 1222/1223 (known red only). Review APPROVE + fix round (prop sorting, re-run noise, the panel, Lucy's image). THJ play-checked: good.
+
+**Not verified:** —
+
+**Findings:** Catch & Return was locked by an unlockable (D-352 opens it). The panel's sight-tile beat needs a small new sequence (`EnemyAlertTracker.TryGetUnawareRangeTiles`, `GridCell.SetShiftPreview`). No bark condition for distance or arrow count.
+
+**Status:** committed, not pushed. Next: C4b.
