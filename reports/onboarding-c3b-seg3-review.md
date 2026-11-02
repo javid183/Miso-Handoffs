@@ -31,3 +31,9 @@ Turn switch traced (`CombatLevelRunHandler.cs:464-541, 1049-1090`): `turnEnded` 
 Should fix (optional): `TurnEndSequenceTrigger.cs:95` scope to `GetComponent<HiddenLevelUnits>()`; `:61-78` stop the subscribe coroutine in `OnDisable` or skip a second add; `HearthMemoryJohnTests.cs:150-157` assert the condition's state and comparison.
 
 Play check: the enemy phase banner shows while the arrival line is on screen; the Claws' AI may walk instead of attacking in place (could set off Watch).
+
+## Redo re-review (visible Claws, turn 1 AP limit; grid-tool lock fix): APPROVE
+
+Should fix: (1) working copies CRLF where neighbours are LF (`CameraBoundaryBatchTool.cs`, Linda/Lucy/John wiring, hint, John tests): back to LF; (2) `HearthMemoryJohnTests.cs:121-139` assert each Claw's cell; `TurnStartActionPointLimitTests` only covers helpers (say so); (3) `TurnStartActionPointLimit.cs:96-100` skip with a log when not FTP mode (ATB refills a drained unit).
+
+Notes: refill (`PhaseData.Reinitialize`, `FactionControllerBase.cs:224`) precedes `turnStarted` (`CombatLevelRunHandler.cs:524-529`); `Consume` is the engine's own drain path, no ability/AP-spent events; Roles not AP-gated (`PlayerController.cs:420-426`); Shield Up costs 1 AP (Singular), turn then ends by itself. `RestartTurn` refills without `turnStarted` (only a level reset action; none here). Auto-select is safe only because `EnemyIntroductionController` delays selection a frame; with introductions off a sister could be auto-selected. Sisters get no end-of-turn FTP credit on turn 1. Grid-tool fix: same behaviour and order, one save instead of three. D-349 pieces gone; prefab matches the block; split builds in order.

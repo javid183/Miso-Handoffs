@@ -73,3 +73,29 @@ EditMode 1202 run, 1201 pass; the one failure is `Baseline_MatchesCurrentAI`. No
 5. Turn 2 punish; win by 3 dead or at turn 3; cutaway; restart the level mid-way and check the Claws are hidden again.
 
 **Commit split** (three units, in order): (1) `GuidedAbilityHint` + tests (as before); (2) `TurnEndSequenceTrigger` + `TurnEndSequenceTriggerTests`; (3) segment 3: wiring, tests, assets and the rebuilt `GB_m3-john.prefab` (plus the Linda/Lucy wiring helper edits).
+
+**Review fixes (rework):** the trigger now finds the hidden units on its own object, keeps and stops its subscribe coroutine and never adds the listener twice; the win test also asserts the dead-count condition is NotExist / GreaterThanOrEqual. EditMode: only Baseline_MatchesCurrentAI red. Wiring did not need a re-run.
+
+**Review fixes (rework):** the trigger now finds the hidden units on its own object, keeps and stops its subscribe coroutine and never adds the listener twice; the win test also asserts the dead-count condition is NotExist / GreaterThanOrEqual. Wiring did not need a re-run. Full EditMode: 1202 run, 1200 pass; red: Baseline_MatchesCurrentAI (known) and GridToLevelSettingsTests.Filler_IsEmptiedWhenTheBlockHasNoPlayerUnits, which hit a one-off Unity "m_LockCount == 0" assertion in that run and passes when re-run alone.
+
+## Redo: visible Claws, turn 1 AP limit
+Two full EditMode runs back to back with nothing else touching the editor: 1201 run, 1200 pass each time; the only failure both times is `Baseline_MatchesCurrentAI`. The log has no new `m_LockCount` assertion. Not play-checked; nothing committed.
+
+**Dropped (the arrival pieces):** `TurnEndSequenceTrigger.cs`, its tests, the `Memory3John_Arrival_*` assets and their wiring/tests, all deleted with their .metas; `git status` shows none left.
+
+**Level:** `GB_m3-john` rebuilt from the revised block (GUID kept; four Claws visible on 1,1 2,2 6,2 7,1, no `level hidden`); `level_to_grid.py` round-trips the same tiles and units, objective texts as before. Wire Memory 3 (John) re-run: hint, start, panel, win (3 dead or turn 3), end unchanged.
+
+**New `TurnStartActionPointLimit`** (`Features/Onboarding/`, non-core, no statics, subscribes in `OnEnable`/`OnDisable`, applies once). On the Bergsons' turn 1 start it brings listed units to a given AP: John 1, Linda 0, Lucy 0 (entries set by the wiring from the prefab's units). Ordering checked in code: `FactionControllerBase.StartTurn` runs `PhaseData.Reinitialize` (the refill, `ResetToInitial`) first, and `CombatLevelRunHandler.StartTurn` raises `turnStarted` after it; the run handler sets `_turnNumber = 1` just before the first `StartTurn`, so the turn number matches. The component spends the difference with `APConsumer.Consume(Singular, n)` (per-unit mode, which this branch uses: `aPConsumptionMode` is PerUnit; in shared mode it logs and does nothing) and then calls `CombatLevelUIManager.RefreshUnitControlPanel`. Nothing else in the code resets AP mid-turn; turn 2 refills through the normal `Reinitialize`. A unit with 0 AP is skipped by `ToPlayUnits`, so the turn ends on its own after John's Shield Up. No core change. Tests: `TurnStartActionPointLimitTests` (turn and faction match, once, the delta, `Set`) and a level test (four Claws active, no hidden group, limits John 1 / sisters 0, turn 1, Bergsons). Not covered: the live AP pips and ability buttons.
+
+**Grid-tool lock fix:** `GridToLevelBuilder.Build` now sets the camera boundary and camera start on the open level before its single `SaveAsPrefabAsset`, instead of reopening, saving and unloading the just-saved prefab twice. For that, `CameraBoundaryBatchTool` gained `AssignBoundaryOnRoot(root)` and `AssignBoundary(path)` now uses it (same behavior, messages and order: boundary first, then the camera start kept inside it). The existing camera-start and grid-tool tests pass unchanged; `PlaceOnPrefab` stays for the menu tool.
+
+**Files** (each with .meta): new `TurnStartActionPointLimit.cs`, `Editor/TurnStartActionPointLimitTests.cs`; modified `HearthMemoryWiring.John.cs`, `HearthMemoryJohnTests.cs`, `GB_m3-john.prefab` (rebuilt), `Core/Levels/Editor/GridToLevel/GridToLevelBuilder.cs`, `Core/Camera/Editor/CameraBoundaryBatchTool.cs`. Prefab hand edits by the wiring script: introSequence, outroSequence, lObjectives, `GuidedAbilityHint`, `TurnStartActionPointLimit`.
+
+**Play check**
+1. Segment 3 opens with four Claws beside the sisters; John line and panel.
+2. Turn 1: John shows 1 AP, Linda and Lucy 0 and cannot act (check the pips and greyed buttons; also whether the game auto-selects a sister at turn start and how that looks); End Turn works; Shield Up button pulses.
+3. Using Shield Up ends the turn by itself; enemy turn: Claws attack where they stand, John's Role takes hits, Wrath stacks, Watch has nothing to fire on.
+4. Turn 2: everyone refills to 2 AP; the punish; win at 3 dead or turn 3; cutaway.
+5. Restart mid-way: the limit applies again on the reloaded turn 1.
+
+**Commit split** (four units, in order): (1) grid-tool lock fix (`GridToLevelBuilder.cs`, `CameraBoundaryBatchTool.cs`); (2) `GuidedAbilityHint` + tests; (3) `TurnStartActionPointLimit` + tests; (4) segment 3: wiring, tests, assets, rebuilt prefab, and the Linda/Lucy wiring helper edits.
