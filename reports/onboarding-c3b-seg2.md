@@ -51,3 +51,8 @@ New game into the Hearth, past segment 1. Segment 2: grid hidden then fading in 
 ## Proposed commits
 1. `fix(onboarding): the first memory level's text carries no placeholder tag`: HearthMemoryLindaTests.cs, the tag/panel-image hunks of HearthMemoryWiring.Linda.cs, Memory1Linda assets, GB_m1-linda.prefab.
 2. `feat(onboarding): the second Hearth memory level's start, interruption, stages and end`: HearthMemoryWiring.Lucy.cs(+meta), HearthMemoryLucyTests.cs(+meta), Resources/Sequences/Hearth/Memory2Lucy/** (with metas), GB_m2-lucy.prefab, and the shared-helper hunks of HearthMemoryWiring.Linda.cs.
+
+## Fix round
+- Interruption now hides the HUD right after disabling input and shows it right after enabling input (order asserted in the test).
+- Camera back now focuses the level opening view (the camera handler initial locator, x 3, y 1.25 in the prefab), not Lucy cell.
+- Wire Memory 2 (Lucy) re-run. EditMode re-run: only Baseline_MatchesCurrentAI failed. GB_m1/m3/m4 untouched.

@@ -2360,3 +2360,15 @@ Core gets one additive, generic `CombatLog.AddCustom`.
 **Findings:** `[PLACEHOLDER]` shows on screen (only barks strip it; `conventions.md` says otherwise). Margaret has no character asset (Narrator + "Margaret:"). Each memory level is its own scene, so segment 2 needs a hide-then-fade-in start for the grid fade-in. Home open/close states wait for a HomeState asset. Unity reimport wrote small diffs on `GB_m2/m3/m4` (left unstaged).
 
 **Status:** committed, not pushed. Next: segments 2-4.
+
+## 2026-11-01 · Onboarding structure C3b segment 2: Lucy's memory scenes (thj/onboarding)
+
+**Built:** D-348: no `[PLACEHOLDER]` tag in dialogue/panel asset text; Linda's text untagged, Watch panel image fixed (old guid pointed at nothing), wiring helpers shared (`911a5def2`). `GB_m2-lucy`: grid hidden at start (`GridVisualSequence` duration 0) and faded in under Lucy's opening line; stage 1 (2 dead or turn 2) → input + HUD off, camera to room 2, `RevealUnitsSequence` reveals the three hidden Claws, "Then ten more!" / "Three.", camera back to the opening view, input + HUD on; stage 2 all dead or cap (counts from stage 2's start); end as segment 1. Tools > Onboarding > Wire Memory 2 (Lucy) (`59103e227`).
+
+**Verified:** EditMode 1183/1184 (known red only). Review FIX (commit grouping; HUD stale during the reveal; camera back on Lucy) → fixed. THJ play-checked: good, including the first live reveal.
+
+**Not verified:** —
+
+**Findings:** a stage's turn cap counts from that stage's start. Segment 2's lines follow the levels plan, not the narrative draft; its punchline is a borrowed Cyclone bark. `GB_m1/m3/m4` still carry Unity reimport diffs (unstaged).
+
+**Status:** committed, not pushed. Next: segments 3-4.
