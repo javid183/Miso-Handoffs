@@ -297,3 +297,31 @@ I re-ran Wire Search: Trail. The commit split is unchanged. All changed files ar
 - **Winning still completes the mission.** The pile is the last level, so her death carries nowhere. Per-unit state is cleared when the mission ends (`FactionTracker.QuitMission`), and she is back for the next mission.
 - **Route levels, for context:** a member who dies on a route comes back in the pile at a minimum. Health carries between levels as `max(saved, current × minHpFractionOnLevelLoad) + gain` (`GUnit.InterLevelPersistent` setter, `GUnit.cs:52-66`), so a saved 0 becomes the minimum fraction.
 - **Losing the whole family** shows the lost panel, then the defeat redirect.
+
+## Play-check fix 2 (the Pass-by panel on both routes, once per save)
+
+**What changed**
+- The family-time-points / Pass-by panel is now one shared sequence, `Resources/Sequences/Search/Trail/Trail_PassBy_SequentialSequence.asset`: input off → the panel → input on, with `PlayJustOnce` on.
+- **Both routes play it from their level-started event** through a `SequencePlayHandle` on the level root, which uses the level's own sequence player. It is the same pattern as the shared first-sleeping-enemy panel: a sequence played directly honours play-just-once, while one nested in an intro wouldn't. So the panel shows in whichever route is played first and never again on that save. Its played flag is kept in the save under the asset's name.
+- Each route's intro now holds only its own line, so "Her blood." and "His tracks." still play every time. The panel follows the line, as before on the Blood route.
+- `SearchWiring.Shared.cs`: the handle wiring is now a general `WirePlayOnLevelStart(root, sequence)`. `WireFirstSleeper` calls it, so the River and Ridge are unchanged.
+- Re-ran Wire Search: Trail.
+
+**Tests**
+- New `SearchTrailTests.BothRoutesShowTheSamePassByPanelOncePerSaveAfterTheirOwnLine`:
+  - the shared asset is play-once and holds the Pass-by panel;
+  - both routes' handles point at that same asset and at the level's sequence player, with one `levelStarted` call each;
+  - it is not in either intro, and each intro is just the route's own line.
+- The old Blood panel check is now `OnlyFollowTheBloodsGullyColumnIsLighter` (health only).
+- Full EditMode: 1266 run, 1265 pass. The only failure is `MISO.Core.Systems.AI.EditorTests.AIRegressionTest.Baseline_MatchesCurrentAI`, with 41 failures inside it. `SearchTrailTests`: 15.
+
+**Files** (commit 3; all LF, no BOM):
+- `Features/Onboarding/Editor/SearchWiring.Trail.cs`, `SearchTrailTests.cs`, `SearchWiring.Shared.cs`
+- `Content/Levels/Greybox/GB_m2-blood.prefab`, `GB_m2-tracks.prefab`
+- `Resources/Sequences/Search/Trail/Trail_Blood_Start_SequentialSequence.asset`
+- new `Trail_PassBy_SequentialSequence.asset`, `Trail_PassBy_TutorialSequence.asset`, `Trail_PassBy_Panels.asset` (+ `.meta`s)
+- removed: `Trail_Blood_Start_Panels.asset` and `Trail_Blood_Start_TutorialSequence.asset` (+ `.meta`s). They were my own uncommitted assets, left unreferenced by the move.
+
+`SearchWiring.Shared.cs` is already committed (C4a/C4b), so its small change also goes in commit 3.
+
+**Play check:** on a fresh save, take one route: its line, then the Pass-by panel. On the next run of the Trail, take the other route: only its line. To see the panel again, reset the save.
