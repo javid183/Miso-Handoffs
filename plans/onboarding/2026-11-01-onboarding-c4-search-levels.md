@@ -17,6 +17,7 @@ C4a The River (`GB_s1-river`):
 - [ ] Built from the `river` block. Tutorial tier, default alert (enemies start Unaware). Family starts 4+ from every enemy. Clearing Claws on 5,3 / 6,4 / 6,2 wake together. Archers on the islands 9,5 / 13,5 / 9,1, out of walking reach. 11,3 is safe from all three.
 - [ ] Level start: camera pans to the clue on the far bank (16,3) and back. Lucy's Family Role panel. John's line "Stay by me." The clue props stand on 16,3 (placeholder), and the end sequence shows them up close.
 - [ ] Win: defeat all. Mission: `collectableGResources` Gold 20 + Timber 1 + Fabric 1 (Timber and Fabric always given), `completionXPReward` 30.
+- [ ] **First sleeping enemy** (levels plan §UX, Required): one shared panel ("Asleep: they act once they see you, 3 tiles, or are hit; Shift shows their sight") shown once in whichever pair mission comes first, plus the nearest sleeper's sight tiles for one beat. Same asset at the start of both River and Ridge, shown once per save if a once-only flag exists (`PlayJustOnce`, `AbilityIntroductionTracker` seen-set); the sight beat as data if possible, else report.
 - [ ] Can a bark condition test "Lucy within 3" (Shield Flare discovery bark)? Answer only. Bark graphs are built by hand.
 
 C4b The Ridge (`GB_s2-ridge`):
