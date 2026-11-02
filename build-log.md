@@ -2372,3 +2372,15 @@ Core gets one additive, generic `CombatLog.AddCustom`.
 **Findings:** a stage's turn cap counts from that stage's start. Segment 2's lines follow the levels plan, not the narrative draft; its punchline is a borrowed Cyclone bark. `GB_m1/m3/m4` still carry Unity reimport diffs (unstaged).
 
 **Status:** committed, not pushed. Next: segments 3-4.
+
+## 2026-11-01 · Onboarding structure C3b segment 3: John's memory level (thj/onboarding)
+
+**Built:** `GB_m3-john`: Claws visible beside the sisters (1,1 2,2 6,2 7,1); player turn 1 caps AP (John 1, Linda and Lucy 0) with `TurnStartActionPointLimit` (`8a443d66c`); Shield Up pulses via `GuidedAbilityHint` (`ba7d19e66`); grid fade-in, John's lines, Shield Up panel; win 3 dead or turn 3; end exchange, grid fade, Mark and Margaret cutaway; Wire Memory 3 (John) (`29cbcd7ed`). Grid tool places camera bounds and start before its single save (`3153906dd`). Decisions D-349 (Claws arrive hidden, dropped after play) and D-350.
+
+**Verified:** EditMode 1200/1201 (known red only), run twice by the implementer and once by the coordinator. Reviews: FIX → fixed (hint lifecycle); APPROVE (arrive version); APPROVE + small fixes (redo). THJ play-checked: good.
+
+**Not verified:** John's Walk range (stat not in assets); auto-select at turn start if unit introductions are off.
+
+**Findings:** first layout: the sisters' openers and Roles killed Claws before John's Role; the empty-board version let everyone wander. The `m_LockCount` assert came from the grid tool reopening a just-saved prefab during reimport. Kill barks need a hand-built bark graph. A sequence can't fire an ability (segment 4 uses the grant + hint).
+
+**Status:** committed, not pushed. Next: segment 4.

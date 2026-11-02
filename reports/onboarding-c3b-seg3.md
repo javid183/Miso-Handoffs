@@ -99,3 +99,6 @@ Two full EditMode runs back to back with nothing else touching the editor: 1201 
 5. Restart mid-way: the limit applies again on the reloaded turn 1.
 
 **Commit split** (four units, in order): (1) grid-tool lock fix (`GridToLevelBuilder.cs`, `CameraBoundaryBatchTool.cs`); (2) `GuidedAbilityHint` + tests; (3) `TurnStartActionPointLimit` + tests; (4) segment 3: wiring, tests, assets, rebuilt prefab, and the Linda/Lucy wiring helper edits.
+
+**Review fixes (redo):** line endings put back to LF (no BOM) on all touched files, checked with a carriage-return count of 0 (the edits had written CRLF); the level test now asserts the four Claws stand on 1,1 / 2,2 / 6,2 / 7,1; `TurnStartActionPointLimit` logs and skips unless the family time points mode is on. `TurnStartActionPointLimitTests` cover the pure helpers only (turn and faction match, once, the delta, `Set`), not the live AP change. Full EditMode once more: only `Baseline_MatchesCurrentAI` red.
+(Cell check reads the tile from the cell name, since the cell coordinates are only set at runtime. A first run started right after a forced recompile failed three grid-tool builder tests with "already exists" on their test folder and the cell check; the re-run, after the compile settled, is the one counted: 1201 run, only Baseline_MatchesCurrentAI red.)

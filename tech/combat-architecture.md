@@ -58,3 +58,10 @@ Design and inventory of all 23 previews: `plans/2026-10-19-preview-pass-design.m
 ## Hidden level units and reveal (2026-11-01, `thj/onboarding`)
 
 `Features/Onboarding/HiddenLevelUnits` (non-core MonoBehaviour on the level root, written by the grid tool's `level hidden` line): named groups of placed units whose GameObjects are inactive in the prefab, so every level-start collector skips them (turn order, AI, objectives, `GridCell` occupancy, alert, roles). `Reveal(group)` repeats `GUnit.SpawnAt`'s steps on the existing object: `SetActive(true)`, `Initialize(true)`, `PlugEntity`, `AddFactionControllerMidWay`, `RegisterUnit` (raises `unitBorn`, so AI and alert pick it up). An instance `_revealed` set stops a second reveal reviving a dead unit (`GUnit.Die` deactivates it); no free cell or no faction → warn, deactivate, skip. No statics. `RevealUnitsSequence` is the level-sequence action that calls it. Note: "defeat every enemy" counts only units in play, so a level with hidden enemies needs its own win stages. Commit `3c99b3ee6` (D-346).
+
+## Tutorial level helpers (2026-11-01, `thj/onboarding`)
+
+Both non-core MonoBehaviours on a level root, no statics, subscribe in `OnEnable`/`OnDisable`.
+
+- `Features/Onboarding/GuidedAbilityHint`: pulses the HUD button of one `AbilityPreset` (scale only) while it shows; ends on that ability's `abilityPerformed`, after the hinted turn (`TurnNumber` counts rounds) or on `levelEnded`; always restores the button's scale. Re-finds the button on `unitSelectionChanged` (1 s fallback poll). Commit `ba7d19e66`.
+- `Features/Onboarding/TurnStartActionPointLimit`: on the player faction's turn N `turnStarted` (after `PhaseData.Reinitialize`'s refill) spends listed units down to a set AP through `APConsumer.Consume` (the engine's own drain path, no ability events). Family Roles aren't AP-gated, so 0-AP units still react. Skips unless per-unit AP and FTP mode. Not re-applied by `RestartTurn` (no `turnStarted`). Auto-select at turn start lands after it only because `EnemyIntroductionController` delays a frame. Commit `8a443d66c`.
