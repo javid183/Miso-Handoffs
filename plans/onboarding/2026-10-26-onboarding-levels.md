@@ -421,9 +421,9 @@ level tier tutorial
 
 ### The Ridge (Linda + Mark)
 
-![ridge](onboarding-levels/ridge.svg)
+![s2-ridge](onboarding-levels/s2-ridge.svg)
 
-```grid id=ridge title="The Ridge (Linda + Mark)"
+```grid id=s2-ridge title="The Ridge (Linda + Mark)"
 # . . . # # # # # # # # # #
 # c . c # # # # # # # # # #
 # . c . # # # # # # # # # #
@@ -438,6 +438,8 @@ arrow 6,1 9,1 mark dy=-10 Vault
 arrow 5,1 9,1 linda dy=6 out
 arrow 9,1 5,1 linda dy=12 back
 note 13,1 clue
+level name The Ridge
+level tier tutorial
 ```
 
 | Item | Plan |
