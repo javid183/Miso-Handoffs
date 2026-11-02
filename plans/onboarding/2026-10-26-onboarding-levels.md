@@ -378,9 +378,9 @@ Without punchline endings (option A) the Hearth runs ~20+ min.
 
 ### The River (John + Lucy)
 
-![river](onboarding-levels/river.svg)
+![s1-river](onboarding-levels/s1-river.svg)
 
-```grid id=river title="The River (John + Lucy)"
+```grid id=s1-river title="The River (John + Lucy)"
 # # . . . . # # . . _ . _ . . # #
 # . . . . . . # . a _ . _ a . # #
 # . . . . . c # _ _ . . . _ _ . .
@@ -396,6 +396,8 @@ arrow 11,3 12,4 13,5 lucy dy=-6
 arrow 11,3 10,2 9,1 lucy dy=6
 note 16,3 clue
 note 11,3 safe tile
+level name The River
+level tier tutorial
 ```
 
 | Item | Plan |
