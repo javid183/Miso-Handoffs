@@ -264,3 +264,36 @@ I re-ran Wire Search: Trail. The commit split is unchanged. All changed files ar
 - `SearchTrailTests`: 13.
 - Full EditMode: 1264 run, 1263 pass. The only failure is `MISO.Core.Systems.AI.EditorTests.AIRegressionTest.Baseline_MatchesCurrentAI`, with 41 failures inside it, as expected.
 - The wiring run logged the engine message "Unsupported type Vector2f" twice, as in C4b; no asset is affected.
+
+## Play-check fix 1 (rear wave throws): done
+
+**Cause (confirmed).** The pile's spawn action had `intervalFaction.entityID` empty (`GB_m2-pile.prefab:5080`). `GUnitSpawnManipulationAction.Manipulate` resolves that id every time it runs (`LevelSpecificBehaviour.cs:125`), and `ReferenceableEntityRegistry.ResolveEntity` indexes its dictionary directly (`:23`). An empty id throws `KeyNotFoundException`. `LevelMarkIntro-C1.prefab:594` sets it to `Bergsons`. The registry and the action are unchanged.
+
+**Done (scripts edited):**
+- `Features/Onboarding/Editor/SearchWiring.Trail.cs`: the rear-wave wiring now sets `intervalFaction.entityID` to `Bergsons` (the family's id, as in the Mark intro level).
+- `Features/Onboarding/Editor/SearchTrailTests.cs`: new test `EverySpawnActionNamesAFactionTheRegistryResolves`. It walks every `LevelSpecificBehaviour` on the four Trail levels, finds each `GUnitSpawnManipulationAction`, and asserts that its `intervalFaction` id is not empty and that `FactionRegistry.ResolveEntity` neither throws nor returns null. It expects exactly one (the rear wave).
+
+**Finished after THJ stopped Play.**
+- Recompiled with a clean console.
+- Ran Wire Search: Trail. `GB_m2-pile.prefab` now has `intervalFaction.entityID: Bergsons` (line 5081, LF).
+- Full EditMode: 1265 run, 1264 pass. The only failure is `MISO.Core.Systems.AI.EditorTests.AIRegressionTest.Baseline_MatchesCurrentAI`, with 41 failures inside it, as before. `SearchTrailTests` has 14 tests.
+- An earlier full run in this round, made during repeated Unity plugin disconnects, also failed one `GridToLevelTests` test with the editor assertion `m_LockCount == 0` in `PrefabUtility.UnloadPrefabContents`. A test-scratch prefab left stale in the asset database then made two more tests fail on a re-run. The same 20 `GridToLevelTests` then passed on their own, and the full suite above passed. The builder code those tests cover did not change in this round, so I read it as editor-state flakiness. It is worth knowing if it comes back.
+- I edited `SearchWiring.Trail.cs` and `SearchTrailTests.cs` while Play mode was on, before I knew it was on. Nothing was saved to any asset until Play stopped.
+
+**Files** (both go with commit 3): `SearchWiring.Trail.cs`, `SearchTrailTests.cs`, `GB_m2-pile.prefab`.
+
+**Grep for other empty ids** (read-only):
+- Every `entityID:` line in all 14 `Content/Levels/Greybox/GB_*.prefab`, both directly serialized and as prefab overrides with an empty `value`: the only empty one is the pile's `intervalFaction`.
+- `Resources/Sequences/Search/**` and `Resources/Sequences/Hearth/**`: no empty `entityID`.
+- The C3/C4 wiring sets every condition's `factionRef` explicitly (`Claim` sets `Enemy`; the tile and exit conditions set `Bergsons`). The C3 components (grant, hints, hidden units, AP limit) carry no empty id in their levels.
+- Nothing else found.
+
+**Lose conditions on the pile** (read-only, unchanged):
+- **Defeat** is the template's (LevelBase): one `LivingUnitsLOCondition` on `Bergsons`, `state` Exist, `comparisonStrategy` 3, `count` 0. That is "no family member left alive", not any single death.
+- **If Lucy dies there, the level goes on** with Linda and the pick:
+  - `PlayerController.OnUnitDeath` lowers the family-time-point cap by Lucy's share (`FamilyTimePoints.UpdateCap`, `PlayerController.cs:1811`), so the pool's ceiling drops by her 3;
+  - her unit is deactivated (`GUnit.DieInternal`);
+  - any revenge reaction on the others runs.
+- **Winning still completes the mission.** The pile is the last level, so her death carries nowhere. Per-unit state is cleared when the mission ends (`FactionTracker.QuitMission`), and she is back for the next mission.
+- **Route levels, for context:** a member who dies on a route comes back in the pile at a minimum. Health carries between levels as `max(saved, current × minHpFractionOnLevelLoad) + gain` (`GUnit.InterLevelPersistent` setter, `GUnit.cs:52-66`), so a saved 0 becomes the minimum fraction.
+- **Losing the whole family** shows the lost panel, then the defeat redirect.
