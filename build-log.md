@@ -2420,3 +2420,15 @@ Core gets one additive, generic `CombatLog.AddCustom`.
 **Findings:** Linda's arrow has no per-hit falloff without `RU_LindaArrowDamageDecay` (an early report said 0.9). Shift preview and the sight beat share a cell flag (cosmetic). The implementer overwrote `GB_s1-river` with its committed version twice to drop reimport noise; told not to without THJ's yes. John/Lucy levels re-serialize `animationEvents` overrides on save.
 
 **Status:** committed, not pushed. Next: C4c The Trail.
+
+## 2026-11-02 · Onboarding structure C4c: The Trail (thj/onboarding)
+
+**Built:** `level deploy x,y` grid line: a `Unit_Placeholder` slot per tile for the roster's free pick, replacing a drawn hero with a warning (`6184486d4`). `Unit_DarkClaw_StartsAlert` variant (`c4f85e804`). `GB_m2-trailhead`, `-blood`, `-tracks`, `-pile` (Early tier, Lucy + Linda + deploy slot) and Wire Search: Trail: trailhead drains FTP and wins on the exit tile; both routes drain FTP and share a once-per-save Pass-by panel (D-355); blood gully Claws 12 / side gully 16 HP; tracks Encore cue on both ledge Archers dead; pile items panel, "Search the pile." stage, rear wave of 2 alert Claws on 0,6 / 0,5 at turn 2, tally and the pick's line via the generic slot. `M2 - The Trail`: trailhead → blood | tracks → OR → pile, Health Potion 2 + Family Trinket 1 (`d72204178`).
+
+**Verified:** EditMode 1265/1266 (known red only; `AIRegressionTest` now 41 inner failures, the variant adds two unit-catalog entries). Review APPROVE + fix round (pile objective visible, route drains, tests, deploy on hidden tile). THJ play-checked both routes: good after two fixes.
+
+**Not verified:** River/Ridge sleeping-enemy panel after the shared `WirePlayOnLevelStart` refactor (tests pass; not replayed).
+
+**Findings:** The rear wave threw `KeyNotFoundException` (empty `intervalFaction` on `GUnitSpawnManipulationAction`; the registry resolves it unconditionally); fixed in data (`Bergsons`). An empty `ReferenceableEntityRef` throwing in `ReferenceableEntityRegistry.ResolveEntity` is a core hardening candidate. One flaky `m_LockCount == 0` grid test while the Unity plugin was disconnecting. The implementer edited scripts during Play mode once. Not built: "stays home" line. M2 XP/Gold left at 40/5.
+
+**Status:** committed, not pushed. **Structure C4 done.** Next: C5.

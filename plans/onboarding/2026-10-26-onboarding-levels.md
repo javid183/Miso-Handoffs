@@ -477,6 +477,9 @@ L U J . . . E
 # # # # # # #
 --
 note 2,1 or Mark
+level name The Trailhead
+level tier early
+level deploy 2,1
 ```
 
 #### Route A · "Follow the blood"
@@ -495,6 +498,9 @@ arrow 0,1 1,1 2,1 3,1 4,1 linda dy=-8 through the family
 arrow 4,1 4,5 linda dx=-8 Marks-Sisters
 range 4,5 2 enemy noise wakes
 note 2,1 or Mark
+level name Follow the blood
+level tier early
+level deploy 2,1
 ```
 
 | Item | Plan |
@@ -526,6 +532,9 @@ arrow 0,1 4,1 linda dy=-8 through the family
 arrow 4,1 4,6 linda dx=-8 Marks-Sisters
 zone 1,2 7,3 enemy Archer reach
 note 2,1 or Mark
+level name Follow the tracks
+level tier early
+level deploy 2,1
 ```
 
 | Item | Plan |
@@ -556,6 +565,9 @@ note 2,1 or Mark
 cells 0,6 0,5 enemy rear wave, turn 2
 zone 4,3 5,4 note the pile
 note 2,5 or Mark
+level name The Pile
+level tier early
+level deploy 2,5
 ```
 
 | Item | Plan |
