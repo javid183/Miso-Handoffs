@@ -266,18 +266,16 @@ Build lines (C3 step 0): no `level camera` (the 10 × 3 tiles fit one view, so i
 # # # # # # # # #
 --
 range 4,1 2 john Shield reach
-cells 1,1 2,2 6,2 7,1 enemy hidden until the end of player turn 1
 step 4,1 1
-note 4,1 Shield Up turn 1
+note 4,1 Shield Up turn 1 (1 AP; the sisters 0)
 level name Memory 3 · John
 level tier tutorial
 level alert all
 level xp none
 level fp full
-level hidden 1,1 2,2 6,2 7,1
 ```
 
-Revised 2026-11-01 (D-349): in play the sisters' openers (Fire Embers, the pierce) and their Roles killed the Claws on their way in, before any attack reached John's Role. The four Claws now start hidden and arrive at the end of player turn 1, already beside the sisters (3+ tiles from John, inside his Shield reach of 2), so they attack without walking into Linda's lanes.
+Revised 2026-11-01 (D-349): in play the sisters' openers (Fire Embers, the pierce) and their Roles killed the Claws on their way in, before any attack reached John's Role. The four Claws now start hidden and arrive at the end of player turn 1, already beside the sisters (3+ tiles from John, inside his Shield reach of 2), so they attack without walking into Linda's lanes. Revised again (D-350): an empty first turn let the sisters and John wander, so the Claws are **visible on those tiles from the start**, and player turn 1 limits AP: **John 1, Linda and Lucy 0**. Turn 2 refills as normal.
 
 Build lines (C3 step 0): no `level camera` (the 7 × 6 tiles fit one view).
 
@@ -289,7 +287,7 @@ Build lines (C3 step 0): no `level camera` (the 7 × 6 tiles fit one view).
 | Squad | John, Linda, Lucy (both sisters 2 tiles from John: inside his Shield reach, not next to him, so Papa's Shelter stays for the River) |
 | Enemies | 4 Dark Claws, Tutorial (HP 10) |
 | Turn budget | 2 (cap 3) |
-| First trigger | **John's Shield on enemy turn 1 (D-349).** Turn 1 has no enemy on the board: the only useful act is the hinted Shield Up. At the end of player turn 1 the four Claws are revealed beside the sisters (1,1 and 2,2 by Linda, 6,2 and 7,1 by Lucy) with a narrator line; on enemy turn 1 they attack without moving, so Watch has nothing to fire on; John's Role takes the hits (tether drawn, FR-13), Wrath stacks. Without Shield Up the Role still takes them, with no stacks |
+| First trigger | **John's Shield on enemy turn 1 (D-350, revising D-349).** The four Claws start beside the sisters (1,1 and 2,2 by Linda, 6,2 and 7,1 by Lucy). Player turn 1: John has 1 AP and the sisters 0, so the only useful act is the hinted Shield Up; on enemy turn 1 the Claws attack without moving, so Watch has nothing to fire on; John's Role takes the hits (tether drawn, FR-13), Wrath stacks. Without Shield Up the Role still takes them, with no stacks |
 | The punish | Turn 2: a Wrath ×1.7 Sword (13.6) kills a Claw outright (10 HP); a Wrath Shield Dash (6.8 each, pushed) is the better read. Lucy's follow-up and Linda's Watch will fire too (already met; not taught here). **Win stage:** 3 enemies dead or turn 3 reached |
 | Cues | Level start: one panel; John's line "Stay where I can reach you." Kill barks. End: "You both did." |
 | Alert | All start alert |
