@@ -2384,3 +2384,15 @@ Core gets one additive, generic `CombatLog.AddCustom`.
 **Findings:** first layout: the sisters' openers and Roles killed Claws before John's Role; the empty-board version let everyone wander. The `m_LockCount` assert came from the grid tool reopening a just-saved prefab during reimport. Kill barks need a hand-built bark graph. A sequence can't fire an ability (segment 4 uses the grant + hint).
 
 **Status:** committed, not pushed. Next: segment 4.
+
+## 2026-11-01 · Onboarding structure C3b segment 4: Mark's memory level (thj/onboarding)
+
+**Built:** `GuidedAbilityHint` first-turn window (`3835af7f6`). `GB_m4-mark` (`1bf976b13`): grid fade-in, Mark's lines, Mark walks 14,2 → 13,2; `LevelStartRunUpgradeGrant` with the Bloom upgrade, Cyclone and Bow hints on turn 1, Chained Assault hint on turn 2; stage 1 (seven dead or turn 3) → mother's scene: camera to the ledge, the two hidden Claws revealed (stay and fight, D-347), lines, the mother's fall (rotated Wolf copy via LSB), the cub's line, camera back; stage 2 a Bergson on 6,9 / 7,9 / 8,9 (goal highlight); grid fades on the win; Hearth close. C3a hand edits kept (no grid-tool rebuild). Wire Memory 4 (Mark).
+
+**Verified:** EditMode 1210/1211 (known red only). Review APPROVE + three small fixes. THJ play-checked: good.
+
+**Not verified:** Bloom absent in The River at runtime (cleared on mission enter/quit in code).
+
+**Findings:** Chained Assault's radius is 5 in data (plan said 4). The Wolf placeholder has only Stand/Move. Not done: Home open/close states, M4-4 to M4-7, optional FTP refill.
+
+**Status:** committed, not pushed. **Structure C3 done.** Next: C4.

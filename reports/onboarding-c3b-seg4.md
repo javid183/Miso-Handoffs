@@ -46,3 +46,5 @@ All lines above. Added or changed against the draft: the narrator line "The cub 
 ## Commit split (read-only git, nothing staged)
 1. `GuidedAbilityHint` first-turn field + its test changes (own commit; the component is already committed).
 2. Segment 4: `HearthMemoryWiring.Mark.cs`, `HearthMemoryMarkTests.cs`, `Resources/Sequences/Hearth/Memory4Mark/**` (+ metas), `GB_m4-mark.prefab`. Leave out the `GB_m1-linda.prefab` reimport noise.
+
+**Review fixes (segment 4):** the hint ends on its ability only from its first hinted turn on (a turn 1 Chained Assault no longer kills the turn 2 pulse; tested); the Mark tests also assert stage 1 counts the Enemy faction, stage 2 reads the Bergsons, and no unit (Bergson or cue Claw) starts on a goal tile. LF, no BOM on all touched files. Full EditMode: 1211 run, only Baseline_MatchesCurrentAI red.
