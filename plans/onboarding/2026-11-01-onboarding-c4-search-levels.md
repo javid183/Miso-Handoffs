@@ -1,7 +1,7 @@
 # Onboarding structure C4: The River, The Ridge, The Trail
 
 Size: L (one risk check + three chunks)    Tier: 2 (content + editor tool; THJ: "Start C4"; any core change found → stop, Tier 3)    Assigned to: `miso-implementer` (C4-0 check, C4a, C4b, C4c) → `miso-reviewer` → THJ play check per chunk
-Branch: `thj/onboarding`. Status: **plan, waiting on THJ** (questions below)
+Branch: `thj/onboarding`. Status: **approved 2026-11-01** (D-351: `level deploy` grid line; order River → Ridge → Trail). C4-0 risk check dispatched
 
 ## Why
 
