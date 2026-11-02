@@ -23,3 +23,11 @@ Non-core: reads `abilityPerformed`, `TurnNumber`, `UnitAbilityButtonUI.Ability`;
 - Wiring matches the brief; idempotent (`Claim<T>`); Linda/Lucy edits behaviour-neutral (`Who.Mark` appended, `private` → `internal`).
 - `GB_m3-john` commit 2 carries reimport noise on unit instances along with the real hunks.
 - `TurnNumber` counts rounds: the hint lasts through enemy turn 1. Turn-restart path not checked (hint stays ended; fine).
+
+## Rework re-review (Claws arrive at the end of player turn 1): APPROVE
+
+Turn switch traced (`CombatLevelRunHandler.cs:464-541, 1049-1090`): `turnEnded` fires in `EndTurn()` with `TurnNumber` still 1; the Enemy controller is inserted at index 1 (> current 0), so no shift; next index is Enemy, no faction skipped or doubled; turn 2 on the wrap. `unitBorn` listeners as `SpawnAt`; new `turnEnded` listeners added mid-invoke don't fire this time. AI waits on `SequenceInProgress`; input and HUD restored. Win can't fire before the arrival (0 alive, 0 dead). Non-core, no statics. Split builds in order.
+
+Should fix (optional): `TurnEndSequenceTrigger.cs:95` scope to `GetComponent<HiddenLevelUnits>()`; `:61-78` stop the subscribe coroutine in `OnDisable` or skip a second add; `HearthMemoryJohnTests.cs:150-157` assert the condition's state and comparison.
+
+Play check: the enemy phase banner shows while the arrival line is on screen; the Claws' AI may walk instead of attacking in place (could set off Watch).

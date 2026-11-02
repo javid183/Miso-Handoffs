@@ -40,3 +40,36 @@ All the lines above, the panel text, the two HUD lines, and "Margaret: Sit, Mark
 ## Proposed commits
 1. `feat(onboarding): a hint that pulses one ability button` : GuidedAbilityHint.cs(+meta), GuidedAbilityHintTests.cs(+meta). (non-core component, own commit)
 2. `feat(onboarding): the third Hearth memory level's start, hint, win stage and end` : HearthMemoryWiring.John.cs, HearthMemoryJohnTests.cs (+metas), Resources/Sequences/Hearth/Memory3John/** (+metas), GB_m3-john.prefab, and the small Linda/Lucy wiring edits (Mark speaker, internal helpers).
+
+## Fix round
+- GuidedAbilityHint: OnEnable subscribes (abilityPerformed, unitSelectionChanged, levelEnded), OnDisable unsubscribes and restores the button size; the hint also ends on level end. The pulse is timed from when the target is set (no jump). The button is re-found when the selection changes, with a 1 s fallback poll instead of 4 per second.
+- Wiring uses an explicit if (!hint) for the Unity object. Wire Memory 3 (John) re-run.
+- Tests: real other-ability / hinted-ability test (RuntimeAbility with a preset set by reflection), restore-size tests (SetTarget/ApplyPulse/ReleaseTarget are now public), placeholder check uses Contains and also covers panel titles and objective texts.
+- EditMode re-run: only Baseline_MatchesCurrentAI failed. Two-commit split unchanged.
+
+## Rework: Claws arrive
+EditMode 1202 run, 1201 pass; the one failure is `Baseline_MatchesCurrentAI`. Not play-checked.
+
+**What changed**
+- `GB_m3-john` rebuilt from the revised block with the grid tool (`GridToLevelBuilder.Build`, overwrite, GUID kept), then Wire Memory 3 (John) re-run. Round trip with `level_to_grid.py`: four Claws, John, Linda, Lucy, `level hidden 0,0 1,1 5,1 6,0` in its offset frame = 1,1 2,2 6,2 7,1; layout as the block. No hand-set HP on this level.
+- New non-core `TurnEndSequenceTrigger` (`Features/Onboarding/`): plays a sequence once when a faction's turn N ends. It subscribes in `OnEnable` and unsubscribes in `OnDisable`, holds no statics, and a restart reloads the level and so the trigger. Option to bring a hidden group in first (see below).
+- Wiring: the trigger on the level root (Bergsons, turn 1, group "hidden"), and the arrival sequence `Memory3John_Arrival_SequentialSequence` (input off, HUD off, `RevealUnitsSequence` as the spawn-animation wait, narrator "Then they came out of the dark!", input on, HUD on). The hint, start, panel, end and win stage are unchanged.
+
+**Does a sequence started from `turnEnded` hold the enemy turn? Yes, with one catch handled.**
+- `turnEnded` fires inside `EndTurn()` in the turn switch, and `SequencePlayer.Play` sets `isPlaying` at once. The AI controller waits on `SequenceInProgress` (= `SequencePlayer.isPlaying`) before each unit, so no Claw acts until the sequence ends. The turn-switch holds do not help here (they are only read before `EndTurn`).
+- The catch: with no Enemy controller, or an Enemy controller with no units, the switch right after the wait would skip the enemy (`CanPlayTurn` false) and hand the turn back to the Bergsons, whatever the sequence is doing. So the trigger brings the hidden group in synchronously inside the `turnEnded` handler, before the switch picks the next faction. `HiddenLevelUnits.Reveal` creates the Enemy controller (`AddFactionControllerMidWay`, inserted in turn order) and registers the Claws; the next turn then includes them, they get a normal turn start, and the AI waits for the sequence. No core change.
+
+**Win cannot fire before the arrival (checked in code, not run).** `LivingUnitsLOCondition` counts the enemy faction's registered units; with no Enemy controller it counts 0 alive and 0 dead, so "dead >= 3" is false, and the stage needs a count of 3. The turn cap is `turn=2`, so the earliest end is turn 3. Nothing else ends the level: the defeat group is Bergsons alive <= 0, and no other "all enemies dead" check exists in the turn switch or the AI. Risk noted: if the previous level's destroyed Enemy controller were still referenced, its dead units would count; Unity treats a destroyed object as null so the condition ignores it. HUD on turn 1 reads "Defeat three Claws: 0 of 3." and "Turns left in the memory: 2." A data-only extra guard was considered and rejected because any added "alive >= 1" condition would block the win when all four die at once.
+
+**Watch on the revealed Claws (item 6).** Watch fires when an enemy ends a *move* in Linda's row or column; a reveal is not a move, so nothing fires at the arrival. The Claws are adjacent (1,1 and 2,2 by Linda, 6,2 and 7,1 by Lucy). The AI picks its target and path by its utility graphs, which I did not run: it may attack from where it stands, but it may also walk to a different target (for example John, 3 to 4 tiles away) or reposition first; a Claw that ends a move in Linda's lane would draw a Watch shot. Nothing in the data stops it; to see it in play.
+
+**Files** (each with .meta): new `Features/Onboarding/TurnEndSequenceTrigger.cs`, `Features/Onboarding/Editor/TurnEndSequenceTriggerTests.cs` (4 tests); new assets `Resources/Sequences/Hearth/Memory3John/Memory3John_Arrival_*` (reveal, dialog, sequential); modified `GB_m3-john.prefab` (rebuilt), `HearthMemoryWiring.John.cs`, `HearthMemoryJohnTests.cs` (adds: four Claws hidden and no active enemy at start; trigger settings and arrival order; win count needs at least one dead). Hand edits to the prefab beyond the tool build: introSequence, outroSequence, lObjectives, GuidedAbilityHint and TurnEndSequenceTrigger components, all by the wiring script (re-run after any rebuild).
+
+**Play check**
+1. Segment 3 starts with an empty board (four Claws hidden), John line and panel, Shield Up pulse on John's button.
+2. HUD shows two lines on turn 1 (0 of 3, turns left 2).
+3. End the Bergsons' turn (with or without Shield Up): the narrator line plays, the four Claws appear beside the sisters (alert), HUD hidden during it, then the enemy phase starts after the line.
+4. Enemy turn: do they attack where they stand or walk? Does John's Role take hits, Wrath stack, does Watch fire?
+5. Turn 2 punish; win by 3 dead or at turn 3; cutaway; restart the level mid-way and check the Claws are hidden again.
+
+**Commit split** (three units, in order): (1) `GuidedAbilityHint` + tests (as before); (2) `TurnEndSequenceTrigger` + `TurnEndSequenceTriggerTests`; (3) segment 3: wiring, tests, assets and the rebuilt `GB_m3-john.prefab` (plus the Linda/Lucy wiring helper edits).
