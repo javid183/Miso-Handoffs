@@ -237,3 +237,30 @@ All the files I wrote are LF without a BOM (CR count 0).
    - Rewards are still the old 40 XP / 5 Gold.
 6. Restart a route level and the pile once: the slot is filled again, the drain doesn't repeat outside the trailhead, and the rear wave comes back on turn 2.
 7. **Sandbox Play** from the grid tool on a Trail level should ask who fills the slot (placeholder assignment window).
+
+## Fix round (review: approve, four should-fixes)
+
+1. **Pile, turn 1.** Stage 1's turn objective is now visible, as "Search the pile.", so turn 1 shows an objective before the rear wave.
+2. **FTP drain on both routes.** Follow the blood and Follow the tracks now get the same −99 start filler as the trailhead: on the bus, wired to `levelStarted`, listing the sisters, no gauge, no heal. Points carry over between levels: a bought `Stat_FPG` upgrade adds some on load, and a restart keeps what was left. With the filler, each route starts empty, as its panel says. The pile has no filler. The panel text is unchanged.
+3. **Tests:**
+   - The drain test is now `TheTrailheadAndBothRoutesEmptyTheFamilyTimePointsAndThePileDoesNot`, with a shared `AssertDrains`.
+   - The trailhead test is now `TheTrailheadHasNoEnemiesAndItsExitWins`, without the drain checks.
+   - The constant-only HP assertion is replaced. The test now reads the Dark Claw's `Specs_Health` base and the enemy faction's `Stat_HP` Early row from their assets, and checks 12 for the gully column (base × row × 0.75) and 16 for the side gully.
+   - The rear-wave test now also checks that stage 1's objective is visible with the text "Search the pile.".
+4. **`level deploy` and `level hidden` on one tile.** `GridBlockParser` makes it an error whichever line comes first:
+   - deploy after hidden: "deploy tile … is a hidden tile"; the tile gets no slot and the drawn unit stays.
+   - hidden after deploy: "hidden tile … is a deploy slot"; the slot stays and the tile is not hidden.
+
+   Two new parser tests in `GridToLevelDeployTests`.
+
+**Files changed this round** (no new files):
+- `Core/Levels/Editor/GridToLevel/GridBlockParser.cs`, `GridToLevelDeployTests.cs` (commit 1)
+- `Features/Onboarding/Editor/SearchWiring.Trail.cs`, `SearchTrailTests.cs`, `Content/Levels/Greybox/GB_m2-blood.prefab`, `GB_m2-tracks.prefab`, `GB_m2-pile.prefab` (commit 3)
+
+I re-ran Wire Search: Trail. The commit split is unchanged. All changed files are LF without a BOM.
+
+**Tests:**
+- `GridToLevelDeployTests`: 10.
+- `SearchTrailTests`: 13.
+- Full EditMode: 1264 run, 1263 pass. The only failure is `MISO.Core.Systems.AI.EditorTests.AIRegressionTest.Baseline_MatchesCurrentAI`, with 41 failures inside it, as expected.
+- The wiring run logged the engine message "Unsupported type Vector2f" twice, as in C4b; no asset is affected.
