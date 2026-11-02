@@ -2408,3 +2408,15 @@ Core gets one additive, generic `CombatLog.AddCustom`.
 **Findings:** Catch & Return was locked by an unlockable (D-352 opens it). The panel's sight-tile beat needs a small new sequence (`EnemyAlertTracker.TryGetUnawareRangeTiles`, `GridCell.SetShiftPreview`). No bark condition for distance or arrow count.
 
 **Status:** committed, not pushed. Next: C4b.
+
+## 2026-11-02 · Onboarding structure C4b: The Ridge (thj/onboarding)
+
+**Built:** Catch & Return open by default (`a7320be82`, D-352; Mark's tree node shows owned). `SleeperSightBeatSequence`: the shared sleeping-enemy panel lights the nearest sleeper's sight tiles for 1.5 s (`eda1d6df6`). `GB_s2-ridge` from the `s2-ridge` block, Wire Search: Ridge: enemy turn first (D-353), rush pack awake at start, gauntlet asleep at the Claw's own HP (9.6 in play, D-354), Mark's Counter panel, the shared panel, clue props on 13,1 and the end close-up; `MS2 - The Ridge`: Gold 20 + Steel 2 fixed, XP 30 (`51f109672`).
+
+**Verified:** EditMode 1240/1241 (known red only). Review APPROVE + small fixes. THJ play-checked twice (the first found the player-first rush too easy and the gauntlet Blitz-able): good.
+
+**Not verified:** —
+
+**Findings:** Linda's arrow has no per-hit falloff without `RU_LindaArrowDamageDecay` (an early report said 0.9). Shift preview and the sight beat share a cell flag (cosmetic). The implementer overwrote `GB_s1-river` with its committed version twice to drop reimport noise; told not to without THJ's yes. John/Lucy levels re-serialize `animationEvents` overrides on save.
+
+**Status:** committed, not pushed. Next: C4c The Trail.
