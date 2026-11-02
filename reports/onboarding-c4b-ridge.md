@@ -169,3 +169,64 @@ The better gates need new bark condition nodes: "Linda has ≥ 1 arrow" would re
 7. **River** on the same save after the Ridge: no "Asleep" panel. On a fresh save, River first: the panel plus the sight beat after the River's intro.
 8. **Skill tree:** Mark's "Catch & Return" node shows as owned and can't be bought.
 9. During the beat, hold Shift over another enemy: check the two previews don't leave tiles stuck.
+
+## Review fixes
+
+- `SearchWiring.Ridge.cs`: the gauntlet comment now gives the measured numbers. The falloff is 0.9, so each way deals 6 then 5.4, which makes 11.4 per Claw against 8 health.
+- `SearchRidgeTests.OnlyTheGauntletClawsHaveLowerHealth`: the in-play health check now reads its inputs from the assets instead of multiplying constants:
+  - the Dark Claw prefab's health default (`Specs_Health` `defaultSbValue.baseFactor`);
+  - the enemy faction's `Stat_HP` row at index `EnemyTier.Tutorial`.
+
+  It checks that base × 0.8333 × that row is 8. The per-Claw factor checks are unchanged.
+- Ridge tests: 12 of 12 pass. Full EditMode: 1239 run, 1238 pass; the only failure is `MISO.Core.Systems.AI.EditorTests.AIRegressionTest.Baseline_MatchesCurrentAI`. Both files are LF without a BOM.
+
+## Enemy turn first (THJ decision D-353)
+
+**Change.** `SearchWiring.Ridge.cs` sets the level's turn order: `_overrideTurnOrders` on, with `turnOrders` Enemy → Bergsons → Neutral. It is the same form as `LevelLucyJohn-C2`, and it keeps applying after any grid rebuild. Wire Search: Ridge was re-run and `GB_s2-ridge.prefab` now carries the override. New test: `SearchRidgeTests.TheEnemyMovesFirst`. I didn't touch the gauntlet's health.
+
+**Results.** Ridge tests: 13 of 13 pass. Full EditMode: 1240 run, 1239 pass; the only failure is `MISO.Core.Systems.AI.EditorTests.AIRegressionTest.Baseline_MatchesCurrentAI`.
+
+**Noise.** `GB_s1-river.prefab` picked up the John and Lucy `animationEvents` noise again during the refresh and save, without the River wiring being run. I put it back to the committed version again. Leave it out of the commits; if it comes back, discard it.
+
+**Checked in the code:**
+- **The rush pack is awake before the first enemy turn: holds.**
+  - `StartLevelIE` runs the intro and the ability introductions, invokes `levelStarted`, then sets `_turnNumber = 1` and calls `StartTurn()` in the same frame (`CombatLevelRunHandler.cs:185-199`).
+  - `EnemyAlertTracker.BeginLevel` runs inside that `levelStarted` call (`EnemyAlertTracker.Events.cs:58, 90`; `EnemyAlertTracker.cs:72-91`). Within it, 2,4 sees Linda and starts alert, and the spread wakes 1,5 and 3,5, synchronously, before `StartTurn`.
+  - Units already awake when their turn starts keep their AP. `CloseActionPointsOnWake` only applies to a unit woken during its own turn.
+- **The intro, panels and sight beat finish before any enemy acts: holds.**
+  - The intro (Mark's role panel, the opening lines) plays inside `PlayIntro`, which is awaited before `levelStarted`.
+  - The shared sleeper sequence starts from `levelStarted` on the level's `SequencePlayer`, so `SequenceInProgress` is already true when the enemy turn starts.
+  - `AIController.HandleUnits` waits while `SessionLogs.SequenceInProgress` or `LevelSpecificBehaviour.InProgress` before each unit (`AIController.cs:73-83`).
+  - On a save that has already seen the panel, `SequencePlayer.Play` returns at once (`SequencePlayer.cs:21-26`) and the enemy acts straight after the intro.
+- **Turn counting: holds.**
+  - `_turnNumber` starts at 1 and goes up when the faction index wraps to 0 (`CombatLevelRunHandler.cs:484-489`). With Enemy at index 0, turn 1 is the enemy's move then the family's, and turn 2 begins with the next enemy move.
+  - The Ridge has no turn-based stage (its win is "defeat all"), no turn-capped hint and no `TurnReached` condition, so nothing reads it differently.
+  - Barks with a turn-number condition count the same way: the first family turn is turn 1.
+- **The gauntlet stays asleep: holds.**
+  - The Claws on 7,1 / 8,1 are Unaware at `BeginLevel`. The AI skips Unaware units (`AIController.prefab` `skipTurnTagsQuery`, D-154).
+  - At the start they are 4 from Mark and 5 from Linda (sight 3), and 8 or more from the rush (alert range 2).
+  - The rush's actions on enemy turn 1 happen next to Linda, around 1,1 to 3,2. Those spots are 4 or more from 7,1, so neither their noise nor Mark's Counter there should wake the gauntlet. A Counter Fist Blitz that carries Mark east of 4,1 would put him within 3 of 7,1. Watch for it in play.
+
+**For the play check:**
+- **Phase banner.** The first turn of a level gets no phase banner: `StartLevelIE` calls `StartTurn()` without `PlayPhaseAnimation`; only later switches play it. The enemy's opening move therefore shows no "Enemy phase" banner. Look at whether it reads clearly.
+- **Input on the enemy turn.** The shared sleeper sequence ends with "enable player input" while the enemy turn is pending. Turn ownership should still keep the family from acting then; check that clicks do nothing until the family turn.
+
+**Note on reimport noise.** During this chunk I put `GB_s1-river.prefab` back to its committed version twice, using `git show HEAD:… > file`. From now on I leave Unity's reimport noise in place and list it here. Undoing it needs THJ's yes.
+
+## Gauntlet at the Claw's own health (THJ decision D-354)
+
+**What changed**
+- `SearchWiring.Ridge.cs`: the per-instance health factor on the gauntlet is gone. The wiring now reverts any `Stat_HP` factor override on every placed unit (`PrefabUtility.RevertPropertyOverride`), so a re-run also removes the old one. Re-running Wire Search: Ridge took the override out of `GB_s2-ridge.prefab`; no `upgradeLevels…factor` modification is left on any instance.
+- Gauntlet Claws in play: 16 × Tutorial 0.6 = **9.6** (the "10" in the design).
+- Tests:
+  - `NoUnitOverridesItsHealth`: no unit carries a health override, and every Claw has factor 1.
+  - `TheCatchKillsAGauntletClawButOneBlitzDoesNot`: everything is read from data. Claw health 9.6. Linda's arrow 6. The per-hit factor is the arrow's stat-backed `Stat_DMGD` base 1 × the ability's level-0 `Stat_DMGD` 1. Fist Blitz 8.
+- Ridge tests: 14 of 14. Full EditMode: 1241 run, 1240 pass; the only failure is `MISO.Core.Systems.AI.EditorTests.AIRegressionTest.Baseline_MatchesCurrentAI`.
+
+**Correction to my earlier catch numbers.** The arrow's per-hit falloff is **1, not 0.9**.
+- `onHitExtraModifier.factor` is stat-backed (`factorReadMode` 1). It reads `baseFactor` 1 through `Stat_DMGD`, and the `constantValue` 0.9 is unused in that mode (`StatBackedValue.GetValue`, `StatEvaluation` folding the sources).
+- The only sources of `Stat_DMGD` are the bow ability (×1 at level 0) and the run upgrade `RU_LindaArrowDamageDecay`. So with no upgrade, every hit on a flight does the full 6.
+- The catch therefore deals **6 out + 6 back = 12 per Claw**. The shot alone (6) or one Fist Blitz (8) leaves a Claw on 9.6 standing; the catch kills both.
+- The gauntlet comment states this now. The earlier "Review fixes" entry (0.9, "6 then 5.4", 11.4) was wrong, and so were the 11.4 figures in the earlier "Vault and catch" section.
+
+**Reimport noise, left in place:** `GB_s1-river.prefab` shows the John/Lucy `animationEvents` overrides again (72 added lines). `GB_m1-linda.prefab` and `GB_m3-john.prefab` are as before. None of it is mine to commit.
