@@ -2432,3 +2432,12 @@ Core gets one additive, generic `CombatLog.AddCustom`.
 **Findings:** The rear wave threw `KeyNotFoundException` (empty `intervalFaction` on `GUnitSpawnManipulationAction`; the registry resolves it unconditionally); fixed in data (`Bergsons`). An empty `ReferenceableEntityRef` throwing in `ReferenceableEntityRegistry.ResolveEntity` is a core hardening candidate. One flaky `m_LockCount == 0` grid test while the Unity plugin was disconnecting. The implementer edited scripts during Play mode once. Not built: "stays home" line. M2 XP/Gold left at 40/5.
 
 **Status:** committed, not pushed. **Structure C4 done.** Next: C5.
+
+
+## 2026-11-02 · Onboarding C5a: M4 squad pick + Mark's weapon slot (`thj/onboarding`)
+
+**Built:** M4 roster Lucy + Linda fixed, 1 free pick (John or Mark, Toba excluded); John's placed unit in M4's 7 levels replaced by a deploy slot (editor tool Tools > Onboarding > Apply M4 Squad Slots, idempotent); `Level2-C2` stale decision entry removed; `Level2-C3-2` FTP filler = Linda, Lucy, Toba; Mark gets a RightHand socket. Commits `8826a11f1`, `cafb8de97`, `f6648ed08`. Plan `plans/onboarding/2026-11-02-onboarding-c5-home-visits.md`.
+**Verified:** compile clean; EditMode 1273/1274 (known red only); review APPROVE after two fix rounds; THJ played M4 with John and with Mark.
+**Not verified:** Wrist Wrap equip on Mark in the Workshop (Workshop locked until C5b).
+**Findings:** `Level3-C1`'s hero HP overrides (150–320) use pre-rename attribute field names and are ignored (D-363; backlog sweep). Mark has no default equipment.
+**Status:** C5a done; C5b next.

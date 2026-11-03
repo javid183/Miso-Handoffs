@@ -2,7 +2,7 @@
 
 Size: L (three chunks)    Tier: 3 (Home, D-180 workplan B5; questions Q1–Q4 below)    Assigned to: `miso-implementer` (sonnet) → `miso-reviewer` → THJ play check per chunk
 Branch: `thj/onboarding`
-Status: **approved 2026-11-02** (Q1 panel API D-356, Q2 stations locked until after M4 D-357, Q3 "Searching" HomeState D-358, Q4 clue scene on the Trail pin click D-359; details D-360). C5a in progress
+Status: **approved 2026-11-02** (Q1 panel API D-356, Q2 stations locked until after M4 D-357, Q3 "Searching" HomeState D-358, Q4 clue scene on the Trail pin click D-359; details D-360). **C5a done**, committed `8826a11f1` (Mark weapon slot + test), `cafb8de97` (Apply M4 Squad Slots tool), `f6648ed08` (M4 roster, 7 levels, tests); review FIX ×2 → APPROVE; EditMode 1273/1274 known red only; THJ played M4 with John and with Mark OK (D-361 withdrawn by D-363, D-362). Carried to C5b: Wrist Wrap equip check in the Workshop (Workshop still locked until C5b). C5b next
 
 Rests on: structure tech § C5 (`plans/onboarding/2026-10-26-onboarding-structure-tech.md`), D-227 (M4 3 deploy slots, Toba placed), D-229 (Mark weapon slot, Wrist Wrap), D-230 (guided spend built, non-core Home component), D-231 (no Bond meter; Yard scene only), D-339/D-341 (shared-file edits go through Apply Opening Setup, light touch). Code facts: Explore check 2026-11-02 (summary under "Code facts").
 
@@ -43,6 +43,7 @@ C5b · Home visits as data (stations, Home look, scenes)
 - [ ] Map Table clue scene: `M2 - The Trail.initiationSequence` = a `DialogNodeSequence` with V2-3 to V2-7 (D-359).
 - [ ] Yard scene stub: `M2 - The Trail.completionSequence` = a `DialogNodeSequence` with Y12-1 to Y12-4 (+ Q-4 if cheap). No Family point (B7).
 - [ ] Every scene edit is applied by Apply Opening Setup (`OnboardingOpeningSetup.Scenes.cs`) and covered by its drift test; rows added to `tech/onboarding-merge.md`.
+- [ ] Play check carried from C5a: the Wrist Wrap of Power equips on Mark in the Workshop.
 - [ ] EditMode tests: station unlock lists, Family tab requirement, each new mission's `homeState`, Trail initiation/completion sequences set.
 
 C5c · Guided skill spend (per Q1)
