@@ -17,6 +17,9 @@ Owner: coordinator. Every edit `thj/onboarding` makes to a file `thj/home-test` 
 | `Home - Scene.unity` | 4 world-map pins re-pointed (Hearth, River, Ridge, Trail) and renamed; M3 Mark Intro, M6, M7 pins hidden; Mark's select button and Upgrades tab unlock after the Hearth | `bb9982c87` | Yes: ~9.8k lines | **Conflict** | Yes (finds pins by mission, not name) |
 | `Unit_Mark.prefab` | `unlockedAfterMission` → Hearth | `bb9982c87` | Yes: stat attribute lines | Auto-merges | Yes |
 | `Scenes/IntroScreen.unity`, `Scenes/MainMenuScene.unity` | `initialMission` → Hearth | `bb9982c87` | No | Clean | Yes |
+| `Unit_Mark.prefab` (again) | Fourth equipment socket (RightHand, empty) so the Wrist Wrap of Power equips; 5-line diff on top of the `unlockedAfterMission` edit | C5a, uncommitted | Possibly (stat attribute lines) | Not run | No: the builder doesn't add the socket; re-check after a merge (`MarkWeaponSocketTests`) |
+| `M4 - The White Mothers.asset` | Roster: Lucy, Linda fixed + 1 free pick, Toba excluded (was John, Linda, Lucy fixed) | C5a, uncommitted | Unknown | Not run | No (`M4SquadPickTests` checks the shape) |
+| M4's 7 level prefabs: `Level2/LevelDomFight`, `Level2/Level2-C1-TArtEx`, `Level2/Level2-C2`, `Level2/Level2-C3-1`, `Level2/Level2-C3-2`, `Level3/Level3-C1`, `DungeonSafeRooms/LevelDivineRelicRoom 1` | Placed John replaced by a `Unit_Placeholder` deploy slot on his cell, facing kept; C2 loses a stale `decisions` override entry that pointed at John; C3-2's FP filler list drops John (Linda stays first) | C5a, uncommitted | Unknown (shared Level2/Level3 prefabs) | Not run | No: take home-test's version whole, then redo the swap (placeholder in place of `Unit_John`; `M4SquadPickTests` fails until done) |
 
 New onboarding-only files (no conflict): the 4 Mission assets (`38bc7db73`), `OnboardingMissionGraphTests.cs` (`f36da02f8`).
 
