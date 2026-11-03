@@ -23,3 +23,9 @@ Reviewer: `miso-reviewer` (read-only; saved by the coordinator) · 2026-11-02 ·
 - HomeState: furthest = deepest mission node, later completion wins ties; all four missions share Searching, so it shows in either order until M4.
 - Assets Unity-shaped; dialogue lines match V2-3..V2-7, Y12-1..Y12-4. Mission diffs 1–3 lines each. Scene diff: 5 station blocks, Family override, 9 known `GlobalEventBus` empty fields.
 - No private IDs, no core code, no runtime statics.
+
+## Fix round 1 re-review (2026-11-02): FIX (one small item)
+
+Must fix: the single `LogAssert.Expect(... "Unsupported type Vector2f")` fails if Unity logs it 0 or 2 times. Instead, set `LogAssert.ignoreFailingMessages = true` only around the test's own `SaveScene` call (restore in `finally`) and drop the `Expect`; builder Check/Apply errors still fail the test.
+
+Checked OK: `RunHomeSceneOnly` runs only `RunHomeSceneStep` on the redirected scene (no graph, GameData, initial-mission or recruit steps; skips Preflight and the Play guard, fine for an internal test-only entry, don't wire it to a menu). `Run`/`ApplyMenu`/`CheckMenu` unchanged; the only pre-existing file change is one `EditStations` line in `.Scenes.cs`. LF normalisation touched no pre-existing file. Drift test breaks four edits and asserts each; clue scene `PlayJustOnce: 1` asserted.
