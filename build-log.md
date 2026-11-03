@@ -2465,3 +2465,9 @@ Core gets one additive, generic `CombatLog.AddCustom`.
 **Not verified:** —
 **Findings:** the sister's hero tab doesn't look selected (tab selection look is the hover size only); fix next. If The Trail is played before the table is opened, the guide never shows (by plan wording).
 **Status:** C5 done except the tab fix; then the timed pacing play check.
+
+## 2026-11-03 · Skill tree tab looks selected (`thj/onboarding`)
+
+**Built:** a hero tab selected from code grows like a clicked one; the first tab on a normal open is marked Selected (D-371). 2 tests. Commit `35ed82daa`.
+**Verified:** EditMode 1305/1306 (known red only); coordinator read the diff; THJ played OK.
+**Status:** structure C5 done. Next: timed pacing play check.
