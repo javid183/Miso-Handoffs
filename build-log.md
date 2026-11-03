@@ -2449,3 +2449,11 @@ Core gets one additive, generic `CombatLog.AddCustom`.
 **Not verified:** Ridge-first order by THJ (covered by tests).
 **Findings:** Mark's Wrist Wrap of Power can be upgraded in the Workshop but doesn't equip or doesn't show as equipped (the data-level `Equip` test passes); under investigation. Home scene save re-adds nine empty `GlobalEventBus` fields (known noise, committed).
 **Status:** C5b done; Wrist Wrap bug, then C5c.
+
+## 2026-11-02 · Mark's default gear (`thj/onboarding`)
+
+**Built:** `Unit_Mark.prefab` sockets default to Monk's Tunic (Chest) and Wrist Wrap of Power (RightHand), like the other heroes (D-367, D-369: fixed gear, upgrade only); test extended. Commit `106edafec`.
+**Verified:** prefab diff only the two lines; EditMode 1289/1291 (known red + flaky `HomeVisitsTests` repair test, passes alone); THJ played: both items equipped.
+**Not verified:** the Wrap's stat bonus in combat.
+**Findings:** the Workshop only upgrades; equip lives in character select (not a player path under D-369). Unity re-adds `preloadOverride`/`showSpeed` lines on the next Mark prefab save.
+**Status:** done. Flaky test fix next.
