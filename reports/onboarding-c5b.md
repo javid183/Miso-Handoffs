@@ -47,11 +47,11 @@ No reset done. For the play check: **Tools > Save Data > Clear Save Data** gives
 - Stations are found by GameObject name (`Equipments Cabinet`, `Grandma Table`, `Bookshelf`, `Training Field`, `Cooking Cabinet`); nothing else tells them apart. The Family tab is found by its family flag. A missing name is a reported Problem, not a silent skip.
 - The station table is a property, not a static field: static fields of a partial class initialise in an unspecified order across files, and the rows copy the table's mission rows.
 - Searching idles (offsets all 0): LucySadSit, JohnWatchCliff, LindaSadLay, MaryReading, BenDrinking, KevinWaterPlant, JoeyFigure. MaryRest (Wolf's Blood state) is left out because it also seats Lucy, which the manager would skip as a conflict; MaryReading comes from the old M2 look. No idle has "Wolf" in its name. Position overlap between the idles is untested in Play.
-- The clue scene is a plain `DialogNodeSequence`, **not** play-once: it replays whenever the Trail pin is picked again after another pin. Plan says nothing; set `PlayJustOnce` on it if THJ wants it once.
+- The clue scene is play-once (coordinator's call after review).
 - Q-4 left out: it follows Y12-6 (the straw-target race), which the stub does not have, so it would read wrong after Y12-4.
 - Workshop page: one page, reused existing placeholder image (the "Asleep" panel picture).
 - V1-1 to V1-4b (Ben and the go-between jokes) not built: not in the plan's C5b list and they need roster-dependent branching.
-- The test that repairs a scene copy ignores Unity's own "Unsupported type Vector2f" log, which Unity writes when it saves the copy (the project scene saved without it).
+- The test that repairs a scene copy expects Unity's own "Unsupported type Vector2f" log, which Unity writes when it saves the copy (the project scene saved without it).
 
 ## Needs THJ
 
@@ -92,11 +92,20 @@ Also seen: `Scenes/PreloadScreen.unity` has a one-line change (`applyFPSLimit: 1
 
 ## Proposed commits
 
-Dependency order:
+Reordered so no intermediate commit is red (data, then scene, then builder and tests):
 
-1. `feat(onboarding): builder re-applies the Home station locks, Family tab and Workshop page` (plain): `Features/Onboarding/Editor/OnboardingOpeningSetup.Stations.cs` (+`.meta`), `OnboardingOpeningSetup.Scenes.cs`, `HomeVisitsWiring.cs` (+`.meta`), `HomeVisitsTests.cs` (+`.meta`).
-2. `feat(onboarding): Home visit data: Searching look, Workshop page, Trail clue and Yard scenes` (plain, data): `Content/Levels/HomeStates-Idles/Searching - HomeState.asset` (+`.meta`), `Resources/Tutorials/Workshop_Tutorial.asset` (+`.meta`), `Resources/Sequences/HomeVisits/` and `HomeVisits.meta`, the four Mission assets (Hearth, River, Ridge, Trail).
-3. `feat(onboarding): Home stations open as the opening progresses` (risky, shared scene): `Features/Home - Imported/___Khashayar/Home - Scene.unity`. Needs commit 2 for its Workshop page reference; own commit so it can be reverted alone.
+1. `feat(onboarding): Home visit data: Searching look, Workshop page, Trail clue and Yard scenes` (plain, data): `Content/Levels/HomeStates-Idles/Searching - HomeState.asset` (+`.meta`), `Resources/Tutorials/Workshop_Tutorial.asset` (+`.meta`), `Resources/Sequences/HomeVisits/` and `HomeVisits.meta`, the four Mission assets (Hearth, River, Ridge, Trail).
+2. `feat(onboarding): Home stations open as the opening progresses` (risky, shared scene): `Features/Home - Imported/___Khashayar/Home - Scene.unity`. Own commit so it can be reverted alone; needs commit 1 for the Workshop page reference.
+3. `feat(onboarding): builder re-applies the Home station locks, Family tab and Workshop page` (plain): `OnboardingOpeningSetup.Stations.cs`, `OnboardingOpeningSetup.Scenes.cs`, `HomeVisitsWiring.cs`, `HomeVisitsTests.cs` (each with `.meta`).
+
+## Fix round (review FIX)
+
+- Must fix done: the repair test now calls a new internal `OnboardingOpeningSetup.RunHomeSceneOnly(targets, apply)` (Stations.cs), which runs only the Home scene step on the scratch copy. No graph, GameData, recruit prefab or initial-mission scene step runs. After the full suite, `git status` shows GameData, Unit prefabs, IntroScreen and MainMenuScene untouched.
+- Fix round 2: the test no longer expects an exact log count. Only its own `SaveScene` of the broken copy is wrapped in `LogAssert.ignoreFailingMessages` (saved and restored in `finally`), because Unity may log "Unsupported type Vector2f" there; errors from the builder's Check and Apply still fail the test.
+- The drift test now also breaks Grandma Table's any/all flag and the Workshop tutorial (set to null), and asserts each reported line plus zero problems, then a clean re-check.
+- All new files are LF.
+- Clue scene is play-once: set in `HomeVisitsWiring.EnsureClueScene`, Wire Home Visits re-run (asset shows `PlayJustOnce: 1`), asserted in the clue-scene test. The Yard stub is not play-once. Picking the Trail pin again skips the scene and still opens the info panel. In the "How to see it" steps, step 4's replay note no longer applies; clear the save to replay it.
+- Full EditMode suite: 1289 run, 1288 passed, only the known `AIRegressionTest.Baseline_MatchesCurrentAI` red.
 
 ## Other branches
 
@@ -109,7 +118,7 @@ Start with Tools > Save Data > Clear Save Data, then Play from `Scenes/PreloadSc
 1. Hearth: play the memories, return Home. Idles are the quiet Searching set. Workshop, skill tree, Bookshelf, Training Field, Cooking Cabinet are all locked; Family tab locked.
 2. Play The River. At Home the Workshop opens (hover then click): its page shows once; close it, click again, no page. Equip the Wrist Wrap of Power on Mark. The skill tree is still locked.
 3. Play The Ridge. The Grandma Table opens. The Trail pin appears (glowing).
-4. Click the Trail pin: the clue scene plays (5 lines), then the mission info panel. Picking another pin and coming back replays it.
+4. Click the Trail pin: the clue scene plays (5 lines), then the mission info panel. Picking another pin and coming back does not replay it (clear the save to see it again).
 5. Play The Trail. Back at Home the Yard stub (4 lines) plays and the Family tab opens. The Bookshelf, Training Field and Cooking Cabinet stay locked until M4 is won.
 6. Alternative order: Ridge first, then River: same results (Workshop opens after whichever comes first).
 7. Editor side: Tools > Onboarding > Check Opening Setup logs "nothing to change".

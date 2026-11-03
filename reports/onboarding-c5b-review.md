@@ -29,3 +29,7 @@ Reviewer: `miso-reviewer` (read-only; saved by the coordinator) · 2026-11-02 ·
 Must fix: the single `LogAssert.Expect(... "Unsupported type Vector2f")` fails if Unity logs it 0 or 2 times. Instead, set `LogAssert.ignoreFailingMessages = true` only around the test's own `SaveScene` call (restore in `finally`) and drop the `Expect`; builder Check/Apply errors still fail the test.
 
 Checked OK: `RunHomeSceneOnly` runs only `RunHomeSceneStep` on the redirected scene (no graph, GameData, initial-mission or recruit steps; skips Preflight and the Play guard, fine for an internal test-only entry, don't wire it to a menu). `Run`/`ApplyMenu`/`CheckMenu` unchanged; the only pre-existing file change is one `EditStations` line in `.Scenes.cs`. LF normalisation touched no pre-existing file. Drift test breaks four edits and asserts each; clue scene `PlayJustOnce: 1` asserted.
+
+## Fix round 2 (2026-11-02): APPROVE (coordinator check)
+
+`HomeVisitsTests.cs:215-218`: `ignoreFailingMessages` saved, set only around the test's own `SaveScene`, restored in `finally`; `Expect` removed. Matches the reviewer's fix exactly; EditMode 1288/1289 known red only.
