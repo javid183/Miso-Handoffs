@@ -36,7 +36,7 @@ Acceptance for the component's test is therefore not covered; the commit "slot H
 
 - `Unit_Mark.prefab`: `equipmentSockets` size 3 to 4, new `data[3].equipmentSocket = 5` (RightHand), item empty. 5 added lines, 1 changed; file kept LF.
 - `M4 - The White Mothers.asset`: roster `freeSlotsCount 1`, fixed Lucy then Linda, `forcedExcludedUnits` = Toba (same shape as The Trail). The character select therefore offers John or Mark (the others are fixed or excluded).
-- The 7 level prefabs: John's `Unit_John` instance replaced in place by a `Unit_Placeholder` instance (same shape as `GB_m2-trailhead.prefab:563`: name override, zero local transform, `initialDirection.x`), same parent; the cell's added-object entry re-pointed to the slot. Lucy, Linda, Toba, `Unit_TobaEnemy` and the Ryker NPC were not touched. Done with a throwaway script on the YAML (kept LF, no Unity save), not an editor tool; the editor reimported them without extra changes.
+- The 7 level prefabs: John's `Unit_John` instance replaced in place by a `Unit_Placeholder` instance (same shape as `GB_m2-trailhead.prefab:563`: name override, zero local transform, `initialDirection.x`), same parent; the cell's added-object entry re-pointed to the slot. Lucy, Linda, Toba, `Unit_TobaEnemy` and the Ryker NPC were not touched. First done by hand-edited YAML; replaced in the fix round by the re-runnable tool below.
 - Tests (new files, LF, no IDs): `Features/Onboarding/Editor/M4SquadPickTests.cs` (5 tests: the mission lists the 7 levels; each has exactly one slot and no placed John; slot facing per level; Lucy and Linda stay placed and no FP filler holds a missing unit; roster shape) and `MarkWeaponSocketTests.cs` (3 tests: RightHand socket present, 4 sockets and the weapon socket empty, the Wrap is RightHand and Mark-only and his socket matches). The new tests do not call `Equip` (it writes the persistent equipment state).
 - `claude-handoff/tech/onboarding-merge.md`: three rows added (Mark prefab again, M4 mission asset, the 7 level prefabs).
 
@@ -44,6 +44,21 @@ Acceptance for the component's test is therefore not covered; the commit "slot H
 
 - Level2-C3-2 FP filler: re-pointing `units[0]` from John to Linda would have put Linda in the list twice (she was already `units[1]`), which heals and fills her ATB twice. I re-pointed and removed the duplicate, so the list is `[Linda, Lucy, Toba]`, same set and same first unit as the intent.
 - Slot facing for John-without-override is (1,0), his prefab default, not the builder's constant (also (1,0)).
+
+## Fix round (review: FIX)
+
+- **Tool:** `Features/Onboarding/Editor/M4SquadSlots.cs`, menu **Tools > Onboarding > Apply M4 Squad Slots**. Per level (table in the script: path, John's cell, facing): `LoadPrefabContents`; a placed John (or an existing slot) is found, its facing is read (John) or taken from the table (slot), the cell is checked against the table (warns on mismatch), both are destroyed, a fresh `Unit_Placeholder` is made with `InstantiatePrefab` under the same occupant root at local 0 with `initialDirection` set through `SerializedObject`, `SaveAsPrefabAsset`, `UnloadPrefabContents`. C3-2: FP filler set to Linda, Lucy, Toba. C2: drops the stale decisions override if present (it was already gone). Idempotent: running it again on today's tree re-creates the slots.
+- **Run:** all 7 levels, from the current tree (the old hand-made slots were re-created). Console: "re-created the existing slot" x7, C2 "no stale decisions entry", C3-2 "FP filler set to Linda, Lucy, Toba".
+- **Re-diff:** now Unity-written. Stripped objects 63 to 156 per file, all follow the XOR rule (0 bad); the cell's added-object entry points at the slot Transform in all 7 (exactly 1 reference each); John's GUID appears 0 times; LF kept. Against my hand-edited version the save changed exactly 134 lines per file (the slot block moved to Unity's order plus new ids and the cell reference); **no unrelated serialization noise** (no `animationEvents` or other lines). Against HEAD the stat is 469 insertions, 592 deletions over the 7 files (C1-TArtEx 138, C2 185, C3-1 134, C3-2 150, DomFight 158, DivineRelicRoom 154, Level3-C1 142 lines changed), all John removal and slot addition.
+- Tests: `MarkWeaponSocketTests` now calls `new EquipmentManager().Equip(Mark, Wrap)` (a fresh manager neither registers nor saves). `M4SquadPickTests` shares the script's table and asserts each slot's ancestor cell name and zero local position. Suite: 1274 total, 1273 passed, only `AIRegressionTest.Baseline_MatchesCurrentAI` red.
+- `tech/onboarding-merge.md` M4 row now says run Apply M4 Squad Slots.
+
+## Fix round 2
+
+- `M4SquadSlots.Apply()` is now a no-op on a level that is already right: no John, exactly one slot on the table's cell, local zero, facing `(Facing, 0)`, a prefab-instance root, C3-2 filler `[Linda, Lucy, Toba]`, C2 stale entry absent. It logs "already up to date" and does not save.
+- A cell mismatch now stops that level before any destroy or save (warning in the log; the `finally` still unloads). `Run()` refuses to run in Play mode (warning, nothing changed).
+- Checked: md5 of the 7 prefabs before and after one run are identical (`md5sum -c`: 7 OK), `git diff --stat` unchanged (7 files, 469 insertions, 592 deletions). Log: "already up to date" x7.
+- Compile clean; full EditMode 1274 total, 1273 passed, only `AIRegressionTest.Baseline_MatchesCurrentAI` red.
 
 ## Checks
 
@@ -66,12 +81,13 @@ Acceptance for the component's test is therefore not covered; the commit "slot H
 .../Content/Levels/Level3/Level3-C1.prefab                   |  58 +++---
 9 files changed, 185 insertions(+), 305 deletions(-)
 ```
-New (untracked): `Features/Onboarding/Editor/M4SquadPickTests.cs` (+`.meta`), `Features/Onboarding/Editor/MarkWeaponSocketTests.cs` (+`.meta`). Handoff: `tech/onboarding-merge.md`.
+New (untracked): `Features/Onboarding/Editor/M4SquadSlots.cs` (+`.meta`), `Features/Onboarding/Editor/M4SquadPickTests.cs` (+`.meta`), `Features/Onboarding/Editor/MarkWeaponSocketTests.cs` (+`.meta`). Handoff: `tech/onboarding-merge.md`.
 
 ## Proposed commits (dependency order; paths under `miso/Assets/_Project/`)
 
 1. Mark's weapon socket: `Features/Player/Mark/Prefabs/Unit_Mark.prefab`, `Features/Onboarding/Editor/MarkWeaponSocketTests.cs` (+`.meta`). Message idea: `feat(mark): add a weapon socket so the Wrist Wrap can be equipped`.
-2. M4 squad pick: `Content/Levels/M4 - The White Mothers.asset`, the 7 level prefabs above, `Features/Onboarding/Editor/M4SquadPickTests.cs` (+`.meta`). Message idea: `feat(onboarding): M4 lets the player take John or Mark`.
+2. The editor tool: `Features/Onboarding/Editor/M4SquadSlots.cs` (+`.meta`). Message idea: `feat(onboarding): tool that places the M4 squad deploy slots`.
+3. M4 squad pick: `Content/Levels/M4 - The White Mothers.asset`, the 7 level prefabs above, `Features/Onboarding/Editor/M4SquadPickTests.cs` (+`.meta`). Message idea: `feat(onboarding): M4 lets the player take John or Mark`.
 There is no HP-component commit (not built, see above).
 
 ## How to see it
