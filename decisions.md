@@ -6,6 +6,7 @@ Rows D-001 to D-011 were carried over on 2026-10-15 from the Home handoff and pr
 
 | Date | ID | Tier | Scope | Decided by | Decision | Why | Affects |
 | --- | --- | --- | --- | --- | --- | --- | --- |
+| 2026-11-03 | D-371 | 3 | thj/onboarding | THJ | The skill tree's first hero tab on a normal open looks selected too (marked Selected through `SetState`, grows like a clicked tab); bundled with the guided-open tab fix | Same gap as the guided open; THJ: "yes go ahead and fix that too" | `AbilityUpgradePanelUI.Start`, `AbilityUpgradeCharacterIconUI` |
 | 2026-11-03 | D-370 | 2 | thj/onboarding | Coordinator | C5c play-checked by THJ and committed (`59c5a6a25` panel API, `4dd76b498` component + builder, `14330fd06` scene, `1f3df84ac` tests); guided nodes Lucy Sidewinders, Linda Longshot; the unselected-looking tab goes to a small Core UI fix (a tab selected from code gets the clicked look) | THJ: "it works. commit" | C5c, `AbilityUpgradeCharacterIconUI` |
 | 2026-11-02 | D-369 | 3 | all | THJ | Confirms the standing rule: every hero has his two items equipped by default and can only upgrade them; equipment never changes. Mark follows it (Wrist Wrap + Monk's Tunic, D-367) | THJ restated an earlier decision | `Unit_Mark.prefab`; character-select equip is not a player path |
 | 2026-11-02 | D-368 | 3 | all | THJ | Character-select equip/unequip is NOT saved immediately; left as is (persists only via a later save) | THJ chose leave as is | backlog |
