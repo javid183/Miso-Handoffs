@@ -2441,3 +2441,11 @@ Core gets one additive, generic `CombatLog.AddCustom`.
 **Not verified:** Wrist Wrap equip on Mark in the Workshop (Workshop locked until C5b).
 **Findings:** `Level3-C1`'s hero HP overrides (150–320) use pre-rename attribute field names and are ignored (D-363; backlog sweep). Mark has no default equipment.
 **Status:** C5a done; C5b next.
+
+## 2026-11-02 · Onboarding C5b: Home visits as data (`thj/onboarding`)
+
+**Built:** Searching HomeState on Hearth/River/Ridge/Trail; Workshop opens after River or Ridge with a once-per-save page; Grandma Table after both; Family tab after The Trail; Bookshelf, Training Field, Cooking Cabinet after M4; Trail clue scene (initiation, play once) and Yard stub (completion). Builder step `OnboardingOpeningSetup.Stations.cs` re-applies the station locks, Family tab and Workshop page; Tools > Onboarding > Wire Home Visits; 15 tests. Commits `67b07c7f8`, `b2659da27`, `cb85c30fe`.
+**Verified:** compile clean; EditMode 1288/1289 (known red only); review APPROVE after two fix rounds; THJ played Hearth → River → Ridge → Trail from a reset save.
+**Not verified:** Ridge-first order by THJ (covered by tests).
+**Findings:** Mark's Wrist Wrap of Power can be upgraded in the Workshop but doesn't equip or doesn't show as equipped (the data-level `Equip` test passes); under investigation. Home scene save re-adds nine empty `GlobalEventBus` fields (known noise, committed).
+**Status:** C5b done; Wrist Wrap bug, then C5c.
