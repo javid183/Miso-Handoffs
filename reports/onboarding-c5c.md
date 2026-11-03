@@ -96,3 +96,17 @@ Stage only those files; the Greybox prefabs, AI scripts, PreloadScreen and Proje
 3. Close the panel and reopen it: it opens as before (first hero, no pulse). Buying the pulsing node (with a point) also stops the pulse.
 4. Reset the save and play the other order (Ridge then River, or River then Ridge) to check both sisters. The tree stays locked after only one of the two.
 5. Tools > Onboarding > Apply Opening Setup (check) should report nothing to change for the Home scene.
+
+## Fix round 1
+
+Review verdict FIX; all four items addressed.
+
+- Must 1 (pulse never stopped): the start level now lives in a small plain class `TreeNodeHighlight` (in `AbilityTreePanelUI.Highlight.cs`). It records the level once per `HighlightNode` call (first sighting) and keeps it across tree rebuilds; `Observe(level)` returns false and clears once the level rises. `Update` no longer recaptures it when it picks up a rebuilt button.
+- Must 2 (highlight survived closing): `OnDisable` now stops the pulse and clears the highlight, so a later open is the plain tree.
+- Tests added (3, in `GuidedSkillSpendTests.cs`): level rise across a rebuild stops the highlight; `Begin` restarts the start level; disabling the tree panel clears the highlight (calls `OnDisable` by reflection because edit mode does not).
+- Should 1: `GuidedSkillSpend` now runs `Pick(last, alreadyShown: false)` first and reads `GuidedSkillSpendMarker.HasBeenShown()` only when a guide applies.
+- Should 2: the per-frame `FindIndex` lambda is replaced by a hand loop (`FindEntryIndex`), no allocation.
+
+EditMode after the fix: 1304 run, 1303 pass, only the known red `AIRegressionTest.Baseline_MatchesCurrentAI` fails. No compile errors.
+
+Changed files this round (all already in the proposed commits): `AbilityTreePanelUI.Highlight.cs` (commit 1), `GuidedSkillSpend.cs` (commit 2), `GuidedSkillSpendTests.cs` (commit 4; now 15 cases). The proposed commit list is unchanged. The live pulse and stop still need the play check.

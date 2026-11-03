@@ -18,3 +18,7 @@ Reviewer: `miso-reviewer` (read-only; saved by the coordinator) · 2026-11-03 ·
 - Fires only on the Grandma Table open after River and Ridge. If The Trail is played before the table is opened, last-completed is the Trail and the guide never shows (matches plan wording; tell THJ).
 - Skill points: XP thresholds start at 0, first XP gain grants 1 SP (`FactionTracker.cs:416-438`); River/Ridge give 30 XP split among participants. Very likely ≥1 SP; play check confirms. Node level-1 SP cost not verified.
 - Tests scoped (scratch scene, scoped log ignore); conventions OK; commit split sound.
+
+## Fix round 1 re-review (2026-11-03): APPROVE
+
+Start level recorded once per `HighlightNode` (`TreeNodeHighlight`), so a purchase rebuild + level rise stops and clears the pulse; `OnDisable` clears the highlight, so reopen shows the plain tree. Lifecycle tests drive the real `OnDisable` and the observe sequence; `Update` itself not driven (single `Observe` call, accepted). No new statics; cheap checks before the tracker; CRLF+BOM kept. Play check must include buying the pulsing node and the points label ≥ 1.
