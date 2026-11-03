@@ -8,55 +8,55 @@ For THJ. Collected 2026-10-17 from the Open questions section of each GDD page. 
 
 FTP's on-screen name: FTP, FP, Family Points (the stat descriptions), Family Time Points (the code) or Family Passive Points (the glossary)?
 
-A: 
+A: Family Points (FP) on screen. Code keeps `FamilyTimePoints`.
 
 ### Combat rules Q2
 
 How should the FTP maximum be set? Today it is the sum of the mission roster's FP values (John 5, Linda 2, Lucy 3, Mark 3, Toba 1, plus the family stat), and the pool starts full. The Demo Spec describes 3 × (heroes − 1) on `thj/home-test`.
 
-A: 
+A: 3 × heroes, plus an additional amount from Home upgrades. Like HP (and John), a character can also raise the base.
 
 ### Combat rules Q3
 
 Leftover AP is lost at the end of the turn. Should it do something with FTP (for example, fill FTP)?
 
-A: 
+A: No. Leftover AP stays lost; it doesn't feed FTP.
 
 ### Combat rules Q4
 
 Family Super Time: on `main` only the Goblin Queen's death triggers it, and it costs nothing. Keep it as a feature? What should it cost, and how should the player trigger it?
 
-A: 
+A: Defer, like Bergson Time: leave the code, keep it out of the design for now.
 
 ### Combat rules Q5
 
 Revenge on an ally's death: a designed family mechanic, or legacy? Where should it live in this document?
 
-A: 
+A: A designed family mechanic. It lives in Family systems.
 
 ### Combat rules Q6
 
 Family members tagged Stunned are not skipped (only Inactive skips their turn). Intended?
 
-A: 
+A: Bug. Stunned should skip the turn.
 
 ### Combat rules Q7
 
 Pass-by and the Family Trinket add FTP through a message that passes a decimal number to a whole-number function. Unity may reject such a call, in which case both add nothing. Check the Console in play ("Failed to call function ProduceFTP").
 
-A: 
+A: Check the Console in play first ("Failed to call function ProduceFTP"), then fix the call to pass a whole number.
 
 ### Combat rules Q8
 
 John's Family Super Time pull, and probably Mark's Vault push, move Immovable units (the Masher, the Deev). Fix?
 
-A: 
+A: Fix. Immovable blocks all forced moves, including Super Time and Duo moves.
 
 ### Combat rules Q9
 
 After a death, FTP is capped below its maximum until the next level, so the pool can't be full and Family Super Time can't fire for the rest of that level. Intended?
 
-A: 
+A: Old design; should change. The FTP max stays at what the mission started with after a death.
 
 ## Family systems (`family-systems.md`)
 
@@ -64,67 +64,67 @@ A:
 
 Toba has no Family Role and no pass-by entry. Is that intended for the newcomer, or missing?
 
-A: 
+A: Deliberate at first: Toba starts as an outsider and earns his Family Role and Pass-by as Bond grows. See Toba Q1.
 
 ### Family systems Q2
 
 The Mark–Lucy Duo's name: Fist Blitz (glossary) or Chained Assault (combat balance notes)? The other Duos need player-facing names too.
 
-A: 
+A: Chained Assault. The other Duos still need player-facing names (not answered yet).
 
 ### Family systems Q3
 
 Linda's trigger. Answered from the data: an enemy that *ends* its move in her lane (the glossary's rule), pushes and Command moves included. Close, or did the balance notes' "any move into it" mean a change?
 
-A: 
+A: Close. Ends-in-lane is right, pushes and Command moves included.
 
 ### Family systems Q4
 
 Are Papa's Shelter and Shield Flare Synergies, or character passives?
 
-A: 
+A: Synergies (they involve another family member).
 
 ### Family systems Q5
 
 Revenge (on an ally's death) and Family Super Time exist in code. Do they belong here?
 
-A: 
+A: Revenge: yes, it belongs here (see Combat rules Q5). Family Super Time: deferred (see Combat rules Q4).
 
 ### Family systems Q6
 
 The pillars mention "trio abilities", and the family tree has a Trio group. Is Trio a system of its own?
 
-A: 
+A: Yes, a later system. Defer it, and keep the Trio group as a placeholder.
 
 ### Family systems Q7
 
 Mark's Continuous Attack still costs FTP (1, then +1 per use in the same turn). D-036 keeps FTP for Duos. Make it free with a limit, or keep the cost?
 
-A: 
+A: Make it free, with a per-turn limit (per D-036, FTP is for Duos only). Limit value not set yet.
 
 ### Family systems Q8
 
 John's redirected hit: the data uses a fixed ×0.5 (the role preset's 0.3 / 0.2 / 0.1 rows and its radius upgrades are read by nothing); the 2026-10-08 notes say 0.4. Which is intended, and should the role upgrade?
 
-A: 
+A: 0.5 base, lowered by upgrades through the tree (wire the preset rows, e.g. 0.5 → 0.4 → 0.3).
 
 ### Family systems Q9
 
 Catch & Return on `main` bounces the arrow back without the +1 AP refund (`returnMode` BounceBack). Intended?
 
-A: 
+A: Bounce only (as built on `main`), and fix the node text so it no longer promises a refund. Why: the refund could loop forever (Linda fires and spends an AP, Mark returns the arrow with a new AP, and so on).
 
 ### Family systems Q10
 
 Duos cost the activator 0 AP, except Mark–Lucy (1), because the partner presets are free. Should every Duo cost the activator 1 AP as designed?
 
-A: 
+A: No. Every Duo costs 0 AP (FTP only). This changes D-035, and Mark–Lucy drops to 0 too.
 
 ### Family systems Q11
 
 Basic attacks have no cooldown on `main`, so rewards that make a basic attack "ready again" (Sisters' Rivalry, the Footrace, Father's Resolve, Revenge) add nothing. Give basic attacks a cooldown, or change the rewards?
 
-A: 
+A: Change the rewards to refund AP instead of making a basic attack ready again.
 
 ## Progression and economy (`progression-economy.md`)
 
@@ -132,61 +132,61 @@ A:
 
 How should FSP and a family level work? As built, a character's tree earns 1 FSP at 2, 3 and 5 SP spent (the design said the first 3 SP). Keep that? And should the hidden family level fed by Bond be built?
 
-A: 
+A: Keep FSP at 2, 3 and 5 SP spent, as built. Defer the hidden family level fed by Bond.
 
 ### Progression and economy Q2
 
 Skill-tree tiers: the data unlocks nodes at 0, 0, 2, 2, 3 and 5 SP spent; [`player-skill-trees.md`](../player-skill-trees.md) says one tier per SP spent (0, 1, 2, 3). Which is intended?
 
-A: 
+A: The data is intended: nodes unlock at 0, 0, 2, 2, 3 and 5 SP spent. Update player-skill-trees.md to match.
 
 ### Progression and economy Q3
 
 Kill XP goes to the whole squad, fallen members included, and completion XP only to the final level's squad. Characters a level places themselves share it too: Linda in M1, Toba in every level of M4 after his duel, before he joins. Intended?
 
-A: 
+A: Keep as built. Kill XP goes to the whole squad, fallen members included; completion XP goes to the final level's squad; characters a level places (Linda in M1, Toba in M4 before he joins) share it.
 
 ### Progression and economy Q4
 
 Restarting a level keeps the XP and gold collected in the failed attempt. Close it?
 
-A: 
+A: Two cases. A loss (the squad falls and returns Home) keeps a percentage of the rewards and XP, never the full amount: intended, and already PR-22's failure reward (20% XP, 50% Gold; tune later). Giving up, returning early or restarting the level resets XP and gold to the level's start (new rule PR-22a).
 
 ### Progression and economy Q5
 
 Shin Armor is authored in the chest socket, where Lucy's Robe and Mark's Tunic also go. Legs intended?
 
-A: 
+A: Keep it in the chest socket, and rename it to fit the chest (new name not set yet).
 
 ### Progression and economy Q6
 
 Divine Relics: keep the walk-on pickup (3 shared uses, no choice) or move relics to run upgrades (the relic kind)? Black Despair is in no level; place it or cut it?
 
-A: 
+A: Relic delivery: keep the pickup room, but offer a choice: the room holds 2 relics and the player takes one. Black Despair: place it as the second choice in the relic room (Heavenly Sword for damage, or Black Despair to set up)
 
 ### Progression and economy Q7
 
 Always Ready only works with ATB but is still offered on `main`. Remove it from the altar?
 
-A: 
+A: Keep the Always Ready item, but take it out of the altar pool for now. Add a new Mark run upgrade that works with FTP to replace it in the pool (needs design).
 
 ### Progression and economy Q8
 
 The unlock `JohnResolve` is used nowhere, and Cyclone Weak (Howling Gale) exists only as a run upgrade. Keep both?
 
-A: 
+A: Cut `JohnResolve`. Keep Cyclone Weak (Howling Gale) as a run upgrade only, with no tree node.
 
 ### Progression and economy Q9
 
 Answered from the code: flat gear bonuses are added after every multiplier, so the Vitality Brooch adds exactly +3 to +15 max HP and the family Health stat doesn't scale it. Close, or should gear scale?
 
-A: 
+A: Close: flat gear bonuses stay flat, added after every multiplier (the Vitality Brooch gives exactly what it says).
 
 ### Progression and economy Q10
 
 The Trinket potency stat (`Stat_FPP`) is sold for 10 / 15 / 40 Gold, but nothing reads it: the Family Trinket always gives +5 FTP. Wire it up, or remove it from the Family Room?
 
-A: 
+A: Wire it up with flat steps: the Family Trinket gives +5 FTP, then +6 / +7 / +8 at Trinket potency levels 1 / 2 / 3 (instead of the authored ×1.2 / ×1.35 / ×1.5).
 
 ## Enemies (`enemies.md`)
 
@@ -194,43 +194,43 @@ A:
 
 The Goblin Queen is still titled "Goblin Shaman" in the data, which is also her save key. Rename it in a way that keeps saves working?
 
-A: 
+A: Split the display name from the save key: players see "Goblin Queen"; the save key stays "Goblin Shaman" internally, so no save migration is needed.
 
 ### Enemies Q2
 
 Should the Masher's counter have a limit per turn? (open since the October balance pass). The prefab also carries two counter components, one with hand-made ids; if both start, it could counter twice.
 
-A: 
+A: Answered by D-098 (2026-10-20): no limit per turn, in either direction. The duplicate counter component was folded into the root handler in the Masher tweak (D-114).
 
 ### Enemies Q3
 
 The Worm's split values (12 / 6 / 4 HP) date from before its HP went to 28. Children spawned with odd HP in playtests. Rebalance the split?
 
-A: 
+A: Change how the split works. The placed Worm and its first split both pop on any hit, whatever the damage (1 HP in effect), and split again. Only the final spawns have real HP: 4 HP, 2 damage. Children's max HP must equal their HP (fixes the 28-max / 0-HP spawn bug).
 
 ### Enemies Q4
 
 The glossary says attacking a Black Claw turns *all* Dark Claws; the data limits it to those within 5 cells. Which is intended?
 
-A: 
+A: Within 5 cells, as built. Fix the glossary.
 
 ### Enemies Q5
 
 The Deev's tentacles and immunity are unused on `main`: M12 removes the Summon that spawns the Deevoted and switches the immunity on. If it ran, the immunity would end when *any* other enemy dies, and nothing removes the tentacles' Inactive status. Restore the Summon and tie the immunity to the tentacles, as designed?
 
-A: 
+A: Restore as designed: the Summon spawns the 3 Deevoted, and the Deev takes no damage until all 3 tentacles are destroyed (not when any other enemy dies). Tentacles die normally at 0 HP; nothing needs to remove an Inactive status.
 
 ### Enemies Q6
 
 Enemy introductions have no text yet. Who writes them (narrative)?
 
-A: 
+A: The narrative agent drafts the introductions; THJ approves.
 
 ### Enemies Q7
 
 Some enemy abilities carry copied titles and text: the Queen's charge and the Deev's pools are titled "Shield Dash" with John's description, the Deev's wave "Taunt". Fix before any screen lists enemy abilities?
 
-A: 
+A: Fix now in a data pass: give the Queen's charge, the Deev's pools and the Deev's wave their own titles and descriptions.
 
 ## Missions and structure (`missions-structure.md`)
 
@@ -238,31 +238,31 @@ A:
 
 M8 to M14 can't be reached on `main` (the gate before M8, M9 and M11 has no input), and MX is outside the graph. Cut content, a later chapter, or a wiring slip?
 
-A: 
+A: A later chapter: leave M8 to M14 and MX unwired and mark them Planned. They stay as maps and chunks until the chapter after the opening is designed. The Mountain Deev stays (see Enemies Q5).
 
 ### Missions and structure Q2
 
 "No More Waiting" is required for M4 and M6 (both M3s feed one AND gate); [`reward-balance.md`](../reward-balance.md) says Mark's intro gates nothing. Which is intended?
 
-A: 
+A: Superseded by D-169: No More Waiting is cut as a mission (its levels stay as maps). The opening graph is D-170's.
 
 ### Missions and structure Q3
 
 M1's roster is John and Lucy, but its second level places Linda alone (no deploy slots) and its third places all three. Is this Linda's introduction? It also gives Linda a share of M1's XP (PR-5).
 
-A: 
+A: Superseded by D-169 and D-170: M1's story is cut and the opening is now the Hearth prologue, then The River and The Ridge.
 
 ### Missions and structure Q4
 
 "Into the Rootwell" has 6 fights and a copy of the Divine Relic room (a second Heavenly Sword). Its labels run (1/5) to (5/5) with a "(4.5/5)" in between. Fix the labels, and keep the relic room?
 
-A: 
+A: Fix the labels to (1/6) to (6/6). Keep the relic room, and make it the new 2-relic choice room (Heavenly Sword or Black Despair; see Progression Q6).
 
 ### Missions and structure Q5
 
 M6: the map shows LevelE2-C2 twice (a false choice), and the Healing Room is forced. `reward-balance.md` describes a different route. Which is intended?
 
-A: 
+A: Superseded by D-169: M6 (The Arcanum) is cut as a mission.
 
 ### Missions and structure Q6
 
@@ -342,7 +342,7 @@ A:
 
 The FTP values at Home assume a small FTP cap; they need the real cap ([Combat rules](combat-rules.md#open-questions) Q2).
 
-A: 
+A: See Combat rules Q2: 3 × heroes + Home upgrades, and a character can raise the base.
 
 ## Narrative and world (`narrative-world.md`)
 
@@ -388,7 +388,7 @@ A:
 
 His Shield role takes the hit at a factor of 0.5; the notes say 0.4 ([Family systems](../family-systems.md#open-questions) Q8).
 
-A: 
+A: See Family systems Q8: 0.5 base, lowered by tree upgrades.
 
 ### Character sheet: John Q3
 
@@ -442,7 +442,7 @@ A:
 
 Catch & Return's node says it refunds his attack; the data only bounces the arrow back ([Family systems](../family-systems.md#open-questions) Q9).
 
-A: 
+A: See Family systems Q9: bounce only; fix the node text.
 
 ### Character sheet: Mark Q3
 
@@ -460,7 +460,7 @@ A:
 
 The Duo node is named "Chained Assault"; the skill-tree notes say "Sidewinder Blitz" and the glossary says "Fist Blitz" ([Family systems](../family-systems.md#open-questions) Q2).
 
-A: 
+A: See Family systems Q2: Chained Assault.
 
 ## Character sheet: Toba (`characters/toba.md`)
 
@@ -468,7 +468,7 @@ A:
 
 Toba has no Family Role, no Pass-by, no Revenge, no ATB gauge, and carries one item where the others carry two. Deliberate for the newcomer, or missing?
 
-A: 
+A: Deliberate at first: he starts without them and earns them (Role, Pass-by and the rest) as Bond grows. ATB no longer matters.
 
 ### Character sheet: Toba Q2
 

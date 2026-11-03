@@ -2457,3 +2457,11 @@ Core gets one additive, generic `CombatLog.AddCustom`.
 **Not verified:** the Wrap's stat bonus in combat.
 **Findings:** the Workshop only upgrades; equip lives in character select (not a player path under D-369). Unity re-adds `preloadOverride`/`showSpeed` lines on the next Mark prefab save.
 **Status:** done. Flaky test fix next.
+
+## 2026-11-03 · Onboarding C5c: guided skill spend (`thj/onboarding`)
+
+**Built:** `AbilityUpgradePanelUI.OpenOnCharacter` / `HighlightNode` and a node pulse in new partials (`59c5a6a25`); `GuidedSkillSpend` + once-per-save marker via `PlayedSequencesTracker` + builder step (`4dd76b498`); Home scene component (`14330fd06`); 15 tests (`1f3df84ac`). First Grandma Table open after River and Ridge opens on the sister who returned last (Lucy Sidewinders / Linda Longshot pulsing).
+**Verified:** EditMode 1303/1304 (known red only); review FIX (pulse never stopped; came back on reopen) → APPROVE; THJ played: right tree, node pulses.
+**Not verified:** —
+**Findings:** the sister's hero tab doesn't look selected (tab selection look is the hover size only); fix next. If The Trail is played before the table is opened, the guide never shows (by plan wording).
+**Status:** C5 done except the tab fix; then the timed pacing play check.

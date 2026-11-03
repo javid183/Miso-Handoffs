@@ -6,6 +6,7 @@ Rows D-001 to D-011 were carried over on 2026-10-15 from the Home handoff and pr
 
 | Date | ID | Tier | Scope | Decided by | Decision | Why | Affects |
 | --- | --- | --- | --- | --- | --- | --- | --- |
+| 2026-11-03 | D-370 | 2 | thj/onboarding | Coordinator | C5c play-checked by THJ and committed (`59c5a6a25` panel API, `4dd76b498` component + builder, `14330fd06` scene, `1f3df84ac` tests); guided nodes Lucy Sidewinders, Linda Longshot; the unselected-looking tab goes to a small Core UI fix (a tab selected from code gets the clicked look) | THJ: "it works. commit" | C5c, `AbilityUpgradeCharacterIconUI` |
 | 2026-11-02 | D-369 | 3 | all | THJ | Confirms the standing rule: every hero has his two items equipped by default and can only upgrade them; equipment never changes. Mark follows it (Wrist Wrap + Monk's Tunic, D-367) | THJ restated an earlier decision | `Unit_Mark.prefab`; character-select equip is not a player path |
 | 2026-11-02 | D-368 | 3 | all | THJ | Character-select equip/unequip is NOT saved immediately; left as is (persists only via a later save) | THJ chose leave as is | backlog |
 | 2026-11-02 | D-367 | 3 | thj/onboarding | THJ | Mark starts wearing his Wrist Wrap of Power (RightHand) and Monk's Tunic (Chest) as socket defaults in `Unit_Mark.prefab`, like the other heroes; needs a fresh save | Cause of the Wrap not equipping: Mark's sockets had no default items, and the Workshop only upgrades (equip lives in character select) | `Unit_Mark.prefab`, onboarding merge notes |
