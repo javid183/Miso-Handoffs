@@ -57,3 +57,11 @@ none
 ## How to see it
 
 1. Test Runner > EditMode > HearthMemoryLevelsTests.NothingInTheHearthGivesExperience to see the failure message.
+
+## Re-run (2026-11-04, EditMode gate, open editor, thj/onboarding, no Play mode)
+
+- **Result:** PASS
+- **Compile:** console shows 0 errors.
+- **Tests:** 1310 total, 1309 passed, 1 failed. The only failure is the known red `MISO.Core.Systems.AI.EditorTests.AIRegressionTest.Baseline_MatchesCurrentAI`. `HearthMemoryLevelsTests.NothingInTheHearthGivesExperience` now passes.
+- **Prefab:** `git diff --stat` for `GB_m1-linda.prefab` exists (1752 insertions, 283 deletions). The prefab holds 7 `lethalDamageXpBonus` overrides (3 original + 4 new).
+- Save reset: no. Editor checks corrections: none (the full suite took about 150 s via the Unity MCP, and `get_test_job` disconnected once and worked on retry).

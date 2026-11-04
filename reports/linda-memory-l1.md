@@ -70,3 +70,11 @@ none
 - Class summary and log line now say "three win stages"; the duplicate "level wiring" section header is removed.
 - Linda unit and gather tile lookups use `FirstOrDefault` and throw an `InvalidOperationException` naming what is missing.
 - Tests read conditions through a `Condition<T>` helper that asserts the type first, so a wrong type fails an assert instead of throwing a cast exception. Still uncompiled/unrun.
+
+## Follow-up: hidden claws give no XP
+
+- Cause: the 4 claws THJ added to the "hidden" group kept the enemy prefab's `lethalDamageXpBonus = 3`; the three original claws had a `0` override from the grid tool's `xp none`.
+- Change: `HideTheHiddenClaws` in `Features/Onboarding/Editor/HearthMemoryWiring.Linda.cs` now also zeroes `LevelXpChecker.UnitXpFields` (`abilityDamageXpReward`, `lethalDamageXpBonus`) on each hidden-group unit through a SerializedObject, only writing when the value is not already 0 (idempotent). Added `using MISO.Core.Levels.CEditor;`. Log line now mentions the hidden claws. LF, no BOM kept.
+- Ran Tools > Onboarding > Wire Memory 1 (Linda) in the open editor (0 compile errors). Prefab diff vs before: exactly 4 new `lethalDamageXpBonus: 0` overrides (target unit fileID 8578014998512379865 of the claw prefab), nothing else. Second run: prefab md5 identical (`6d04267c...`).
+- EditMode `HearthMemoryLevelsTests` + `HearthMemoryLindaTests`: 11/11 pass. Full suite left to the verifier.
+- Commit with the earlier wiring commit: the wiring file plus THJ's prefab.
