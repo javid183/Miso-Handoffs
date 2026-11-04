@@ -1,6 +1,6 @@
 # Linda memory tuning + what goes to `main` (2026-11-04)
 
-Status: **draft, waiting on THJ** (Tier 3 questions below). Slug `linda-memory-tuning`. Facts: `reports/linda-memory-rework-review.md`, `reports/linda-memory-tweaks-research.md`, `reports/onboarding-commits-for-main.md`.
+Status: **approved 2026-11-04** (D-372 to D-375). L1 dispatched. Open level questions for THJ: `reports/linda-memory-rework-review.md`. Slug `linda-memory-tuning`. Facts: `reports/linda-memory-rework-review.md`, `reports/linda-memory-tweaks-research.md`, `reports/onboarding-commits-for-main.md`.
 
 ## Principle (proposed)
 
