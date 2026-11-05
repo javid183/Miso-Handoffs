@@ -2487,3 +2487,11 @@ Core gets one additive, generic `CombatLog.AddCustom`.
 **Not verified:** no play check of the inactive-claw save (runtime already hid them on load).
 **Findings:** `67fb2d3bf` had shipped 2 red tests (THJ's play-tuned save after the verify); rule D-379 added. Only `Level2-C2` truly shared a condition; the other two suspects were variant override entries.
 **Status:** next G1 (level ability lock).
+
+## 2026-11-04: Ability lock, Encore pulse, hint on unlock (G1–G3)
+
+**Built:** level ability lock (`266a3985c`), Encore pulse while empty (`ccfbb36d2`), hint start mode WhenUnlocked (`ced039945`).
+**Verified:** compile clean; EditMode 1335/1336 (known red only); reviews APPROVE (fixes applied).
+**Not verified:** no play check yet; comes with L3 (Linda memory data).
+**Findings:** Family Super Time can still cast a locked `superTimeAbility` (core; accepted for now, D-381). `GB_m4-mark` re-save writes `startMode: 0` (noise).
+**Status:** next L3.

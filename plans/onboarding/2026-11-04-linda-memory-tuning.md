@@ -70,3 +70,5 @@ Acceptance: (1) with Linda's Explosive Arrow and Encore listed, her bar at level
 - `Level2-C2` split (D-378): `9ba3b8421` → **to `main`** (re-check `Level2-C3-2`, `LevelDomFight` there with the scan test).
 - EditMode before these: 1314/1315, known red only.
 - G1 level ability lock (review APPROVE + 2 fixes; EditMode 1327/1328): `266a3985c` → **to `main`**. Play check owed with L3. Super Time gap accepted (D-381).
+- G3 Encore pulse (+ lock query methods; review APPROVE + fixes D-382; EditMode 1335/1336): `ccfbb36d2` → **to `main`** (after `266a3985c`).
+- G2 hint WhenUnlocked: `ced039945` (onboarding-only, D-380).
