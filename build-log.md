@@ -2495,3 +2495,11 @@ Core gets one additive, generic `CombatLog.AddCustom`.
 **Not verified:** no play check yet; comes with L3 (Linda memory data).
 **Findings:** Family Super Time can still cast a locked `superTimeAbility` (core; accepted for now, D-381). `GB_m4-mark` re-save writes `startMode: 0` (noise).
 **Status:** next L3.
+
+## 2026-11-04: Linda memory lock/unlock (L3)
+
+**Built:** `GB_m1-linda` locks Explosive Arrow + Encore, unlock step in the interruption, Explosive Arrow hint on unlock; THJ's claw turnOrder and camera tweaks (`0aa549bc6`).
+**Verified:** tool idempotent; review APPROVE; THJ played OK (locks, unlock, pulses, order); EditMode 1337/1339.
+**Not verified:** Super Time reach in the memory (gap accepted, D-381).
+**Findings:** `QuiverWiringTests.RecallAbility_IsTwoApCooldownTwoSelfCast` red since `87174b9fc` (Encore text no longer states 2 AP).
+**Status:** onboarding-side tweaks T1–T4, T6 done; T5 data done (tie-break core fix later, D-374). Next: THJ on the Encore text test; the cherry-pick session to `main` when he wants.
