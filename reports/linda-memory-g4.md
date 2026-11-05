@@ -63,3 +63,21 @@ main (cherry-pick; no onboarding dependency).
 
 1. Select `Content/Levels/Level2/Level2-C2.prefab`, run Tools > Levels > Split Shared Objective Conditions (Selected Levels): console logs the one split; run again: nothing.
 2. Test Runner > EditMode > `SharedObjectiveConditionTests`.
+
+## Review fixes
+
+- `SharedObjectiveConditionTests.cs`: `Split_WorksOnCopyOfRealVariantPrefabWithSharedCondition` replaced by `Split_WorksOnVariantPrefabWithSharedConditionOverride`. It is self-contained: a temp base prefab (`MakePrefab(shareFirstTwo: false)`), a variant of it saved in the temp folder, the second objective's condition set to the first's as a variant override, then check, split, check, turns `{4,4,7}`, second split a no-op, base untouched. No level scan. Added a small `Objectives` helper.
+- `SharedObjectiveConditionChecker.cs`: the hand-copied -2 is now `UnityEngine.Serialization.ManagedReferenceUtility.RefIdNull` (exists in 6000.3.4f1; compiles).
+- Files LF, no BOM (kept). Compiled with 0 errors.
+
+Proposed commit B (the six `SharedObjectiveCondition*` files, .cs and .meta, as in the commit above, now including these fixes): `feat(level-tools): editor check and split tool for shared objective conditions, with a scan test`. Goes before commit C.
+
+## Level2-C2 split
+
+Ran Tools > Levels > Split Shared Objective Conditions (Selected Levels) on `Content/Levels/Level2/Level2-C2.prefab` only (no prefab stage open). Console: split `lObjectives.defeatObjectiveGroups[0].objectives[1].conditions[0]` (LivingUnitsLOCondition) from rid 8046274707106824281; second run: byte-identical.
+
+Diff: 25 insertions, 1 deletion. The second defeat objective's condition slot now points at new rid 8881842456907219243 (the one changed line); the 24 added lines are the override entries creating that reference (type LivingUnitsLOCondition) with values `factionRef.entityID` Neutral, `comparisonStrategy` 3 (LessThanOrEqual), `count` 0, `state` 0 (Exist), `evaluationMode` 0 - identical to the original.
+
+Proposed commit C: `fix(levels): Level2-C2's second defeat objective gets its own condition` with `miso/Assets/_Project/Content/Levels/Level2/Level2-C2.prefab`.
+
+Full EditMode run after all three: 1314/1315 pass; only `AIRegressionTest.Baseline_MatchesCurrentAI` fails (known). The scan test and both Linda tests pass.

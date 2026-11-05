@@ -23,3 +23,8 @@ Explore, read-only, for `linda-memory-tuning` (c). Branch = `main` + 48 commits;
 ## Onboarding-only (stay on the branch)
 
 `38bc7db73`, `bb9982c87`, `f36da02f8`, `509a634dc`, `c772bbf34`, `a161e0956`, `9ace80c28`, `848a67fd2`, `911a5def2`, `59103e227`, `ba7d19e66`, `8a443d66c`, `29cbcd7ed`, `3835af7f6`, `1bf976b13`, `3289158db`, `a7320be82`, `eda1d6df6`, `51f109672`, `d72204178`, `cafb8de97`, `f6648ed08`, `67b07c7f8`, `b2659da27`, `cb85c30fe`, `6acefb6c0`, `4dd76b498`, `14330fd06`, `1f3df84ac`.
+
+## Added 2026-11-04 (linda-memory-tuning)
+
+- `83aa585f0` shared objective condition checker/tool/tests (editor-only, general).
+- `9ba3b8421` `Level2-C2` split (data; after `83aa585f0`). On `main`, run the scan test; split any other level it flags.

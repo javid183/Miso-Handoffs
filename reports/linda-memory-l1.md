@@ -78,3 +78,16 @@ none
 - Ran Tools > Onboarding > Wire Memory 1 (Linda) in the open editor (0 compile errors). Prefab diff vs before: exactly 4 new `lethalDamageXpBonus: 0` overrides (target unit fileID 8578014998512379865 of the claw prefab), nothing else. Second run: prefab md5 identical (`6d04267c...`).
 - EditMode `HearthMemoryLevelsTests` + `HearthMemoryLindaTests`: 11/11 pass. Full suite left to the verifier.
 - Commit with the earlier wiring commit: the wiring file plus THJ's prefab.
+
+## Follow-up: per-stage caps
+
+THJ decided: keep the tuned caps 2 / 3 / 4 and save the 4 hidden claws inactive.
+
+- `HearthMemoryWiring.Linda.cs`: the single `TurnCap = 4` constant is now `TurnCaps = { 2, 3, 4 }` (stage 1, 2, 3); the three stages use `TurnCaps[0..2]`. The claw switch-off was already there (`SetActive(false)`, saved as `m_IsActive: 0`).
+- `HearthMemoryLindaTests.cs`: `ThreeStagesInAQueue` expects `TurnCaps[i]` per stage and `{ 2, 3, 4 }`.
+- Ran Tools > Onboarding > Wire Memory 1 (Linda) twice. The working-tree `GB_m1-linda.prefab` already differed from HEAD by exactly the 4 claws `m_IsActive` 1 -> 0 (4 lines each way) and the run changed nothing further (byte-identical before/after, and run 2 identical to run 1). So the diff vs HEAD is only the 4 claws becoming inactive; caps were already 2/3/4. No prefab was open in Prefab Mode.
+- EditMode full run: 1314/1315 pass; only the known red `AIRegressionTest.Baseline_MatchesCurrentAI` fails. Both Linda tests pass.
+
+Files: `miso/Assets/_Project/Features/Onboarding/Editor/HearthMemoryWiring.Linda.cs`, `.../HearthMemoryLindaTests.cs`, `miso/Assets/_Project/Content/Levels/Greybox/GB_m1-linda.prefab`.
+
+Proposed commit A: `fix(onboarding): Linda's memory keeps per-stage turn caps 2/3/4 and saves the hidden claws inactive` with those three files.

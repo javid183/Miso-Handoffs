@@ -2479,3 +2479,11 @@ Core gets one additive, generic `CombatLog.AddCustom`.
 **Not verified:** nothing open for L1.
 **Findings:** shared `[SerializeReference]` conditions came from the list "+" copy (T6, G4 next); same sharing in `main`'s `Level2-C2`, `Level2-C3-2`, `LevelDomFight`.
 **Status:** next G4. THJ's level questions open (`reports/linda-memory-rework-review.md`).
+
+## 2026-11-04: Shared objective conditions (G4) + Linda caps follow-up
+
+**Built:** editor checker + Tools > Levels > Split Shared Objective Conditions + scan test (`83aa585f0`); `Level2-C2` split (`9ba3b8421`); Linda wiring per-stage caps 2/3/4, hidden claws inactive (`4d4e78424`).
+**Verified:** compile clean; EditMode 1314/1315 (known red only); G4 review APPROVE; tool runs idempotent.
+**Not verified:** no play check of the inactive-claw save (runtime already hid them on load).
+**Findings:** `67fb2d3bf` had shipped 2 red tests (THJ's play-tuned save after the verify); rule D-379 added. Only `Level2-C2` truly shared a condition; the other two suspects were variant override entries.
+**Status:** next G1 (level ability lock).
