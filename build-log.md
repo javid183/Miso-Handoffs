@@ -2519,3 +2519,11 @@ Core gets one additive, generic `CombatLog.AddCustom`.
 **Not verified:** a long play session confirming no new overrides on level save (expected; restart the editor first, since prefabs already grown in memory stay grown).
 **Findings:** 30 committed levels on `main` and `Unit_Linda.prefab` (15 entries) carry inert junk; left as is by THJ's choice.
 **Status:** done. Next: THJ's pick.
+
+## 2026-11-05: Lucy/Linda memory tweaks; narrator box; tint after Reset
+
+**Built:** THJ's tweaks (Lucy: Cyclone lock, hint, reset call, unlock; Linda caps 2/2/2) + wiring/tests sync (`97f4a7653`); image-first dialogues skip the empty text box (`82734b642`, D-388); `RestartTurn` refreshes the exhausted tint (`02ef3195e`, core, D-389).
+**Verified:** reviews APPROVE (sync after one compile fix); tools re-run change nothing; EditMode 1354/1355 (known red only), rerun after THJ's play; THJ played OK.
+**Not verified:** a phase reset during the AI phase (no level does it today).
+**Findings:** the cutaway image is `HearthStill_Placeholder.png` (85 bytes, blank) until the Hearth painting exists (design Q5). Dialogue edge cases backlogged. animationEvents noise remains on 7 Greybox levels until the editor restarts.
+**Status:** done; next THJ's pick.

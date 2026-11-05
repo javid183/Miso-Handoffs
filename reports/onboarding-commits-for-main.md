@@ -33,3 +33,5 @@ Explore, read-only, for `linda-memory-tuning` (c). Branch = `main` + 48 commits;
 - `87174b9fc` (THJ) Encore icon and text + `7a1674008` cost back in the text (data, general; **confirmed D-386**).
 - `89f4981fe` Level1-C1-2 sprites under Environment (THJ) + GB_m4-mark startMode default. **Goes to `main` (D-386)**; split out the `GB_m4-mark` part (onboarding-only file) when cherry-picking.
 - `73fa9050e` core: Family Role partial init uses the light ability init (animationEvents growth on hero prefabs). Own commit; applies cleanly on `main` per review.
+- `82734b642` dialogue: image-first dialogues don't flash an empty text box (general, not core).
+- `02ef3195e` core: RestartTurn refreshes the exhausted tint (own commit).
