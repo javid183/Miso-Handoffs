@@ -71,6 +71,8 @@ Owner: coordinator. Every item has a scope: `all` or a branch. Started 2026-10-1
 
 (New requests land here before triage.)
 
+- 2026-11-05 `john-memory-tweaks` (thj/onboarding; review, S/M): THJ's uncommitted `GB_m3-john` edits (4th claw, moved claws, turnOrder, turn 3 / 4 kills, `LevelAbilityLock` on three units) + Linda Encore anim / Recall activationMode. `miso-reviewer` running → `reports/john-memory-tweaks-review.md`.
+
 - 2026-11-05 `mission-onvalidate-dirty` (all; S, Tier 2): `Mission.OnValidate` (`Mission.cs` ~:276-282) marks the Mission asset dirty on load and inspector edits, independently of `LevelBase.SetID`. Minor; noise in saves.
 
 - 2026-11-05 `dialogue-image-node-edge-cases` (all; bugs, S, from review of D-388; already in the code before it): an image-first dialogue node with no character on side Left/Right makes `DialoguePlayerUI.SetCharacter` throw; Skip All during an image fade runs the fade-in and the hide fade-out on the same canvas group at once.
