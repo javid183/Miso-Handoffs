@@ -30,3 +30,38 @@ The 21 commits in `reports/onboarding-commits-for-main.md` (with its splits) + G
 ## Commit log
 
 - L1 (+ D-376 no-XP follow-up): `67fb2d3bf` (THJ's rework prefab + 6 interruption assets + wiring + tests). EditMode 1309/1310 known red only; THJ played OK 2026-11-04.
+
+## Tech plan: G1, G2, G3 (written 2026-11-04, coordinator)
+
+Branch `thj/onboarding`. G1 and G3 are general (go to `main`, D-372): new files outside `Features/Onboarding`, no onboarding dependency. G2 edits `GuidedAbilityHint` (onboarding-only today) and stays on the branch unless THJ moves the hint to `main`. No core system touched (D-373: bar-level lock); if any chunk finds it needs a file in `tech/core-systems.md`, it stops and reports.
+
+### G1 Level ability lock (sonnet; M)
+
+Goal: a level can lock chosen abilities of chosen units at level start; locked abilities are absent from the action bar (and every other player path to cast them); an unlock sequence brings them back, and the bar rebuilds at once if that unit is shown.
+
+- New `Features/Levels/AbilityLock/`: `LevelAbilityLock` MonoBehaviour on the level (entries: `GUnit unit`, `AbilityPreset[] abilities`; locked from level start; `IsLocked(RuntimeAbility)`; `Unlock(AbilityPreset[] or all)`; C# event `Changed`). A pure rules class (no Unity objects) holding the locked set, for EditMode tests. `UnlockAbilitiesSequence : Sequence` (fields: abilities to unlock, or "all"); finds the level's lock and unlocks, completes at once. Optional `LockAbilitiesSequence` only if trivial (THJ may want re-locking later; not required).
+- Lookup: no static. The bar finds the level's `LevelAbilityLock` when it populates (level-scoped `FindAnyObjectByType` is fine; Populate runs on selection) or via the current level instance if one is exposed cheaply.
+- `AbilitiesBarHUDUI.Populate` (`Features/UI/Panels/Scripts/AbilitiesBarHUDUI.cs:57`): skip locked abilities next to the `QuiverAbilityInfo.HiddenFromBar` check; subscribe to `Changed` and repopulate the shown unit when its abilities change. Number shortcuts map to shown buttons, so they follow; verify.
+- Audit every other player route that casts an ability without the bar (Family Role prompts/follow-ups, Duos, cooperation, QTE, `PlayerController` paths, quiver UI). List them in the report. A route that can cast a locked ability and can only be blocked in a core file: stop, report (Tier 3).
+- Subscriptions removed on disable/destroy; nothing persists after the level (component lives on the level).
+
+Acceptance: (1) with Linda's Explosive Arrow and Encore listed, her bar at level start lacks both buttons and shortcuts don't reach them; (2) after `UnlockAbilitiesSequence` plays, both appear without reselecting Linda; (3) no route in the audit casts a locked ability; (4) levels without the component behave exactly as before; (5) EditMode tests for the rules class and the bar's hide decision; full EditMode green except the known red.
+
+### G2 Hint starts on unlock (sonnet; S; onboarding-only)
+
+- `Features/Onboarding/GuidedAbilityHint.cs`: add a start mode: `Turn` (today's behaviour, default, existing levels unchanged) or `WhenUnlocked` (starts when the level's `LevelAbilityLock` unlocks its ability; ends on first use as today; `lastTurn` ignored or optional cap). Uses G1's `Changed` event.
+- Acceptance: John/Mark memory hints unchanged (tests); a `WhenUnlocked` hint pulses Explosive Arrow right after the unlock and stops on its first use; EditMode tests for the start decision.
+
+### G3 Encore pulses while Linda is out of arrows (sonnet; S/M; general)
+
+- In `Features/Player/Linda/Scripts/Quiver/` (find the quiver HUD/bar code): while the shown unit is Linda, her quiver `IsEmpty`, and her Encore button is on the bar and interactable, the Encore button pulses (size pulse like the hint: own small pulse math, not a dependency on `Features/Onboarding`); stops as soon as she has an arrow, Encore is used, or the button is gone (locked, hidden with the quiver off). Driven by `LindaQuiver.OnChanged` / bar rebuilds, not per-frame searches. Restores the button's scale.
+- Must not fight a `GuidedAbilityHint` on the same button (if both target one button, the hint wins or they don't stack; pick one and say which).
+- Acceptance: empty quiver → Encore pulses; one arrow back → stops; Encore locked (G1) → no pulse, appears pulsing after unlock if still empty; quiver off → nothing; EditMode test for the pulse decision rule.
+
+### Risks
+
+- Statics: none planned (PlayModeStaticReset if any appear). AI: untouched (player bar only; `RuntimeAbility.Available` unchanged, so AI threat sims still see Linda's full kit; acceptable, and noted). Serialized renames: none. Saved data: none. Assets: level data in L3 by THJ or a small wiring change. Subscriptions: cleaned on disable. Other branches: G1, G3 to `main` per D-372.
+
+### Then L3 (data, onboarding)
+
+`GB_m1-linda`: `LevelAbilityLock` with Linda: Explosive Arrow + Encore; `UnlockAbilitiesSequence` added to stage 1's interruption (`Memory1Linda_Interruption_SequentialSequence`, before EnableInput/ShowHUD); `GuidedAbilityHint` (`WhenUnlocked`, Explosive Arrow); per-claw `turnOrder` overrides in THJ's order (D-374; THJ gives the order or tunes it). Wired through Wire Memory 1 (Linda) so re-runs keep it. THJ play-checks.
