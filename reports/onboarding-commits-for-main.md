@@ -28,3 +28,4 @@ Explore, read-only, for `linda-memory-tuning` (c). Branch = `main` + 48 commits;
 
 - `83aa585f0` shared objective condition checker/tool/tests (editor-only, general).
 - `9ba3b8421` `Level2-C2` split (data; after `83aa585f0`). On `main`, run the scan test; split any other level it flags.
+- `266a3985c` level ability lock (general, `Features/Levels/AbilityLock` + bar partial).

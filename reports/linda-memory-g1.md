@@ -83,3 +83,10 @@ Tier 3 (only if it matters): Family Super Time casts Linda's `superTimeAbility`,
 2. Create an `UnlockAbilitiesSequence` asset (Create > Game > Sequence > Common) with the same two presets (or `unlockAll`), and play it from an objective group's `onCompleteSequence` or a sequential sequence.
 3. Play: select Linda, her bar has no Explosive Arrow or Encore, keys skip them. After the sequence plays the buttons appear without reselecting her.
 4. Play a level without the component: bars as before.
+
+## Review fixes
+
+- The bar's hide decision now lives in the pure layer: `AbilityLockSet.HiddenFromBar(owner, ability, duoPartners)` (owner + preset match, plus a scan of the Duo partners' (unit, preset) pairs). `LevelAbilityLock.HiddenFromBar` gathers the partners and calls it. The tautological `AbilityLockRules` class and its test are gone.
+- New tests: Linda/Encore locked, Linda with another ability shown, another unit with the same preset shown, Duo trigger with a locked partner hidden, with unlocked partners shown, nothing locked shown.
+- `AbilitiesBarHUDUI.AbilityLock.cs` uses `!_shownController`.
+- EditMode Run All after recompile: 1327/1328, only the known red. (A first run was cut by the domain reload and showed three GridToLevel failures from a leftover test prefab; they passed on the clean rerun.)
