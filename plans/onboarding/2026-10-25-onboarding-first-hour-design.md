@@ -40,7 +40,7 @@ Docs: `design/gdd/missions-structure.md`, `narrative-world.md`, `family-systems.
 | # | Step | Squad | Teaches (the one new thing) | Story beat |
 |---|---|---|---|---|
 | 0 | **Hearth** (Home state) | — | — | Ryker's anniversary. The family gathers to retell the rescue in the Caeldippo caves; Ryker lies by the fire |
-| 1 | Memory: Linda's version | Linda | Basics (move, attack, AP, end turn), piercing lines, **Linda's Family Role** (works solo: first enemy-turn QTE); each shot spends an arrow (D-331, D-333) | "Three Claws. My last arrow." (placeholder) The Claws line up for her |
+| 1 | Memory: Linda's version | Linda | Basics (move, attack, AP, end turn), piercing lines, **Linda's Family Role** (works solo: first enemy-turn QTE); each shot spends an arrow (D-331, D-333); gather arrows, then Explosive Arrow (since 2026-11-04) | "Seven Claws. One arrow." (D-384) The Claws line up for her, then four more appear and she blasts them |
 | 2 | Memory: Lucy's version | Lucy | Fire Embers (sidewinders), **Cyclone** | "There were at least ten!" More enemies walk in; her fire is bigger |
 | 3 | Memory: John's version | John, Linda, Lucy | **John's loop: Family Role → Wrath** (protect, then punish) | The sisters steal kills and bicker in barks. John: "You both did." Neither accepts |
 | 4 | Memory: Mark's version (Mark walks in late) | All four | Atman's Focus, Continuous Attack, **Mark–Lucy Duo (Chained Assault)**; every role firing (showcase) | The epic rescue. Tempest Bloom "happens" once. Ends on the cub saved and the mother lost: the one part nobody exaggerates |
@@ -81,7 +81,7 @@ Rough length: Hearth ~12–15 min (4 short segments, each 2–4 turns; cutaways 
 
 | Segment | Map source (to confirm on paper) | Notes |
 |---|---|---|
-| 1 Linda | `Level1-C1-2` (Linda alone, 4 Dark Claws, cave) | Lanes laid out so Claws end moves in her row: first Watch QTE on turn 1 or 2. Only two Watch shots on enemy turn 1, so her turn-2 shot is her last arrow (D-331) |
+| 1 Linda | `Level1-C1-2` (Linda alone, 4 Dark Claws, cave) | Lanes laid out so Claws end moves in her row: first Watch QTE once they wake. As built (`GB_m1-linda`, D-372 to D-384): 3 Claws, then "Gather your arrows", then 4 hidden Claws revealed in a side room and Explosive Arrow + Encore unlocked; details in [the paper levels](2026-10-26-onboarding-levels.md#segment-1--lindas-telling-seven-claws-one-arrow) |
 | 2 Lucy | Showcase draft A "Lucy's Telling"; chunk 1 (sidewinders, Cyclone) | Spawn-on-cue for "ten of them" |
 | 3 John | `Level1-C2` (three, cave) or showcase draft B "Papa's Telling"; chunk 3 (the gallery) | Turn 1 Shield Up + role prompt on a lunge at a sister; turn 2 Wrath-charged Shield Dash. One panel, a readable stack counter |
 | 4 Mark | New level (cave, larger); chunks 13 (prism) and 21 (Chained Assault) as parts | Showcase, few new rules; the mother's death staged in-engine |

@@ -140,7 +140,7 @@ a . _ _ _ . . a
 
 | Source | What's there | Used for | Change |
 |---|---|---|---|
-| Level1-C1-2 | 16 tiles, cave, Linda alone vs 4 Dark Claws, a `LevelSequenceTrigger` that holds the enemies, the D-131 end sequence | Segment 1 | Reworked: the 2-wide corridor becomes a 1-wide throat with a den above and a small room below; 3 Claws; trigger lock removed |
+| Level1-C1-2 | 16 tiles, cave, Linda alone vs 4 Dark Claws, a `LevelSequenceTrigger` that holds the enemies, the D-131 end sequence | Segment 1 | Reworked: the 2-wide corridor becomes a 1-wide throat with a den above and a small room below; trigger lock removed; since 2026-11-04 a side room with 4 hidden Claws (3 + 4) |
 | Level1-C2 | 36 tiles, cave, John, Lucy, Linda (arrives from the south), 4 Claws, 1 Archer | Segment 3's cast and cave | New layout (open arena); Archer dropped (the River introduces Archers) |
 | Showcase A, chunk 1 | Lucy's throat | Segment 2 | Lengthened room 2 so spawns arrive a turn later |
 | Chunks 13, 21 | The prism, the summoner screen | Segment 4 | Prism kept; Chained Assault on Dark Claws (no Shaman: a new enemy rule) |
@@ -152,62 +152,67 @@ a . _ _ _ . . a
 
 ## The Hearth memory (one mission, four levels)
 
-**Mission rules (all four segments).** Roster: John, Linda, Lucy, Mark fixed (FTP maximum 13; levels place their own heroes). Tier: Tutorial. **All enemies start alert** (`LevelAlertSettings.allEnemiesStartAlert` on every segment; no spawns, D-345: cue enemies are placed hidden and come in alert when revealed). FTP: `LevelStartFPFiller` +13 at each segment start (clamped to full). No XP: completion XP 0 **and** kill XP suppressed (A3 to check how; otherwise every Bergson gets its first SP in the memory, PR-6). Abilities used here don't count as seen (D-175, A3). Each segment's win is a **punchline stage** in an any-group with a turn cap, so it can't drag. Each segment's end sequence ends with `OutroCutsceneKeepGridHidden` (see [grid fade](#the-grid-fade-rule-d-131-re-placed)), then the Hearth cutaway (painted still + 2–4 lines).
+**Mission rules (all four segments).** Roster: John, Linda, Lucy, Mark fixed (FTP maximum 13; levels place their own heroes). Tier: Tutorial. **All enemies start alert** (`LevelAlertSettings.allEnemiesStartAlert` on every segment except segment 1, whose enemies start Unaware, D-384; no spawns, D-345: cue enemies are placed hidden and come in alert when revealed). FTP: `LevelStartFPFiller` +13 at each segment start (clamped to full). No XP: completion XP 0 **and** kill XP suppressed (A3 to check how; otherwise every Bergson gets its first SP in the memory, PR-6). Abilities used here don't count as seen (D-175, A3). Each segment's win is a **punchline stage** in an any-group with a turn cap, so it can't drag. Each segment's end sequence ends with `OutroCutsceneKeepGridHidden` (see [grid fade](#the-grid-fade-rule-d-131-re-placed)), then the Hearth cutaway (painted still + 2–4 lines).
 
-### Segment 1 · Linda's telling: "Three Claws, my last arrow"
+### Segment 1 · Linda's telling: "Seven Claws. One arrow."
 
 ![m1-linda](onboarding-levels/m1-linda.svg)
 
-```grid id=m1-linda title="Memory 1 · Linda: three Claws, her last arrow"
-# # c # #
-# # . # #
-# . c . #
-# . c . #
-# . . . #
-# # . # #
-# # . # #
-# # . # #
-# # . # #
-# L . . #
+```grid id=m1-linda title="Memory 1 · Linda: seven Claws, one arrow (as built, GB_m1-linda)"
+# # c # # # # # # # #
+# # . # # # . c . # #
+# . c . . . c . c . #
+# . c . # # . c . # #
+# . . . # # # # # # #
+# # . # # # # # # # #
+# # . # # # # # # # #
+# # . # # # # # # # #
+# # . # # # # # # # #
+# L . . # # # # # # #
 --
-zone 2,1 2,4 linda her lane from 2,0
-arrow 1,0 2,0 linda one step
-arrow 2,6 2,5 2,4 2,3 2,2 enemy dx=-12
-arrow 2,7 2,6 2,5 2,4 2,3 enemy dx=-4
-arrow 2,9 2,8 2,7 2,6 2,5 enemy dx=4
-arrow 2,1 2,5 linda dx=12 turn 2 last arrow
+zone 2,0 2,4 linda the throat
+cells 6,7 7,6 7,8 8,7 enemy hidden until the cut-in
+arrow 2,7 7,7 linda dy=-10 Explosive Arrow
 step 2,0 1
-step 2,1 2
-note 2,3 2 Watch shots
-note 2,9 the deep Claw
+step 2,7 2
+step 7,7 3
+note 2,6 A
+note 2,8 B on 2,7
+note 2,9 C
+note 4,8 gather on 2,7
 level name Memory 1 · Linda
 level tier tutorial
-level alert all
 level xp none
 level fp full
+level hidden hidden 6,7 7,6 7,8 8,7
 ```
 
-Build lines (C3 step 0): no `level camera`. The tiles (10 high) don't fit one view at the template's default zoom 2 (8 tiles high, assumed: `LevelBase` value, not overridden in `LevelM1-C2`), so the rule pulls the view down onto Linda: it shows the throat and Claws A and B; the deep Claw C at 2,9 sits just above the top edge until the camera follows the fight.
+History: designed 2026-10-26 as 3 Claws and a turn-2 "last arrow" (D-331, D-333); THJ rebuilt it on 2026-11-04 with the side room, three win stages and the ability unlock (D-372 to D-384; [review](../../reports/linda-memory-rework-review.md), [tuning plan](2026-11-04-linda-memory-tuning.md)).
 
-The throat is now 1 wide and 4 long (2,1 to 2,4), and the den has a back niche (2,8 to 2,9) for the third Claw (D-331). Claw letters below: **A** 2,6 (front), **B** 2,7, **C** 2,9 (deep).
+The block is read from the prefab at HEAD (`aff7dabec`); its coordinates are the prefab's `GridCell - (x, y)` indices, no offset. **Don't rebuild from it:** `GB_m1-linda` has been edited by hand and is the master (skill rebuild rule), and **Tools › Onboarding › Wire Memory 1 (Linda)** (`HearthMemoryWiring.Linda.cs`) re-applies its stages, sequences, hidden claws, XP, ability lock, hint and the Reset call. The camera start is as THJ placed it, not from a `level camera` line. No `level alert all`: this segment's enemies start Unaware (D-384).
+
+Layout: the den and throat of D-331 (throat 2,1 to 2,4, den 1..3 × 5..7, niche 2,8 to 2,9), plus a 12-cell side room east of the den: a corridor 3,7 → 5,7, a 3 × 3 room 6..8 × 6..8, and a stub at 9,7. Claw letters: **A** 2,6, **B** 2,7, **C** 2,9; the four hidden Claws stand on the four tiles next to the empty 7,7.
 
 | Item | Plan |
 |---|---|
-| Source | Level1-C1-2, reworked (above) |
-| Teaches | Basics (select, move, attack, 2 AP, end turn), the pierce, **Linda's Family Role** (Watch), and that **each shot spends an arrow**: her turn-2 shot is her last (D-331, D-333) |
-| Twist | None beyond the role itself (segment 1 is pure lesson) |
-| Squad | Linda (quiver 3, full at level start, LI-3, LI-10) |
-| Enemies | 3 Dark Claws, Tutorial, per-instance in-play HP: **A 14, B 6, C 2** (default 10). Starting values from the maths below; retuned in play (D-331). C's near-empty bar reads as a Claw already hurt |
-| Turn budget | 2 (cap 3) |
-| First trigger | Watch on **enemy turn 1**. Nothing is in reach from 1,0, so the only useful action is the step into the lane at the throat's foot (2,0); the ghost's sword icons draw the lane up the throat (CR-37). Enemy turn 1, in turn order A, B, C (each moves 4): A ends at 2,2 (2 from her) → **Watch shot 1**: A 6. B ends at 2,3 → **Watch shot 2**: the arrow pierces A first (6, A at 12) then B (3.6); units in between don't block. C, from the niche, ends at 2,5: 5 from her, out of range, **no Watch**. Quiver 3 → 1; both spent arrows lie locked under A and B (LI-6, LI-7). If she doesn't step, the Claws stop on 2,2 to 2,5, out of her lanes, and the QTE comes on enemy turn 2 |
-| The punchline | Turn 2: she steps to 2,1 (A, B and C are now 1, 2 and 4 away) and fires **her last arrow** up the throat: A 6 (18 ≥ 14), B 3.6 (7.2 ≥ 6), C 2.16 (≥ 2): three kills. The arrow lands on C's tile. **Win stage:** all enemies dead **or** turn 3 reached |
-| Cues | Level start: Hearth line (Margaret hands Linda the telling); two panels (move and AP; Watch and its QTE key, which now also says **"Each shot spends an arrow"**, D-333). End: **"Three Claws. My last arrow."** (placeholder text, the narrator's proposal). No spawn |
-| Alert | All start alert |
+| Source | Level1-C1-2, reworked (D-331), then THJ's rework of 2026-11-04 (side room, hidden Claws, three stages, ability unlock). Master: `Content/Levels/Greybox/GB_m1-linda.prefab`, wired by `HearthMemoryWiring.Linda.cs` |
+| Teaches | Basics (select, move, attack, 2 AP, end turn), the pierce, **Linda's Family Role** (Watch), **each shot spends an arrow** and **walking onto arrows picks them up** (stage 2, LI-7), then **Explosive Arrow** (Explosive Crescendo, GDD Linda) on a packed group |
+| Twist | The tall tale grows: once she has "gathered her arrows", the telling remembers four more Claws in the side room and hands her the tool to brag with |
+| Squad | Linda on 1,0 (quiver 3, full at level start, LI-3, LI-10). **Explosive Arrow and Encore start locked** (`LevelAbilityLock`, hidden from her bar, D-373) and unlock in the cut-in |
+| Enemies | 7 Dark Claws, Tutorial, no XP (D-376). In play: **A 2,6 ≈ 14, B 2,7 ≈ 6, C 2,9 ≈ 2** (HP factor overrides 1.4583 / 0.625 / 0.2083 on the default 10). Hidden group `hidden`, saved inactive (D-377): **6,7 / 7,6 / 7,8 / 8,7**, the four tiles next to the empty 7,7, default HP 10 |
+| Turn order | Per-enemy `turnOrder`, as THJ set it (D-374, D-380); lower acts first (`AIFactionBrain` sorts by `TurnOrder`, verified). **B 0, C 1, A 2.** Hidden: 8,7 not overridden (prefab default, assumed 0), 7,6 and 7,8 both 1 (tie, order not fixed until G5), 6,7 2 |
+| Turn budget | Caps 2 / 3 / 4, one per stage (D-377) |
+| Win / loss | Three queued stages (`queueWinGroups`), each "objective **or** its cap", every objective with a condition of its own (D-375): **(1)** "Eliminate all dark claws." or cap 2 (cap hidden). **(2)** "Gather your arrows.": Linda stands on **2,7** (`UnitTileOccupiedLOCondition`) or cap 3 (hidden); completing it plays the cut-in. **(3)** "Eliminate remaining claws. {alive_0} left." or cap 4, shown as "Turns left in the memory: {remaining_0}." Loss: the template's (family down) |
+| The cut-in (stage 2 done) | `Memory1Linda_Interruption_SequentialSequence`: input off, HUD hidden → camera to 7,7 → LSB call "reset" (`CurrentPhaseManipulationAction` **Reset**: a fresh player turn, D-384) → reveal group `hidden` (0.6 s) → Linda: "No matter how many I took out. More kept coming." · "But they were no match for the power of my explosive arrows." → camera back → unlock Explosive Arrow + Encore → input and HUD back |
+| First trigger | **Watch:** the first Claw that ends its move in her row or column once the Claws are awake (they start Unaware, below). **Explosive Arrow:** right after the cut-in its button pulses until first use (`GuidedAbilityHint`, WhenUnlocked, D-380, D-382). From 2,7 the room's centre 7,7 is 5 in a row, inside its reach of 5, and its blast (the cell and the 4 next to it) covers all four hidden Claws. **Encore** pulses while her quiver is empty and Encore is usable (G3; never while locked) |
+| The punchline | End sequence: Linda **"Seven Claws. One arrow."** (D-384: a brag, true or not, whatever the player hit), grid fade, then the cutaway: Lucy "That's not how it went!" · Linda "That's exactly how it went." · Margaret "Then you tell it, Lucy." |
+| Cues | Level start: Margaret "Eldest first. Linda."; two panels (Moving and AP; Watch, with "Each shot spends an arrow.", D-333). The cut-in above. No spawn |
+| Alert | **Enemies start Unaware** (`allEnemiesStartAlert` off, D-384): the one memory segment that differs from the mission rule. Linda starts 7+ from every Claw, so they wake only when she stops within 3 or hits them. The revealed four are 4+ from 2,7 and come in asleep; the blast wakes them |
 | FTP | Topped up (13) |
 | Drops / clue | None |
-| Fallback | **If she's empty, step onto a fallen Claw's arrow and shoot; cap 3 holds.** Example: she walks up to 2,2 on turn 1 and shoots A early; the two Watch shots then kill A and empty her. On turn 2 she steps onto A's tile (2,3), picks up its arrow (LI-7) and shoots: B and C die. If she walks on into the throat on turn 1 (2,1), A ends beside her and C ends 4 away and a **third** Watch shot fires: it pierces all three (A 18, B 7.2, C 2.16) and the triple kill lands on the Watch, with her last arrow, on enemy turn 1. Same punchline, lesson carried by the Watch. If she never steps, the cap ends it on turn 3 |
-| To check | Enemy turn order follows the level's unit order (`AIFactionBrain` walks the faction controller's `AllUnits`; the plan needs A, B, C, front to back). If B moves first, the front Claw takes 12 and the second 3.6, so HP must be retuned. Damage rounding (2.16 against HP 2). Encore is on her bar and not pointed at here |
-| Time | ~1.75 min |
+| Fallback | Every stage moves on at its cap: the three in-play Claws not dead by its cap → stage 2 anyway; 2,7 not reached by its cap → the cut-in plays anyway; stage 3 ends the telling at its cap. An empty quiver is answered by walking onto her arrows (stage 2's lesson) and, after the cut-in, by Encore's pulse |
+| To check | Played OK by THJ (2026-11-04, `aff7dabec`); not re-counted on paper: the old A-B-C maths assumed A acts first, and with B first a waking B can slip round A through the den and lead down the throat (6 HP in front of 14). Explosive Arrow's 8 (GDD, before stats) against the hidden Claws' 10. Whether a later stage's cap can already be met when the stage starts (review question) |
+| Time | ~3 min plus the cut-in (estimate, not timed) |
 
 ### Segment 2 · Lucy's telling: "There were at least ten!"
 
@@ -356,7 +361,7 @@ Build lines (C3 step 0): no `level camera`. The 15 × 11 tiles don't fit one vie
 | Step | Min |
 |---|---|
 | Hearth open (Home state, Margaret, 3–4 lines) | 0.75 |
-| Segment 1 | 2.5 |
+| Segment 1 (longer since the 2026-11-04 side room and cut-in, ~3 + 0.5; total below not re-summed) | 2.5 |
 | Cutaway + segment 2 | 0.4 + 3.0 |
 | Cutaway + segment 3 | 0.4 + 3.5 |
 | Cutaway + segment 4 (scripted Bloom, the scene, the walk) | 0.4 + 5.0 |
@@ -641,20 +646,21 @@ A new effect must add no AP and no arrow (the arrow already comes back), so it c
 
 **The moment designed for:** segment 4's walk to the cub. After three turns of showing off, nobody talks, and the player moves one Bergson to a crying cub. The grid fades out once they get there. It's the only input in the memory that isn't a fight, and it's the one the Hearth close calls back to when Ryker goes quiet by the door.
 
-Secondary moments: the triple arrow (segment 1), Linda's "Three." over Lucy's "ten" (segment 2), the islands lit up at once by Shield Flare (River), the arrow coming back down the ridge (Ridge), the barks stopping at the pile (M2).
+Secondary moments: the side room's reveal and the one Explosive Arrow into the packed four (segment 1), Linda's "Three." over Lucy's "ten" (segment 2), the islands lit up at once by Shield Flare (River), the arrow coming back down the ridge (Ridge), the barks stopping at the pile (M2).
 
 ### Systems
 
 - **Levers:** per-instance enemy HP in the memory (6 / 8 / 10), tier per mission (Tutorial for the memory and pairs, Early for M2), turn caps per segment, FTP fill/drain, item counts (Potion 2, Trinket 1), completion rewards (Gold 20 each pair).
-- **Interactions:** Role costs (FTP 1 today) vs small FTP pools (the Ridge's 5, M2's 0) is the biggest one: see Q4. Linda's quiver (3 arrows, LI-3) replaces the planned Watch limit (FR-4, LI-11): segment 1 is built around it (2 Watch shots, then her last arrow), and the Ridge and route B rely on pickup and Encore to refill her. Alert spread groups (River clearing, Ridge rush, route A noise) are placed at exactly 2 apart, so they wake as one.
-- **Failure cases:** a player who never steps into the throat (segment 1: still 2 turns); never casts Shield Up (segment 3: fallback prompt); never finds the Cyclone (segment 2: still wins); finds no Duo with 4 FTP (M2: wins with arrows, slower); runs the Ridge's FTP dry (roles go silent with no explanation: Q4).
+- **Interactions:** Role costs (FTP 1 today) vs small FTP pools (the Ridge's 5, M2's 0) is the biggest one: see Q4. Linda's quiver (3 arrows, LI-3) replaces the planned Watch limit (FR-4, LI-11): segment 1 is built around it (shots spend arrows, stage 2 sends her to gather them, Encore unlocks after), and the Ridge and route B rely on pickup and Encore to refill her. Alert spread groups (River clearing, Ridge rush, route A noise) are placed at exactly 2 apart, so they wake as one.
+- **Failure cases:** a player who never walks up the throat (segment 1: the Claws sleep, and the stage caps carry the telling to the cut-in and the end); never casts Shield Up (segment 3: fallback prompt); never finds the Cyclone (segment 2: still wins); finds no Duo with 4 FTP (M2: wins with arrows, slower); runs the Ridge's FTP dry (roles go silent with no explanation: Q4).
 - **Dominant strategy check:** none new. The AP refund that could loop is gone (D-332); the node candidates add no AP or arrows (Q5).
 
 ### UX
 
 | Moment | Shown | The player clicks | Likeliest misread |
 |---|---|---|---|
-| Segment 1 turn 1 | Move/AP panel, sword icons up the throat on the ghost; her 3 arrows on her portrait | Linda, the throat's foot (2,0), End turn | Ends turn without moving (fine: QTE comes a turn later). Doesn't link the arrow count dropping to the Watch shots: the Watch panel's "Each shot spends an arrow" and the turn-2 "last arrow" line carry it |
+| Segment 1 turn 1 | Move/AP panel, sword icons up the throat on the ghost; her 3 arrows on her portrait | Linda, up the throat, End turn | Ends turn without moving (the Claws sleep; the cap moves the telling on). Doesn't link the arrow count dropping to the Watch shots: the Watch panel's "Each shot spends an arrow" and stage 2's "Gather your arrows." carry it |
+| Segment 1 stage 2 | "Gather your arrows." | Walks onto her arrows | Picks up every arrow and waits: the stage wants Linda **on 2,7**, which may hold none of them |
 | First QTE ever | "Activate Passive" + the Watch panel shown at level start | The QTE key | Misses the window (1 s): no cost, the role skips; the next Claw gives another try |
 | Segment 3 turn 1 | One panel (Shield Up → Wrath), John's tether during his prompt, stack counter | Shield Up, then the QTE | Thinks the hit was lost (John's HP drops instead): the tether and "×0.5" sell it |
 | First Unaware enemy (River or Ridge, whichever comes first) | The marker over sleeping enemies | — | Thinks they're dead or decorative. **Required (not optional):** one shared "first sleeping enemy" panel, shown once in whichever pair mission comes first ("Asleep: they act once they see you, 3 tiles, or are hit; Shift shows their sight"), with the nearest sleeper's sight tiles shown for one beat. New tech, small; whether `AbilityIntroductionTracker`'s seen-set can hold it is to check |
@@ -750,7 +756,7 @@ None of these touches core systems. Each one is small, and each is a fallback un
 
 ## Docs to update (if approved)
 
-- `design/gdd/missions-structure.md`: the Missions and Levels tables (Hearth, The River, The Ridge, M2 The Trail with trailhead and routes; rosters, tiers, rewards, items, FTP fill/drain); **MI-27's table** (add the four memory segments as "all enemies start alert"); MI-14 (M2 becomes the second route choice); M1's row (its levels reused: Level1-C1-2 as segment 1).
+- `design/gdd/missions-structure.md`: the Missions and Levels tables (Hearth, The River, The Ridge, M2 The Trail with trailhead and routes; rosters, tiers, rewards, items, FTP fill/drain); **MI-27's table** (add memory segments 2 to 4 as "all enemies start alert"; segment 1 keeps the default, D-384); MI-14 (M2 becomes the second route choice); M1's row (its levels reused: Level1-C1-2 as segment 1).
 - `design/gdd/family-systems.md`: SY table, Catch & Return Unlock → Open (D-177), Notes → drop "Return to Sender planned (D-228)", add "no AP refund for bow or Watch arrows (D-332)" and the node's effect (Q5).
 - `design/gdd/characters/mark.md`: MA-3 ("Once bought" → open; the "Planned (D-228)" sub-bullet → no refund ever, D-332, node effect per Q5), family nodes list; Q2 and Q3 per answers.
 - `design/gdd/progression-economy.md`: Unlocks table (Catch & Return row); PR-20 rewards for the pair missions (rigged picks).

@@ -71,7 +71,7 @@ Owner: coordinator. Every item has a scope: `all` or a branch. Started 2026-10-1
 
 (New requests land here before triage.)
 
-- 2026-11-04 `hero-animation-events-noise` (thj/onboarding, maybe all; bug/tool, S–M, Tier 2 to investigate): editor saves write extra `ability`/`superTimeAbility` `animationEvents` entries (beyond the hero prefab's sizes, e.g. Linda 17/15 → data[17..22], frames 4/7) onto hero instances in `GB_m2-*`, `GB_m3-john`, `GB_s1-river`, `GB_s2-ridge`. Not committed (would change ability timing per level and pin sizes). Find what writes them; then revert the overrides (needs THJ's yes for a discarding checkout) or fix the source.
+- 2026-11-04 `hero-animation-events-noise` (thj/onboarding, maybe all; bug/tool, S–M, Tier 2 to investigate): editor saves write extra `ability`/`superTimeAbility` `animationEvents` entries (beyond the hero prefab's sizes, e.g. Linda 17/15 → data[17..22], frames 4/7) onto hero instances in `GB_m2-*`, `GB_m3-john`, `GB_s1-river`, `GB_s2-ridge`. Not committed (would change ability timing per level and pin sizes). Cause found (`reports/hero-animation-events-noise.md`); THJ chose the root fix only (D-387), 7 Greybox diffs discarded 2026-11-05; core fix dispatched (opus).
 
 - 2026-11-04 `ability-lock-super-time` (all; core, **Tier 3**): a level ability lock hides an ability from the bar, but Family Super Time still casts a locked `superTimeAbility` (`LindaFactionRoleHandler.ActivateSuperTime` :99 via `PlayerController.ActivateFactionSuperTime`). THJ accepted the gap for now (D-381). Fix later = Super Time respects the lock (core, own commit).
 
