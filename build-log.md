@@ -2471,3 +2471,11 @@ Core gets one additive, generic `CombatLog.AddCustom`.
 **Built:** a hero tab selected from code grows like a clicked one; the first tab on a normal open is marked Selected (D-371). 2 tests. Commit `35ed82daa`.
 **Verified:** EditMode 1305/1306 (known red only); coordinator read the diff; THJ played OK.
 **Status:** structure C5 done. Next: timed pacing play check.
+
+## 2026-11-04: Linda memory rework committed (L1)
+
+**Built:** THJ reworked `GB_m1-linda` into 3 queued win stages (clear claws, Linda gathers on (2,7), interruption reveals 4 hidden claws, finish; turn cap 4). Wire Memory 1 (Linda) now rebuilds that design with a separate condition per objective, hidden claws inactive and worth no XP (D-376); tests rewritten (5 new). Commit `67fb2d3bf`.
+**Verified:** compile clean; tool run twice, second run byte-identical; EditMode 1309/1310 (known red only); review APPROVE; THJ played OK.
+**Not verified:** nothing open for L1.
+**Findings:** shared `[SerializeReference]` conditions came from the list "+" copy (T6, G4 next); same sharing in `main`'s `Level2-C2`, `Level2-C3-2`, `LevelDomFight`.
+**Status:** next G4. THJ's level questions open (`reports/linda-memory-rework-review.md`).

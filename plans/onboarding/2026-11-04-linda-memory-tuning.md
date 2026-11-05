@@ -26,3 +26,7 @@ Order: L1 → G4 → G1 → G2 → G3 → L3 (→ G5 if approved). One writer at
 ## To `main`
 
 The 21 commits in `reports/onboarding-commits-for-main.md` (with its splits) + G1–G4 (+ G5), in one cherry-pick session.
+
+## Commit log
+
+- L1 (+ D-376 no-XP follow-up): `67fb2d3bf` (THJ's rework prefab + 6 interruption assets + wiring + tests). EditMode 1309/1310 known red only; THJ played OK 2026-11-04.
