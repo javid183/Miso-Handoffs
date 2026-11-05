@@ -2511,3 +2511,11 @@ Core gets one additive, generic `CombatLog.AddCustom`.
 **Not verified:** nothing open.
 **Findings:** hero `animationEvents` overrides keep appearing in several Greybox levels on save; held back, backlog `hero-animation-events-noise`.
 **Status:** Linda memory tuning done. Next: THJ's pick (next level, cherry-pick session, tie-break plan, noise investigation). Narrative draft M1-1 note needs the new punchline (narrative agent).
+
+## 2026-11-05: Hero animation-event growth fixed at the source
+
+**Built:** `FactionRoleHandlerBase.InitializePartially` uses the light ability init (`73fa9050e`, core, D-387) + test. Levels plan's Linda section rewritten as built; grid rendered and checked.
+**Verified:** review APPROVE; EditMode 1343/1344 (known red only, same 41 mismatches); test red before, green after.
+**Not verified:** a long play session confirming no new overrides on level save (expected; restart the editor first, since prefabs already grown in memory stay grown).
+**Findings:** 30 committed levels on `main` and `Unit_Linda.prefab` (15 entries) carry inert junk; left as is by THJ's choice.
+**Status:** done. Next: THJ's pick.
