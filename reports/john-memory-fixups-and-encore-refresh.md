@@ -60,3 +60,9 @@ main gets chunk B (after THJ's Encore files).
 1. Recompile, run EditMode tests (Hearth and EncoreKit suites).
 2. Play the John memory: 5 claws, "Defeat four Claws: 0 of 4.", no Duo buttons for any hero.
 3. Play Level1-C2 as Linda: Encore plays its animation.
+
+## Review fixes
+
+- `EncoreKitTests.cs`: the refresh test now loads its Linda copy with `PrefabUtility.LoadPrefabContents` and releases it with `UnloadPrefabContents` in the `finally` (no scene dirtying). It also asserts `SlotNeedsRefresh(defaultSlot, levelSlot) == false` for every Linda in every level of `EncoreKitTool.Levels`.
+- Line endings: the file is LF (also at HEAD, 0 CRLF), not CRLF as the brief said; I kept LF, no BOM.
+- Recompiled; console showed only existing warnings (graph view hiding, obsolete InstanceIDToObject, unused field) plus domain-backup and serialization-depth messages that are not from these files. Ran only `EncoreKitTests`: 2 passed, 0 failed. Full suite and menu tools not run (verifier's job).

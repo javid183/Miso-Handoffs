@@ -71,7 +71,7 @@ Owner: coordinator. Every item has a scope: `all` or a branch. Started 2026-10-1
 
 (New requests land here before triage.)
 
-- 2026-11-05 `john-memory-tweaks` (thj/onboarding; review, S/M): THJ's uncommitted `GB_m3-john` edits (4th claw, moved claws, turnOrder, turn 3 / 4 kills, `LevelAbilityLock` on three units) + Linda Encore anim / Recall activationMode. `miso-reviewer` running → `reports/john-memory-tweaks-review.md`.
+- 2026-11-05 `john-memory-tweaks` (thj/onboarding + Encore general; S/M): review FIX → THJ answers D-393/D-394 → fix-ups D-395 built (review APPROVE + 2 test fixes). Verify: compile clean, both tools idempotent (10/10 md5 same). **Waiting on THJ:** EditMode Run All (MCP drops on run_tests), then play John's memory + an Encore (frame 5 = last clip frame). Then 2 commits: John (prefab + wiring + tests); Encore (THJ's anim/controller/Unit_Linda/Recall + EncoreKitTool/Tests + 9 levels) → `main`. Reports `john-memory-*`.
 
 - 2026-11-05 `mission-onvalidate-dirty` (all; S, Tier 2): `Mission.OnValidate` (`Mission.cs` ~:276-282) marks the Mission asset dirty on load and inspector edits, independently of `LevelBase.SetID`. Minor; noise in saves.
 
