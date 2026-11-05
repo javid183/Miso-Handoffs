@@ -31,3 +31,4 @@ Explore, read-only, for `linda-memory-tuning` (c). Branch = `main` + 48 commits;
 - `266a3985c` level ability lock (general, `Features/Levels/AbilityLock` + bar partial).
 - `ccfbb36d2` Encore pulse while the quiver is empty (general; needs `266a3985c`).
 - `87174b9fc` (THJ) Encore icon and text + `7a1674008` cost back in the text (data, general; candidates, THJ to confirm).
+- `89f4981fe` Level1-C1-2 sprites under Environment (THJ) + GB_m4-mark startMode default. Level1-C1-2 is a `main` level: THJ to say if it goes to `main`.
