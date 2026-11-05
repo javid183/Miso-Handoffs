@@ -35,3 +35,5 @@ Explore, read-only, for `linda-memory-tuning` (c). Branch = `main` + 48 commits;
 - `73fa9050e` core: Family Role partial init uses the light ability init (animationEvents growth on hero prefabs). Own commit; applies cleanly on `main` per review.
 - `82734b642` dialogue: image-first dialogues don't flash an empty text box (general, not core).
 - `02ef3195e` core: RestartTurn refreshes the exhausted tint (own commit).
+- `98574aaab` core: ability Initialize never writes the serialized animation events (own commit).
+- `eb10f1c5a` core: LevelBase.SetID marks dirty only on a real change (own commit).

@@ -2527,3 +2527,11 @@ Core gets one additive, generic `CombatLog.AddCustom`.
 **Not verified:** a phase reset during the AI phase (no level does it today).
 **Findings:** the cutaway image is `HearthStill_Placeholder.png` (85 bytes, blank) until the Hearth painting exists (design Q5). Dialogue edge cases backlogged. animationEvents noise remains on 7 Greybox levels until the editor restarts.
 **Status:** done; next THJ's pick.
+
+## 2026-11-05: Animation-event growth closed for good
+
+**Built:** `RuntimeAbility.Initialize` uses a runtime-only activation event (`98574aaab`, core, D-390); `LevelBase.SetID` returns early when unchanged (`eb10f1c5a`, core, D-391).
+**Verified:** reviews APPROVE; EditMode 1359/1360 (known red, 41 mismatches); THJ played attacks, a Super Time, an item, a Duo, a pass-by; after Play + Ctrl+S, 0 of 111 level/hero prefabs changed (md5 baseline).
+**Not verified:** nothing open.
+**Findings:** `73fa9050e` alone wasn't enough (source of the residual growth not pinned). `Mission.OnValidate` still dirties Mission assets (backlog).
+**Status:** done.
