@@ -30,3 +30,4 @@ Explore, read-only, for `linda-memory-tuning` (c). Branch = `main` + 48 commits;
 - `9ba3b8421` `Level2-C2` split (data; after `83aa585f0`). On `main`, run the scan test; split any other level it flags.
 - `266a3985c` level ability lock (general, `Features/Levels/AbilityLock` + bar partial).
 - `ccfbb36d2` Encore pulse while the quiver is empty (general; needs `266a3985c`).
+- `87174b9fc` (THJ) Encore icon and text + `7a1674008` cost back in the text (data, general; candidates, THJ to confirm).
