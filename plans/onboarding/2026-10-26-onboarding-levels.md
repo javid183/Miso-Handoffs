@@ -263,11 +263,11 @@ Build lines (C3 step 0): no `level camera` (the 10 × 3 tiles fit one view, so i
 
 ```grid id=m3-john title="Memory 3 · John: protect, then punish"
 # . . . . . . . #
-# . . . . . . . #
-# . . . . . . . #
-# . . . . . . . #
 # . c . . . c . #
-# c L . J . U c #
+# c . . c . . c #
+# . . . . . . . #
+# . . . . . . . #
+# . L . J . U . #
 # # # # # # # # #
 --
 range 4,1 2 john Shield reach
@@ -282,6 +282,8 @@ level fp full
 
 Revised 2026-11-01 (D-349): in play the sisters' openers (Fire Embers, the pierce) and their Roles killed the Claws on their way in, before any attack reached John's Role. The four Claws now start hidden and arrive at the end of player turn 1, already beside the sisters (3+ tiles from John, inside his Shield reach of 2), so they attack without walking into Linda's lanes. Revised again (D-350): an empty first turn let the sisters and John wander, so the Claws are **visible on those tiles from the start**, and player turn 1 limits AP: **John 1, Linda and Lucy 0**. Turn 2 refills as normal.
 
+Revised 2026-11-05 (D-393, THJ's play-tuning; reverses D-350's adjacent start): **five** Claws start 3-4 tiles out, at (1,4), (2,5), (4,4), (6,5), (7,4), and walk in. Per-claw turn order: (6,5) 1, (7,4) 2, (2,5) 3, (1,4) 4; the (4,4) Claw has none (0) and acts first, straight at John. Win: **4** dead or turn cap 3 ("Defeat four Claws: {dead_0} of 4."). Every hero's two Duos are locked all level (`LevelAbilityLock`). Turn-1 AP limits unchanged. Watch can now fire on the (2,5) Claw walking down Linda's column. The table below still describes the D-350 setup where it differs.
+
 Build lines (C3 step 0): no `level camera` (the 7 × 6 tiles fit one view).
 
 | Item | Plan |
@@ -290,8 +292,8 @@ Build lines (C3 step 0): no `level camera` (the 7 × 6 tiles fit one view).
 | Teaches | **John's loop: Shield Up → his Family Role takes a sister's hit → Wrath stacks → the punish.** One panel (Shield Up arms Wrath; each hit stacks; the next damaging ability spends them), with the stack counter on his panel |
 | Twist | The sisters steal kills and bicker in barks (enemy-death bark graph); John at the end: "You both did." Neither accepts |
 | Squad | John, Linda, Lucy (both sisters 2 tiles from John: inside his Shield reach, not next to him, so Papa's Shelter stays for the River) |
-| Enemies | 4 Dark Claws, Tutorial (HP 10) |
-| Turn budget | 2 (cap 3) |
+| Enemies | 5 Dark Claws (D-393; was 4), Tutorial (HP 10) |
+| Turn budget | 3 (cap 3, D-393) |
 | First trigger | **John's Shield on enemy turn 1 (D-350, revising D-349).** The four Claws start beside the sisters (1,1 and 2,2 by Linda, 6,2 and 7,1 by Lucy). Player turn 1: John has 1 AP and the sisters 0, so the only useful act is the hinted Shield Up; on enemy turn 1 the Claws attack without moving, so Watch has nothing to fire on; John's Role takes the hits (tether drawn, FR-13), Wrath stacks. Without Shield Up the Role still takes them, with no stacks |
 | The punish | Turn 2: a Wrath ×1.7 Sword (13.6) kills a Claw outright (10 HP); a Wrath Shield Dash (6.8 each, pushed) is the better read. Lucy's follow-up and Linda's Watch will fire too (already met; not taught here). **Win stage:** 3 enemies dead or turn 3 reached |
 | Cues | Level start: one panel; John's line "Stay where I can reach you." Kill barks. End: "You both did." |
