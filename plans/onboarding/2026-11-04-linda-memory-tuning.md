@@ -64,4 +64,4 @@ Acceptance: (1) with Linda's Explosive Arrow and Encore listed, her bar at level
 
 ### Then L3 (data, onboarding)
 
-`GB_m1-linda`: `LevelAbilityLock` with Linda: Explosive Arrow + Encore; `UnlockAbilitiesSequence` added to stage 1's interruption (`Memory1Linda_Interruption_SequentialSequence`, before EnableInput/ShowHUD); `GuidedAbilityHint` (`WhenUnlocked`, Explosive Arrow); per-claw `turnOrder` overrides in THJ's order (D-374; THJ gives the order or tunes it). Wired through Wire Memory 1 (Linda) so re-runs keep it. THJ play-checks.
+`GB_m1-linda`: `LevelAbilityLock` with Linda: Explosive Arrow + Encore; `UnlockAbilitiesSequence` added to stage 1's interruption (`Memory1Linda_Interruption_SequentialSequence`, before EnableInput/ShowHUD); `GuidedAbilityHint` (`WhenUnlocked`, Explosive Arrow); claw `turnOrder`: THJ tunes it himself (D-380), L3 leaves it alone. Wired through Wire Memory 1 (Linda) so re-runs keep it. THJ play-checks.
