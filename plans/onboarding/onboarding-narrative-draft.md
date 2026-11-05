@@ -4,7 +4,7 @@ Narrative agent, 2026-10-26. Step **A5** of `plans/onboarding/2026-10-25-onboard
 
 **Answered 2026-10-26 (D-234):** open questions 1–8 all as recommended (one year; Bloom is Mark's claim; Lucy's line at Toba in M4; Linda asks "Still counting?"; stone axe and leaf wrapper; "Dad"/"Father"; scoped barks later, level sequences in the greybox; Mark's line without Grandma). The glossary and lore rows still wait on THJ.
 
-**Quiver folded in 2026-10-30 (D-331 to D-334).** M1-1 now ends on her last arrow (D-331); segment 1's Watch panel says each shot spends an arrow, and no other quiver panel (D-333); route B is Encore's first use, with Linda's line and cue (D-334, rows T11-B1 to T11-B4); the Ridge catch line is in as a proposal, with no AP refund anywhere (D-332). The other quiver beats wait in [Proposed quiver beats, THJ to pick](#proposed-quiver-beats-thj-to-pick). Source: `reports/onboarding-quiver-impact.md`.
+**Quiver folded in 2026-10-30 (D-331 to D-334).** M1-1 ended on her last arrow (D-331; superseded by D-384, now "Seven Claws. One arrow."); segment 1's Watch panel says each shot spends an arrow, and no other quiver panel (D-333); route B is Encore's first use, with Linda's line and cue (D-334, rows T11-B1 to T11-B4); the Ridge catch line is in as a proposal, with no AP refund anywhere (D-332). The other quiver beats wait in [Proposed quiver beats, THJ to pick](#proposed-quiver-beats-thj-to-pick). Source: `reports/onboarding-quiver-impact.md`.
 
 **Grade (D-180).** Greybox text: one short line per beat, 2–4 for a cutaway, enough to play and time the flow. Every line here goes in as `[PLACEHOLDER] ` until THJ approves it. All of it is Tier 3 (story beats, lore). Where a line matters, options are given with the recommended one first.
 
@@ -25,11 +25,11 @@ Narrative agent, 2026-10-26. Step **A5** of `plans/onboarding/2026-10-25-onboard
 | H0-3 | Linda | You were crying. | Home scene | |
 | H0-4 | Margaret | Eldest first. Linda. | Home scene | Hand-off 1 → segment 1 |
 
-## Step 1 · Memory, Linda's version (Linda alone, 4 Dark Claws)
+## Step 1 · Memory, Linda's version (Linda alone, 3 Dark Claws + 4 revealed in a side room, D-384)
 
 | ID | Speaker | Line | Where | Notes |
 |---|---|---|---|---|
-| M1-1 | Linda (off) | The Caeldippo caves. Three Claws. My last arrow. That's the whole story. | Level dialogue (start) | Her joke: modest words, impossible claim. Changed 2026-10-30 (D-331): only 2 Watch shots fire on enemy turn 1, so the turn-2 shot really is her last arrow; the line becomes the quiver's first lesson. Was "Three Claws, one arrow." Note: the levels plan places this line at the level **end** ("Three claws. One arrow."); placement and capital C to settle with the designer |
+| M1-1 | Linda (off) | Seven Claws. One arrow. | Level dialogue (end, the outro punchline) | Approved 2026-11-04 (D-384). A tall-tale brag over the reworked level: 3 Claws, then 4 more revealed in a side room (7 in all), and she can take those 4 with one Explosive Arrow. Lucy answers it in C1-1 ("That's not how it went!"). Options: `reports/linda-memory-punchline.md`. History: "Three Claws, one arrow." (first draft), then "The Caeldippo caves. Three Claws. My last arrow. That's the whole story." (D-331, 3-Claw level, superseded) |
 | P1-1 | Panel | **Watch.** When an enemy ends its move in Linda's row or column, press [key] to shoot it. Each shot spends an arrow. | Level start, the Watch panel (second of the two segment 1 panels) | D-333. Ability text in the established voice, `[PLACEHOLDER]` until signed off. "[key]" is the QTE key glyph. No first-empty-quiver panel: arrows, pickup and Encore are taught through play |
 | M1-2 | Linda | Walk into my line. | Bark (scoped: memory), first Watch QTE | The story beat for her Family Role's first use (S8, joke form). Doesn't count as seen (D-175) |
 | M1-3 | Lucy (off) | They did *not* line up for you. | Interruption (on the first Watch trigger) | Freeze on the Claws standing in her row |
