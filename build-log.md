@@ -2503,3 +2503,11 @@ Core gets one additive, generic `CombatLog.AddCustom`.
 **Not verified:** Super Time reach in the memory (gap accepted, D-381).
 **Findings:** `QuiverWiringTests.RecallAbility_IsTwoApCooldownTwoSelfCast` red since `87174b9fc` (Encore text no longer states 2 AP).
 **Status:** onboarding-side tweaks T1–T4, T6 done; T5 data done (tie-break core fix later, D-374). Next: THJ on the Encore text test; the cherry-pick session to `main` when he wants.
+
+## 2026-11-04: Linda memory follow-up
+
+**Built:** THJ's objective texts, interruption phase call Reset (fresh turn after the reveal), punchline "Seven Claws. One arrow.", all through the wiring (`aff7dabec`); `Level1-C1-2` sprite reparent + `GB_m4-mark` default (`89f4981fe`).
+**Verified:** tool idempotent; THJ played OK; EditMode 1340/1341 (known red only).
+**Not verified:** nothing open.
+**Findings:** hero `animationEvents` overrides keep appearing in several Greybox levels on save; held back, backlog `hero-animation-events-noise`.
+**Status:** Linda memory tuning done. Next: THJ's pick (next level, cherry-pick session, tie-break plan, noise investigation). Narrative draft M1-1 note needs the new punchline (narrative agent).

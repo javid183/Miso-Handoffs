@@ -68,3 +68,18 @@ none
 - `TheInterruptionUnlocksBothAbilitiesBeforeInputAndHudReturn` (HearthMemoryLindaTests.cs only): each `FindIndex` (dialog, cameraBack, input, hud) is now asserted `>= 0` with a message, and the unlock step's abilities are asserted to be exactly the Explosive Arrow and Encore presets (`CollectionAssert.AreEquivalent`). LF, no BOM kept.
 - Compiled with no errors. EditMode Run All: 1339 total, 1337 passed, 2 failed, 0 skipped.
 - Failures: the known `AIRegressionTest.Baseline_MatchesCurrentAI`, and `QuiverWiringTests.RecallAbility_IsTwoApCooldownTwoSelfCast` (description no longer contains "2 AP"; Recall's text was changed in commit 87174b9, so the test needs updating by whoever owns that change). Not caused by this edit.
+
+## Follow-up: texts, reset, punchline
+
+Wired in the open editor (not in Play, prefab not in Prefab Mode), Tools > Onboarding > Wire Memory 1 (Linda) run twice. Decision D-384.
+
+Files (all LF):
+- `miso/Assets/_Project/Features/Onboarding/Editor/HearthMemoryWiring.Linda.cs`: stage 1 objective text "Eliminate all dark claws.", stage 3 objective text "Eliminate remaining claws. {alive_0} left." (the shared enemies text split in two); new `WireResetCall` sets the level's "reset" call's phase action to Reset (idempotent, new const `ResetCallId`); punchline text "Seven Claws. One arrow."
+- `miso/Assets/_Project/Features/Onboarding/Editor/HearthMemoryLindaTests.cs`: new `TheResetCallRestartsThePhaseInsteadOfEndingIt` and `TheClawObjectivesUseTheClawWording`; punchline test expects the new line. No other test checked those texts.
+- `miso/Assets/_Project/Content/Levels/Greybox/GB_m1-linda.prefab`: run 1 diff vs pre-run is one line, LSB `mode: 1` to `mode: 0` (THJ's texts and turnOrder were already in the prefab and untouched).
+- `miso/Assets/_Project/Resources/Sequences/Hearth/Memory1Linda/Memory1Linda_End_Punchline_DialogNodeSequence.asset`: one line, the new punchline (written by the wiring).
+
+Run 2: md5 of the prefab and all `Memory1Linda_*.asset` identical to run 1.
+Tests: EditMode Run All 1341 total, 1340 passed, 1 failed (known `AIRegressionTest.Baseline_MatchesCurrentAI`). Save not reset.
+
+Proposed commit: `fix(onboarding): Linda memory claw wording, the reset call restarts the phase, new punchline` with the four files above (the prefab also carries THJ's uncommitted objective text overrides).

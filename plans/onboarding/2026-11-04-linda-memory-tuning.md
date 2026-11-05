@@ -74,3 +74,4 @@ Acceptance: (1) with Linda's Explosive Arrow and Encore listed, her bar at level
 - G2 hint WhenUnlocked: `ced039945` (onboarding-only, D-380).
 - L3 Linda memory lock/unlock/hint data + THJ's claw turnOrder + camera tweaks: `0aa549bc6` (review APPROVE + test fixes; THJ played OK; EditMode 1337/1339: known red + `QuiverWiringTests.RecallAbility_IsTwoApCooldownTwoSelfCast`, red since THJ's `87174b9fc` dropped "(2 AP)" from Encore's description; his call).
 - Encore text cost restored: `7a1674008` (D-383).
+- Texts, Reset call, punchline (D-384): `aff7dabec` (THJ played OK; EditMode 1340/1341).
