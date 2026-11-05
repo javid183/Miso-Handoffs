@@ -71,6 +71,8 @@ Owner: coordinator. Every item has a scope: `all` or a branch. Started 2026-10-1
 
 (New requests land here before triage.)
 
+- 2026-11-05 `mission-onvalidate-dirty` (all; S, Tier 2): `Mission.OnValidate` (`Mission.cs` ~:276-282) marks the Mission asset dirty on load and inspector edits, independently of `LevelBase.SetID`. Minor; noise in saves.
+
 - 2026-11-05 `dialogue-image-node-edge-cases` (all; bugs, S, from review of D-388; already in the code before it): an image-first dialogue node with no character on side Left/Right makes `DialoguePlayerUI.SetCharacter` throw; Skip All during an image fade runs the fade-in and the hide fade-out on the same canvas group at once.
 
 - 2026-11-05 `memory-tweaks-lucy-linda` (thj/onboarding; S/M): THJ tuned Linda (caps 2/2/2, an interruption line's side) and Lucy (Cyclone locked until the interruption, hint on unlock, LSB phase call, unlock step) by hand; **Done 2026-11-05:** sync `97f4a7653`; narrator box `82734b642` (D-388, to `main`); tint after Reset `02ef3195e` (core, D-389, to `main`). THJ played OK; EditMode 1354/1355. animationEvents noise back on 7 Greybox levels (editor not restarted since `73fa9050e`); TMP fallback font asset re-saved (noise).
