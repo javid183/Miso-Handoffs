@@ -2,7 +2,18 @@
 
 Size: L    Tier: 3    Assigned to: miso-game-designer (plan); miso-implementer (wiring, after approval)
 Branch: `thj/onboarding` (the working main, D-396)
-Status: waiting on THJ
+Status: approved by THJ 2026-11-05 (D-398)
+
+**THJ's answers (D-398):**
+
+- **Q1:** A+.
+- **Q2:** the 3 hidden Claws appear at John's line, **plus 2 visible around the mother from the start**.
+- **Q3:** real pools, refilling every enemy turn (`SpecificTurns`), with 0-XP variants. This is an exception to D-345.
+- **Q4:** the passage up.
+- **Q5, Q6, Q8:** as recommended.
+- **Q7:** John starts on 10,5. The 7,5 in the drawing only showed the goal.
+
+The plan below is updated to these answers.
 
 ## Why
 
@@ -18,7 +29,7 @@ A ~5-minute telling where the player does three family things in order, each wit
 - [ ] Mark's arrival is followed by a fresh player turn with the camera on Mark (selection after a Reset is random today; see Q8), and his Blitz plus Continuous Attack clear the two Claws that came with him.
 - [ ] John standing on 7,5 plays his line, reveals the Claws by the mother and unlocks the Mark–Lucy Duo, which pulses until it is used.
 - [ ] From the stage that unlocks it, Lucy and Mark can reach a tile where Chained Assault has 3 targets in the same turn.
-- [ ] The last Claw by the mother dying plays her fall, the walk to the cub and the end, and the level is won. No "reach the cub" objective is left.
+- [ ] The last of the five Claws by the mother (2 visible from the start, 3 revealed) dying plays her fall, the walk to the cub and the end, and the level is won. No "reach the cub" objective is left.
 - [ ] Every stage moves on at a turn cap, so a slow or lost player still reaches the end.
 - [ ] No Duo other than Mark–Lucy, and no Cleanse, can be used in the level.
 
@@ -58,12 +69,12 @@ Coordinates are the drawing's (`m4now`). The prefab's top room sits one column r
 |---|---|---|---|
 | 1 | Mark and the two bottom-right Claws hidden at start | One reveal group `arrival`: Mark 15,2, Claws 11,2 and 13,2 | **Confirm.** Tech T3: can `HiddenLevelUnits` hide a *player* unit? (not covered by the tech check) |
 | 2 | Play Tempest Bloom after the opening line | See [Item 2 options](#item-2-how-the-player-plays-tempest-bloom). **Correction to B as drawn:** Lucy on 7,2 can't reach the den. The Bloom tile is 4,4 (the corridor crossing, where the old prism was), 5 tiles from 7,2, and her Cyclone reaches 3 (GDD; the asset may say 4, T8). Lucy must start in the bottom room, and A's "she runs right" becomes part of the arrival | Correct |
-| 3 | Mark appears, turn resets, Mark selected, Mark and Lucy in front in the narrow path | **Selection:** after a Reset the game auto-selects a random unit that can act (tech check). Making it Mark takes two new small sequences (tag the others `Status.Inactive`, then give them AP back), so I propose the camera on Mark instead (Q8). **Narrow path = the x = 9 passage (9,2 → 9,3 → 9,4) up to the top room.** Lucy runs to 9,3 during the arrival sequence. Mark's arrival chain (Blitz 13,2, Continuous Attack 11,2) ends on 11,2, 2 tiles from the passage. Both are then one move from the Duo tiles | Propose (Q4) |
+| 3 | Mark appears, turn resets, Mark selected, Mark and Lucy in front in the narrow path | **Selection:** after a Reset the game auto-selects a random unit that can act (tech check). Making it Mark takes two new small sequences (tag the others `Status.Inactive`, then give them AP back), so the camera goes on Mark instead (Q8, answered). **Narrow path = the x = 9 passage (9,2 → 9,3 → 9,4) up to the top room.** Lucy runs to 9,3 during the arrival sequence. Mark's arrival chain (Blitz 13,2, Continuous Attack 11,2) ends on 11,2, 2 tiles from the passage. Both are then one move from the Duo tiles, and both are in front of John and Linda, as THJ wanted | **Answered (Q4)** |
 | 4 | All Duos and Cleanse locked | All seven Duos and all four Cleanse buttons locked all level; only Mark–Lucy unlocks (at John's line). Reason for Cleanse: one Cleanse destroys a Corruption pool (`level-chunks.md` hazard table), which would make John's hold pointless | Confirm |
-| 5 | John to 7,5 → his line → new Claws on top → Duo hint → Duo unlocks and pulses | **Correction: John can't start on 7,5** (drawn there), or the objective is done at once. He starts on **10,5**, 3 steps away, in the top room. "New Claws appear on top" = **the Claws by the mother start hidden** and appear at his line. Otherwise they walk down at the family before the Duo exists, and the player kills them with basic attacks (Q2) | Correct, propose |
-| 6 | Top Claws dead → mother dies → success | Stage 3 = "every Claw by the mother dead". It must count only that group, because the pools keep Claws alive in the den (T5) | Confirm |
-| 7 | Pools keep one Claw each | The `P` tiles are the existing Corruption pools (`CP_Spawner`, `spawnLimit` 1). Tech check: as placed they refill on enemy turns 1, 3 and 5 only. Listing every turn (`intervalMode = SpecificTurns`) makes them check each enemy turn (data; `interval = 0` is a core bug that never refires). Spawned Claws give 3 XP today, so they need a **0-XP Hearth Claw plus pool variants** (data). That is an exception to **D-345** (no spawned enemies in the memory). Still open: whether spawns come in Alerted (EN-12: spawns are Unaware unless a hostile is within 3, and both pools are 5+ from everyone) | Confirm, with Q3 |
-| 8 | Heroes walk to the cub in a sequence, no "reach the cub" goal | Fixed walkers: **Lucy and Mark** (the Duo pair, nearest after the Duo, and Lucy is the cub's future owner). Tech check: `MoveUnitSequence` walks a unit by nickname to a fixed cell along a real path, one unit after another, and does **nothing, silently, if the path is blocked**. The cub and the mother are sprites, not units; the mother's fall already works (LSB `motherFalls`). "Closest" or "next to" is new code (S–M) | Propose (Q5) |
+| 5 | John to 7,5 → his line → new Claws on top → Duo hint → Duo unlocks and pulses | John starts on **10,5**, 3 steps away, in the top room; 7,5 only marked the goal. "New Claws appear on top" = **3 hidden Claws (9,8 / 10,8 / 10,7)** appear at his line. **2 Claws stand visible by the mother from the start (10,9 / 11,8)** | **Answered (Q2, Q7)** |
+| 6 | Top Claws dead → mother dies → success | Stage 3 = "all five Claws by the mother dead" (explicit list). It must count only that group, because the pools keep Claws alive in the den (T5) | Confirm |
+| 7 | Pools keep one Claw each | The `P` tiles are the existing Corruption pools (`CP_Spawner`, `spawnLimit` 1). Tech check: as placed they refill on enemy turns 1, 3 and 5 only. Listing every turn (`intervalMode = SpecificTurns`) makes them check each enemy turn (data; `interval = 0` is a core bug that never refires). Spawned Claws give 3 XP today, so they need a **0-XP Hearth Claw plus pool variants** (data). That is an exception to **D-345** (no spawned enemies in the memory), logged with D-398. THJ: the pool's Recurring mode spends a turn re-arming after each fire, so every turn is only possible by listing the turns. Still open: whether spawns come in Alerted (EN-12: spawns are Unaware unless a hostile is within 3, and both pools are 5+ from everyone) | **Answered (Q3)** |
+| 8 | Heroes walk to the cub in a sequence, no "reach the cub" goal | Fixed walkers: **Lucy and Mark** (the Duo pair, nearest after the Duo, and Lucy is the cub's future owner). Tech check: `MoveUnitSequence` walks a unit by nickname to a fixed cell along a real path, one unit after another, and does **nothing, silently, if the path is blocked**. The cub and the mother are sprites, not units; the mother's fall already works (LSB `motherFalls`). "Closest" or "next to" is new code (S–M) | **Answered (Q5)** |
 
 ---
 
@@ -123,8 +134,10 @@ From these facts, the **cheapest version that teaches is A+**: the sequence cast
 |---|---|---|
 | Den Claws' HP | 2,4 / 6,4 / 4,5 = 6; 4,6 = 3; 1,4 / 7,4 = 10 | The Bloom kills 4 under either copy-range model; 7,4 survives to face John |
 | Arrival Claws' HP | 11,2 / 13,2 = 8 | Each Blitz (8) kills, so Continuous Attack chains (old plan's gallery values) |
-| Top Claws | 3, at 9,8 / 10,8 / 10,7, HP 7 | From 9,5 all three are within 4 (3, 4, 3). Chained Assault at ×0.7 does 2.1 + 5.6 = 7.7 (≥ 7, even rounded down per hit: 2 + 5 = 7). The Duo ends the fight |
-| Pool cadence | 1 (a Claw each enemy turn when the pool's own Claw is dead) | THJ's "each turn"; was 3 |
+| Top Claws, hidden (`top`) | 3, at 9,8 / 10,8 / 10,7, HP 7 | From 9,5 all three are within 4 (3, 4, 3). Chained Assault at ×0.7 does 2.1 + 5.6 = 7.7 (≥ 7, even rounded down per hit: 2 + 5 = 7) |
+| Top Claws, visible from the start (D-398) | 2, at **10,9** (THJ's drawing) and **11,8** (the nearest free tile by the mother; his drawing has no fifth top tile), HP **8** | Both are 5 from 9,5, so they are never in the Duo's reach and the Duo always takes the hidden three. At 8 HP, one Blitz or Counter (8) kills each, but Lucy's single ember (4 + 3) doesn't. THJ's levers if it plays too hard: cut them or lower their HP |
+| Pool cadence | Every enemy turn, as `intervalMode = SpecificTurns` listing turns 1 to 6 (the stage-3 cap is 4, plus margin); a Claw spawns when the pool's own Claw is dead | THJ's "each turn" (D-398). The Recurring mode spends a turn re-arming after each fire, and `interval 0` never refires |
+| Pool Claw | 0-XP Hearth Claw variant, with matching pool variants (data) | The Hearth gives no XP (`NothingInTheHearthGivesExperience`); an exception to D-345 for these two pools (D-398) |
 | Turn-1 AP | Linda 1, Lucy 0, John 0 (Mark hidden) | One action, and Linda is the only unit that can act, so she is auto-selected (tech check) |
 | Caps | Stage 1: 1; stage 2: 2; stage 3: 4 (as `Turns` caps: "when turn N+1 begins") | Every stage moves on |
 
@@ -133,7 +146,7 @@ Interactions:
 - The Cyclone stays on 4,4 and drifts toward enemies afterwards (it may finish 7,4 or 1,4, which is fine).
 - Linda's **Watch** fires on pool Claws walking down column 4 (4,6 is 4 from 4,2; 4,5 is 3).
 - Lucy's **follow-up** may hit 11,2 when Mark Blitzes 13,2 (she is 3 away on 9,3). It's harmless, and if it kills, the QTE swing has no target.
-- Mark's **Counter**: if the Duo is delayed and a top Claw hits Lucy on 9,5, Mark on 9,4 is within 2 of every tile next to her.
+- Mark's **Counter** is the expected finish. After the Duo, the 2 visible Claws act on enemy turn 1 and both can reach Lucy on 9,5 in 4 steps: 10,9 → 9,6 via 10,8 / 10,7 / 10,6, and 11,8 → 10,5 via 11,7 / 11,6 / 11,5. Neither can reach John on 7,5 (6+ steps to a tile next to him). Each hit (about 3) is answered by Mark's Counter from 9,4: 9,6 and 10,5 are both 2 away, and the Counter's 8 kills an 8-HP Claw. Lucy ends near 9 of 15 HP and the telling ends on the enemy turn. If the Counter doesn't fire (FTP, or the planned once-a-round limit, FR-4), turn 2 cleans up: Mark's Blitz kills one, and two of Lucy's embers kill the other.
 - Pass-by: Lucy walks through Mark, and John through anyone.
 
 Failure cases:
@@ -141,6 +154,7 @@ Failure cases:
 - The player spends Lucy's or Mark's AP before moving John. The Duo is unlocked with nobody able to use it, so it waits a turn; the hint keeps pulsing (WhenUnlocked ignores turns).
 - John never goes to 7,5. Den Claws pour into the top room. Stage 2's cap plays the beat anyway.
 - A dominant strategy is possible: Mark could kill the top Claws alone with Blitz. With only 1 AP left after his chain that can't happen on the unlock turn, and the Duo's 3 targets beat 1 Blitz.
+- **The visible two walk down early (risk THJ accepts).** In the expected flow no enemy turn happens before the Duo (the Bloom ends in the Reset, and the chain, the hold and the Duo all fit in the turn after it). They move only if the player ends that turn without the Duo. Then all five top Claws come at Lucy and Mark. In the passage (Lucy on 9,3) only 9,4 touches her; on 9,5 up to three tiles do (about 9 damage, of her 15). The Claws can't reach John. If it plays too hard, THJ cuts them or lowers their HP.
 
 **UX.** What the player sees, in order:
 
@@ -157,7 +171,7 @@ New on-screen elements: **one**, the Corruption pool, which is existing art new 
 
 Likeliest misread: **after the reset, the player thinks Mark is the one who should go to 7,5** ("the camera is on Mark, the objective says hold the mouth"). After a Reset the auto-selection is random, so it may even pick John or Linda. Mitigation: the objective text names John ("John: hold the den mouth") and the marker sits on 7,5. Second misread: the reset itself ("did I lose my turn?"). The arrival cut-in ends on Mark's "Exactly on time." over a full AP bar, as Memory 1's cut-in does (D-384), so players have seen this once already.
 
-**Where the lenses disagree.** Creative wants the four top Claws visible from the start, menacing the mother. Systems and UX want them hidden: visible and alert, they walk down before the Duo unlocks, and the player kills them with basic attacks, which spends the Duo's lesson. I lean hidden (Q2). The mother and cub stand alone at the top from the start, and the Claws that "come for her" at John's line are the threat that makes him say it.
+**Where the lenses disagreed, and THJ's call.** Creative wanted the top Claws visible from the start, menacing the mother. Systems and UX wanted them hidden, so that they couldn't walk down and die to basic attacks before the Duo. THJ took both (D-398): **2 visible from the start**, so the opening shows the threat over the mother, and **3 hidden** that "come for her" at John's line and are the Duo's targets. The visible two stand out of the Duo's reach and become Mark's Counter targets (or turn 2's clean-up).
 
 ---
 
@@ -167,17 +181,18 @@ Likeliest misread: **after the reset, the player thinks Mark is the one who shou
 
 | # | Beat | On screen | Player does | Systems |
 |---|---|---|---|---|
-| 0 | **[S] Opening** | Grid fades in on the bottom room, the den across the gap, John up top, the mother over the cub | — | Intro sequence. Mission rules as the other segments: Tutorial tier, `level xp none`, `level fp full`, all alert. `LevelAbilityLock` from the start: every Duo trigger and every `CleanseAbility` (tech check: it can). No kit locks: turn 1 is held by AP alone |
+| 0 | **[S] Opening** | Grid fades in on the bottom room, the den across the gap, John up top, the mother over the cub with 2 Claws beside her (10,9, 11,8) | — | Intro sequence. Mission rules as the other segments: Tutorial tier, `level xp none`, `level fp full`, all alert. `LevelAbilityLock` from the start: every Duo trigger and every `CleanseAbility` (tech check: it can). No kit locks: turn 1 is held by AP alone |
 | 0b | Lines (N1): Mark sets the scene. John: "Lucy, shut the den!" (in-character, not an instruction). **`CastAbilitySequence`: Lucy casts Cyclone on 4,4** (no AP spent; it then behaves as normal, tech check). John: "Linda, through her storm!" (N2) | | | AP cap turn 1 (`TurnStartActionPointLimit`, built): Linda 1, Lucy 0, John 0 |
 | 1 | **[P] Turn 1, the Bloom** | Linda auto-selected (the only unit with AP); her bow pulses (`GuidedAbilityHint`, turn 1); one lane has a target, column 4 through the storm | Shoots; the arrow splits three ways; 4 Claws die | Stage 1 completes: "any of 2,4 / 6,4 / 4,5 / 4,6 destroyed" (`EntitiesDestroyedLOCondition`, aggregation Any), hidden objective. Cap 1 as fallback (if she walks instead, the turn ends with no AP left) |
 | 4 | **[S] Arrival** (stage 1's complete sequence) | Mark: "And Linda shot straight into Lucy's fire, and the whole cave bloomed." · Linda: "Did I?" · Mark: "In my version, you did." → Lucy runs 4,1 → 9,3 (`MoveUnitSequence`; route 5,1 / 5,2 / 9,2 / 9,3 is clear of allies, since a blocked path is a silent no-op) → camera east → reveal `arrival` (Mark 15,2, Claws 11,2, 13,2) → Mark: "And then I arrived." · Lucy: "Late." · Mark: "Exactly on time." | — | LSB **Reset** (fresh player turn, everyone's AP refilled; the AP limit doesn't re-fire; the player faction ticks once more, so cooldowns and the Cyclone lose a turn) → camera on Mark → input on. Selection is random among the units that can act (Q8). Stage 2 objective shows |
-| 5 | **[P] Turn 1 again: Mark's entrance** | Camera on Mark; objective "John: hold the den mouth." with 7,5 marked (T12) | Mark Blitzes 13,2 (2 away), QTE swing kills 11,2 (2 away), ends on 11,2 with 1 AP | Continuous Attack 1 FTP (MA-2 as built). Atman's Focus +1 per hit, not pointed at |
+| 5 | **[P] Turn 1 again: Mark's entrance** | Camera on Mark; objective "John: hold the den mouth." with 7,5 marked (T12) | Mark Blitzes 13,2 (2 away), QTE swing kills 11,2 (2 away), ends on 11,2 with 1 AP | Continuous Attack 1 FTP (MA-2 as built). Atman's Focus +1 per hit, not pointed at. The pools are set to spawn from enemy turn 1 (`SpecificTurns` 1 to 6) |
 | 6 | **[P] John to the mouth** | | John 10,5 → 7,5 (3 steps: 9,5 / 8,5 / 7,5) | Stage 2 completes: John on 7,5 (`UnitTileOccupiedLOCondition`), or cap 2 |
-| 7 | **[S] The hold** (stage 2's complete sequence) | John: "I'll hold them off. You save them." → camera to the top → reveal `top` (9,8, 10,8, 10,7) → Mark: "Lucy's fire, my fists. As we practiced." · Lucy: "We never practiced that." · Mark: "I practiced. You followed." (M4-5 to M4-7, moved here) → camera back | — | Unlock the Mark–Lucy Duo (`LevelAbilityLock` unlock; T2: the tech check says an unlock applies to all heroes at once with no re-lock. If that means the whole lock list opens, the other Duos and Cleanse open here too, and keeping them shut needs "unlock per preset", S) → its WhenUnlocked hint pulses until used. Stage 3 objective shows: "Save the cub." (an explicit-list condition has no "{n} left" counter; a counter is a new small condition class, S) + "Turns left in the memory: {remaining_0}." **Stage 3 must activate after the reveal**: hidden units probably count as destroyed before they are revealed (tech check) |
-| 8 | **[P] The Duo** | Duo button pulses on Lucy and on Mark | Mark 11,2 → 9,4 (4 steps, his last AP). Lucy 9,3 → 9,5 (2 steps), then Chained Assault with her last AP: 3 targets within 4, mash, all three die | DU-1: activator needs ≥ 1 AP and pays 1 AP in Mark–Lucy; 2 FTP. Range origin T13: from 9,5 the targets are 3 / 4 / 3 |
+| 7 | **[S] The hold** (stage 2's complete sequence) | John: "I'll hold them off. You save them." → camera to the top → reveal `top` (9,8, 10,8, 10,7) → Mark: "Lucy's fire, my fists. As we practiced." · Lucy: "We never practiced that." · Mark: "I practiced. You followed." (M4-5 to M4-7, moved here) → camera back | — | Unlock the Mark–Lucy Duo (`LevelAbilityLock` unlock; T2: the tech check says an unlock applies to all heroes at once with no re-lock. If that means the whole lock list opens, the other Duos and Cleanse open here too, and keeping them shut needs "unlock per preset", S) → its WhenUnlocked hint pulses until used. Stage 3 objective shows: "Save the cub." (all five: the 2 visible and the 3 revealed) (an explicit-list condition has no "{n} left" counter; a counter is a new small condition class, S) + "Turns left in the memory: {remaining_0}." **Stage 3 must activate after the reveal**: hidden units probably count as destroyed before they are revealed (tech check) |
+| 8 | **[P] The Duo** | Duo button pulses on Lucy and on Mark | Mark 11,2 → 9,4 (4 steps, his last AP). Lucy 9,3 → 9,5 (2 steps), then Chained Assault with her last AP: the 3 revealed Claws are within 4, mash, all three die. The visible two (both 5 away) remain. End turn | DU-1: activator needs ≥ 1 AP and pays 1 AP in Mark–Lucy; 2 FTP. Range origin T13: from 9,5 the targets are 3 / 4 / 3, and the visible two are 5 |
+| 8b | **Enemy turn 1** | The 2 visible Claws come at Lucy (to 9,6 and 10,5); Mark Counters each from 9,4. The pools spawn; den Claws queue at 7,4 against John | QTEs (Counter, John's Role if a Claw hits him) | If both die to Counters, stage 3 completes on the enemy turn. Otherwise **player turn 2** cleans up (Mark Blitz, Lucy embers) |
 | 9 | **[S] Ending** (stage 3 complete = win; played in the outro) | Camera to the ledge → the mother falls (LSB `motherFalls`, kept) → Mark, level voice (N7, rewritten: she was there all along) → Lucy walks to 8,9, Mark to 9,9 → "The cub cried out." → Lucy: "She saved her. We only carried her home." → grid fades → Hearth cutaway (kept: Margaret, "Ten Claws, Lucy." / "At least.") | — | No jokes from the mother's fall on (D-171). The pool Claws are still in the den, and input is off |
 
-**Reset count: one** (beat 4, THJ's). I don't add a second at John's line (Q6). Beats 2 and 3 of the first draft (a Cyclone cast by the player, then an unlock of Linda's bow) are folded into 0b and 1 by the A+ choice.
+**Reset count: one** (beat 4, THJ's). No second at John's line (Q6, answered). Beats 2 and 3 of the first draft (a Cyclone cast by the player, then an unlock of Linda's bow) are folded into 0b and 1 by the A+ choice.
 
 ---
 
@@ -189,8 +204,8 @@ Coordinates as `m4now` (16 × 11, x from the left, y from the bottom). **Don't r
 
 ```grid id=m4r-start title="Memory 4 rework · start (hidden units drawn, tinted)"
 _ _ _ _ _ _ _ _ . . _ _ _ _ _ _
-_ _ _ _ _ _ _ . . . . _ _ _ _ _
-_ _ _ _ _ _ _ . . c c . _ _ _ _
+_ _ _ _ _ _ _ . . . c _ _ _ _ _
+_ _ _ _ _ _ _ . . c c c _ _ _ _
 _ _ _ _ P _ _ . . . c . _ _ _ _
 _ _ _ _ c _ _ . . . . . _ _ _ _
 _ _ _ _ c _ _ . . . J . _ _ _ _
@@ -202,6 +217,7 @@ _ _ . . . . . _ _ _ _ _ _ _ _ _
 --
 cells 9,8 10,8 10,7 enemy hidden: top
 cells 11,2 13,2 15,2 mark hidden: arrival
+note 11,8 visible
 cells 7,5 john den mouth
 note 8,10 cub
 note 9,10 mother
@@ -215,14 +231,14 @@ level hidden top 9,8 10,8 10,7
 level hidden arrival 11,2 13,2 15,2
 ```
 
-Note: Lucy 4,1 and Linda 4,2 (Lucy 4,0 if the Cyclone reaches 4, T8). John 10,5. Den Claws 1,4 / 2,4 / 6,4 / 7,4 / 4,5 / 4,6, pools 0,4 and 4,7. Alert check (skill): everyone starts alert by the mission rule, but no enemy turn comes before the Bloom and the reset, so the first enemy turn sees John already at the mouth if the player follows the flow. Nearest visible threat to the family: 4,5 is 3 from Linda, across the gap. The top room's fourth Claw (THJ's 10,9) is dropped (lever: keep it if THJ wants Mark's Counter or a turn-2 clean-up).
+Note: Lucy 4,1 and Linda 4,2 (Lucy 4,0 if the Cyclone reaches 4, T8). John 10,5. Den Claws 1,4 / 2,4 / 6,4 / 7,4 / 4,5 / 4,6, pools 0,4 and 4,7. Alert check (skill): everyone starts alert by the mission rule, but no enemy turn comes before the Bloom and the reset, so the first enemy turn sees John already at the mouth if the player follows the flow. Nearest visible threat to the family: 4,5 is 3 from Linda, across the gap. **Two Claws stand visible by the mother from the start (D-398): 10,9 (THJ's tile) and 11,8 (the nearest free tile by her, my pick, since his drawing has only four top tiles and the hidden three use the other three).** Both are 4 from John on 10,5, but no enemy turn comes before he moves. If THJ prefers 9,9 (straight under the mother) for the second, it would be 4 from 9,5, inside the Duo's reach. The Duo would still take 3 targets, but the hidden three would no longer be guaranteed, and 9,9 is Mark's walk-to tile in the ending.
 
 ### 2 · The Bloom (turn 1)
 
 ```grid id=m4r-bloom title="Memory 4 rework · the Bloom: Cyclone on 4,4, arrow up column 4"
 _ _ _ _ _ _ _ _ . . _ _ _ _ _ _
-_ _ _ _ _ _ _ . . . . _ _ _ _ _
-_ _ _ _ _ _ _ . . . . . _ _ _ _
+_ _ _ _ _ _ _ . . . c _ _ _ _ _
+_ _ _ _ _ _ _ . . . . c _ _ _ _
 _ _ _ _ P _ _ . . . . . _ _ _ _
 _ _ _ _ c _ _ . . . . . _ _ _ _
 _ _ _ _ c _ _ . . . J . _ _ _ _
@@ -247,8 +263,8 @@ Note: step 1 is Lucy's Cyclone from 4,1, cast by the opening sequence (A+). It's
 
 ```grid id=m4r-arrival title="Memory 4 rework · arrival: Mark's chain, John to the mouth"
 _ _ _ _ _ _ _ _ . . _ _ _ _ _ _
-_ _ _ _ _ _ _ . . . . _ _ _ _ _
-_ _ _ _ _ _ _ . . . . . _ _ _ _
+_ _ _ _ _ _ _ . . . c _ _ _ _ _
+_ _ _ _ _ _ _ . . . . c _ _ _ _
 _ _ _ _ P _ _ . . . . . _ _ _ _
 _ _ _ _ . _ _ . . . . . _ _ _ _
 _ _ _ _ . _ _ . . . J . _ _ _ _
@@ -273,8 +289,8 @@ Note: Lucy ran to 9,3 in the cut-in. Mark Blitzes 13,2 (2 away), steps in, and t
 
 ```grid id=m4r-hold title="Memory 4 rework · the hold: top Claws revealed, Chained Assault from 9,5"
 _ _ _ _ _ _ _ _ . . _ _ _ _ _ _
-_ _ _ _ _ _ _ . . . . _ _ _ _ _
-_ _ _ _ _ _ _ . . c c . _ _ _ _
+_ _ _ _ _ _ _ . . . c _ _ _ _ _
+_ _ _ _ _ _ _ . . c c c _ _ _ _
 _ _ _ _ P _ _ . . . c . _ _ _ _
 _ _ _ _ . _ _ . . . . . _ _ _ _
 _ _ _ _ . _ _ J . U . . _ _ _ _
@@ -288,10 +304,13 @@ range 9,5 4 lucy Chained Assault reach
 arrow 9,3 9,5 lucy dx=10
 arrow 11,2 9,2 9,4 mark dy=10
 cells 7,4 enemy one at a time
+arrow 10,9 10,6 9,6 enemy dx=14 enemy turn 1
+arrow 11,8 11,5 10,5 enemy dx=10 enemy turn 1
 step 9,5 1
+note 9,4 Counter
 ```
 
-Note: Lucy walks 2 (9,3 → 9,5) and keeps 1 AP for the Duo. Mark walks 4 (11,2 → 9,4) on his last AP. From 9,5 the targets are 10,7 (3), 9,8 (3) and 10,8 (4): all three, nearest first. From 9,4 only two are in reach (4, 4; 10,8 is 5). So if the reach is measured from Mark (T13), the two swap tiles. John on 7,5 has one attacker tile, 7,4. The den is sealed: 7,4 → 7,5 is its only link to the top room.
+Note: Lucy walks 2 (9,3 → 9,5) and keeps 1 AP for the Duo. Mark walks 4 (11,2 → 9,4) on his last AP. From 9,5 the targets are 10,7 (3), 9,8 (3) and 10,8 (4): all three revealed Claws, nearest first. The 2 visible Claws, 10,9 and 11,8, are both 5 away and outside the reach. On enemy turn 1 (the enemy-coloured arrows) they walk 4 each to 9,6 and 10,5, next to Lucy, and hit her. Mark on 9,4 is 2 from both tiles and Counters each (8 against 8 HP). From 9,4 only two are in reach (4, 4; 10,8 is 5). So if the reach is measured from Mark (T13), the two swap tiles. John on 7,5 has one attacker tile, 7,4. The den is sealed: 7,4 → 7,5 is its only link to the top room.
 
 ### 5 · Ending (sequence, no input)
 
@@ -326,7 +345,9 @@ Note: Lucy moves first, then Mark (so Mark's path up column 9 is clear). The wal
 - Mark's chain: Blitz 2 + swing 2.
 - John: 10,5 → 7,5 = 3, one move.
 - Lucy to the Duo tile: 2. Mark: 4.
-- Duo targets from 9,5: 3 / 4 / 3.
+- Duo targets from 9,5: 3 / 4 / 3. The visible two are 5 / 5, outside.
+- Visible two to Lucy: 10,9 → 9,6 = 4 and 11,8 → 10,5 = 4, both through floor that is free after the Duo. To any tile next to John: 6+.
+- Mark's Counter from 9,4 to 9,6 and to 10,5: 2 each.
 - Pools to John: 4,7 → 7,5 = 5. 0,4 → 7,5 = 8. Both outside the 3-tile sight, hence T10.
 
 ---
@@ -337,19 +358,19 @@ Note: Lucy moves first, then Mark (so Mark's path up column 9 is clear). The wal
 |---|---|---|---|---|
 | 1 Bloom | any of 2,4 / 6,4 / 4,5 / 4,6 destroyed (`EntitiesDestroyedLOCondition`, Any) | 1 (turn 2 begins) | hidden | Arrival sequence (beat 4), including the reset |
 | 2 Hold | John on 7,5 (`UnitTileOccupiedLOCondition`) | 2 (turn 3 begins) | "John: hold the den mouth." | The hold sequence (beat 7) |
-| 3 Save | 9,8 / 10,8 / 10,7 all destroyed (`EntitiesDestroyedLOCondition`, explicit list; the pools' Claws would break a "living units" count) | 4 (turn 5 begins) | "Save the cub." + "Turns left in the memory: {remaining_0}." | Win → the outro holds the whole ending (beat 9) |
+| 3 Save | 10,9 / 11,8 (visible) and 9,8 / 10,8 / 10,7 (revealed) all destroyed (`EntitiesDestroyedLOCondition`, explicit list of 5; the pools' Claws would break a "living units" count) | 4 (turn 5 begins) | "Save the cub." + "Turns left in the memory: {remaining_0}." | Win → the outro holds the whole ending (beat 9) |
 
 Loss: the template's (family down). At Tutorial damage (about 3 a Claw) it's unlikely.
 
-**Expected:** the Bloom turn, then one full turn (the chain, the hold and the Duo all on turn 1 after the reset), then the end. That's **one player turn plus the reset turn**. A player who delays the Duo finishes on turn 2.
+**Expected:** the Bloom turn, then one full turn (the chain, the hold and the Duo all on turn 1 after the reset), then **enemy turn 1**. On it, the visible two attack Lucy and die to Mark's Counters, and the telling ends there. If a Counter doesn't kill, the end comes on **player turn 2** (one Blitz, two embers). A player who delays the Duo finishes on turn 2 or 3.
 
 **A slow player:**
 
-- If Linda walks instead of shooting, the turn ends. The den Claws (alert) walk toward the family via 7,5 and the passage, and on turn 2 the cap plays the arrival anyway. The boast lines cover the missing Bloom.
+- If Linda walks instead of shooting, the turn ends. The den Claws (alert) walk toward the family via 7,5 and the passage, the visible two by the mother come down too, and on turn 2 the cap plays the arrival anyway. The boast lines cover the missing Bloom. This is the hardest case: 2 + 6 Claws loose before Mark arrives. THJ's levers are the visible two's HP, or cutting them.
 - If John never goes to 7,5, the den Claws and the pool spawns (one per pool, at most two at a time plus 1,4 and 7,4) come up through 7,5 into the top room and down the passage at Lucy and Mark. At turn 3 the cap plays John's line wherever he stands, and the reveal and the Duo follow.
-- If the Duo isn't used, the hint keeps pulsing, the top Claws attack Lucy, Mark Counters, and the turn-5 cap ends the telling. Pools never empty the den, but the den is sealed as long as John stands on 7,5.
+- If the Duo isn't used, the hint keeps pulsing, all five top Claws come at Lucy and Mark (in the passage only one tile touches Lucy; on 9,5, three), Mark Counters, and the turn-5 cap ends the telling. Pools refill every enemy turn and never empty the den, but the den is sealed as long as John stands on 7,5.
 
-**Time (cold player, the levels plan's rates):** opening and lines 0.5, Bloom turn 0.75, arrival cut-in 0.5, Mark/John/Duo turn 1.5, enemy turn 0.3, ending 0.75 ≈ **4.5 min** (+0.4 cutaway). That's within the plan's 5.0 for the segment.
+**Time (cold player, the levels plan's rates):** opening and lines 0.5, Bloom turn 0.75, arrival cut-in 0.5, Mark/John/Duo turn 1.5, enemy turn with Counters 0.4, a turn-2 clean-up when needed 0.3, ending 0.75 ≈ **4.7 min** (+0.4 cutaway). That's within the plan's 5.0 for the segment.
 
 ---
 
@@ -386,7 +407,7 @@ Answered rows are from the tech check ([`reports/m4-mark-rework-tech.md`](../../
 
 ## Complexity budget
 
-The one sentence: *"John holds the den while Lucy and Mark save the cub."* New on-screen element: the Corruption pool (existing art, new to the player). It replaces nothing because the old segment had no hold; it's needed so the hold has a reason. Everything else reuses this memory's own tools (locks, pulses, AP caps, reveals, a reset). The one item that adds tracking is the pools, which is why Q3 asks rather than decides.
+The one sentence: *"John holds the den while Lucy and Mark save the cub."* New on-screen element: the Corruption pool (existing art, new to the player). It replaces nothing because the old segment had no hold; it's needed so the hold has a reason. Everything else reuses this memory's own tools (locks, pulses, AP caps, reveals, a reset). The one item that adds tracking is the pools, which is why it went to THJ as Q3 (answered: real pools, D-398).
 
 ## Risks
 
@@ -401,18 +422,23 @@ The one sentence: *"John holds the den while Lucy and Mark save the cub."* New o
 
 ---
 
-## Recommendation
+## Recommendation (approved, D-398)
 
 Build:
 
 - **Option A+** for the Bloom: the opening sequence casts Lucy's Cyclone on 4,4 at John's call, then turn 1 gives only Linda AP, and her bow pulses.
 - The three-stage flow above, with **one reset** (at Mark's arrival) and the **camera on Mark** after it.
 - John starting on **10,5**.
-- The **three** top Claws **hidden until John's line**.
+- **Two Claws visible by the mother from the start** (10,9, 11,8; HP 8) **plus three hidden** (9,8, 10,8, 10,7; HP 7) that appear at John's line. Stage 3 waits for all five.
 - Lucy and Mark as the **fixed walkers** to the cub.
-- The pools as **real Corruption pools refilling every enemy turn** (`SpecificTurns`, 0-XP Claw variants), if T10's open point (spawns come in Alerted) holds. Otherwise Q3's option b.
+- The pools as **real Corruption pools refilling every enemy turn** (`SpecificTurns` 1 to 6, 0-XP Claw and pool variants; an exception to D-345).
 
 New code: `CastAbilitySequence` (S, not core), plus "unlock per preset" (S) only if T2 needs it. Starting values are in the levers table above.
+
+**Still open for the build:**
+
+- Whether pool spawns come in Alerted (T10). If they come in Unaware, they sit 5+ tiles from everyone and never reach John. The fix is data or a small change, to settle in the wiring plan; the staged reveal (old Q3b) is the fallback.
+- The second visible tile, 11,8, is my pick (THJ's drawing has only four top tiles).
 
 **Playtest signal:**
 
@@ -421,51 +447,51 @@ New code: `CastAbilitySequence` (S, not core), plus "unlock per preset" (S) only
 
 ---
 
-## Questions for THJ
+## Questions for THJ (all answered 2026-11-05, D-398)
 
-**Q1. How does the player play Tempest Bloom?**
+**Q1. How does the player play Tempest Bloom?** **Answered: A+.**
 - Context: a forced unit, ability and cell is a core change (M, Tier 3; tech check). A sequence can cast the Cyclone with a new `CastAbilitySequence` (S). Locks unlock only once for everyone, and nothing fires a sequence when an ability is used. THJ's B can't work as drawn: Lucy on 7,2 is 5 from the den crossing, her Cyclone reaches 3, and B needs two new pieces (set AP after a Reset, a trigger on "Cyclone used"), while the Reset costs the Cyclone a turn of life.
 - Options: A (scripted Cyclone, Lucy runs off, the player shoots); **A+ (John calls, the sequence casts Lucy's Cyclone on 4,4 in view, and only Linda has AP on turn 1, so she is auto-selected with her bow pulsing; Lucy runs ahead later, in the arrival)**; B; C (forced action); D (both clicks by the player: Lucy's reach leaves 4,4 the only den tile, plus a new trigger to order them); E (cutscene).
 - Recommendation: **A+**. D is the upgrade if you want Lucy's click too (+1 small new piece).
 - Blocked: the wiring of beats 0 to 1; `CastAbilitySequence`.
 
-**Q2. Are the Claws by the mother there from the start, or are they the "new Claws" at John's line?**
+**Q2. Are the Claws by the mother there from the start, or are they the "new Claws" at John's line?** **Answered: both.** 3 hidden that appear at John's line (9,8 / 10,8 / 10,7), **plus 2 visible around the mother from the start** (10,9 / 11,8). THJ accepts the risk that the visible two walk down early, and will cut them or lower their HP if it plays too hard. Duo re-check: from 9,5 the three revealed Claws are within 4 (3 / 4 / 3) and the visible two are 5, so Chained Assault takes 3 on the unlock turn. The visible two then die to Mark's Counters on enemy turn 1, or in turn 2's clean-up.
 - Context: alert and visible, they walk down before the Duo unlocks, and get killed by basic attacks.
 - Options: (a) **hidden until John's line** (the mother and cub alone at the top before that); (b) visible from the start but Unaware, waking at the line (fragile: any ability within 2 or a family member within 3 wakes them); (c) visible plus 2 more at the line (more enemies, longer).
 - Recommendation: **(a)**, with **3** Claws (9,8 / 10,8 / 10,7), not 4, so the Duo's three targets end the fight. Keep 10,9 if you want a turn-2 clean-up or a Counter moment.
 - Blocked: the `top` group and stage 3.
 
-**Q3. Pools: real spawners or a staged reveal?**
+**Q3. Pools: real spawners or a staged reveal?** **Answered: real pools, refilling every enemy turn.** The Recurring mode re-arms for a turn after each fire and `interval 0` never refires, so the turns are listed with `SpecificTurns` (data), plus the 0-XP Claw variants. The exception to D-345 is logged with D-398.
 - Context: the drawn `P` are Corruption pools (`CP_Spawner`). D-345 bans spawned enemies in the memory. The tech check found they refill only on enemy turns 1, 3 and 5 as placed. Every turn is data (`SpecificTurns`; `interval 0` is a core bug). Spawns give 3 XP, so 0-XP Hearth Claw and pool variants are needed (data, S). Still open: spawns may come in Unaware (EN-12), since both pools are 5+ from everyone, and then they'd never reach John.
 - Options: (a) **real pools**, every enemy turn, 0-XP variants, Cleanse locked (a D-345 exception for these two), if spawns come in Alerted; (b) no spawning: the pool art stays, and 2 hidden Claws on the pool tiles are revealed at John's line ("more kept coming"); (c) no pools.
 - Recommendation: **(a)** if the alert point holds. Otherwise **(b)**: it keeps D-345, and for a 2-turn hold it plays almost the same.
 - Blocked: the den's data; the slow-player pressure.
 
-**Q4. Which narrow path?**
+**Q4. Which narrow path?** **Answered: the passage up.** With Lucy moved there, Lucy and Mark are both in front of John and Linda, as THJ wanted.
 - Context: you asked for Mark and Lucy in front in the narrow path.
 - Options: (a) **the x = 9 passage**: Lucy runs to 9,3 in the arrival cut-in, and Mark's chain ends 2 tiles from it on 11,2; (b) the bottom corridor (y = 2), with Mark arriving nearer the passage (for example on 12,2, with the two Claws at 10,2 and 11,2 between him and Lucy).
 - Recommendation: **(a)**.
 - Blocked: the arrival sequence's run destination.
 
-**Q5. Who walks to the cub?**
+**Q5. Who walks to the cub?** **Answered: (a), Lucy and Mark, fixed.**
 - Context: "closest heroes" needs new logic; fixed walkers are a built `MoveUnitSequence`.
 - Options: (a) **Lucy and Mark, fixed**; (b) the two closest (new logic); (c) all four.
 - Recommendation: **(a)**.
 - Blocked: the ending sequence.
 
-**Q6. A second reset at John's line?**
+**Q6. A second reset at John's line?** **Answered: (a), no.**
 - Context: if the player spent Lucy's or Mark's AP before moving John, the Duo waits a turn (its pulse persists).
 - Options: (a) **no** (control just returns, as you wrote); (b) reset at John's line so the Duo is always usable at once.
 - Recommendation: **(a)**. Add (b) only if the play check shows players stranded without AP.
 - Blocked: nothing now.
 
-**Q7. John's start tile.**
+**Q7. John's start tile.** **Answered: 10,5.** THJ never meant John to start on 7,5; that tile only showed the goal.
 - Context: drawn on 7,5, which would complete his objective at once.
 - Options: (a) **10,5 in the top room**, 3 steps from the mouth; (b) with the sisters in the bottom room, 6+ steps through the passage, his whole turn.
 - Recommendation: **(a)**.
 - Blocked: the start layout.
 
-**Q8. Must Mark be *selected* after the reset, or is the camera on him enough?**
+**Q8. Must Mark be *selected* after the reset, or is the camera on him enough?** **Answered: (a), camera on Mark.**
 - Context: after a Reset the game auto-selects a random unit that can act (tech check).
 - Options: (a) **camera on Mark** plus his line, and the player clicks him (no new code); (b) true selection: tag the others `Status.Inactive` during the Reset so only Mark gets AP and is selected, then untag them and give their AP back with a "set AP" sequence (two new small sequences); this also means Mark acts first, alone.
 - Recommendation: **(a)**. Take (b) if the play check shows players starting with John or Linda and missing Mark's entrance.
@@ -483,42 +509,43 @@ New code: `CastAbilitySequence` (S, not core), plus "unlock per preset" (S) only
 | M4-1 to M4-3 | Arrival | Kept ("And then I arrived." per THJ) |
 | N5 | John on 7,5 | THJ's "I'll hold them off. You save them." Polish only |
 | M4-5 to M4-7 | The hold | Kept, moved from "first Chained Assault bark" to the Duo hint |
-| N7 | Ending | **Rewrite M4-11 and M4-12.** "Then her mother came" no longer fits: she is there from the start. Something like "She'd stood over the cub the whole time. Until the last Claw fell." Then M4-13, the narrator's "The cub cried out.", and Lucy's line as today. No jokes (D-171) |
-| Cutaway | End | Unchanged. "Ten Claws, Lucy." still works: 6 in the den, 2 with Mark, 3 by the mother, plus pool spawns |
+| N7 | Ending | **Rewrite M4-11 and M4-12.** "Then her mother came" no longer fits: she is there from the start, with two Claws already at her. Something like "She'd stood over the cub the whole time. Until the last Claw fell." Then M4-13, the narrator's "The cub cried out.", and Lucy's line as today. No jokes (D-171) |
+| Cutaway | End | Unchanged. "Ten Claws, Lucy." / "At least." works even better: 6 in the den, 2 with Mark, 5 by the mother, plus pool spawns |
 
 ## What changes in the levels plan (Segment 4)
 
 - **Grid and table replaced** by this plan's grids and stages.
 - **Teaches:** Tempest Bloom by the player (was scripted), Continuous Attack on the entrance, Chained Assault.
-- **Enemies:** 6 den + 2 arrival + 3 top, plus pools (Q3).
+- **Enemies:** 6 den + 2 arrival + 5 top (2 visible, 3 hidden), plus two pools refilling every enemy turn with 0-XP Claws.
 - **Stages:** 3 instead of 2. The "Reach the cub" stage is removed, and **D-347 (the cue Claws fight during the walk) is superseded**: there is no player walk.
 - **The mother's scene** moves from the end of stage 1 to the outro.
-- **D-345:** an exception is proposed for the pools (Q3a), or kept (Q3b).
-- **To check rows:** 2 resolved by design (scripted Bloom, the quiver question); T1 to T16 added.
-- **Hearth time:** 5.0 → 4.5 + 0.4.
+- **D-345:** exception for these two pools (D-398).
+- **To check rows:** 2 resolved by design (scripted Bloom, the quiver question); the open T rows added.
+- **Hearth time:** 5.0 → 4.7 + 0.4.
 
 ---
 
 ## Player experience
 
-- The memory fades in. I'm in a small cave room with Linda and Lucy. Across a gap there's a corridor full of Claws, with two dark pools at its ends. Up top, a big wolf stands over a cub, and Dad is up there too.
+- The memory fades in. I'm in a small cave room with Linda and Lucy. Across a gap there's a corridor full of Claws, with two dark pools at its ends. Up top, a big wolf stands over a cub with two Claws circling her, and Dad is up there too.
 - Mark (telling the story) sets the scene. Dad shouts at Lucy to shut the den, and she throws a storm right where the corridors cross.
 - Dad shouts to Linda. She's the only one who can act, and her bow button glows. I shoot up at the storm, and the arrow splits three ways down the corridors. Four Claws drop.
 - Mark: "And Linda shot straight into Lucy's fire, and the whole cave bloomed." Linda: "Did I?" Mark: "In my version, you did."
 - Lucy runs ahead toward the passage to the cub. At the far end of the tunnel, Mark appears behind two Claws. "And then I arrived." "Late." "Exactly on time."
 - It's my turn again with everyone fresh, and the camera is on Mark. I click him. He jumps one Claw, a button prompt lets him swing again, and the second drops.
 - The goal says John must hold the den mouth, and the tile is marked. I walk Dad there, three steps.
-- Dad: "I'll hold them off. You save them." Three Claws appear around the wolf. Mark: "Lucy's fire, my fists. As we practiced." Lucy: "We never practiced that." Mark: "I practiced. You followed."
-- A new button glows on Lucy and Mark, their Duo. I step them up the passage and fire it: Lucy's embers and Mark's ghost fists hit all three Claws, and they fall.
+- Dad: "I'll hold them off. You save them." Three more Claws appear around the wolf. Mark: "Lucy's fire, my fists. As we practiced." Lucy: "We never practiced that." Mark: "I practiced. You followed."
+- A new button glows on Lucy and Mark, their Duo. I step them up the passage and fire it: Lucy's embers and Mark's ghost fists hit the three new Claws, and they fall. I end the turn.
+- The last two Claws by the wolf run at Lucy. Each time one hits her, Mark strikes back and drops it. (If one survives, I finish it next turn.) Pools keep spitting Claws at Dad, but he holds the mouth.
 - The jokes stop. The wolf lies down and doesn't get up. Lucy and Mark walk up to the cub, and it cries out. Lucy: "She saved her. We only carried her home."
 - The grid fades back to the hearth. "Ten Claws, Lucy." "At least."
 
-## Docs to update if approved
+## Docs to update (approved, D-398)
 
 - `plans/onboarding/2026-10-26-onboarding-levels.md` Segment 4 (grid, table, Hearth time, To check), with a history line pointing here.
 - `plans/onboarding/onboarding-narrative-draft.md` Step 4 (via `miso-narrative`: N1, N2, N5, N7, the moved lines).
 - `design/level-chunks.md`: optional new pattern "hold the door" (a 1-wide mouth, a sealed spawner den, one defender), plus a coverage row for John. Only if THJ wants it catalogued.
-- GDD: **no rule changes** (all level data). If Q3a is chosen, `missions-structure.md` gets no change either, because the pool cadence is per-level data. The decision log gets the D-345 exception (coordinator).
+- GDD: **no rule changes** (all level data, including the pool cadence). The decision log gets the D-345 exception with D-398 (coordinator).
 - `HearthMemoryWiring.Mark.cs` and `HearthMemoryMarkTests.cs` (implementer, after approval): stages, sequences, locks, AP limit, hints, hidden groups, re-read tile constants.
 
 ## Gates

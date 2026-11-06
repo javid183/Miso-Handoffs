@@ -301,6 +301,10 @@
 <g><rect x="670" y="486" width="46" height="46" fill="url(#gap)" stroke="#e2dccf" stroke-width="1"/><title>14,0  Gap</title></g>
 <g><rect x="716" y="486" width="46" height="46" fill="url(#gap)" stroke="#e2dccf" stroke-width="1"/><title>15,0  Gap</title></g>
 <rect x="349" y="257" width="44" height="44" fill="#5a3d1f" fill-opacity="0.22" stroke="#5a3d1f" stroke-width="1.5"/>
+<g><path d="M509.0,80.0 L524.0,95.0 L509.0,110.0 L494.0,95.0 z" fill="#d9822b" stroke="#2b1035" stroke-width="1.5"/><title>10,9  Dark Claw</title></g>
+<text x="509.0" y="99.5" font-size="12" text-anchor="middle" font-weight="bold" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#fff">c</text>
+<g><path d="M555.0,126.0 L570.0,141.0 L555.0,156.0 L540.0,141.0 z" fill="#d9822b" stroke="#2b1035" stroke-width="1.5"/><title>11,8  Dark Claw</title></g>
+<text x="555.0" y="145.5" font-size="12" text-anchor="middle" font-weight="bold" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#fff">c</text>
 <g><circle cx="509.0" cy="279.0" r="15" fill="#5a3d1f" stroke="#fff" stroke-width="2"/><title>10,5  John</title></g>
 <text x="509.0" y="283.5" font-size="13" text-anchor="middle" font-weight="bold" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#fff">J</text>
 <g><path d="M95.0,310.0 L110.0,325.0 L95.0,340.0 L80.0,325.0 z" fill="#d9822b" stroke="#2b1035" stroke-width="1.5"/><title>1,4  Dark Claw</title></g>

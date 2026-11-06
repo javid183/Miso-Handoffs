@@ -362,10 +362,14 @@
 <text x="444.0" y="84.0" font-size="10" text-anchor="start" font-weight="bold" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#ffffff" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">Chained Assault reach</text><text x="444.0" y="84.0" font-size="10" text-anchor="start" font-weight="bold" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#b32424">Chained Assault reach</text>
 <rect x="349" y="303" width="44" height="44" fill="#d35400" fill-opacity="0.22" stroke="#d35400" stroke-width="1.5"/>
 <text x="352.0" y="314.0" font-size="10" text-anchor="start" font-weight="bold" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#ffffff" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">one at a time</text><text x="352.0" y="314.0" font-size="10" text-anchor="start" font-weight="bold" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#d35400">one at a time</text>
+<g><path d="M509.0,80.0 L524.0,95.0 L509.0,110.0 L494.0,95.0 z" fill="#d9822b" stroke="#2b1035" stroke-width="1.5"/><title>10,9  Dark Claw</title></g>
+<text x="509.0" y="99.5" font-size="12" text-anchor="middle" font-weight="bold" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#fff">c</text>
 <g><path d="M463.0,126.0 L478.0,141.0 L463.0,156.0 L448.0,141.0 z" fill="#d9822b" stroke="#2b1035" stroke-width="1.5"/><title>9,8  Dark Claw</title></g>
 <text x="463.0" y="145.5" font-size="12" text-anchor="middle" font-weight="bold" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#fff">c</text>
 <g><path d="M509.0,126.0 L524.0,141.0 L509.0,156.0 L494.0,141.0 z" fill="#d9822b" stroke="#2b1035" stroke-width="1.5"/><title>10,8  Dark Claw</title></g>
 <text x="509.0" y="145.5" font-size="12" text-anchor="middle" font-weight="bold" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#fff">c</text>
+<g><path d="M555.0,126.0 L570.0,141.0 L555.0,156.0 L540.0,141.0 z" fill="#d9822b" stroke="#2b1035" stroke-width="1.5"/><title>11,8  Dark Claw</title></g>
+<text x="555.0" y="145.5" font-size="12" text-anchor="middle" font-weight="bold" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#fff">c</text>
 <g><path d="M509.0,172.0 L524.0,187.0 L509.0,202.0 L494.0,187.0 z" fill="#d9822b" stroke="#2b1035" stroke-width="1.5"/><title>10,7  Dark Claw</title></g>
 <text x="509.0" y="191.5" font-size="12" text-anchor="middle" font-weight="bold" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#fff">c</text>
 <g><circle cx="371.0" cy="279.0" r="15" fill="#5a3d1f" stroke="#fff" stroke-width="2"/><title>7,5  John</title></g>
@@ -382,6 +386,11 @@
 <text x="233.0" y="421.5" font-size="13" text-anchor="middle" font-weight="bold" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#fff">L</text>
 <polyline points="473.0,358.0 473.0,293.0" fill="none" stroke="#b32424" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#ah)" opacity="0.9"/>
 <polyline points="542.0,427.0 463.0,427.0 463.0,349.0" fill="none" stroke="#1b1b1b" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#ah)" opacity="0.9"/>
+<polyline points="523.0,108.0 523.0,233.0 491.0,233.0" fill="none" stroke="#d35400" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#ah)" opacity="0.9"/>
+<text x="507.0" y="227.0" font-size="10.5" text-anchor="middle" font-weight="bold" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#ffffff" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">enemy turn 1</text><text x="507.0" y="227.0" font-size="10.5" text-anchor="middle" font-weight="bold" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#d35400">enemy turn 1</text>
+<polyline points="565.0,154.0 565.0,279.0 533.0,279.0" fill="none" stroke="#d35400" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#ah)" opacity="0.9"/>
+<text x="549.0" y="273.0" font-size="10.5" text-anchor="middle" font-weight="bold" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#ffffff" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">enemy turn 1</text><text x="549.0" y="273.0" font-size="10.5" text-anchor="middle" font-weight="bold" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#d35400">enemy turn 1</text>
 <circle cx="477" cy="265" r="8" fill="#111"/>
 <text x="477.0" y="268.5" font-size="10" text-anchor="middle" font-weight="bold" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#fff">1</text>
+<text x="463.0" y="308.0" font-size="10" text-anchor="middle" font-weight="bold" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#ffffff" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">Counter</text><text x="463.0" y="308.0" font-size="10" text-anchor="middle" font-weight="bold" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#6c4fc4">Counter</text>
 </svg>

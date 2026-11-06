@@ -305,6 +305,10 @@
 <rect x="211" y="257" width="44" height="44" fill="#d35400" fill-opacity="0.22" stroke="#d35400" stroke-width="1.5"/>
 <rect x="211" y="211" width="44" height="44" fill="#d35400" fill-opacity="0.22" stroke="#d35400" stroke-width="1.5"/>
 <text x="122.0" y="314.0" font-size="10" text-anchor="start" font-weight="bold" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#ffffff" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">die</text><text x="122.0" y="314.0" font-size="10" text-anchor="start" font-weight="bold" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#d35400">die</text>
+<g><path d="M509.0,80.0 L524.0,95.0 L509.0,110.0 L494.0,95.0 z" fill="#d9822b" stroke="#2b1035" stroke-width="1.5"/><title>10,9  Dark Claw</title></g>
+<text x="509.0" y="99.5" font-size="12" text-anchor="middle" font-weight="bold" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#fff">c</text>
+<g><path d="M555.0,126.0 L570.0,141.0 L555.0,156.0 L540.0,141.0 z" fill="#d9822b" stroke="#2b1035" stroke-width="1.5"/><title>11,8  Dark Claw</title></g>
+<text x="555.0" y="145.5" font-size="12" text-anchor="middle" font-weight="bold" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#fff">c</text>
 <g><path d="M233.0,218.0 L248.0,233.0 L233.0,248.0 L218.0,233.0 z" fill="#d9822b" stroke="#2b1035" stroke-width="1.5"/><title>4,6  Dark Claw</title></g>
 <text x="233.0" y="237.5" font-size="12" text-anchor="middle" font-weight="bold" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#fff">c</text>
 <g><path d="M233.0,264.0 L248.0,279.0 L233.0,294.0 L218.0,279.0 z" fill="#d9822b" stroke="#2b1035" stroke-width="1.5"/><title>4,5  Dark Claw</title></g>
