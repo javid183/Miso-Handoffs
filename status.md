@@ -71,6 +71,8 @@ Owner: coordinator. Every item has a scope: `all` or a branch. Started 2026-10-1
 
 (New requests land here before triage.)
 
+- 2026-11-05 `m4-mark-rework` (thj/onboarding; design + build, L): THJ's 8-point rework of Mark's memory (hidden Mark + 2 Claws, forced/guided Tempest Bloom, Mark arrives + reset, Duos/Cleanse locked, John holds the corridor, Mark–Lucy Duo unlock, respawning pools, scripted walk to the cub). His uncommitted `GB_m4-mark` edits illustrate it (drawn in `plans/onboarding/m4-rework/`). `miso-game-designer` → `plans/onboarding/2026-11-05-m4-mark-rework.md`; Explore checking the tech in parallel.
+
 - 2026-11-05 `opening-family-roles`: **closed, D-397** (THJ keeps Linda first, "Watch", Encore as is). Plan kept for reference; revisit after a cold playtest.
 - 2026-11-05 `cyclone-redesign` (all; feature, L; core: GridCell, OnGridEntity, Projectile): direction A picked (`design/cyclone-redesign.md`); open: one-or-two Cyclones, numbers, build plan, branch.
 
