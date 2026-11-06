@@ -13,3 +13,9 @@ Should fix:
 4. Optional `canProvokeFamilyRoles` (default on), as the Masher counter does.
 
 Notes: event set right; ATB fill on the ATB branch; cooldown only on the animation event (timeout leaves the ability half-active); fpFill granted; lookup order abilities → items → role (abilities win); casts through `LevelAbilityLock` (wanted). AI never reads it.
+
+## Re-review after fixes (2026-11-05)
+
+**R1 APPROVE** (all six fixed; no compile errors found by reading). Optional: use `FactionRoleProvocationSuppression.Suppress/Release` (public API, not a core edit) when the toggle is off, for generality; not needed for M4 (Mark's role needs an enemy action, Linda's an enemy in lane; John is covered by the toggle). R3: set `canProvokeFamilyRoles = false` on the opening cast; check the grid doesn't react to hover mid-cutscene.
+
+**R2 APPROVE** (not yet run): effects single-document, references overwritten; variant pattern as the Trail tool; idempotent by design. Test fixes requested: shared refs intact, variant check, null assert. Fires-every-turn timing vs `TurnNumber` to the play check.

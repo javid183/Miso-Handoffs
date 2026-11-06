@@ -54,3 +54,16 @@ none (general code; lands on thj/onboarding)
 
 1. Test Runner > EditMode > run MISO.Content.Levels.EditorTests.CastAbilitySequenceTests (7 pass), then Run All.
 2. Create the asset via Assets > Create > Game > Sequence > Common > CastAbilitySequence; set Lucy, her Cyclone preset and a free cell; play it from a level (R3 wires it).
+
+## Review fixes
+
+All six findings are applied in `CastAbilitySequence.cs` and `Editor/CastAbilitySequenceTests.cs`. **Not compiled and not run**: the Unity MCP timed out on refresh (60s) and disconnected on run_tests, so the editor needs a recompile and a test run from THJ.
+
+1. Event order now matches the player path: onStart raises abilityStarted, onActivation raises abilityActivationStarted, completion raises abilityPerformed and finishes. Comment rewritten.
+2. The ActivateAbility call is in try/catch: Debug.LogException, a warning, then yield break.
+3. TryResolve fails with a reason unless the preset's target type includes Cell and its apply mode is Targeted. Tests added for wrong target type and wrong apply mode.
+4. `PickUnit` (public static) accepts only alive, non-downed units and warns on duplicate nicknames; FindUnit uses it.
+5. Added a successful-resolve test (same unit, ability, cell; problem null) using a GridCell component on a hidden object. The real FindUnit lookup is not exercised for a live unit: EditMode units never run Awake, so IsAlive stays false; PickUnit has only a rejecting test, and the accepting side is left to the play check.
+6. `canProvokeFamilyRoles` field (default on). Off skips abilityStarted only, as the Masher counter does. It does not use FactionRoleProvocationSuppression (a core class), so Mark and Linda role handlers still see the action in the log; say if that matters.
+
+Risk: AddComponent<GridCell> in the test may fail if GridCell needs other components; if so, only that test is affected.
