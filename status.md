@@ -71,7 +71,7 @@ Owner: coordinator. Every item has a scope: `all` or a branch. Started 2026-10-1
 
 (New requests land here before triage.)
 
-- 2026-11-05 `m4-mark-rework` (thj/onboarding + R1 general; L): design D-398, lines D-399. R1 `CastAbilitySequence` and R2 Hearth pool Claws (tool `Wire Hearth Pool Claws`, 0-XP alert variant, SpecificTurns 1-8) written, reviewed APPROVE, verified 2026-11-06 (`reports/m4-r1-r2-verify.md`: clean compile, pool tool idempotent by md5, 17/17 new tests). `HearthMemoryLevelsTests.NothingInTheHearthGivesExperience` red only because THJ's uncommitted `GB_m4-mark` has two stock `CP_Spawner`s (XP 3); R3 swaps them. **Waiting on THJ:** full Run All (expect that red + the AI red), then the R1 and R2 commits, then R3 (opus).
+- 2026-11-05 `m4-mark-rework` (thj/onboarding + R1 general; L): design D-398, lines D-399. R1 `CastAbilitySequence` and R2 Hearth pool Claws (tool `Wire Hearth Pool Claws`, 0-XP alert variant, SpecificTurns 1-8) written, reviewed APPROVE, verified and committed 2026-11-06 (`0131dd473` R1, `163e01f56` R2; `reports/m4-r1-r2-verify.md`). Run All: 4 red = AI known, Hearth XP (THJ's uncommitted `GB_m4-mark` stock spawners, R3 fixes), 2 GridToLevel from a stale `__Test` left by the frozen run (passed 2x on rerun). **Now:** R3 (opus) dispatched.
 
 - 2026-11-05 `opening-family-roles`: **closed, D-397** (THJ keeps Linda first, "Watch", Encore as is). Plan kept for reference; revisit after a cold playtest.
 - 2026-11-05 `cyclone-redesign` (all; feature, L; core: GridCell, OnGridEntity, Projectile): direction A picked (`design/cyclone-redesign.md`); open: one-or-two Cyclones, numbers, build plan, branch.

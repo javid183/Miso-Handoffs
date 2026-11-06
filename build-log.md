@@ -2542,3 +2542,11 @@ Core gets one additive, generic `CombatLog.AddCustom`.
 - Verified: review APPROVE; both tools idempotent (md5); EditMode 1361/1362, known red only; THJ played OK.
 - Encore: THJ's animation (frame 4) + Add Encore refreshes existing slots, 9 custom-kit levels refreshed: `4a0c8c080` (→ `main`). EditMode 1361/1362 known red.
 - Status: done.
+
+## 2026-11-06 · Memory 4 rework: R1 cast sequence, R2 Hearth pool Claws
+
+- **Built:** `CastAbilitySequence` (general; a sequence makes a unit cast an ability on a cell) and Tools > Onboarding > Wire Hearth Pool Claws (0-XP alert Claw variant, spawner on turns 1-8).
+- **Verified:** clean compile; pool tool idempotent (md5 of 8 files unchanged on rerun); 11/11 + 6/6 new tests; THJ Run All 1375/1379.
+- **Not verified:** play (comes with R3).
+- **Findings:** `GridToLevelTests` has no stale-folder cleanup in SetUp: an interrupted run leaves `Greybox/__Test` and the next run fails two tests once. Backlog candidate. `NothingInTheHearthGivesExperience` red until R3 swaps THJ's stock spawners.
+- **Status:** committed `0131dd473`, `163e01f56`. R3 next.
