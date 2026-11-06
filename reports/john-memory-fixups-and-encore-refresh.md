@@ -66,3 +66,11 @@ main gets chunk B (after THJ's Encore files).
 - `EncoreKitTests.cs`: the refresh test now loads its Linda copy with `PrefabUtility.LoadPrefabContents` and releases it with `UnloadPrefabContents` in the `finally` (no scene dirtying). It also asserts `SlotNeedsRefresh(defaultSlot, levelSlot) == false` for every Linda in every level of `EncoreKitTool.Levels`.
 - Line endings: the file is LF (also at HEAD, 0 CRLF), not CRLF as the brief said; I kept LF, no BOM.
 - Recompiled; console showed only existing warnings (graph view hiding, obsolete InstanceIDToObject, unused field) plus domain-backup and serialization-depth messages that are not from these files. Ran only `EncoreKitTests`: 2 passed, 0 failed. Full suite and menu tools not run (verifier's job).
+
+## Frame 4 refresh (incomplete, Unity MCP dropped)
+
+- Play mode was off (`manage_editor stop` said already stopped).
+- Run 1 of Tools/Levels/Linda/Add Encore To Custom Kits: the MCP call returned "session disconnected while awaiting command_result", but Editor.log shows the tool did finish: `[EncoreKitTool] Encore added to 0 kit(s) and refreshed in 9. 0 other level(s) still lack it`. Each of the 9 levels logged "Encore in slot 5 refreshed to the default kit's." Matches the expected 9.
+- After that the MCP never came back (read_console and run_tests-side pings unanswered, several retries over about a minute; Editor.log shows MCP websocket send exceptions). Unity.exe is still running. Per instructions I changed nothing further.
+- NOT done: run 2 (expect 0 refreshed), EncoreKitTests, full EditMode suite.
+- Diff check is inconclusive: the 9 level prefabs were already modified (uncommitted) before this task, so `git diff` against HEAD mixes Chunk B changes with this run. It shows `value: 4` x9 on the Encore activation frame (good), plus Encore stateName / sideVisualMode additions and a few LindaJohn-C2/C3 extra lines that come from the earlier Chunk B refresh (not isolated; no pre-run snapshot was taken). Needs a check of the frame-only delta by a re-run once the MCP is up (a second run reporting 0 refreshed is the idempotence proof).

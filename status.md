@@ -71,7 +71,7 @@ Owner: coordinator. Every item has a scope: `all` or a branch. Started 2026-10-1
 
 (New requests land here before triage.)
 
-- 2026-11-05 `john-memory-tweaks` (thj/onboarding + Encore general): John committed `0cfba55c8` (THJ played OK; EditMode 1361/1362 known red). Encore held: THJ moved Encore's activation frame 5→4 on `Unit_Linda` after the test run; implementer re-running Add Encore on the 9 custom-kit levels + tests, then the Encore commit (→ `main`). Reports `john-memory-*`.
+- 2026-11-05 `john-memory-tweaks`: **done.** John `0cfba55c8` (branch); Encore animation + kit refresh `4a0c8c080` (→ `main`). EditMode 1361/1362 known red; THJ played OK. Open: `EditorSettings` autosave 1→0 left uncommitted (shared or local? THJ).
 
 - 2026-11-05 `mission-onvalidate-dirty` (all; S, Tier 2): `Mission.OnValidate` (`Mission.cs` ~:276-282) marks the Mission asset dirty on load and inspector edits, independently of `LevelBase.SetID`. Minor; noise in saves.
 

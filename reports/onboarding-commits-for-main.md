@@ -37,4 +37,4 @@ Explore, read-only, for `linda-memory-tuning` (c). Branch = `main` + 48 commits;
 - `02ef3195e` core: RestartTurn refreshes the exhausted tint (own commit).
 - `98574aaab` core: ability Initialize never writes the serialized animation events (own commit).
 - `eb10f1c5a` core: LevelBase.SetID marks dirty only on a real change (own commit).
-- Encore animation (THJ) + Add Encore refreshes existing slots + 9 custom-kit levels: pending commit, **goes to `main`** (D-394).
+- `4a0c8c080` Encore animation (THJ, activation frame 4) + Add Encore refreshes existing slots + 9 custom-kit levels: **goes to `main`** (D-394; after `87174b9fc`/`7a1674008`).
