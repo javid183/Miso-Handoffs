@@ -119,6 +119,82 @@ Narrative agent, 2026-10-26. Step **A5** of `plans/onboarding/2026-10-25-onboard
 | M4-13 | Mark (off) | She didn't get up again. | Level dialogue | |
 | M4-14 | Lucy (off) | She saved her. We only carried her home. | Level dialogue | Lucy, the most attached, gives the credit away. Options: B (Linda): "That part, we all tell the same." |
 
+## Memory 4 rework (D-398), draft for THJ
+
+Narrative agent, 2026-11-05. Source: `plans/onboarding/2026-11-05-m4-mark-rework.md` (beat list, "Lines needed", "Player experience"). **This section replaces the Step 4 tables above once THJ signs off**; until then the Step 4 rows stay as history. Every line goes in as `[PLACEHOLDER] ` until approved. Tier 3 throughout. Beat numbers are the plan's.
+
+**Speakers.** "(off)" = a voice from the hearth over the memory (Mark is the teller). John and Lucy without "(off)" speak inside the memory, as in Step 3. Where a line matters, options are listed with the recommended one first.
+
+### Opening (beat 0b)
+
+| ID | Speaker | Line | Where it plays | Replaces / notes |
+|---|---|---|---|---|
+| N1-1 | Mark (off) | Claws in every tunnel. And on the ledge, a wolf standing over her cub. | Level dialogue, intro sequence, camera on the den then the ledge | **New.** Sets the den, the mother and the cub; no rule, no objective. **A (rec.)**: plain picture, lets the board do the rest. **B**: "Picture it. A den full of Claws, and one mother between them and her cub." (warmer, foreshadows her fall). **C**: "A cave full of Claws. One wolf, one cub, and nowhere to run." (more dread) |
+| N1-2 | Mark (off) | The family was there. Most of it. The best part was still on its way. | Level dialogue, right after N1-1 | **New.** The boast that sets up "And then I arrived." **A (rec.)**: Mark claims the arrival before it happens. **B**: "Everyone was there. Well. Almost everyone." (drier; lets Lucy's "Late." do more). **C**: drop N1-2 and keep N1-1 alone if the intro runs long |
+| N1-3 | John | Lucy! Keep them in their hole! | Level dialogue, just before `CastAbilitySequence` casts her Cyclone on 4,4 | **New.** "Shut the den" in a father's shout, not an instruction to the player. **A (rec.)**: blunt and warm. **B**: "Lucy, shut the den!" (THJ's words, plainest). **C**: "Lucy! Give them a storm to sit in." (lighter, names her Cyclone without the word) |
+| N2-1 | John | Linda! Through her storm! | Level dialogue, right after the Cyclone lands, still in the opening | **New.** Points her at the storm without naming a button; the layout leaves one lane anyway. **A (rec.)**: short, clear. **B**: "Linda. Thread it through the wind." (the archer's word; softer). Keep John on "storm/wind": Mark then retells it as "fire" in M4-8, which is the tall-tale gap (and echoes Lucy's "the wind caught fire", M2-5) |
+
+### After the Bloom (beat 4, start of the arrival cut-in)
+
+| ID | Speaker | Line | Where it plays | Replaces / notes |
+|---|---|---|---|---|
+| M4-8 | Mark (off) | And Linda shot straight into Lucy's fire, and the whole cave bloomed. | Arrival sequence, first line, over the split arrows | **Moved** from the opening interruption. **Fits better now**: it lands after the player's own shot, so the boast is about something they just did. Unchanged |
+| M4-9 | Linda (off) | Did I? | Arrival sequence | **Moved**, unchanged. Still works when the player made the shot: Linda doubts it ever happened, which keeps open question 2 (the Bloom is Mark's claim) and the Yard callback ("It never happened." / "Yet.") |
+| M4-10 | Mark (off) | In my version, you did. | Arrival sequence | **Moved**, unchanged. No longer "the last joke": the arrival and the Duo hint follow. Lucy runs to 9,3 after this line |
+
+### The arrival (beat 4, after Lucy's run and the reveal)
+
+| ID | Speaker | Line | Where it plays | Replaces / notes |
+|---|---|---|---|---|
+| M4-1 | Mark (off) | And then I arrived. | Arrival sequence, on the `arrival` reveal, camera on Mark | **Replaces** "Then I arrived." (THJ's wording). Pays off N1-2. Fits: it plays the moment he appears |
+| M4-2 | Lucy (off) | Late. | Arrival sequence | Unchanged. Lands harder now that the Bloom happened without him |
+| M4-3 | Mark (off) | Exactly on time. | Arrival sequence, last line before the Reset and the fresh turn | Unchanged. Ends the cut-in over Mark's full AP bar (the plan's answer to "did I lose my turn?") |
+| M4-4 | Mark | I closed my eyes. I didn't need them. | Bark (scoped: memory), first Atman's Focus | Unchanged. Most likely fires during his entrance chain |
+
+### The hold (beat 7)
+
+| ID | Speaker | Line | Where it plays | Replaces / notes |
+|---|---|---|---|---|
+| N5-1 | John | I'll hold them off. You save them. | Hold sequence, first line, John on 7,5 | **New, THJ's line, recommended as is.** "Them" means the mother and the cub, and only the cub survives: the line pays off quietly at the end. **Alt**: "Nothing gets past me. Go. Save them." (more of a shield; one beat longer) |
+| M4-5 | Mark (off) | Lucy's fire, my fists. As we practiced. | Hold sequence, after the `top` reveal, before the Duo unlocks | **Moved** from "first Chained Assault bark" to the Duo hint. Fits: it names both halves (her fire, his fists) without naming a button, and the pulse on Lucy and Mark does the rest |
+| M4-6 | Lucy (off) | We never practiced that. | Hold sequence | **Moved**, unchanged |
+| M4-7 | Mark (off) | I practiced. You followed. | Hold sequence, last line, camera back | **Moved**, unchanged. The last joke of the memory now (D-171: none from the mother's fall on) |
+
+### The ending (beat 9, outro; no jokes, no interruptions)
+
+The mother falls on screen first (LSB `motherFalls`). Recommend a held camera, about one second of silence, before M4-11 (the plan's risk about the fast cutaway).
+
+| ID | Speaker | Line | Where it plays | Replaces / notes |
+|---|---|---|---|---|
+| M4-11 | Mark (off) | She never left her cub. Not once. | Outro, after the fall, camera on the ledge | **Replaces** "Then her mother came." (she is on screen from the start now). Level voice, no boast; that is the tone shift. Options below |
+| M4-12 | Mark (off) | She held on until the last Claw fell. | Outro, still on the ledge, before the walk | **Replaces** "She stood over the cub until the last Claw fell." Kept the old line's ending, since now it is literally what the player watched |
+| M4-13 | Mark (off) | The cub cried out. | Outro, after Lucy reaches 8,9 and Mark 9,9 | **Replaces** "She didn't get up again." (the fall shows it; saying it after reads twice). The plan calls this line "the narrator's"; Mark is the narrator here |
+| M4-14 | Lucy (off) | She saved her. We only carried her home. | Outro, last line before the fade | Unchanged |
+
+N7 options for M4-11 / M4-12 (the ending's key lines):
+
+- **A (rec.)**: "She never left her cub. Not once." / "She held on until the last Claw fell." Says what the player saw (she stood there all fight) and why she falls now. "Held on" hints she was already hurt, without adding a fact.
+- **B**: "She'd stood over her cub the whole fight." / "When it was over, she lay down beside her." Gentler, no hint of wounds; the fall reads as exhaustion.
+- **C**: "She was hurt long before we came." / "She waited until the last Claw fell." Explains the fall outright. **Adds a lore fact** (her wounds came before the family), so Tier 3 on its own.
+
+### Cutaway check (unchanged)
+
+"Ten Claws, Lucy." / "At least." (H5-2 / H5-3) still works, and better: Mark's telling now shows 13 placed Claws (6 in the den, 2 with Mark, 5 by the mother) plus the pool spawns, so Lucy's "at least ten" from M2 is backed by the next teller, and John's tease turns into a concession. "At least." becomes her win. **Speaker note:** this draft gives the line to **John** in the Home scene after Margaret's H5-1; the rework plan's beat 9 says "Margaret". I kept John (it answers his C2-1 "Ten?"). THJ to confirm.
+
+### Old Step 4 lines, status
+
+| Old ID | Status in the rework |
+|---|---|
+| M4-1 | Reworded ("And then I arrived."), moved to the arrival cut-in after the Bloom |
+| M4-2, M4-3 | Kept, same beat |
+| M4-4 | Kept (first Atman's Focus bark) |
+| M4-5 to M4-7 | Kept, moved to the hold sequence as the Duo hint |
+| M4-8 to M4-10 | Kept, moved from the opening to after the player's shot |
+| M4-11, M4-12 | Rewritten (N7) |
+| M4-13 | Replaced by "The cub cried out." |
+| M4-14 | Kept |
+| New | N1-1, N1-2, N1-3, N2-1, N5-1 |
+
 ## Step 5 · Hearth close (Home state; `FirePlace` / `MoreFire`, then `WolfSitDoor`; night; morning)
 
 | ID | Speaker | Line | Where | Notes |
