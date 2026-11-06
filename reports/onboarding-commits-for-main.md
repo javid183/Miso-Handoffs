@@ -1,5 +1,7 @@
 # `thj/onboarding` commits that belong in `main` (2026-11-04)
 
+**History since 2026-11-05 (D-396):** no cherry-picks; the branch is the working main and `main` is fast-forwarded later. Kept as a record of which commits are general.
+
 Explore, read-only, for `linda-memory-tuning` (c). Branch = `main` + 48 commits; `main` has none the branch lacks. Not verified by a cherry-pick run.
 
 ## MAIN, in cherry-pick order
