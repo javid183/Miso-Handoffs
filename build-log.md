@@ -2535,3 +2535,9 @@ Core gets one additive, generic `CombatLog.AddCustom`.
 **Not verified:** nothing open.
 **Findings:** `73fa9050e` alone wasn't enough (source of the residual growth not pinned). `Mission.OnValidate` still dirties Mission assets (backlog).
 **Status:** done.
+
+## 2026-11-05 · John memory tuning (THJ) + fix-ups
+
+- Built: THJ's `GB_m3-john` tuning (5 far Claws, per-claw turn order, 4 kills / turn cap 3, Duos locked all level, D-393); fix-ups (new Claw no XP, text, Wire Memory 3 (John) writes it all incl. the lock, tests; D-395). Commit `0cfba55c8`.
+- Verified: review APPROVE; both tools idempotent (md5); EditMode 1361/1362, known red only; THJ played OK.
+- Status: Encore animation commit pending the frame-4 kit refresh.

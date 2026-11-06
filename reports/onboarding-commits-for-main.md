@@ -22,7 +22,7 @@ Explore, read-only, for `linda-memory-tuning` (c). Branch = `main` + 48 commits;
 
 ## Onboarding-only (stay on the branch)
 
-`38bc7db73`, `bb9982c87`, `f36da02f8`, `509a634dc`, `c772bbf34`, `a161e0956`, `9ace80c28`, `848a67fd2`, `911a5def2`, `59103e227`, `ba7d19e66`, `8a443d66c`, `29cbcd7ed`, `3835af7f6`, `1bf976b13`, `3289158db`, `a7320be82`, `eda1d6df6`, `51f109672`, `d72204178`, `cafb8de97`, `f6648ed08`, `67b07c7f8`, `b2659da27`, `cb85c30fe`, `6acefb6c0`, `4dd76b498`, `14330fd06`, `1f3df84ac`.
+`0cfba55c8`, `38bc7db73`, `bb9982c87`, `f36da02f8`, `509a634dc`, `c772bbf34`, `a161e0956`, `9ace80c28`, `848a67fd2`, `911a5def2`, `59103e227`, `ba7d19e66`, `8a443d66c`, `29cbcd7ed`, `3835af7f6`, `1bf976b13`, `3289158db`, `a7320be82`, `eda1d6df6`, `51f109672`, `d72204178`, `cafb8de97`, `f6648ed08`, `67b07c7f8`, `b2659da27`, `cb85c30fe`, `6acefb6c0`, `4dd76b498`, `14330fd06`, `1f3df84ac`.
 
 ## Added 2026-11-04 (linda-memory-tuning)
 
@@ -37,3 +37,4 @@ Explore, read-only, for `linda-memory-tuning` (c). Branch = `main` + 48 commits;
 - `02ef3195e` core: RestartTurn refreshes the exhausted tint (own commit).
 - `98574aaab` core: ability Initialize never writes the serialized animation events (own commit).
 - `eb10f1c5a` core: LevelBase.SetID marks dirty only on a real change (own commit).
+- Encore animation (THJ) + Add Encore refreshes existing slots + 9 custom-kit levels: pending commit, **goes to `main`** (D-394).
