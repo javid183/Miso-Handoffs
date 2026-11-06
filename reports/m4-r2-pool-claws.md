@@ -65,3 +65,12 @@ none
 2. Tools > Onboarding > Wire Hearth Pool Claws.
 3. Open `Features/Onboarding/Hearth/PoolClaw/CP_Spawner_Hearth.prefab`: Interval Mode SpecificTurns, turns 1-8, spawn limit 1.
 4. Test Runner > EditMode > `HearthPoolClawTests`.
+
+## Review fixes (appended)
+
+Edited `HearthPoolClawTests.cs` only (LF, no BOM):
+1. Shared-assets test: dropped the intervalMode assert; now asserts the shared `CP_Spawner` phaseTickEffect is still `CP_SpawnerCompoundEffect` and that compound's `effects[0]` is still `GUnitSpawnerEffect`.
+2. New test `ThePoolClawIsAVariantOfTheStartsAlertClaw`: asset type is Variant and its source path is `Unit_DarkClaw_StartsAlert.prefab`.
+3. `ThePoolClawStartsAlert` asserts the settings component is not null first.
+
+Not compiled or run: the MCP bridge still drops (session disconnected on refresh), so the menu tool, the second-run md5 check, `HearthPoolClawTests` and `CastAbilitySequenceTests` are all still to do once the editor answers.

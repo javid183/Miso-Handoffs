@@ -71,7 +71,7 @@ Owner: coordinator. Every item has a scope: `all` or a branch. Started 2026-10-1
 
 (New requests land here before triage.)
 
-- 2026-11-05 `m4-mark-rework` (thj/onboarding + R1 general; L): design approved D-398 (`plans/onboarding/2026-11-05-m4-mark-rework.md`, grids checked). Tech plan `plans/onboarding/2026-11-05-m4-mark-rework-tech.md`: R1 `CastAbilitySequence` (implementer running) → R2 0-XP pool Claws → R3 level + Wire Memory 4 + tests (opus). `miso-narrative` drafting lines in parallel. THJ's `GB_m4-mark` edits stay untouched until R3 starts from them.
+- 2026-11-05 `m4-mark-rework` (thj/onboarding + R1 general; L): design D-398, lines D-399. R1 `CastAbilitySequence` and R2 Hearth pool Claws (tool `Wire Hearth Pool Claws`, 0-XP alert variant, SpecificTurns 1-8) written + reviewed APPROVE, **not compiled**: Unity MCP unreachable. **Waiting on THJ:** unstick the editor / MCP. Then: compile, run the pool tool twice (md5), R1+R2 tests, THJ Run All, then R3 (opus) from THJ's `GB_m4-mark`.
 
 - 2026-11-05 `opening-family-roles`: **closed, D-397** (THJ keeps Linda first, "Watch", Encore as is). Plan kept for reference; revisit after a cold playtest.
 - 2026-11-05 `cyclone-redesign` (all; feature, L; core: GridCell, OnGridEntity, Projectile): direction A picked (`design/cyclone-redesign.md`); open: one-or-two Cyclones, numbers, build plan, branch.
