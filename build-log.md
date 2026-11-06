@@ -2557,3 +2557,15 @@ Core gets one additive, generic `CombatLog.AddCustom`.
 - **Verified:** review APPROVE + 3 fix-ups; tool idempotent (md5); Mark/Levels/Pool tests 38/38; THJ Run All (AI red only); THJ played it through.
 - **Findings:** hand-placed cells outside `Grid/Tilemap` are ignored by the grid with everything on them (`GridManager.cs:58-60`); the tool now reparents them. No other level has stray cells. Hidden heroes lose Duo bindings (core; D-400).
 - **Status:** committed `b18b2b6c7`. THJ tuning next.
+## 2026-11-06: UnitAnimationSequence modes and two-column end panel
+
+**Built:** `UnitAnimationSequence` playback modes, facing and find-by-tile (`8a5cc1fb4`); John's Bloom gesture and BackToIdle (`ffc182379`); THJ's Loop Time off on APTransfer (`3706b47ab`); objective row truncation (`decb77658`); two-column end panel, empty rows hidden, input lock while open, stale scene overrides removed (`7e5d28da5`).
+
+**Verified:** full EditMode 1433 run, 1422 passed, 11 known reds (AI baseline, 10 Mark layout tests). THJ played both: "all fine". Reviews: `reports/unit-animation-sequence-modes-review.md`, `reports/end-panel-two-columns-review.md`.
+
+**Not verified:** suite not re-run after THJ's clip change (no code). Input lock read and unit-tested, not re-reviewed. Boss intro sequence can't be played (nothing uses it).
+
+**Findings:** with Loop Time off, John's Loop mode logs a warning and plays once. Every win objective shows Success (unchanged). The Hearth's `completed` in a test save makes the Lost panel offer Return Home, by the existing rule.
+
+**Status:** done; other branches need the panel and sequence when merged.
+

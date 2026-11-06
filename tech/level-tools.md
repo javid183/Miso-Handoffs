@@ -42,3 +42,7 @@ level deploy 2,1             (a squad deploy slot (Unit_Placeholder) on each til
 **Known limits.** Objectives are the template's (warned when they aren't the defaults); `R` and `d` build as floor with a warning, `E @ ~ ?` as plain floor; the template's scenery (rocks, statues, background) stays and doesn't match the new shape; no per-unit HP, enemy facing (prefabs face left; enemies left of the family need `initialDirection.x` = 1 by hand, skill `miso-level-chunks`), deploy slots, sequences or Mission wiring yet.
 
 **Built so far** (verification set, kept for play): `GB_24-nook`, `GB_27-snare`, `GB_33-deev-wave`, `GB_11-spread-pools`, `GB_m1-linda`.
+
+## `UnitAnimationSequence` modes (2026-11-06)
+
+`OnceAndWait` (default), `OnceNoWait`, `Loop` (needs Loop Time on the clip), `HoldLastFrame` (needs Loop Time off), `Stop` (back to idle). Optional facing and find-by-tile. Loop and Hold last until the unit's next animation or a `Stop` step, so pair them with a `Stop`. Facing shows only up, down and side.
