@@ -71,6 +71,9 @@ Owner: coordinator. Every item has a scope: `all` or a branch. Started 2026-10-1
 
 (New requests land here before triage.)
 
+- 2026-11-05 `opening-family-roles` (thj/onboarding; design, L): THJ's playtest worry that the tutorial opens with Family Roles (unique, may confuse; maybe too quick). `miso-game-designer` running → `plans/onboarding/2026-11-05-opening-family-roles.md`.
+- 2026-11-05 `cyclone-redesign` (all; feature, L; core: GridCell, OnGridEntity, Projectile): direction A picked (`design/cyclone-redesign.md`); open: one-or-two Cyclones, numbers, build plan, branch.
+
 - 2026-11-05 `classic-fallback` (all; tool/doc, M; D-396): tag `classic-intro-base` made; Explore auditing the 69 commits for wiring points → `tech/classic-fallback.md`. Later, when THJ has time: rehearse once on a `classic-intro` branch (implementer applies the recipe, THJ plays the classic).
 
 - 2026-11-05 `john-memory-tweaks`: **done.** John `0cfba55c8` (branch); Encore animation + kit refresh `4a0c8c080` (→ `main`). EditMode 1361/1362 known red; THJ played OK. Open: `EditorSettings` autosave 1→0 left uncommitted (shared or local? THJ).
