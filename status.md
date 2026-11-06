@@ -71,7 +71,7 @@ Owner: coordinator. Every item has a scope: `all` or a branch. Started 2026-10-1
 
 (New requests land here before triage.)
 
-- 2026-11-05 `opening-family-roles` (thj/onboarding; design, L): THJ's playtest worry that the tutorial opens with Family Roles (unique, may confuse; maybe too quick). `miso-game-designer` running → `plans/onboarding/2026-11-05-opening-family-roles.md`.
+- 2026-11-05 `opening-family-roles`: **closed, D-397** (THJ keeps Linda first, "Watch", Encore as is). Plan kept for reference; revisit after a cold playtest.
 - 2026-11-05 `cyclone-redesign` (all; feature, L; core: GridCell, OnGridEntity, Projectile): direction A picked (`design/cyclone-redesign.md`); open: one-or-two Cyclones, numbers, build plan, branch.
 
 - 2026-11-05 `classic-fallback` (all; D-396): tag `classic-intro-base` made; recipe written `tech/classic-fallback.md` (6 wiring points, mixed files `Unit_Mark` + `Level2-C2`, expected red tests). Later, when THJ has time: rehearse once on a `classic-intro` branch.
