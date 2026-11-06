@@ -2550,3 +2550,10 @@ Core gets one additive, generic `CombatLog.AddCustom`.
 - **Not verified:** play (comes with R3).
 - **Findings:** `GridToLevelTests` has no stale-folder cleanup in SetUp: an interrupted run leaves `Greybox/__Test` and the next run fails two tests once. Backlog candidate. `NothingInTheHearthGivesExperience` red until R3 swaps THJ's stock spawners.
 - **Status:** committed `0131dd473`, `163e01f56`. R3 next.
+
+## 2026-11-06 · Memory 4 rework: R3 level
+
+- **Built:** `GB_m4-mark` rebuilt by Wire Memory 4 (Mark): Bloom opening (Lucy's Cyclone by sequence at level start), Mark visible with 0 AP and his two Claws revealed on arrival (D-400), John's hold, Mark-Lucy Duo unlock, wolf falls and walk to the cub. Locks, AP cap, hints, Hearth pools.
+- **Verified:** review APPROVE + 3 fix-ups; tool idempotent (md5); Mark/Levels/Pool tests 38/38; THJ Run All (AI red only); THJ played it through.
+- **Findings:** hand-placed cells outside `Grid/Tilemap` are ignored by the grid with everything on them (`GridManager.cs:58-60`); the tool now reparents them. No other level has stray cells. Hidden heroes lose Duo bindings (core; D-400).
+- **Status:** committed `b18b2b6c7`. THJ tuning next.

@@ -111,3 +111,4 @@ The rest is THJ's play check: the Bloom kills 4, the arrival plays, Mark's chain
 
 - 2026-11-06 R1 `0131dd473` feat(levels): add a sequence that makes a unit cast an ability on a cell
 - 2026-11-06 R2 `163e01f56` feat(onboarding): Hearth pool spawner that summons a no-experience alert Claw on turns 1 to 8
+- 2026-11-06 R3 `b18b2b6c7` feat(onboarding): rebuild Mark's memory around the Bloom, Mark's arrival, John's hold and the Mark and Lucy Duo
