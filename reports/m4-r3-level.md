@@ -9,7 +9,7 @@ Outcome: done, with one approved-fallback deviation (T3: Mark is visible from th
 - `Features/Onboarding/Editor/HearthMemoryWiring.Mark.Sequences.cs` (new): intro, Bloom cut-in, arrival, hold and ending sequences with the approved lines.
 - `Features/Onboarding/Editor/HearthMemoryWiring.Mark.Layout.cs` (new): stock pools swapped for `CP_Spawner_Hearth`, hero tiles, Claw plan (tiles, health, hidden state, no XP; adds the fifth top Claw), hidden groups `arrival` and `top`.
 - `Features/Onboarding/Editor/HearthMemoryWiring.Mark.Level.cs` (new): 3 stages, Duo and Cleanse locks, 2 hints, turn-1 AP cap, Tempest Bloom grant, LSB calls `motherFalls` and `reset`, and the Bloom cut-in on `levelStarted` (`SequencePlayHandle`).
-- `Features/Onboarding/Editor/HearthMemoryMarkTests.cs` + `HearthMemoryMarkTests.Flow.cs` (new partial): rewritten, 29 tests.
+- `Features/Onboarding/Editor/HearthMemoryMarkTests.cs` + `HearthMemoryMarkTests.Flow.cs` (new partial): rewritten, 28 tests.
 - `Content/Levels/Greybox/GB_m4-mark.prefab`: THJ's hand edits plus the tool's output.
 - `Resources/Sequences/Hearth/Memory4Mark/`: 3 assets modified, 9 deleted (old mother scene, old arrival, Mark's walk-in), 26 new (all with `.meta`).
 - `Core/` files, other levels and THJ's AI diagnostic, scene and settings files: not touched.
@@ -57,7 +57,7 @@ Tech plan extras:
 
 ## Test results
 
-- `HearthMemoryMarkTests` 29/29, `HearthMemoryLevelsTests`, `SharedObjectiveConditionTests`, `CastAbilitySequenceTests` 11/11, `HearthPoolClawTests` 6/6: all pass (Test Runner through the Unity MCP; first batch 53/53, second 45/45).
+- `HearthMemoryMarkTests` 28/28, `HearthMemoryLevelsTests`, `SharedObjectiveConditionTests`, `CastAbilitySequenceTests` 11/11, `HearthPoolClawTests` 6/6: all pass (Test Runner through the Unity MCP; first batch 53/53, second 45/45).
 - **Full suite: not confirmed.** I started it through the Unity MCP. The MCP session then dropped ("plugin session disconnected"), Unity stopped answering pings, and my watchers on the fallback file `%USERPROFILE%/AppData/LocalLow/Dead Mage/miso/TestResults.xml` were killed by Claude Code because the machine was critically low on memory. At 01:58 the file still held the earlier 45-test run (written 01:43:35), so there is no full-suite result. **To do:** check that Unity is responsive, then run Window > General > Test Runner > EditMode > Run All. The only expected red is `AIRegressionTest.Baseline_MatchesCurrentAI` (it may also shift with the new layout; not touched or re-baselined).
 
 ## Open checks (from the code)
@@ -148,3 +148,21 @@ None (onboarding-only).
 - Pools: a Claw spawns on enemy turns while the pool's own Claw is dead; John holds 7,5.
 - Ending: both walks happen (end tiles free), the mother swap shows, the cutaway plays.
 - Caps: let each stage time out once and check the flow still ends.
+
+## Fix-ups (after review, 2026-11-06)
+
+From `reports/m4-r3-review.md` (approved, three should-fix items):
+
+1. **The intro no longer gives back input and the HUD.** `HearthMemoryWiring.Mark.Sequences.cs`: the intro ends after Mark's opening lines, without `EnablePlayerInputSequence` / `ShowHUDSequence`. The Bloom cut-in (on `levelStarted`) already disables both at its start and restores them at its end. This removes the show/hide flicker and keeps the End Turn button from being live during the cut-in (`PhaseControlPanelUI` ignores the input switch). Tests: `TheIntroFadesTheGridInUnderMarksOpening` now asserts the intro has no Enable/Show step; `TheBloomCutInPlaysWhenTheLevelStartsAndLucyCastsOnTheCrossing` also asserts the HUD is hidden at the cut-in's start and shown at its end.
+2. **FP full is now checked.** `TheMemoryRulesAreTheHearths` asserts one `LevelStartFPFiller` with `fpAmountToFill` ≥ the grid builder's full amount (99), wired to the level's `levelStarted`. The wiring tool doesn't set it: it comes from the level build (`level fp full`), and the prefab has it (99, wired). The test checks it survives.
+3. **Test count corrected:** `HearthMemoryMarkTests` has 28 tests, not 29 (above fixed). Still 28 after the fix-ups (no test added, two extended).
+
+**Status: code edited, NOT compiled, tool NOT re-run, tests NOT run.** Unity didn't answer the MCP (four tries: pings unanswered, a forced refresh timed out after 60 s), so per the coordinator I stopped. Until the tool is re-run, the prefab's intro asset on disk still has the two trailing steps, and `TheIntroFadesTheGridInUnderMarksOpening` will fail. **To do, once Unity responds:**
+1. Let it compile and check the console for errors.
+2. Run Tools > Onboarding > Wire Memory 4 (Mark) twice, with md5 before and after the second run on `GB_m4-mark.prefab` and `Resources/Sequences/Hearth/Memory4Mark/*`. Only `Memory4Mark_Start_SequentialSequence.asset` should change against the earlier run.
+3. Run `HearthMemoryMarkTests` and `HearthMemoryLevelsTests`. No full-suite run from agents: THJ runs All.
+
+Files touched in the fix-ups (same commit as before): `HearthMemoryWiring.Mark.Sequences.cs`, `HearthMemoryMarkTests.cs`, `HearthMemoryMarkTests.Flow.cs`, plus `Memory4Mark_Start_SequentialSequence.asset` once the tool re-runs. Line endings: these files are LF without a BOM, like the other Hearth wiring files, and they stay that way (the coordinator's note said CRLF; the files never were).
+
+**For THJ's play check (added):**
+- During the opening cut-in, the HUD stays hidden and End Turn can't be clicked. If the run handler's own HUD show at level start still wins the race (it runs in the same frame as `levelStarted`), the fallback is a one-frame wait (or a `HideHUDSequence` repeat) at the cut-in's start.
