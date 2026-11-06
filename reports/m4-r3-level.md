@@ -166,3 +166,13 @@ Files touched in the fix-ups (same commit as before): `HearthMemoryWiring.Mark.S
 
 **For THJ's play check (added):**
 - During the opening cut-in, the HUD stays hidden and End Turn can't be clicked. If the run handler's own HUD show at level start still wins the race (it runs in the same frame as `levelStarted`), the fallback is a one-frame wait (or a `HideHUDSequence` repeat) at the cut-in's start.
+
+### Fix-ups verified (after THJ restarted Unity)
+
+- Not in Play mode; forced refresh and compile: no console errors.
+- md5 (prefab + all 62 files in `Memory4Mark/`, assets and metas) before the first run matched the earlier run's record, so nothing changed on disk in between.
+- Run 1: only `Memory4Mark_Start_SequentialSequence.asset` changed (`ac9bdba2…` → `f7201def…`): the intro lost its two trailing steps (Enable input, Show HUD). The prefab is unchanged (`c74f39f0…`).
+- Run 2: all 63 checksums identical to run 1. The tool is idempotent.
+- `HearthMemoryMarkTests` (28) + `HearthMemoryLevelsTests` (3): 31/31 passed, including `NothingInTheHearthGivesExperience`. No full suite (THJ runs All).
+- Nothing deleted; `_GuidedSpendScratch.unity` left alone.
+- The "Status: NOT compiled" note above is superseded: compiled, re-run, tested.
