@@ -305,58 +305,121 @@ Build lines (C3 step 0): no `level camera` (the 7 × 6 tiles fit one view).
 
 ### Segment 4 · Mark's telling: "And then I arrived"
 
+**As built, synced 2026-11-06.** Branch `thj/onboarding`. `Content/Levels/Greybox/GB_m4-mark.prefab` and `Resources/Sequences/Hearth/Memory4Mark/` are the master (D-405, D-417); this section records them and proposes nothing. Read from the YAML; not played for this sync. The reasoning is in the [rework plan](2026-11-05-m4-mark-rework.md) (D-398); the first tuning round is in [the review](../../reports/m4-mark-thj-tweaks-review.md), though the prefab has changed since. Every line and objective text, in playback order, is in the narrative draft: [Memory 4 as in the game](onboarding-narrative-draft.md#memory-4-as-in-the-game-synced-2026-11-06).
+
+**Coordinates.** Tiles in the prose and tables are **prefab cells** (`GridCell - (x, y)`), as the sequences and objectives use them. The grid block and its drawing count from 0, so **drawing x = prefab x + 1**, y the same: prefab (-1,4) is drawn on 0,4. The rework plan's and D-400's tiles are drawing tiles.
+
 ![m4-mark](onboarding-levels/m4-mark.svg)
 
-```grid id=m4-mark title="Memory 4 · Mark: the rescue"
-# # # # # # # R . # # # # # #
-# # # # # # . . . c # # # # #
-# # # # # # . . c c . # # # #
-# # # # # # . . . c . # # # #
-# # # c # # . . . . . # # # #
-# # # . # # . . . . . # # # #
-. c . ~ . c . # . # # # # # #
-# # # . # # # # . # # # # # #
-# . U . . . . . . . c . c . M
-# . . L J . # # # # # # # # #
-# . . . . . # # # # # # # # #
+```grid id=m4-mark title="Memory 4 · Mark, as built: start tiles (offset x+1, y+0)"
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+_ _ _ _ _ _ _ . . . c . _ _ _ _
+_ _ _ _ cP _ _ . . c c c _ _ _ _
+_ _ _ _ c _ _ . . . c . _ _ _ _
+_ _ _ _ c _ _ . . . . . _ _ _ _
+cP c c . ~ . c c _ . _ _ _ _ _ _
+_ _ _ _ _ _ _ _ _ . _ _ _ _ _ _
+_ _ . . L J . . . . . c . c . M
+_ _ . . U . . _ _ _ _ _ _ _ _ _
+_ _ . . . . . _ _ _ _ _ _ _ _ _
 --
-arrow 3,1 3,4 linda scripted
-arrow 3,4 1,4 linda
-arrow 3,4 5,4 linda
-arrow 3,4 3,6 linda
-arrow 14,2 12,2 10,2 mark dy=-8 Blitz chain
-cells 6,9 7,9 8,9 note reach the cub
-cells 9,9 9,8 enemy hidden
-note 8,10 mother (by hand)
-note 7,10 cub (by hand)
-step 3,4 1
-step 12,2 1
+cells 0,4 4,7 enemy hidden: left
+cells 9,7 10,7 10,6 enemy hidden: top
+cells 11,2 13,2 mark hidden: arrival
+cells 7,5 john den mouth
+cells 8,8 9,8 note walk-to
+arrow 4,2 4,4 linda bow
+arrow 4,4 2,4 linda dy=-10
+arrow 4,4 6,4 linda dy=-10
+arrow 4,4 4,6 linda dx=10
+arrow 4,1 6,1 6,2 9,2 9,3 lucy dy=8 scripted
+arrow 5,2 8,2 john dy=-8 scripted
+arrow 15,2 13,2 11,2 mark dy=-10 Blitz chain
+arrow 8,2 9,2 9,5 7,5 john dx=-10
+arrow 7,4 7,7 8,7 enemy dx=10 scripted
+step 4,2 1
+step 15,2 2
+step 7,5 3
+step 9,5 4
+note 4,3 gap
+note 8,9 cub
+note 9,9 mother
 level name Memory 4 · Mark
 level tier tutorial
 level alert all
 level xp none
 level fp full
-level hidden 9,9 9,8
+level origin -1,0
+level hidden arrival 11,2 13,2
+level hidden top 9,7 10,7 10,6
+level hidden left 0,4 4,7
 ```
 
-Build lines (C3 step 0): no `level camera`. The 15 × 11 tiles don't fit one view at default zoom 2 (about 14 × 8 tiles, assumed as in segment 1), so the rule keeps the four Bergsons in view (Lucy 2,2 to Mark 14,2) and sits low: by the count it shows x ≈ 1–15, y ≈ 0.5–8.5, i.e. the prism, the gallery, Mark and the hall's lower part. That is the opening the scripted Bloom needs; the ledge (y 9–10) comes in with the stage-1 camera move. **`level hidden` is proposed** (as in segment 2). **The mother and the cub have no unit character.** The cub is drawn `R` (protectee) on 7,10, which the builder turns into plain floor with a warning; the mother is a note on 8,10, whose tile is floor. Both are placed by hand after the build (C3a step 2) with the placeholder prefabs in Assets below, and the hand edit is logged. The two cue Claws sit on 9,9 (diagonal to the mother, beside 8,9) and 9,8, so the walk-in cells 6,9 / 7,9 / 8,9 and the left approach (6,8, 7,8) stay free.
+The block shows the start tiles: everything scripted before the player's first click is an arrow or the `~` (the Cyclone, cast in the Bloom cut-in). Steps are the intended order: 1 the Bloom, 2 Mark's chain, 3 John on the mouth, 4 the Duo. **Don't rebuild from this block:** the prefab is hand-edited and is the master (skill rebuild rule); the `level` lines only describe it. 57 cells. Cells (7,9) and (8,9) were deleted, so the mother and the cub stand off the grid, and the top row of cells is y = 8. World position of a cell is 0.5 × cell + 0.25, for reading the camera numbers below.
 
-| Item | Plan |
+| Item | As built |
 |---|---|
-| Source | New level (cave, larger: 15 × 11); chunk 13 (the prism) bottom-left; chunk 21's idea (three targets within 4) in the hall, on Dark Claws |
-| Teaches | **The Mark–Lucy Duo (Chained Assault)**: the one thing the player does on purpose. Fist Blitz + Continuous Attack is the second, short act: a two-link chain. Atman's Focus isn't pointed at (critic: too much at once). This segment is the showcase |
-| Twist | Unearned power: **Tempest Bloom once, scripted.** It's the narrators' claim, played as a cutscene when the segment opens, so the player has nothing to discover. Prefer a sequence that has Lucy cast and Linda shoot. If sequences can't fire abilities (to check), use the one-mission grant of `RU_LindaLucyCycloneSpreadUnlock` plus a guided action on the crossing |
-| Squad | All four. Mark is placed at 14,2 and walks in after the Bloom (`MoveUnitSequence` from the edge): the late entrance |
-| Enemies | **7 Dark Claws in play** + **2 cue Claws placed hidden on 9,9 and 9,8** (revealed in the mother's scene; default Tutorial HP 10, not tuned), Tutorial. Prism 3 (1,4 / 5,4 / 3,6): in-play HP 6, killed by the scripted Bloom. Gallery 2 (12,2 and 10,2; drop 8,2): HP 8, so each Blitz kills and the chain takes two. Hall 2 (8,8 and 9,7; drop 6,7): **HP 8**, so Chained Assault kills even on a poor mash. At ×0.7 it does 2 + 6 = 8, where 10 HP would need ×0.91 or better (systems critic) |
-| Turn budget | 2 (cap 3) + the scene and a short walk |
-| First triggers | **Synergy: Tempest Bloom, at the open** (scripted, ≈ 9.5 min). **Continuous Attack, turn 1:** Mark Blitzes 12,2 and the QTE takes 10,2 (FTP 1). **Duo: Chained Assault, turn 2,** on the hall Claws. They start alert, so they come wherever the AI sends them, not on a schedule (critic). Within 4 of Mark or Lucy by turn 2 is likely, not certain |
-| Cues | **Stage 1** (all seven in-play enemies dead **or** turn 3 reached; the hidden two don't count) starts the mother's scene. The camera goes to the ledge and the narrators fall silent. 2 Claws, placed hidden on 9,9 and 9,8 beside the mother, are revealed (D-345: no spawns in the memory); she fights and she falls (`UnitAnimationSequence`, LSB); the cub cries. **The two revealed Claws stay and fight (D-347)**: they act on the enemy turns from here, so the walk is under attack. **Stage 2:** a Bergson reaches 6,9, 7,9 or 8,9 (`Unit on tiles`, any) → win. The player walks to the cub, a marker on the cub shows where to go, and nobody jokes. **The grid fades out on the win, after the walk** (the UX critic: no blind clicks) |
-| Alert | All start alert |
-| FTP | Topped up (13). Optional refill at stage 1 via `SignalSequence` → `SignalAction` → the filler |
-| Fallback | **Guided action for the Duo: plan on it.** Highlight the Duo button and a target on turn 2, as in segment 3. Tempest Bloom has no fallback because it is scripted |
-| Assets | The mother: no adult wolf combat unit exists; `Home - Imported/Entities/Characters/Wolf/Wolf.prefab` as a placeholder (art call for THJ). The cub: `NPCs/Ryker/Ryker.prefab` |
-| To check | Does a Bloom copy fly 2 tiles past the Cyclone (chunk 13 assumes so)? Can a sequence fire an ability? Is Chained Assault's "within 4" measured from Mark, Lucy or the activator (level-chunks To check 16)? Does Mark's Counter fire when he himself is hit? **Quiver:** the scripted Bloom spends one of Linda's arrows (LI-4); does a scripted cast respect `HasArrow` (if she's at 0, does it fail, or fire anyway)? She starts full (LI-10), so it only matters if the script runs after she has shot |
-| Time | ~4 min (+0.4 cutaway) |
+| Source | New level (cave); chunk 13 (the prism) at the crossing (3,4). Tuned by hand from the rework |
+| Teaches | Three acts in order: the player's own **Tempest Bloom** shot (Synergy), **Mark's Fist Blitz + Continuous Attack** (his kit), **Chained Assault** (Mark–Lucy Duo). Atman's Focus isn't pointed at |
+| Twist | John holds the den mouth (6,5) against two pools while Lucy and Mark go up to the cub. Mark's boasts come after the player has done the thing |
+| Squad | All four, on: Lucy (3,1), Linda (3,2), John (4,2), Mark (14,2). Mark is visible from the start (D-400). Turn-1 AP cap: Linda 1, the others 0 (`TurnStartActionPointLimit`) |
+| Enemies | 15 Dark Claws, Tutorial tier, see the table below. Two pools, `CP_Spawner_Hearth`, on (-1,4) and (3,7), with specific turns 1 to 8 |
+| Turn budget | Caps by stage, see the stages table. Expected: the Bloom turn, then one full turn after the reset, then clean-up |
+| First triggers | **Synergy, turn 1:** Linda on (3,2) shoots up column 3 across the gap (3,3) into the Cyclone on (3,4). **Continuous Attack, after the reset:** Mark Blitzes (12,2), 2 away, and the QTE takes (10,2), 2 away. **Duo, once John has played the hold:** from (8,5) all six stage-3 Claws are within 4: (8,7) 2, (9,6) 2, (7,7) 3, (9,7) 3, (9,8) 4, (10,7) 4 |
+| Win / loss | Three queued stages, below. Loss: not overridden in the prefab, so the template's |
+| Cues | See the sequence table below. `levelStarted` tops up FTP, then plays `Bloom` |
+| Locks and hints | All Duos and Cleanse are locked on all four heroes (`LevelAbilityLock`). Linda's **Explosive Arrow is locked until the Bloom is over** (D-408: unlocked with no pulse, first step of `PostBloom`). Mark–Lucy unlocks in `Hold`, alone (`UnlockAbilitiesSequence`, `unlockAll` off). Pulses (`GuidedAbilityHint`): Linda's primary attack on turn 1; the Mark–Lucy Duo from its unlock until used |
+| Alert | All start alert (`LevelAlertSettings`) |
+| FTP, XP, clue | `LevelStartFPFiller` fills all four (99, so full). All 15 placed Claws have `lethalDamageXpBonus` 0. `LevelStartRunUpgradeGrant` gives `RU_LindaLucyCycloneSpreadUnlock` for the level. No drops, no clue |
+| Fallback | Every stage moves on at its cap. Nothing warns of the cap: no objective shows the turns left |
+| Assets | Mother and cub are scenery placeholders under `Memory Scenery`: mother over (8,9), cub over (7,9), no cell under either (the drawing's 9,9 and 8,9). `motherFalls` swaps the mother for `Mother (fallen)` |
+| Time | ~4.7 min (+0.4 cutaway): the rework's paper estimate, not timed since the tuning |
+
+**Enemies.** In-play HP is the prefab's health factor × the default, about 9.6 (estimate, back-calculated; base value not read).
+
+| Group | Tiles and HP | In play | Then |
+|---|---|---|---|
+| Bloom targets (stage 1's list) | (1,4) 6, (5,4) 6, (3,5) 6, (3,6) 3 | From the start | Expected to die to the arrow and its copies |
+| Left of the den | (0,4) 10 | From the start | Scripted to (2,4) in `PostBloom` |
+| Den mouth | (6,4) ≈ 12.5 | From the start | Scripted to (7,7) in `PostBloom`; **counts in stage 3** (D-417) |
+| `left`, hidden | (3,7) ≈ 9.6, (-1,4) ≈ 9.6 | `PostBloom` | Default HP (D-417). They stand on the pools. (3,7) is scripted to (3,5); (-1,4) stays |
+| `arrival`, hidden | (10,2) 8, (12,2) 8 | `Arrival` | Mark's chain |
+| By the mother, visible | (9,8) 8, (10,7) 8 | From the start | Stage 3 |
+| `top`, hidden | (8,7) 7, (9,7) 7, (9,6) 7 | `Hold` | Stage 3 |
+
+**Stages** (`queueWinGroups` on; `evaluationMode` 0 throughout). A cap is `TurnReachedLOCondition`: turns elapsed since the stage started, not the level's turn number.
+
+| Stage | Done when | Visible text | On complete |
+|---|---|---|---|
+| 1 Bloom | Any of (1,4), (5,4), (3,5), (3,6) dead, **or** cap 1 | None (both objectives hidden) | `Arrival` |
+| 2 Hold | John on (6,5), **or** cap 2 (hidden) | "John: Cut the reinforcement path." | `Hold` |
+| 3 Save | **Both:** all 6 Claws dead ((9,8), (10,7), (8,7), (9,7), (9,6), and the one that started on (6,4)) or cap 4; **and** John on (6,5) or cap 4 | "Kill the dark claws near the cub." and "Hold the den mouth with John." | Win, then the outro `End` |
+
+So with the six dead, the level still waits for John on the mouth or the cap. Stage 3 starts only after `Hold` has revealed `top`.
+
+**Sequences,** in play order. Common steps are shortened: `Bloom`, `Arrival` and `Hold` open with input off and HUD hidden and close with input on and HUD shown.
+
+| Sequence | Plays | Steps |
+|---|---|---|
+| `Start` | Intro | Input off, HUD hidden, grid hidden, grid fades in, Mark's two opening lines, camera sweep up to (3.75, 3.75) and back, camera to (1.75, 1.75) |
+| `Bloom` | Level start | **John's gesture** (`APTransfer`, facing up), his line to Lucy, back to idle. `CastAbilitySequence`: Lucy casts the Cyclone on (3,4). Lucy's line. **Lucy runs to (8,3).** John's line to Linda. Input on |
+| `Arrival` | Stage 1 complete | The boast lines, then `PostBloom`, then camera to (6.25, 1.75), reveal `arrival`, the arrival lines, phase reset (LSB `reset`), camera on Mark (7.25, 1.75), input on, **`SelectUnitSequence` selects Mark** (D-415, D-416) |
+| `PostBloom` | Inside `Arrival` | Unlock Explosive Arrow, camera to (1.5, 2.5), reveal `left`, Claw (6,4) → (7,7), Claw (0,4) → (2,4), Claw (3,7) → (3,5), John's two lines, **John walks to (7,2)** |
+| `Hold` | Stage 2 complete | John's line, camera to (4.5, 4), reveal `top`, unlock Mark–Lucy, the Duo lines, camera to (4.25, 2.75), input on |
+| `End` | Outro, on the win | Input off, camera to the ledge (4, 4.75), LSB `motherFalls`, Mark's two lines, Lucy walks to (7,8), Mark walks to (8,8), the cub lines, grid fades out, the cutaway, keep-grid-hidden step |
+
+The Claw moves find their unit by tile (`findUnitByTile`). A move that can't reach its destination cancels with a warning (D-404). `Memory4Mark_Bloom_CameraToDen` is in the folder but in no sequence.
+
+**Open** (none decided here):
+
+- **Win at a cap:** when a stage wins on its cap, every objective shows as Success on the end panel, though the conditions weren't met.
+- **John's gesture:** D-419 says Hold Last Frame, but `Memory4Mark_Bloom_John_UnitAnimationSequence.asset` still has `mode: 2`, Loop.
+- **Follow-ups (D-417, from `status.md`; not checked here):** the 10 Mark layout tests move to the prefab (D-405); the builder sets enemy facing (D-407).
+- **Play checks left from the review, not confirmed either way here:** John's 6 steps from (7,2) to (6,5) against stage 2's cap of 2. Mark and Lucy reaching the Duo tiles with John in the passage. Chained Assault's range origin (T13) and which three it takes with six in reach. `PostBloom` moves when stage 1 ends on its cap or after a partial Bloom (a Claw still on the path cancels the move). `Hold` camera (4.5, 4), which the review read as a row high.
+- **Pool on (-1,4):** the Claw revealed there stays on it, and a pool can't spawn while a unit stands on its tile.
+- **The ending walks** on a cap win: a living Claw could stand on (7,8) or (8,8), and the walk then cancels.
+- **Interrupted walks (core, not asked yet):** a walk interrupted midway can leave a later `MoveUnitSequence` waiting (`status.md`).
+- **Text:** the narrative draft's [flags for THJ](onboarding-narrative-draft.md#flags-for-thj-nothing-changed-for-these).
 
 ### Hearth time
 
