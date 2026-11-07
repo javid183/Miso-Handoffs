@@ -2569,3 +2569,15 @@ Core gets one additive, generic `CombatLog.AddCustom`.
 
 **Status:** done; other branches need the panel and sequence when merged.
 
+## 2026-11-06: Select a unit from a sequence; Mark selected after his arrival
+
+**Built:** `TrySelectUnit` and the one-shot preferred auto-select unit (`4b0237c01`, core); `SelectUnitSequence` (`c2b2f467b`); Memory 4's arrival step.
+
+**Verified:** full EditMode 1452 run, 1441 passed, 11 known reds, before a comment-only fix (12 related tests re-run after). Re-review approved. THJ played it and saw nothing wrong.
+
+**Not verified:** `Clear` and `Take` call sites have no automated test. Whether THJ tried the last-AP kill and hold-to-skip cases wasn't stated.
+
+**Findings:** `GridToLevelCameraStartTests` teardown ignores `DeleteAsset`'s result and once left `__CameraStartTest` behind (now gone). `HearthMemoryWiring.Mark.Sequences.cs` omits this step.
+
+**Status:** done; project-wide code goes to other branches when merged.
+

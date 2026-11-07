@@ -73,7 +73,7 @@ Owner: coordinator. Every item has a scope: `all` or a branch. Started 2026-10-1
 
 - 2026-11-06 `hearth-lost-button` (thj/onboarding; S): **closed, not a bug.** THJ launched from the level play button; from the main play button the Lost panel offers Try Again. Return Home on the level button is fine (THJ).
 
-- 2026-11-06 `select-unit-sequence` (all; S, touches core `PlayerController`): select Mark after his arrival. THJ approved 2026-11-06, including a small public method on `PlayerController`. In progress.
+- 2026-11-06 `select-unit-sequence` (all; S, touches core `PlayerController`): select Mark after his arrival. **Done**: THJ played it, saw nothing wrong; committed `4b0237c01`, `c2b2f467b`, plus the Memory 4 step. Docs: `tech/core-systems.md` Faction controllers row updated.
 
 - 2026-11-06 `unit-animation-sequence-modes` (all + thj/onboarding data; M): playback modes and facing, THJ's Bloom gesture for John. Plan: `plans/onboarding/2026-11-06-unit-animation-sequence-modes.md`. **Done**: THJ played it; committed `8a5cc1fb4`, `ffc182379`; his Loop Time off on APTransfer `3706b47ab`. John's asset still Loop (logs a warning with Loop Time off; THJ's call whether to set HoldLastFrame). Reports: `reports/unit-animation-sequence-modes.md`, `-review.md`.
 
