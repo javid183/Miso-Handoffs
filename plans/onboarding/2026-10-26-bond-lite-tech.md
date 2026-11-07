@@ -31,7 +31,7 @@ Audit of the plan against `thj/bond-lite` @ `58aa10418`, from reading code and Y
 - **Play check additions:** `GB_m3-john`, `GB_m4-mark` and The Trail with Rivalry locked (they were tuned with it on); Rivalry's worth for Linda under the Quiver (AP, no arrow).
 - **Altar route to Tempest Bloom:** M6 only, classic. Accepted, unchanged.
 
-**Open for THJ:** Marks-Sisters lock; the Yard choice not being enforced; whether the Hearth counts for Bond.
+**Answered by THJ 2026-11-06:** Marks-Sisters is locked too, at Lv 2 (D-424; check no level or M4 plan expects it bought). The Yard raises the Bond, grants one point and points at the nodes in dialogue, with free spending; item 8's forced choice is dropped (D-425). The Hearth adds no Bond (D-426).
 
 ## Why
 
