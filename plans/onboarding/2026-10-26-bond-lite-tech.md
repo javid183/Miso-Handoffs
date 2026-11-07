@@ -6,6 +6,33 @@ Status: **approved (D-233)**; built after the greybox and the pacing check (D-18
 
 Design: `plans/onboarding/2026-10-25-onboarding-first-hour-design.md` ("New tech", "The Sister's Rivalry arc"). Work plan step A4(a), build step B7. Decisions: D-173 (Rivalry to the Family tree, Bond gates the pair's nodes, Yard grants the first Family point), D-179 (go to a tech plan), D-180 (built after the greybox and the pacing check).
 
+## Refresh 2026-11-06 (read this first; it overrides what's below)
+
+Audit of the plan against `thj/bond-lite` @ `58aa10418`, from reading code and YAML; nothing run. Paths under `miso/Assets/_Project/`.
+
+**Order and branch.** Built now on `thj/bond-lite` (D-422, D-423), not after the pacing check. C1 to C3 commit after review and tests; C4 and C5 commit after THJ plays them, with the pacing check. Read "on `main`" below as "on this branch".
+
+**Corrections**
+
+- Rivalry's guard is 2 s of scaled game time (`Time.time`), and its detail string still says "basic attack ready" (D-232's text change isn't done).
+- `Level1/Level1-C2` and `Level1-C4` remove Rivalry from both sisters through `m_RemovedComponents`; leave those alone.
+- No Rivalry data exists: no `UnlockableSet` entry, no tree node. C4 creates the entry **before** the gate reads it (`FactionTracker.cs:472` dereferences the entry), then a Family node with `unlockLevel` 0 (`GetUnlockLevels` counts every node's level, so a new level changes points awarded) on a free slot such as row 2, column 0. `Unit_Linda` has no Family nodes; `Unit_Lucy` has Tempest Bloom `[6]` and Marks-Sisters `[7]`.
+- There is no tooltip to extend. The lock line goes in `AbilityUpgradeDescriptionPanelUI` (D-231's "tooltip" becomes this line; coordinator's call, same meaning). Compute one effective state in `AbilityTreePanelUI.ShowFamilyAbilityBars:107-111` and `AbilityUpgradePanelUI.RefreshDescriptionPanel:162-174`, and guard `UpgradeButtonClickedEvent:176-190`. New partial files like `AbilityUpgradePanelUI.Guided.cs`. `SkillTree` is unchanged (D-203). Editor tools skip the lock; accepted.
+- Memory 4's Bloom isn't affected: its grant goes through `RunUpgrades.UnlocksLiteral` and `CanGrant` doesn't check node state. Don't flip `unlockedByDefault` on `CycloneArrowScatter` or add `requireUnlockable` to the upgrade.
+- Mission-end source: use the `"Mission complete"` rewards event (`CombatLevelRunHandler.cs:908`), subscribed per level; it carries no squad, so read `ActiveMission.MissionRoster.Units` and check the free slot's assignment at that moment. It's skipped in the sandbox.
+- Family points: the story grant uses `FactionTracker.GrantAggregatedResource` with `MainResource_FamilySP`, then a save. Level-ups can already have given points before the Yard.
+- `Core/Systems/HomeSystem` is effectively empty here, so C1 creates its contents. `MISO.Core.Home.HomeState` exists; avoid that name.
+
+**Added to the chunks**
+
+- **C1 silent-lock test:** starts with an allow-list and a plain reason for `_DoNotRemove_` and `_JohnResolve`, which have no node or run upgrade.
+- **C5 Yard wiring:** `DialogNodeSequence` can't grant, so add a new `Sequence` in `Features/Onboarding` and chain it with `SequentialSequence`; update `HomeVisitsWiring.cs:66` and `HomeVisitsTests.cs:190-195`; once-only guard on the grant (`PlayJustOnce`, `SequencePlayer.cs:21,39`).
+- **Classic fallback:** the recipe gets a new wiring point when C4 lands: `unlockedByDefault` 1 on Rivalry's entry, so classic stays as is (M5's tutorial page describes Rivalry, and classic has no Yard).
+- **Play check additions:** `GB_m3-john`, `GB_m4-mark` and The Trail with Rivalry locked (they were tuned with it on); Rivalry's worth for Linda under the Quiver (AP, no arrow).
+- **Altar route to Tempest Bloom:** M6 only, classic. Accepted, unchanged.
+
+**Open for THJ:** Marks-Sisters lock; the Yard choice not being enforced; whether the Hearth counts for Bond.
+
 ## Why
 
 The Sister's Rivalry arc needs the Family-tree unlock to be a story moment: the sisters' Bond reaches level 2 in the Yard scene, both of their nodes light up, and the player spends a story-granted Family point on one. `main` has no Bond; `thj/home-test` has a full one inside its day simulation. Bond Lite is the smallest slice that does this job and folds into `thj/home-test` later.
