@@ -71,7 +71,7 @@ Owner: coordinator. Every item has a scope: `all` or a branch. Started 2026-10-1
 
 (New requests land here before triage.)
 
-- 2026-11-06 `m4-settled` (thj/onboarding + builder all; M): **done.** THJ finished tuning Memory 4 (D-417, D-418, D-420). John's mode `ac1293445`, Mark tests `8da7747fa`, builder enemy facing (D-407) committed; Segment 4 and the narrative draft synced; EditMode 1466/1467, known AI red only. Reports: `reports/m4-tests-and-builder-facing*.md`. THJ: skills sync; narrative flags in the draft's Memory 4 section for the line pass. **Next: the timed pacing play check.**
+- 2026-11-06 `m4-settled` (thj/onboarding + builder all; M): **done.** THJ finished tuning Memory 4 (D-417, D-418, D-420). John's mode `ac1293445`, Mark tests `8da7747fa`, builder enemy facing (D-407) committed; Segment 4 and the narrative draft synced; EditMode 1466/1467, known AI red only. Reports: `reports/m4-tests-and-builder-facing*.md`. Skills sync done by THJ. Narrative flags in the draft's Memory 4 section wait for the line pass. **Next: the timed pacing play check.**
 
 - 2026-11-06 `hearth-lost-button` (thj/onboarding; S): **closed, not a bug.** THJ launched from the level play button; from the main play button the Lost panel offers Try Again. Return Home on the level button is fine (THJ).
 
