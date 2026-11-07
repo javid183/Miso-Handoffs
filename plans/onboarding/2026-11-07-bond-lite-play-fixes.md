@@ -59,3 +59,6 @@ World map page (title + body), skill-tree page (title + body), Bond level-up pla
 
 ## Text and adjustments (2026-11-07, after narrative)
 Text: `reports/bond-lite-fixes-text.md` (placeholder grade). Coordinator choices (D-436): the bridge line "The fire burned low. By morning, the door stood open." goes in as a narrator node between H5-5 and H5-6 (Home can't change state mid-scene); Yard order becomes focus, Y12-1 to Y12-6, Bond step, Bond line "Linda & Lucy's Bond reached Lv 2.", Y12-7, pointer; night lines kept. C3: the Workshop opens after River or Ridge, not after the Hearth, so its page plays on that load; its text gets "This is the Workshop." and "Bergson" for "hero". Open for THJ (non-blocking): "Family point" vs the combat "Family Points (FP)".
+
+## Log
+- 2026-11-07: C1 `b14e52fe7`; C2 `18f73aaeb` (setup), `eb3ba2406` (Hearth close + World map page). THJ played, review APPROVE. C3 dispatched (opus).
