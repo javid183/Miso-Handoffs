@@ -39,7 +39,9 @@ level deploy 2,1             (a squad deploy slot (Unit_Placeholder) on each til
 
 **Rebuild rule.** Rebuilding asks, then replaces the prefab whole (GUID kept). Once a level has been edited by hand, the prefab is the master: read it back with `level_to_grid.py` instead of rebuilding.
 
-**Known limits.** Objectives are the template's (warned when they aren't the defaults); `R` and `d` build as floor with a warning, `E @ ~ ?` as plain floor; the template's scenery (rocks, statues, background) stays and doesn't match the new shape; no per-unit HP, enemy facing (prefabs face left; enemies left of the family need `initialDirection.x` = 1 by hand, skill `miso-level-chunks`), deploy slots, sequences or Mission wiring yet.
+**Enemy facing.** New builds set `initialDirection.x` = 1 on enemies whose footprint centre is left of the middle of the family's main group (rule: skill `miso-level-chunks`). Existing levels keep what they have; a rebuild replaces it.
+
+**Known limits.** Objectives are the template's (warned when they aren't the defaults); `R` and `d` build as floor with a warning, `E @ ~ ?` as plain floor; the template's scenery (rocks, statues, background) stays and doesn't match the new shape; no per-unit HP, deploy slots, sequences or Mission wiring yet.
 
 **Built so far** (verification set, kept for play): `GB_24-nook`, `GB_27-snare`, `GB_33-deev-wave`, `GB_11-spread-pools`, `GB_m1-linda`.
 
