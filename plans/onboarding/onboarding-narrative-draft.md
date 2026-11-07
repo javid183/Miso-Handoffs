@@ -97,6 +97,8 @@ Narrative agent, 2026-10-26. Step **A5** of `plans/onboarding/2026-10-25-onboard
 
 ## Step 4 · Memory, Mark's version (all four; Atman's Focus, Continuous Attack, Chained Assault; Tempest Bloom once)
 
+**History.** Not what plays today: see [Memory 4 as in the game](#memory-4-as-in-the-game-synced-2026-11-06).
+
 | ID | Speaker | Line | Where | Notes |
 |---|---|---|---|---|
 | M4-1 | Mark (off) | Then I arrived. | Level dialogue, when Mark walks in (turn 1 or 2) | |
@@ -119,7 +121,73 @@ Narrative agent, 2026-10-26. Step **A5** of `plans/onboarding/2026-10-25-onboard
 | M4-13 | Mark (off) | She didn't get up again. | Level dialogue | |
 | M4-14 | Lucy (off) | She saved her. We only carried her home. | Level dialogue | Lucy, the most attached, gives the credit away. Options: B (Linda): "That part, we all tell the same." |
 
+## Memory 4 as in the game (synced 2026-11-06)
+
+Narrative agent, branch `thj/onboarding`. THJ has finished tuning this level and **his text is the master**: this section records it word for word and in playback order. Sources: `Resources/Sequences/Hearth/Memory4Mark/*DialogNodeSequence.asset` and the objectives in `Content/Levels/Greybox/GB_m4-mark.prefab`. The assets carry no `[PLACEHOLDER] ` tags. Where an older table below disagrees, this one wins. IDs `THJ-n` and `OBJ-n` are new, for discussion only. The speaker column comes from each node's character; "(off)" keeps the draft's reading, since the assets don't mark it.
+
+### Dialogue
+
+| Plays in | ID | Speaker | Line in the game | Status against the rework draft |
+|---|---|---|---|---|
+| Intro (`Start`) | N1-1 | Mark (off) | Claws in every tunnel. And on the ledge, a wolf standing over her cub. | As drafted (option A) |
+| Intro | N1-2 | Mark (off) | The family was there. Most of it. The best part was still on its way. | As drafted (option A) |
+| Bloom cut-in, on John's gesture, before Lucy's Cyclone (`Bloom`) | THJ-1 | John | Lucy! Keep them busy! | **New, THJ's.** Replaces N1-3 "Lucy! Keep them in their hole!" |
+| Bloom cut-in, after the Cyclone; Lucy then runs ahead | THJ-2 | Lucy | You deal with them. I'll save the cub. | **New, THJ's** |
+| Bloom cut-in, last line before Linda's turn | N2-1 | John | Linda! Through her storm! | As drafted (option A). Now follows Lucy's line and run |
+| Arrival, stage 1 complete (`Arrival`) | M4-8 | Mark (off) | And Linda shot straight into Lucy's fire, and the whole cave bloomed. | As drafted |
+| Arrival | M4-9 | Linda (off) | Did I? | As drafted |
+| Arrival | M4-10 | Mark (off) | In my version, you did. | As drafted |
+| Arrival, after the post-Bloom reveal and scripted moves (`PostBloom`) | THJ-3 | John | We need to cut their reinforcements. | **New, THJ's** |
+| Arrival, same beat; John then moves | THJ-4 | John | I'll make sure they stay in their hole. | **New, THJ's** |
+| Arrival, on Mark's reveal | M4-1 | Mark (off) | And then I arrived. | As drafted |
+| Arrival | M4-2 | Lucy (off) | Late. | As drafted |
+| Arrival, last line before the reset; Mark is then selected | M4-3 | Mark (off) | Exactly on time. | As drafted |
+| Hold, stage 2 complete (`Hold`) | N5-1 | John | I'll hold them off. You save them. | As drafted |
+| Hold, after the reveal and the Duo unlock | M4-5 | Mark (off) | Lucy's fire, my fists. As we practiced. | As drafted |
+| Hold | M4-6 | Lucy (off) | We never practiced that. | As drafted |
+| Hold, last line | M4-7 | Mark (off) | I practiced. You followed. | As drafted |
+| Outro, after the mother falls (`End`) | M4-11 | Mark (off) | She never left her cub. Not once. | As drafted (N7 option A) |
+| Outro | M4-12 | Mark (off) | She held on until the last Claw fell. | As drafted (N7 option A) |
+| Outro, after Lucy and Mark walk to the cub | M4-13 | Mark (off) | The cub cried out. | As drafted |
+| Outro | M4-14 | Lucy (off) | She saved her. We only carried her home. | As drafted |
+| Outro cutaway, over the hearth still | H5-1 | Narrator node | Margaret: Every one of you saved her. That's the only version I believe. | Words as drafted. "Margaret: " is part of the text, since no Margaret dialogue character exists |
+| Outro cutaway | H5-2 | John | Ten Claws, Lucy. | As drafted. John, not Margaret: settles the speaker note under "Cutaway check" |
+| Outro cutaway | H5-3 | Lucy | At least. | As drafted |
+
+### Objectives
+
+| Stage | ID | Text in the game | Replaces (the wiring tool's text, never in the draft's tables) |
+|---|---|---|---|
+| 1 (the Bloom) | none | Two objectives, both hidden and with no text | Unchanged |
+| 2 (after the arrival) | OBJ-1 | John: Cut the reinforcement path. | "John: hold the den mouth." |
+| 3 (after the hold) | OBJ-2 | Kill the dark claws near the cub. | "Save the cub." |
+| 3 | OBJ-3 | Hold the den mouth with John. | "Turns left in the memory: {remaining_0}." |
+
+Stage 2's second objective is hidden and has no text. The prefab also overrides a `factionStateObjectives` string, "Eliminate all enemies. {x} remaining."; whether it shows on screen in this level wasn't checked.
+
+### No longer in the game
+
+| ID | Old text | Now |
+|---|---|---|
+| N1-3 | Lucy! Keep them in their hole! | **Replaced** by THJ-1 "Lucy! Keep them busy!" The hole now appears in THJ-4 |
+| M4-4 | I closed my eyes. I didn't need them. | **Not in the game, no replacement.** No match in the text, data or code files under `Assets/`, so this bark plays nowhere today; see flag 6 |
+| Objective | John: hold the den mouth. | **Replaced** by OBJ-1 |
+| Objective | Save the cub. | **Replaced** by OBJ-2 |
+| Objective | Turns left in the memory: {remaining_0}. | **Replaced** by OBJ-3 |
+
+### Flags for THJ (nothing changed for these)
+
+1. **THJ-3 and OBJ-1 against the Q1 rule.** "We need to cut their reinforcements." states the objective shown at the start of stage 2; the draft's binding rule says no line explains an objective. "Reinforcements" is also a planner's word for a father under pressure. Keep as an exception, or relax the rule for this level?
+2. **One cell, two names.** OBJ-1's "reinforcement path" and OBJ-3's "den mouth" point at the same tile. Neither term is in the glossary. Which is the player-facing one?
+3. **"dark claws" in OBJ-2.** The glossary writes **Dark Claw**, capitalised, and every line here says "Claws". Lowercase is the one mismatch with the glossary.
+4. **Objective format.** OBJ-1 uses "John: ..." and OBJ-3 "... with John." for the same unit. Intended difference?
+5. **Margaret as text.** "Margaret: " sits in a Narrator node because she has no dialogue character, unlike John and Lucy beside her in the same cutaway. Also, H5-1 to H5-3 play only in this cutaway today, while Step 5 lists them as Home scene.
+6. **M4-4's Atman's Focus bark.** Drop it, or keep it for later? Its row stays as a record until then.
+7. **For the coordinator, not a text issue.** `HearthMemoryWiring.Mark.Sequences.cs` and `HearthMemoryWiring.Mark.cs` still hold the old N1-3 and objective strings, and don't build THJ-2 to THJ-4; `HearthMemoryMarkTests.Flow.cs` asserts the old strings. As read, running Wire Memory 4 (Mark) again would overwrite THJ's text. Not run or tested here.
+
 ## Memory 4 rework (D-398), draft for THJ
+
+**History from here to "Old Step 4 lines, status".** Kept for its reasoning and options; the wording and order that play are in the section above.
 
 Narrative agent, 2026-11-05. Source: `plans/onboarding/2026-11-05-m4-mark-rework.md` (beat list, "Lines needed", "Player experience"). **This section replaces the Step 4 tables above once THJ signs off**; until then the Step 4 rows stay as history. Every line goes in as `[PLACEHOLDER] ` until approved. Tier 3 throughout. Beat numbers are the plan's.
 
@@ -131,7 +199,7 @@ Narrative agent, 2026-11-05. Source: `plans/onboarding/2026-11-05-m4-mark-rework
 |---|---|---|---|---|
 | N1-1 | Mark (off) | Claws in every tunnel. And on the ledge, a wolf standing over her cub. | Level dialogue, intro sequence, camera on the den then the ledge | **New.** Sets the den, the mother and the cub; no rule, no objective. **A (rec.)**: plain picture, lets the board do the rest. **B**: "Picture it. A den full of Claws, and one mother between them and her cub." (warmer, foreshadows her fall). **C**: "A cave full of Claws. One wolf, one cub, and nowhere to run." (more dread) |
 | N1-2 | Mark (off) | The family was there. Most of it. The best part was still on its way. | Level dialogue, right after N1-1 | **New.** The boast that sets up "And then I arrived." **A (rec.)**: Mark claims the arrival before it happens. **B**: "Everyone was there. Well. Almost everyone." (drier; lets Lucy's "Late." do more). **C**: drop N1-2 and keep N1-1 alone if the intro runs long |
-| N1-3 | John | Lucy! Keep them in their hole! | Level dialogue, just before `CastAbilitySequence` casts her Cyclone on 4,4 | **New.** "Shut the den" in a father's shout, not an instruction to the player. **A (rec.)**: blunt and warm. **B**: "Lucy, shut the den!" (THJ's words, plainest). **C**: "Lucy! Give them a storm to sit in." (lighter, names her Cyclone without the word) |
+| N1-3 | John | Lucy! Keep them in their hole! | Level dialogue, just before `CastAbilitySequence` casts her Cyclone on 4,4 | **Replaced in the game by THJ's "Lucy! Keep them busy!" (THJ-1).** Original note: "Shut the den" in a father's shout, not an instruction to the player. **A (rec.)**: blunt and warm. **B**: "Lucy, shut the den!" (THJ's words, plainest). **C**: "Lucy! Give them a storm to sit in." (lighter, names her Cyclone without the word) |
 | N2-1 | John | Linda! Through her storm! | Level dialogue, right after the Cyclone lands, still in the opening | **New.** Points her at the storm without naming a button; the layout leaves one lane anyway. **A (rec.)**: short, clear. **B**: "Linda. Thread it through the wind." (the archer's word; softer). Keep John on "storm/wind": Mark then retells it as "fire" in M4-8, which is the tall-tale gap (and echoes Lucy's "the wind caught fire", M2-5) |
 
 ### After the Bloom (beat 4, start of the arrival cut-in)
@@ -140,7 +208,7 @@ Narrative agent, 2026-11-05. Source: `plans/onboarding/2026-11-05-m4-mark-rework
 |---|---|---|---|---|
 | M4-8 | Mark (off) | And Linda shot straight into Lucy's fire, and the whole cave bloomed. | Arrival sequence, first line, over the split arrows | **Moved** from the opening interruption. **Fits better now**: it lands after the player's own shot, so the boast is about something they just did. Unchanged |
 | M4-9 | Linda (off) | Did I? | Arrival sequence | **Moved**, unchanged. Still works when the player made the shot: Linda doubts it ever happened, which keeps open question 2 (the Bloom is Mark's claim) and the Yard callback ("It never happened." / "Yet.") |
-| M4-10 | Mark (off) | In my version, you did. | Arrival sequence | **Moved**, unchanged. No longer "the last joke": the arrival and the Duo hint follow. Lucy runs to 9,3 after this line |
+| M4-10 | Mark (off) | In my version, you did. | Arrival sequence | **Moved**, unchanged. No longer "the last joke": the arrival and the Duo hint follow. Lucy runs to 9,3 after this line. **In the game:** Lucy already ran, to 8,3, in the Bloom cut-in; John's THJ-3 and THJ-4 follow this line |
 
 ### The arrival (beat 4, after Lucy's run and the reveal)
 
@@ -149,7 +217,7 @@ Narrative agent, 2026-11-05. Source: `plans/onboarding/2026-11-05-m4-mark-rework
 | M4-1 | Mark (off) | And then I arrived. | Arrival sequence, on the `arrival` reveal, camera on Mark | **Replaces** "Then I arrived." (THJ's wording). Pays off N1-2. Fits: it plays the moment he appears |
 | M4-2 | Lucy (off) | Late. | Arrival sequence | Unchanged. Lands harder now that the Bloom happened without him |
 | M4-3 | Mark (off) | Exactly on time. | Arrival sequence, last line before the Reset and the fresh turn | Unchanged. Ends the cut-in over Mark's full AP bar (the plan's answer to "did I lose my turn?") |
-| M4-4 | Mark | I closed my eyes. I didn't need them. | Bark (scoped: memory), first Atman's Focus | Unchanged. Most likely fires during his entrance chain |
+| M4-4 | Mark | I closed my eyes. I didn't need them. | Bark (scoped: memory), first Atman's Focus | **Not in the game, no replacement (2026-11-06).** Original note: Unchanged. Most likely fires during his entrance chain |
 
 ### The hold (beat 7)
 
@@ -179,7 +247,7 @@ N7 options for M4-11 / M4-12 (the ending's key lines):
 
 ### Cutaway check (unchanged)
 
-"Ten Claws, Lucy." / "At least." (H5-2 / H5-3) still works, and better: Mark's telling now shows 13 placed Claws (6 in the den, 2 with Mark, 5 by the mother) plus the pool spawns, so Lucy's "at least ten" from M2 is backed by the next teller, and John's tease turns into a concession. "At least." becomes her win. **Speaker note:** this draft gives the line to **John** in the Home scene after Margaret's H5-1; the rework plan's beat 9 says "Margaret". I kept John (it answers his C2-1 "Ten?"). THJ to confirm.
+"Ten Claws, Lucy." / "At least." (H5-2 / H5-3) still works, and better: Mark's telling now shows 13 placed Claws (6 in the den, 2 with Mark, 5 by the mother) plus the pool spawns, so Lucy's "at least ten" from M2 is backed by the next teller, and John's tease turns into a concession. "At least." becomes her win. **Speaker note:** this draft gives the line to **John** in the Home scene after Margaret's H5-1; the rework plan's beat 9 says "Margaret". I kept John (it answers his C2-1 "Ten?"). THJ to confirm. **Settled by the game (2026-11-06):** the asset gives the line to John, in the level's outro cutaway.
 
 ### Old Step 4 lines, status
 
@@ -187,13 +255,14 @@ N7 options for M4-11 / M4-12 (the ending's key lines):
 |---|---|
 | M4-1 | Reworded ("And then I arrived."), moved to the arrival cut-in after the Bloom |
 | M4-2, M4-3 | Kept, same beat |
-| M4-4 | Kept (first Atman's Focus bark) |
+| M4-4 | Kept in this draft (first Atman's Focus bark). **Not in the game** as of 2026-11-06 |
 | M4-5 to M4-7 | Kept, moved to the hold sequence as the Duo hint |
 | M4-8 to M4-10 | Kept, moved from the opening to after the player's shot |
 | M4-11, M4-12 | Rewritten (N7) |
 | M4-13 | Replaced by "The cub cried out." |
 | M4-14 | Kept |
-| New | N1-1, N1-2, N1-3, N2-1, N5-1 |
+| New | N1-1, N1-2, N1-3 (**replaced in the game** by THJ-1), N2-1, N5-1 |
+| New in the game, THJ's | THJ-1 to THJ-4, OBJ-1 to OBJ-3 |
 
 ## Step 5 · Hearth close (Home state; `FirePlace` / `MoreFire`, then `WolfSitDoor`; night; morning)
 
