@@ -48,7 +48,7 @@ Restore **all of them together** (W7 and W7b only apply with Bond Lite). Partial
 
 - `OnboardingMissionGraphTests`: the graph tests and `Mark_JoinsAfterTheHearth…`. The roster and level tests should still pass.
 - `OnboardingOpeningSetupTests.CheckOnTheProject_ReportsNothingToChange…`
-- `HomeVisitsTests`: `WorkshopOpensAfterTheRiverOrTheRidge`, `SkillTreeOpensAfterTheRiverAndTheRidge`, `FamilyTabOpensAfterTheTrail`, `WorkshopShowsItsPageOnFirstOpen_OncePerSave`, `TheHomeSceneShowsNoOpeningPage` (the restored scene brings `Home_Tutorial` back as Home's opening page)
+- `HomeVisitsTests`: `WorkshopOpensAfterTheRiverOrTheRidge`, `SkillTreeOpensAfterTheRiverAndTheRidge`, `FamilyTabOpensAfterTheTrail`, `WorkshopShowsItsPageOnFirstOpen_OncePerSave`, `TheHomeSceneShowsNoOpeningPage` (the restored scene brings `Home_Tutorial` back as Home's opening page), and the station-page tests in `HomeVisitsTests.StationPages.cs` (the restored scene has no `playPageOnUnlock` flags or Grandma Table page; the runtime does nothing without flags)
 - `GuidedSkillSpendTests.HomeSceneSkillTreePanelHasTheGuidedSpend`
 - `M4SquadPickTests`: slot and roster tests
 - `BondStoreTests.Asset_StartsLindaLucyAt15_AndOthersAt0` (after W7)
