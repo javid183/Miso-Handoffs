@@ -71,7 +71,7 @@ Owner: coordinator. Every item has a scope: `all` or a branch. Started 2026-10-1
 
 (New requests land here before triage.)
 
-- 2026-11-06 `bond-lite` (thj/bond-lite; L; Tier 3, approved D-233, order changed D-422): auditing the 10-26 plan against the code, then C1. THJ plays it with the pacing check when built. Classic fallback gains a wiring point when C4 lands.
+- 2026-11-06 `bond-lite` (thj/bond-lite; L; Tier 3, approved D-233, order changed D-422): C1 to C3 committed (`a7751be22`, `ddb367619`, `b7df45567`, `590b13f9f`, `7453257cc`). C4 and C5 built, uncommitted, EditMode 1591/1592 known AI red only; C4 reviewed APPROVE, C5 review fixed (must-fix and station guard D-429 checked by the coordinator, not re-reviewed). **Waiting on THJ: play with the timed pacing check** (steps: `reports/bond-lite-c5.md`, `bond-lite-c4.md`). Open: Rivalry cap per sister or per pair; Yard interrupted before the Bond step. Docs at close: `design/gdd/progression-economy.md`, `family-systems.md`, `tech/home-system.md`, `branches.md`.
 
 - 2026-11-06 `m4-settled` (thj/onboarding + builder all; M): **done.** THJ finished tuning Memory 4 (D-417, D-418, D-420). John's mode `ac1293445`, Mark tests `8da7747fa`, builder enemy facing (D-407) committed; Segment 4 and the narrative draft synced; EditMode 1466/1467, known AI red only. Reports: `reports/m4-tests-and-builder-facing*.md`. Skills sync done by THJ. Narrative flags in the draft's Memory 4 section wait for the line pass. **Next: the timed pacing play check.**
 

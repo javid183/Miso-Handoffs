@@ -9,14 +9,14 @@ Paths are under `miso/Assets/_Project/`.
 
 - `Resources/Unlockables/UnlockableSet.asset`: new entry `SistersRivalry` at the end of the list, empty group, off by default, cost 1 `MainResource_FamilySP`. 10 added lines.
 - `Features/Player/Lucy/Prefabs/Unit_Lucy.prefab`: node `[8]` "Sister's Rivalry". 46 insertions, 1 deletion (array size 8 to 9); see "Prefab diff".
-- `Features/Player/Linda/Scripts/SistersRivalry.cs` (+ `.meta`): new. `SynergyId`, `IsUnlocked(tracker)` and the plain class `RivalryTurnCap`.
+- `Features/Player/Linda/Scripts/SistersRivalry.cs` (+ `.meta`): new. `SynergyId`, `IsUnlocked(tracker)` and the plain class `RivalryTurnCap` (`SpendIfGained` spends the use only if the points rose).
 - `Features/Player/Linda/Scripts/UnitKillAbilityPointProvider.cs`: reads the literal, uses the cap instead of the 2 s guard, no reset call, "basic attack ready" gone from the detail.
 - `Core/Systems/HomeSystem/Runtime/BondLite/HomeLockRules.cs`: `Title` spelled "Sister's Rivalry". The id `"Sisters' Rivalry"` stays.
 - `Resources/Tutorials/Tutorial_LucyLindaKillAP.asset`: one phrase removed; see "Tutorial text".
 - `Core/Editor/SkillTreeSmokeTest.cs`: 10 family nodes, 16 points granted and spent.
 - `Core/Systems/HomeSystem/Editor/HomeLockRulesTests.cs`: the real-entry check now covers Rivalry too (test renamed `LiteralLock_NamesARealEntryOfTheUnlockableSet`, two cases).
 - `Core/Systems/HomeSystem/Editor/BondNodeGateTests.cs`: test renamed `RealTrees_MarksSistersAndTempestBloomAndRivalry_AreLockedFamilyNodes`, Rivalry added.
-- `Features/Player/Linda/Scripts/Editor/SistersRivalryTests.cs` (+ `.meta`, and `Editor.meta` for the new folder): new, 10 tests.
+- `Features/Player/Linda/Scripts/Editor/SistersRivalryTests.cs` (+ `.meta`, and `Editor.meta` for the new folder): new, 11 tests.
 
 No core system file changed. `Level1-C2` and `Level1-C4` still remove the component; untouched.
 
@@ -25,12 +25,13 @@ No core system file changed. `Level1-C2` and `Level1-C4` still remove the compon
 - [x] Off when locked: `Locked_ItIsOff_UntilTheNodeIsBought`, `Locked_ItIsOff_WithNoTracker`, `AnotherUnlockable_DoesNotTurnItOn`.
 - [x] On when owned or by a run upgrade: `Bought_ItIsOn`, `RunUpgrade_ItIsOn_WithTheNodeNotBought`.
 - [x] Once per turn, with the turn identified by the owner's faction: `Cap_OneUsePerTurnOfTheOwner`, `Cap_AnotherFactionsTurnDoesNotGiveItBack`.
+- [x] A kill at the AP cap keeps the use, with no synergy raised (review fix): `Cap_AKillAtTheAPCapKeepsTheUse` covers the rule; the provider calling it needs the play check.
 - [x] Entry exists before the gate reads it, cost 1 Family point: `Entry_CostsOneFamilyPoint`, `LiteralLock_NamesARealEntryOfTheUnlockableSet`.
 - [x] Node data (family, literal, `unlockLevel` 0, title, no "ready" or "cooldown" in the text): `Node_IsAFamilyNodeWithNoLevelAndNoNewPoints`. `GetUnlockLevels` is distinct and 0 is already in Lucy's list, so points awarded don't change.
 - [x] Node is locked at Bond Lv 2 like the other two: `RealTrees_...`. Lock counts stay at 3.
 - [x] Silent-lock test passes with the new entry (in the full suite).
 - [x] Synergy id tied to Bond: shared constant `SistersRivalry.SynergyId` and `SynergyId_IsTheOneBondSettingsPaysHelpFor`, which reads the real `BondSettings.asset`.
-- [x] EditMode suite: 1569 of 1570 passed. The only failure is `AIRegressionTest.Baseline_MatchesCurrentAI`. A `get_test_job` wait timed out once; calling again returned the result.
+- [x] EditMode suite after the review fix, with C5's uncommitted work in the tree: 1587 of 1588 passed. The only failure is `AIRegressionTest.Baseline_MatchesCurrentAI`. The plugin session dropped once during the wait; calling again returned the result.
 - [x] **`AIRegressionTest` didn't move:** ran it before any edit and after: 42 FAIL lines both times, the same lines. Not re-baselined.
 - [ ] **Not verified: the provider itself.** Its handlers run only in Play, so no test catches a removed call to the cap or the gate. See "How to see it".
 - [ ] **Not run: `SkillTreeSmokeTest`.** It is a Play-mode menu tool; it only compiled.
@@ -134,6 +135,7 @@ Nothing raises the sisters to Lv 2 until C5, so opening the node needs a hand st
 6. Then kill with Lucy: Linda gains 1 AP (the question above: is this what you want?).
 7. End the turn. On the next player turn, the same kills pay again.
 8. A piercing arrow or area basic attack killing two at once pays one AP.
+9. A kill while the other sister is at the AP cap (3) gives nothing, shows no log line and pays no help Bond, and it keeps the use for a later kill in that turn, once she has spent AP.
 
 **Levels with Rivalry locked (they were tuned with it on):** `GB_m3-john`, `GB_m4-mark` and The Trail. And Rivalry's worth for Linda under the Quiver: she gets AP, no arrow.
 

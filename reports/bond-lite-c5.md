@@ -1,7 +1,7 @@
 # Report: Bond Lite C5 (Yard scene hook)
 
 Plan: plans/onboarding/2026-10-26-bond-lite-tech.md    Agent: miso-implementer    Branch: thj/bond-lite
-Outcome: done, nothing staged. Tests pass; **nothing has been played**, and this chunk commits only after THJ plays it. One review assumption turned out not to hold (the Yard is not guaranteed to come before the tree panel), so the `OnEnable` refresh is in. One placeholder line for narrative.
+Outcome: done, nothing staged. Tests pass; **nothing has been played**, and this chunk commits only after THJ plays it. One review assumption turned out not to hold (stations took clicks during the Yard), so the `OnEnable` refresh is in and, with THJ's approval, stations now ignore clicks until Home's opening has finished. One placeholder line for narrative. Review fixes are at the end.
 
 Paths are under `miso/Assets/_Project/`.
 
@@ -15,7 +15,10 @@ Paths are under `miso/Assets/_Project/`.
 - `Resources/Sequences/HomeVisits/Yard_FamilyTreePointer_DialogNodeSequence.asset` (+ `.meta`): new. The one placeholder line.
 - `Resources/Sequences/HomeVisits/Yard_Midnight_SequentialSequence.asset` (+ `.meta`): new. The chain: existing Yard lines, Bond step, pointer line. Play Just Once.
 - `Content/Levels/M2 - The Trail.asset`: one line, `completionSequence` points at the chain.
-- `Core/UI/Runtime/Home/UpgradePanel/AbilityUpgradePanelUI.BondLock.cs`: `OnEnable` refresh (see "Stale panel").
+- `Core/UI/Runtime/Home/UpgradePanel/AbilityUpgradePanelUI.BondLock.cs`: `OnEnable` refresh, description panel included (see "Stale panel").
+- `Features/Home - Imported/___Khashayar/HomeManager.cs`: instance property `OpeningInProgress`, `BeginOpening`, `EndOpening`; set in `Start`, cleared in `StartIE` right after input comes on.
+- `Features/Home - Imported/___Khashayar/HomeInteractables.cs`: `OnPointerDown` returns while the opening is in progress.
+- `Features/Onboarding/Editor/HomeOpeningStationGuardTests.cs` (+ `.meta`): new, 4 tests.
 
 All assets came from `Tools/Onboarding/Wire Home Visits`, run through the menu. Run twice: the second run changed nothing, and the first left no noise (the Trail diff is one line; `Yard_Midnight_DialogNodeSequence.asset`, the Searching look, the Workshop and clue assets are unchanged).
 
@@ -28,8 +31,9 @@ Not touched: C4's files, `AIFactionBrain.cs`, `AIUnitBrain.cs`, the TMP font, `P
 - [x] Grants once: `Apply_PaysOnlyOnce...`, `Apply_ANewCopyOfTheStepAfterAReload_StillPaysNothing`.
 - [x] Null-safe, warns: no store, no tracker, no resource, no pair, no callbacks, throwing level-up listener.
 - [x] The real Trail chain has the dialog, the Bond step and the pointer, in order, both flagged once: `TheTrailPlaysTheYardChainWhenItIsWon_LinesThenBondThenThePointer`, `TheYardsBondStep_PaysTheSistersOneFamilyPoint_Once`.
-- [x] EditMode suite: 1586 of 1587 passed (C4's 1570 + 17 new). The only failure is `AIRegressionTest.Baseline_MatchesCurrentAI`, at 42 failures as in C4's run. A `get_test_job` wait dropped once; calling again returned the result. No compile errors.
-- [ ] **Needs THJ's play: the whole path below.** `PlaySequence` itself isn't run by any test, since it reaches the real save. So no test catches the chain failing to play, or the `OnEnable` refresh.
+- [x] Stations ignore a click during the opening and take it after, and with no `HomeManager`: `HomeOpeningStationGuardTests`, through the real `OnPointerDown`. That `StartIE` clears the flag on each path is read, not run (see "Station guard").
+- [x] EditMode suite after the review fixes: 1591 of 1592 passed (C4's report had 1570 and this chunk adds 21; the one extra test isn't mine, see Risks). The only failure is `AIRegressionTest.Baseline_MatchesCurrentAI`, at 42 failures as in C4's run. A `get_test_job` wait dropped once; calling again returned the result. No compile errors.
+- [ ] **Needs THJ's play: the whole path below.** `PlaySequence` itself isn't run by any test, since it reaches the real save. So no test catches the chain failing to play, the `OnEnable` refresh, or `StartIE` failing to clear the station guard.
 - [ ] **Not verified: after the Yard, Linda-Lucy is Lv 2 in the real game and the nodes open.** The arithmetic is tested by C3 (`Asset_ANormalRun...`, 20 to 23 + 5 = 25 to 28).
 
 ## Once-only: what can and can't pay twice
@@ -66,6 +70,8 @@ This window is about the length of the intro and four lines, but it loses the on
 
 ## Level-up queue: left uncalled
 
+**Plan deviation:** the plan's C5 row and its "level-up hook" have a queue that plays a scene at the next Home visit. As built, the queue has no caller and no scene; the Yard's own lines are the level-up moment.
+
 `TakeNextLevelUpScene()` keeps no caller. `levelUpScenes` is empty, so calling it could only drop entries, and playing a scene would mean editing `HomeManager` for a path no asset can exercise. The Yard's Lv 2 therefore sits in `pendingLevelUps` in the save, with any free-slot pair's levels: at most 3 per pair, and harmless.
 
 - This corrects C3's note that "C5 must call it". Whoever adds the first scene adds the call.
@@ -74,11 +80,38 @@ This window is about the length of the intro and four lines, but it loses the on
 
 ## Stale panel: the review's assumption doesn't hold
 
+**Superseded in part by "Station guard":** the guard shuts the way to the panel during the opening. The refresh stays as a second layer. What follows is what was found.
+
 The order in `HomeManager.StartIE` is right: intro, sequence, then `SetInteractionMode(All)`. But **that mode doesn't gate the stations**. `HomeInteractables` takes clicks through `IPointerDownHandler`, and `ActiveCheckGuard` only covers `PlayerInputController`'s own actions. So during the intro and the lines a station can be clicked, unless something covers it. The dialogue panel's only large raycast target is `ImageFramePanel`, a centred 1453 x 880 rect (alpha 0, `blocksRaycasts` on), not the full screen. I read this from code and the prefab; not played.
 
 As the brief says for this case, I added the refresh on enable: tree and points in Family view, the new-points dots always; skipped on the first enable, before `Start`. It covers a panel opened and closed before the Bond step, then reopened.
 
-**Not covered:** the panel left open with the Family tab showing while the step runs. The lock icon and points label stay old until a tab click or reopen. Clicking a node reads the right level and buying works (per C2). Fixing this needs a `BondLevelReached` subscription, beyond the brief; it's cosmetic and narrow.
+The refresh also redraws the description panel, because `selectedNode` survives a close: otherwise a player who read the lock line, closed and reopened would see the node open but the old line and a disabled Upgrade.
+
+**The panel open while the step runs** no longer arises: stations are shut until after the sequence.
+
+## Station guard (approved by THJ)
+
+Stations ignore clicks until Home's opening has finished. Instance property, so no static and no reset hook. `Home - Scene.unity` is unchanged. `SequencePlayer` is unchanged.
+
+**Does it clear on every path?** Read from `StartIE`; there is one way through it, and `EndOpening` sits after all its waits:
+
+| Path | Result |
+| --- | --- |
+| No completion sequence | `PlayInitialSequence` skips its `if`, goes on, clears. |
+| Once-only skip (Trail replay) | `SequencePlayer.Play` calls back at once, so the wait ends at once, clears. |
+| Sequence ends | The callback ends the wait, clears. |
+| First-tutorial page | Waits for its close, clears. |
+| Intro skipped | **No such path:** nothing skips the intro. `StartIE` always waits for the animator to leave its state. |
+| `Start` throws before the coroutine | The flag is set on the line before `StartCoroutine`, so it was never set: stations open. |
+| Anything after input comes on throws (`cameraHandler.Initialize`) | Already cleared. |
+| No `HomeManager`, or a disabled one | `Start` never ran or no instance: stations open (tested for none). |
+
+**Where stations can still stay dead:** only if `StartIE` itself never finishes, and those cases are already broken today, with camera and input off: an exception inside a completion sequence (the player never calls back), or an animator that never leaves its state. Before this change the stations still worked in such a broken Home; now they don't. A timeout isn't possible, since the scene waits on the player for as long as they read. I left that as it is; say if you want a fallback.
+
+**Hover isn't guarded:** highlights still react during the opening, since only `OnPointerDown` was asked for. Clicking a highlighted station does nothing, which may read as odd; judge it in the play check.
+
+**World map (`WorldMapPanelUI.cs:88`):** it can overwrite the player's callback the same way, but it can't be reached during the opening, so no change. In `Home - Scene.unity` all six panel calls (`ShowWorldMap` and the other five) sit in a `PointerDown` event, and the map's pin clicks need the map open. The scene has no other route. Read from the scene file, not played.
 
 ## Save reset
 
@@ -125,7 +158,8 @@ Also still open from C2 and C4, unchanged: what locking Marks-Sisters means, and
 
 ## Risks and loose ends
 
-- **A station with a first-open page, clicked during the Yard, may hang the Home start.** Read in code, existing, not new to C5, but a longer chain widens the window. `HomeInteractables.OnPointerDown` calls `SequencePlayer.Play(tutorialSequence)`; the player holds one slot, so that replaces `playingSequence` and `_onComplete`, and `HomeManager`'s `_isPlayingSequence` may never clear, leaving input off. The Workshop's page (`Equipments Cabinet`) is such a sequence, and that station is open by The Trail, so this needs a player who hasn't opened it yet. Check in the play pass (step 6). The same click would also leave the chain unmarked; the step's guard still prevents a second grant.
+- **Closed by the station guard: a station's first-open page clicked during the Yard.** `HomeInteractables.OnPointerDown` called `SequencePlayer.Play(tutorialSequence)`, which replaces the player's one slot and its callback, so `_isPlayingSequence` wouldn't clear and `StartIE` wouldn't finish. **Correction to my first version, which said this leaves Home input off:** it doesn't, since `OnTutorialClosed` → `OnPanelClosed` → `StartCameraMovement` sets the mode to All. What's lost is the rest of `StartIE`: `cameraHandler.Initialize()`, the `OnSwitch` hook and `InitialTutorial`. The same click would also have left the chain unmarked.
+- **Test count:** the suite grew by 22, and I added 21. The extra one isn't from this chunk; most likely a change to C4's tests while it's under review. I didn't trace it, and nothing depends on it.
 - **Esc > Quit on The Trail's end panel** (C3's open hole): the mission isn't recorded and pays Bond again on re-entry, and that quit plays no Yard. Later completion plays it once. Numbers run higher; nothing breaks.
 - **Scene and unlock can disagree** on a Trail-completed save (above). Accepted.
 - **Hold-to-skip hides the pointer line.** The point is still granted, and the Family tab's dot still shows.
@@ -142,7 +176,11 @@ Nothing staged. **For after THJ's play check.** C4 should land first: this build
    - `miso/Assets/_Project/Features/Onboarding/Editor/BondActivitySequenceTests.cs` + `.meta`
 2. `fix(home): the skill tree panel shows new Bond locks and Family points when reopened` (plain; independent):
    - `miso/Assets/_Project/Core/UI/Runtime/Home/UpgradePanel/AbilityUpgradePanelUI.BondLock.cs`
-3. `feat(onboarding): the Yard raises the sisters' Bond and grants a Family point after The Trail` (mission data; own commit so it can be reverted alone; needs 1):
+3. `fix(home): Home stations ignore clicks until Home's opening has finished` (behavior change for every Home load, own commit so it can be reverted alone; independent):
+   - `miso/Assets/_Project/Features/Home - Imported/___Khashayar/HomeManager.cs`
+   - `miso/Assets/_Project/Features/Home - Imported/___Khashayar/HomeInteractables.cs`
+   - `miso/Assets/_Project/Features/Onboarding/Editor/HomeOpeningStationGuardTests.cs` + `.meta`
+4. `feat(onboarding): the Yard raises the sisters' Bond and grants a Family point after The Trail` (mission data; own commit so it can be reverted alone; needs 1):
    - `miso/Assets/_Project/Features/Onboarding/Editor/HomeVisitsWiring.cs`
    - `miso/Assets/_Project/Features/Onboarding/Editor/HomeVisitsTests.cs`
    - `miso/Assets/_Project/Resources/Sequences/HomeVisits/Yard_BondAndFamilyPoint_BondActivitySequence.asset` + `.meta`
@@ -166,9 +204,11 @@ Your current save hasn't completed The Trail, so it can stay; a fresh save works
 5. Open the skill tree, Family tab. Its dot is on and the points label counts the new point. Tempest Bloom, Marks-Sisters and Sister's Rivalry show no lock and no "Opens with..." line. Buy one: it costs 1 and nothing forces the choice.
 
 **During the Yard (the panel assumption):**
-6. On another run of the Yard (a save from before The Trail), click stations during the intro and the lines, especially where the dialogue doesn't cover the screen.
-   - If the skill tree (`Grandma Table`) opens: pick the Family tab, close it, wait for the Yard to end, reopen. The lock must be gone and the points right.
-   - If the Workshop's first-open page opens during the lines: **does Home's input come back afterwards?** See Risks.
+6. On another run of the Yard (a save from before The Trail), click stations during the intro and the lines, on every part of the screen: **nothing opens**. Hover highlights still react.
+   - Once the last line closes, click a station right away: it opens. Do the same for the Workshop's first-open page on a save that hasn't seen it, then check that camera scrolling and switching between stat panels work afterwards.
+   - Load Home with no Yard (return from a failed mission, and start the game from the menu): stations work once the intro ends.
+   - Replay The Trail after the Yard is done (the once-only skip, step 7): stations work too.
+   - Skill tree reopened after a purchase, Family tab, with a node selected: the description matches the node.
 
 **Once-only:**
 7. Replay The Trail from the map and win. No Yard, no change to `Bond` or `MainResource_FamilySP`, no hang at Home.
@@ -181,3 +221,11 @@ Your current save hasn't completed The Trail, so it can stay; a fresh save works
 ## Review (coordinator's condensed copy, 2026-11-07)
 
 **FIX.** Read only. Must fix: stale description after `OnEnable`. Should fix: station clicks during Home's opening (D-429). Once-only guard saved under `PlayedSequences`; partial grant impossible in the normal path; a crash between the two saves can pay again on a replay, accepted. Skip path ends cleanly. 16 points add up. Queue bounded at 3 per pair. Open: Yard interrupted before the step leaves no point until a replay; later missions can still lift the Bond and open the nodes. Left, decide after the playtest.
+
+## Review fixes
+
+Applied from the review (verdict FIX; findings passed on by the coordinator), then the full suite was re-run.
+
+1. `OnEnable` also calls `RefreshDescriptionPanel` in family view (it returns on no selected node).
+2. Station guard, as THJ approved (above). Its own commit.
+3. Report: the "leaves Home input off" claim corrected, the level-up queue deviation recorded, the play step added.
