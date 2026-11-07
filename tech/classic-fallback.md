@@ -28,7 +28,7 @@ The onboarding didn't edit any classic mission, level or tutorial sequence. It o
 
 ## Wiring points and how to undo each
 
-Restore **all of them together**. Partial restores break play: Mark never unlocks, or New Game starts on a mission that isn't in the graph. **Never run Tools › Onboarding › Apply Opening Setup or Apply M4 Squad Slots afterwards.** Both are forward-only.
+Restore **all of them together** (W7 and W7b only apply with Bond Lite). Partial restores break play: Mark never unlocks, or New Game starts on a mission that isn't in the graph. **Never run Tools › Onboarding › Apply Opening Setup or Apply M4 Squad Slots afterwards.** Both are forward-only.
 
 | # | What | Files (commit) | Undo |
 |---|---|---|---|
@@ -39,6 +39,8 @@ Restore **all of them together**. Partial restores break play: Mark never unlock
 | W5 | M4 squad: Lucy + Linda + 1 pick (no Toba); John's placed unit swapped for a deploy slot in 7 levels | `Content/Levels/M4 - The White Mothers.asset`; `Level2/LevelDomFight`, `Level2-C1-TArtEx`, `Level2-C3-1`, `Level2-C3-2`, `Level3/Level3-C1`, `DungeonSafeRooms/LevelDivineRelicRoom 1` (`f6648ed08`) | take the asset and the 6 levels from the tag, together |
 | W5b | same, `Level2/Level2-C2` | `f6648ed08` + general `9ba3b8421` (objective split) | take from the tag, then run Tools › Levels › Split Shared Objective Conditions; or `git show f6648ed08 -- <file> \| git apply -R` (overlap not checked) |
 | W6 | Catch & Return open from the start | `Resources/Unlockables/UnlockableSet.asset` (`a7320be82`) | take from the tag (`MarkLindaSynergy.unlockedByDefault` back to 0) |
+| W7 | Bond Lite locks (only if `thj/bond-lite` is merged): Linda and Lucy start at Bond 25, so Tempest Bloom, Marks-Sisters and Rivalry's node open with no Yard; on a New Game, because saved points override the start | `Resources/BondSettings.asset` | edit Linda-Lucy `points` 15 to 25 |
+| W7b | Sister's Rivalry stays always on in classic (M5's tutorial page describes it), once C4 lands | `Resources/Unlockables/UnlockableSet.asset`, entry `SistersRivalry` | set `unlockedByDefault` to 1 |
 
 **Checked and inert:** no auto hooks start the onboarding. The only new `[InitializeOnLoadMethod]` is general editor tooling. Onboarding `Resources/` assets are only reached by direct reference. `LevelAbilityLock` does nothing unless a level has one. Everything else onboarding-only goes inert once W1 to W6 are undone: the Hearth, River, Ridge and Trail missions and levels, `Features/Onboarding`, the sequences.
 
@@ -49,6 +51,7 @@ Restore **all of them together**. Partial restores break play: Mark never unlock
 - `HomeVisitsTests`: `WorkshopOpensAfterTheRiverOrTheRidge`, `SkillTreeOpensAfterTheRiverAndTheRidge`, `FamilyTabOpensAfterTheTrail`, `WorkshopShowsItsPageOnFirstOpen_OncePerSave`
 - `GuidedSkillSpendTests.HomeSceneSkillTreePanelHasTheGuidedSpend`
 - `M4SquadPickTests`: slot and roster tests
+- `BondStoreTests.Asset_StartsLindaLucyAt15_AndOthersAt0` (after W7)
 - `SearchRidgeTests.CatchAndReturnIsOpenByDefault`
 - Only if done wrong: `MarkWeaponSocketTests` (`Unit_Mark` taken whole), `SharedObjectiveConditionTests` (`Level2-C2` taken whole without the split).
 
@@ -66,3 +69,4 @@ Restore **all of them together**. Partial restores break play: Mark never unlock
 
 - 2026-11-05: written from the audit; tag `classic-intro-base` made.
 - 2026-11-06: re-checked at `thj/onboarding` @ `03cb1a97f` (16 commits after the audit): none touches a W1 to W6 file, so the table stands. General changes come along: `CombatLevelContainerScene` end panel, `PlayerController`, new sequences. Still not rehearsed.
+- 2026-11-06: W7 and W7b added for Bond Lite (written ahead of C4 on `thj/bond-lite`). Not rehearsed.

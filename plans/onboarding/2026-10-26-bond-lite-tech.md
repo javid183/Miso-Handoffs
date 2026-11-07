@@ -33,7 +33,7 @@ Audit of the plan against `thj/bond-lite` @ `58aa10418`, from reading code and Y
 
 **C3 constraint (from C1's review):** no `BondStore.Add` during combat. `BondSources` keeps an unsaved per-mission help tally with its cap, like `_collectedResources`, and makes one `Add` per pair at `"Mission complete"`. So no mid-combat saves, no restart farming, and failed missions give nothing. `Add` stays for mission end and Home activity.
 
-**C2 and C4 notes:** C2 needs a lock lookup by literal. C4's Rivalry entry id is `SistersRivalry` with the set's empty group title; update the counts at `HomeLockRulesTests.cs:26,27,34` and add Rivalry to the real-entry check. Scene objects must unsubscribe from `BondLevelReached`. Don't cache `BondStore.Instance`.
+**C2 and C4 notes:** C2 needs a lock lookup by literal. C4's Rivalry entry id is `SistersRivalry` with the set's empty group title; add Rivalry to the real-entry check and to `RealTrees_MarksSistersAndTempestBloom_AreLockedFamilyNodes`; lock counts stay at 3. Use the glossary's spelling "Sister's Rivalry" (`HomeLockRules.cs:45` differs). `SkillTreeSmokeTest.cs:218,238` hard-codes 9 family nodes and 15 points; update it. Marks-Sisters is a stat node locked by id (`HomeLock.NodeGuid`). C5: if `Add` runs after the panel opened in the same visit, rebuild the tree in `OnEnable`. Scene objects must unsubscribe from `BondLevelReached`. Don't cache `BondStore.Instance`.
 
 **Answered by THJ 2026-11-06:** Marks-Sisters is locked too, at Lv 2 (D-424; check no level or M4 plan expects it bought). The Yard raises the Bond, grants one point and points at the nodes in dialogue, with free spending; item 8's forced choice is dropped (D-425). The Hearth adds no Bond (D-426).
 
