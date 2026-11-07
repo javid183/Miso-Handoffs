@@ -31,6 +31,12 @@ Owner: coordinator; THJ approves. `claude-handoff/` doesn't change when the shar
 - **2026-11-05 (D-396): the working main while THJ works solo.** No cherry-picks; `main` (still @ `194bd566b`, 0 commits the branch lacks) is fast-forwarded later. Tag `classic-intro-base` marks the classic opening. Fallback recipe: `tech/classic-fallback.md` (every onboarding change that adds a wiring point updates it).
 - Checked 2026-11-06: at `03cb1a97f`, 85 ahead of `main` and 0 behind, so `main` can still fast-forward.
 
+## `thj/bond-lite`
+
+- Created 2026-11-06 by THJ's choice (D-423) from `thj/onboarding` @ `58aa10418`, 0 ahead and 0 behind at creation. His uncommitted AI diagnostic, TMP font, `PreloadScreen` and `ProjectSettings` came along.
+- **Purpose:** Bond Lite (`plans/onboarding/2026-10-26-bond-lite-tech.md`). `thj/onboarding` stays the build without Bond, and merges as a fast-forward if nothing is committed there meanwhile. Until then, tweaks go here.
+- Combat resource and AP: same as `main`.
+
 ## `thj/linda-quiver`
 
 **Merged into `main` on 2026-10-29** (fast-forward in place with `git fetch . thj/linda-quiver:main`, `a1483f0b9..8c2e8617c`, 47 commits: the quiver, its core fixes, the swap fix). Afterwards THJ committed `341ac3d0d` (enemy alert on 4 levels), `c3ca01367` and `a94240034` (EditorFPSLimiter in PreloadScreen) on the branch, and is switching to `main` to merge those himself. Not pushed. The quiver is on in `main` by the code default (`lindaQuiverEnabled`); `GlobalSettings.asset` doesn't store it. Items scoped to this branch now count as `all`.
