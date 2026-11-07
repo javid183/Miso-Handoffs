@@ -119,3 +119,6 @@ Needs a save where the skill tree and the Family tab are open. Nothing raises th
 ## Review (coordinator's condensed copy, 2026-11-06)
 
 **APPROVE.** Read only. One should-fix: a test for the node overloads. No test catches a gate removed from a call site (`AbilityTreePanelUI.cs:112,113`, `AbilityUpgradePanelUI.cs:172,176,182`), so the play check names each: below Lv 2 with a point in hand, lock icon, description line, Upgrade greyed, no point spent; same at Lv 2. Other buy paths: editor tools only. Guided spend's nodes aren't locked. New-points dot left as it is. `NodeGuid` is sound and merge-safe. A stat node whose ability isn't found would read Maxed and dodge the lock; Lucy's lookup should find it (read, not played).
+
+
+2026-11-06: one more test added after review; 12 new tests, EditMode 1517 of 1518, known AI red only.
