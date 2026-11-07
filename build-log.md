@@ -2581,3 +2581,15 @@ Core gets one additive, generic `CombatLog.AddCustom`.
 
 **Status:** done; project-wide code goes to other branches when merged.
 
+## 2026-11-06: Memory 4 settled: tests follow the prefab, builder sets enemy facing
+
+**Built:** John's gesture on Once No Wait (`ac1293445`); Mark tests pin THJ's prefab (`8da7747fa`); Build Level From Grid sets enemy facing by footprint centre against the main group's middle (commit after `8da7747fa`). Segment 4 and the narrative draft synced.
+
+**Verified:** full EditMode 1466/1467, known AI red only. Reviewer's fixes applied (reviewer didn't re-read them; coordinator spot-checked the footprint fix). THJ played John's gesture. Drawing checked against the prefab.
+
+**Not verified:** facing on a real rebuilt level in play; no test checks the saved YAML override.
+
+**Findings:** the (6,4) Claw has about 12.5 HP, the level's highest; flagged to THJ. If the (3,5) Claw lives into the arrival, the (3,7) walk cancels with a warning. Rebuilding an older greybox turns its left enemies.
+
+**Status:** done; next is the timed pacing check.
+

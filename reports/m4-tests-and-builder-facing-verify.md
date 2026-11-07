@@ -50,3 +50,13 @@ none
 ## How to see it
 
 1. Test Runner > EditMode > Run All; expect 1462 green and `Baseline_MatchesCurrentAI` red.
+
+## Re-run 2026-11-06 (verifier, Unity MCP, editor open, branch thj/onboarding)
+
+- Editor not in Play mode (log ends in edit-mode scene load; test job ran in EditMode). No new compile errors: the last `error CS` lines in Editor.log (GridToLevelFacingTests.cs 177/179) are from an earlier compile, since followed by a successful compile; console error list holds only an old "Can't remove GUnit (Script)" component message.
+- Full EditMode suite: 1467 run, 1466 passed, 1 failed, 0 skipped (181 s).
+- Only failure: `MISO.Core.Systems.AI.EditorTests.AIRegressionTest.Baseline_MatchesCurrentAI` (known red, 713 checks, 42 failures; not touched).
+- `git status --short -- miso/Assets` untracked files: `GridToLevelBuilder.Facing.cs`(+.meta), `GridToLevelFacingTests.cs`(+.meta), both under `Core/Levels/Editor/GridToLevel/`. Nothing new.
+- No `__*` folder under Content/Levels/Greybox after the run.
+- Nothing changed; save not reset.
+- Editor checks corrections: `get_test_job` dropped once ("session disconnected"), a retry worked as documented. Final result's `results` is null; failure names are in `progress.failures_so_far`.
