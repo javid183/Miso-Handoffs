@@ -52,6 +52,7 @@ Restore **all of them together** (W7 and W7b only apply with Bond Lite). Partial
 - `GuidedSkillSpendTests.HomeSceneSkillTreePanelHasTheGuidedSpend`
 - `M4SquadPickTests`: slot and roster tests
 - `BondStoreTests.Asset_StartsLindaLucyAt15_AndOthersAt0` (after W7)
+- `SkillTreeSmokeTest` (a Play-mode tool, `:238-239` hard-codes 16 Family points; 15 in classic after W7b). Two "off" tests on Rivalry go inconclusive, not red, after W7b.
 - `SearchRidgeTests.CatchAndReturnIsOpenByDefault`
 - Only if done wrong: `MarkWeaponSocketTests` (`Unit_Mark` taken whole), `SharedObjectiveConditionTests` (`Level2-C2` taken whole without the split).
 
