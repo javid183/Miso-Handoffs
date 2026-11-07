@@ -23,3 +23,17 @@ Turn ending and unit dying are safe. No statics, no private IDs, CRLF no BOM mat
 - If a Claw dies on an enemy turn, the reset does nothing and the step only warns, so Mark isn't selected.
 - Hold-to-skip: camera steps collapse; if `RestartTurn` ran after a direct select, Mark would lose it silently. Check in play.
 - `HearthMemoryWiring.Mark.Sequences.cs` omits this step; rerunning it would drop the selection (tool's menu entry is retired).
+
+## Re-review after the preferred-unit rework: **APPROVE**
+
+Read from the code; never played. One should-fix: the doc comment at `PlayerController.ScriptedSelection.cs:16`.
+
+- With nothing stored, `AutoSelectUnit` is unchanged. With a unit stored there's one fewer `Random` draw, and nothing depends on it.
+- The preference can't leak: `EndTurn` clears it (`PlayerController.cs:247`), `Take` clears on every use, and each level gets a new controller (`Faction.cs:72-76`).
+- Stored at the last step because `PlayPending` holds the controller busy: holds. `RestartTurn` runs before the step while `ShowHUD` is non-instant; skip doesn't collapse `ShowHUD`.
+- On the arrival path the preference is used before the player can act. Elsewhere a mid-action step can linger and replace one random pick, cost-free, gone at `EndTurn`; disclosed in the class comment.
+- `Clear` and `Take` call sites have no automated test. Play steps that matter most: last-AP kill and hold-to-skip.
+
+`__CameraStartTest`: not caused by this change. `GridToLevelCameraStartTests.cs:28-29` ignores `DeleteAsset`'s result, so a refused delete passes silently; cause of the refusal not established. Next run of the class should clear it. Separate task if it recurs: log the failed delete. Don't stage the folder.
+
+Line endings: the repo stores these as LF (`text eol=lf`); new CRLF files normalize on `git add`.
