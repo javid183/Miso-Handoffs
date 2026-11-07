@@ -57,7 +57,7 @@ Restore **all of them together**. Partial restores break play: Mark never unlock
 1. THJ: commit or stash the work in progress, close Unity, create `classic-intro` from the current `thj/onboarding`, and switch to it. Git writes need his yes.
 2. Implementer: undo W1 to W6 as in the table, in one commit.
 3. Implementer: handle the red tests above (Ignore with a plain reason, or remove), in their own commit.
-4. Open Unity, Ctrl+R, EditMode: only the known AI red may remain.
+4. Open Unity, Ctrl+R, EditMode: only the known AI red may remain, plus any `HearthMemoryMarkTests` layout reds still open (10 on 2026-11-06, until they're updated to THJ's Memory 4 prefab, D-405).
 5. **Optional, the shortened classic** (THJ's route, D-396): M1 → M2 or M3 Mark Intro → M5 (optional) → M4, M7 out. That's a graph edit in `Game Data.asset` plus the Home station and pin unlocks that name the removed missions (W3's classic values reference M2, M5, M3 Blood Trail, M3 Mark Intro). Needs a small design pass for which unlock follows which mission.
 6. **Tutorial bits the memory absorbed** that the classic shortening would lose: Linda's Watch and the Duo, taught in classic M3 Blood Trail. If M3 Blood Trail is dropped, move those beats into M2 or M5 (design pass).
 7. THJ plays M1 → M4. Make a player build.
@@ -65,3 +65,4 @@ Restore **all of them together**. Partial restores break play: Mark never unlock
 ## Log
 
 - 2026-11-05: written from the audit; tag `classic-intro-base` made.
+- 2026-11-06: re-checked at `thj/onboarding` @ `03cb1a97f` (16 commits after the audit): none touches a W1 to W6 file, so the table stands. General changes come along: `CombatLevelContainerScene` end panel, `PlayerController`, new sequences. Still not rehearsed.
