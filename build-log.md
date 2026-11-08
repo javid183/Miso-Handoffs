@@ -2593,3 +2593,17 @@ Core gets one additive, generic `CombatLog.AddCustom`.
 
 **Status:** done; next is the timed pacing check.
 
+
+## 2026-11-08: Bond Lite done, with the fixes from THJ's first full play
+
+**Built:** C4 Rivalry (`f64dc3424`, `b4525d46e`, `fa1fbcbb6`) and C5 Yard Bond and point (`c0e91e97c`, `72ed77108`, `a75c19680`, `59a527d4c`), committed after THJ's play. Then fixes from his nine findings (`plans/onboarding/2026-11-07-bond-lite-play-fixes.md`): skill-tree highlight null ref (`b14e52fe7`); Home opens without the old house page (`18f73aaeb`); Hearth close at Home with Ryker's loss and the World map page (`eb3ba2406`); station pages play by themselves when a station first opens, no camera move (`67fd68a04` runtime, `32ac85086` data); Marks-Sisters drops "[Duo]" (`eeb2a1c4a`); THJ's F10 win-level cheat (`47a9139cb`); Home camera step for scenes in Home's opening (`6998ba019`); the Yard staged: own Home state with Lucy training and Linda near, camera to the yard, Y12-1 to Y12-6, Bond step, "Linda & Lucy's Bond reached Lv 2.", Margaret, pointer, pan back (`6af47eeb6`).
+
+**Verified:** reviews APPROVE (C1–C4 fixes). THJ played every fix. Final EditMode Run All by THJ: all pass except the known AI red. Pan back checked frame by frame in Play (no jump).
+
+**Not verified:** one-hold skip of the whole Yard (a hold during the pan only finishes the pan; shared `SequentialSequence`). Page images are placeholders.
+
+**Findings:** before `cameraHandler.Initialize()` the Home MainCamera sits offset (-12.69, -24.38) from its rig with zoom target 0, so any focus in Home's opening frames the wrong place (`tech/home-system.md`). `CameraSequence` reaches the stale combat handler after a mission. Rare test flakes: `GridToLevelSettingsTests` and `GridToLevelFpTests` (leftover folder, Unity assert); a stalled run left `_GuidedSpendScratch.unity` (gone after the rerun).
+
+**Docs:** GDD progression-economy (PR-6, PR-8, unlock table), family-systems (BO-1 to BO-4), overview (BO prefix), glossary (Bond, skill points, Family skill point), narrative draft, first-hour design, `tech/home-system.md`, `tech/classic-fallback.md`, `branches.md`. Claude Doc mirror: this build-log section needs syncing.
+
+**Status:** Bond Lite done on `thj/bond-lite`. THJ's: fast-forward `thj/onboarding`, idles per visit (Linda's yard stand-in), page images. Open: Lucy's pointer says "Family Skill Tree" vs the glossary's "Family tree".

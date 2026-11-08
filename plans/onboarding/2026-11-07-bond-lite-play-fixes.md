@@ -64,3 +64,4 @@ Text: `reports/bond-lite-fixes-text.md` (placeholder grade). Coordinator choices
 - 2026-11-07: C1 `b14e52fe7`; C2 `18f73aaeb` (setup), `eb3ba2406` (Hearth close + World map page). THJ played, review APPROVE. C3 dispatched (opus).
 - 2026-11-07: C3 played (flow fine, framing wrong). Cause: before `cameraHandler.Initialize()` the MainCamera sits offset (-12.69, -24.38) from the rig and the zoom target is 0. THJ dropped the focus (D-440); pages play with no camera move. Marks-Sisters "[Duo]" dropped (D-441). **C4 trap:** the yard camera focus runs in Home's opening, so it must call `Initialize()` first (or focus after it).
 - 2026-11-08: C3 committed `67fd68a04`, `32ac85086`; Marks-Sisters `eeb2a1c4a`; THJ's F10 cheat `47a9139cb`. C4 dispatched (opus).
+- 2026-11-08: C4 committed `6998ba019`, `6af47eeb6` (pan back, THJ). All chunks done; docs synced.
