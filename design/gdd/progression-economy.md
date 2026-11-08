@@ -16,15 +16,15 @@ The family grows in two lasting ways. Each Bergson earns XP, levels up and spend
 | Steel, Timber, Fabric, Stone | Family | Material picks on mission completion | Gear upgrades |
 | XP | Each character | Kills, mission completion | Skill points |
 | Skill Point (SP) | Each character | XP thresholds | Skill-tree nodes, unlocks |
-| Family Skill Point (FSP) | Family | A character's 2nd, 3rd and 5th SP spent | Family nodes, family unlocks |
+| Family Skill Point (FSP) | Family | A character's 2nd, 3rd and 5th SP spent; **on `thj/bond-lite`** also the Yard scene, once (PR-8) | Family nodes, family unlocks |
 
-The data titles FSP "Bergson Skill Point"; the glossary name is Family Skill Point. Source: `Resources/GResources/GResourceSet.asset` (`aggregated` 1 = family wallet), `Core/Units/Runtime/Factions/FactionTracker.cs`.
+The data titles FSP "Bergson Skill Point"; the glossary name is Family Skill Point, shown on screen as "Family skill point" (D-439), never "Family point" or "FP", which are the combat FTP. Source: `Resources/GResources/GResourceSet.asset` (`aggregated` 1 = family wallet), `Core/Units/Runtime/Factions/FactionTracker.cs`.
 
 ## Experience and levels
 
 - **PR-4.** XP comes from kills and from completing a mission. A kill pays the enemy's kill XP only when an ability lands the killing blow ([Enemies](enemies.md#roster)). *Built*
 - **PR-5.** XP is split evenly, rounded up, among family members: kill XP among everyone who started the level (members who fell included), completion XP among those in the final level. The killer gets no extra share, and members who stayed out of the mission get nothing. Characters a level places themselves (Linda in M1, Toba in M4 before he joins) share as members do. *Built*, intended (D-183)
-- **PR-6.** Each XP threshold reached gives 1 SP. The first threshold is 0, so a character's first XP of any amount gives 1 SP. There are 10 thresholds, so 10 SP is the cap. *Built*
+- **PR-6.** Each XP threshold reached gives 1 SP. The first threshold is 0, so a character's first XP of any amount gives 1 SP. There are 10 thresholds, so 10 SP is the cap. *Built*. Intended: every hero who has earned XP may hold a point at the first skill-tree open; the guided spend stays on the sister and the others wait (D-432).
 - **PR-7.** A character's level is the number of SP spent in their tree. Nodes unlock at 0, 0, 2, 2, 3 and 5 SP spent; the trees are on the character sheets ([Characters](characters/README.md)). Each tree costs 8 SP, which leaves 2 SP spare at the cap. *Built*, intended (D-222)
 
 | SP earned | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 |
@@ -35,11 +35,11 @@ Source: `Resources/Game Data.asset` (`xpLevelThresholds`), `FactionTracker.cs` (
 
 ## Family Skill Points and family level
 
-- **PR-8.** A character's tree also earns the family 1 FSP each time the SP spent in it reaches 2, 3 and 5 (its unlock levels): 3 per character, 15 in all, which is exactly what the family nodes cost. Only purchases in the skill-tree panel count. FSP buy the family nodes, which sit on the characters' trees and upgrade Duos and Synergies ([Family systems](family-systems.md)). *Built*, intended (D-221; the first design said a character's first 3 SP)
+- **PR-8.** A character's tree also earns the family 1 FSP each time the SP spent in it reaches 2, 3 and 5 (its unlock levels): 3 per character, 15 in all, which is exactly what the family nodes cost. Only purchases in the skill-tree panel count. FSP buy the family nodes, which sit on the characters' trees and upgrade Duos and Synergies ([Family systems](family-systems.md)). *Built*, intended (D-221; the first design said a character's first 3 SP). **On `thj/bond-lite`:** the Sister's Rivalry node adds a tenth family node, so the family nodes cost 16; the extra point is a story grant: the Yard scene after The Trail gives 1 FSP, once per save (D-173, D-425). Level-ups still earn 15. Three Family nodes on Lucy's tree are shut until Linda & Lucy's Bond reaches Lv 2: Sister's Rivalry, Tempest Bloom and Marks-Sisters (D-424; [Family systems](family-systems.md) BO-4). *Built*
 - **PR-9.** There is no family level. A hidden family level fed by Bond level-ups was proposed in the Home readability pass ([`m9-readability.md`](../m9-readability.md)). *Deferred* (D-221)
 - **PR-10.** **On `thj/home-test`:** the family earns 1 FSP after its second side mission and spends it on the Picnic ([Home](home.md)). *Demo*
 
-Source: `Core/UI/Runtime/Home/UpgradePanel/AbilityUpgradePanelUI.cs` (FSP grants), `SkillTree.cs` (`GetNodeState`), `FactionTracker.cs` (`UnitLevels`), `Resources/Unlockables/UnlockableSet.asset` (FSP costs); design rules in `design/player-skill-trees.md`.
+Source: `Core/UI/Runtime/Home/UpgradePanel/AbilityUpgradePanelUI.cs` (FSP grants), `SkillTree.cs` (`GetNodeState`), `FactionTracker.cs` (`UnitLevels`), `Resources/Unlockables/UnlockableSet.asset` (FSP costs); design rules in `design/player-skill-trees.md`. **On `thj/bond-lite`:** `Features/Onboarding/BondActivitySequence.cs` (the Yard's grant), `Core/Systems/HomeSystem/Runtime/BondLite/HomeLockRules.cs` (the locks), `Unit_Lucy.prefab` node `[8]` (Rivalry), from the Bond Lite reports C4 and C5, 2026-11-07.
 
 ## Family stats
 
@@ -86,7 +86,8 @@ All 12 items at level 3 cost 845 Gold, 56 Fabric, 34 Steel, 22 Timber and 15 Sto
 
 | Unlock | Cost | Bought on | Same effect as a run upgrade |
 | --- | --- | --- | --- |
-| Tempest Bloom | 1 FSP | Lucy's tree (family node) | Tempest Bloom |
+| Tempest Bloom | 1 FSP | Lucy's tree (family node). **On `thj/bond-lite`:** shut until Linda & Lucy's Bond Lv 2 (D-424) | Tempest Bloom |
+| Sister's Rivalry | 1 FSP | **On `thj/bond-lite` only:** Lucy's tree (family node, row 2, column 0), shut until Linda & Lucy's Bond Lv 2. Once bought, at most once per turn per sister, +1 AP only, no cooldown reset (D-173, D-232, D-437). Elsewhere Rivalry has no node and is always on | — |
 | Catch & Return | 1 FSP | Mark's tree (family node) | — |
 | Move as One | 1 SP | Linda's tree | — |
 | Sundering Strikes | 1 SP | John's tree | Sundering Strikes |
@@ -97,7 +98,7 @@ All 12 items at level 3 cost 845 Gold, 56 Fabric, 34 Steel, 22 Timber and 15 Sto
 | Cyclone Weak | 1 SP | No node: run upgrade only, by design (D-188) | Howling Gale |
 | `JohnResolve` | 1 SP | Not used anywhere; to cut (D-188) | — |
 
-Source: `Resources/Unlockables/UnlockableSet.asset`; references on `Unit_*.prefab` (`skillTree`, passive components) and `Resources/RunUpgrades/*/RU_*.asset`.
+Source: `Resources/Unlockables/UnlockableSet.asset` (on `thj/bond-lite` also entry `SistersRivalry`); references on `Unit_*.prefab` (`skillTree`, passive components) and `Resources/RunUpgrades/*/RU_*.asset`; Rivalry's gate and cap in `Features/Player/Linda/Scripts/UnitKillAbilityPointProvider.cs`, `SistersRivalry.cs`.
 
 ## Mission rewards
 

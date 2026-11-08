@@ -2,7 +2,7 @@
 
 Owner: game designer (THJ approves) · Scope: `all` · Checked against assets: `main` @ `92853a5a9`, 2026-10-16 (ability presets read from the live project); [Role zones on the grid](#role-zones-on-the-grid) read from `thj/preview-improvements` @ `f5d263743`, 2026-10-20, now merged into `main`; Linda's and Lucy's role rows, FR-2, Catch & Return and the quiver notes from `main` @ `8c2e8617c`, 2026-10-29 (the `thj/linda-quiver` merge, D-326) · Mirror: Claude Doc "Miso — Game Design", tab Family systems · Up: [Overview](overview.md)
 
-The family fights as a family through four systems. Family Roles react on their own during anyone's turn. Duos are paired abilities the player chooses and pays FTP for. Synergies fire automatically when two members line up. Pass-by lets members tag each other while moving. On `thj/home-test`, Bond earned at Home unlocks some of them.
+The family fights as a family through four systems. Family Roles react on their own during anyone's turn. Duos are paired abilities the player chooses and pays FTP for. Synergies fire automatically when two members line up. Pass-by lets members tag each other while moving. On `thj/home-test`, Bond earned at Home unlocks some of them; on `thj/bond-lite`, Bond Lite shuts three of the sisters' Family-tree nodes until their Bond reaches Lv 2 ([Bond](#bond)).
 
 | System | Player chooses it? | Designed cost and limit | On `main` today | Status |
 | --- | --- | --- | --- | --- |
@@ -78,7 +78,7 @@ Source: `Unit_<Name>.prefab` (role handler: `roleZoneSprite`, `roleZoneSlot`, `r
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | John–Linda | `John_Linda_Duo` | **John-Linda Dance.** John moves to a cell within 4 (5 or 6 with the Dance node) and Linda moves the mirrored offset at the same time; a held key flips the mirror, and the player can cycle paths | None | 2 | Yes | Open | Built |
 | John–Lucy | `John_Lucy_Duo` | **Hide and Seek.** 2 decoys (3 or 4 with the Hide and Seek node) appear on free cells within 2 of Lucy and John, about half around each | Lucy: time window, 2 cycles, hit at 0.7–0.9 → +1 decoy | 3 | No | Open | Built |
-| Linda–Lucy | `Linda_Lucy_Duo` | **Marks-Sisters.** Linda fires a fire arrow along a row or column (5 cells) that pierces: 12 × damage to every enemy, with no falloff (×1.2 or ×1.35 with the Marks-Sisters node). Spends one of Linda's arrows, which lands at the end of the line (as Healing Marks; [Linda](characters/linda.md) LI-4, LI-6) | Linda: mash → damage ×0.7 to ×1.5 | 2 | No | Open | Built |
+| Linda–Lucy | `Linda_Lucy_Duo` | **Marks-Sisters.** Linda fires a fire arrow along a row or column (5 cells) that pierces: 12 × damage to every enemy, with no falloff (×1.2 or ×1.35 with the Marks-Sisters node). Spends one of Linda's arrows, which lands at the end of the line (as Healing Marks; [Linda](characters/linda.md) LI-4, LI-6) | Linda: mash → damage ×0.7 to ×1.5 | 2 | No | Open. **On `thj/bond-lite`:** the Duo stays open; its Marks-Sisters node is shut until Bond Lv 2 (BO-4) | Built |
 | Linda–Toba | `Linda_Toba_Duo` | **Healing Marks.** The same piercing arrow, charged by Toba: 12 × damage to enemies, and every Bergson in the line, Linda included, heals 10 × `Stat_WIS` (×1.5 or ×2 with the Healing Marks node) | Linda: mash → WIS ×0.7 to ×1.5 | 2 | No | **On `thj/home-test`:** Bond L2 (D-010) | Built |
 | Mark–Lucy | `Mark_Lucy_Duo` | **Chained Assault.** Up to 3 targets within 4: Lucy fires a sidewinder at each (3 × damage) and Mark's ghost strikes each, nearest first (8 × damage); ×1.2 or ×1.35 with the Chained Assault node | Lucy: mash → damage ×0.7 to ×1.5 (Mark's hits too) | 2 | No | Open | Built |
 | Mark–Linda | `Mark_Linda_Duo` | **Family Footrace.** A race to a point within both runners' reach. The winner deals ×1.5 damage until their next basic attack (or 1 turn); the loser gets +1 AP; both basic attacks reset, which becomes an AP refund (D-220) | None | 2 (1 with Head Start) | Yes | Open | Built. **Planned (D-268, D-271):** Arrow Chase replaces it; designed, on hold since the simplification (D-292 to D-294) |
@@ -92,8 +92,8 @@ Source: `Content/Controllers/PlayerController.prefab` (`UnitsCooperationHandler`
 
 | Synergy | Between | When | Effect | Unlock | Status | Notes |
 | --- | --- | --- | --- | --- | --- | --- |
-| Sisters' Rivalry | Linda, Lucy | One sister kills an enemy with a basic attack | The other gets +1 AP and her basic attack is ready again, at most once every 2 s (the reset adds nothing on `main`; it becomes an AP refund, D-220) | **On `thj/home-test`:** Bond L2 (D-010) | Built | |
-| Tempest Bloom | Linda, Lucy | Linda's basic arrow (also her role arrow) or the Linda–Lucy Duo arrow enters Lucy's Cyclone | The arrow splits into copies toward each neighbouring cell except back the way it came; each copy keeps the damage | Family tree; also a run upgrade (`LindaLucyCycloneSpreadUnlock`) | Built | |
+| Sisters' Rivalry | Linda, Lucy | One sister kills an enemy with a basic attack | The other gets +1 AP and her basic attack is ready again, at most once every 2 s (the reset adds nothing on `main`; it becomes an AP refund, D-220). **On `thj/bond-lite`:** +1 AP only, no cooldown reset (D-232); at most once per turn per sister, so up to 2 AP a turn between them (D-173, D-437); a kill while the other sister is at the AP cap keeps the use | **On `thj/home-test`:** Bond L2 (D-010). **On `thj/bond-lite`:** a Family-tree node on Lucy's tree, 1 FSP, shut until Bond Lv 2 (BO-4) | Built | Glossary spelling: Sister's Rivalry |
+| Tempest Bloom | Linda, Lucy | Linda's basic arrow (also her role arrow) or the Linda–Lucy Duo arrow enters Lucy's Cyclone | The arrow splits into copies toward each neighbouring cell except back the way it came; each copy keeps the damage | Family tree; also a run upgrade (`LindaLucyCycloneSpreadUnlock`). **On `thj/bond-lite`:** the node is shut until Bond Lv 2 (BO-4); the run upgrade still grants it | Built | |
 | Papa's Shelter | John, Lucy | Lucy stands next to John | Lucy is Sheltered and her basic attack gains a level (one more ember) | Open | Built | |
 | Shield Flare | John, Lucy | Lucy's fireball reaches John while his Shield Up is on | John absorbs it and launches copies along the four diagonals; each hits the first enemy within 2 cells | Open | Built | |
 | Command Shield Dash | John, Mark | A unit finishes a move made by Mark's Command | Press QTE on John ("Shield Dash"): a free Shield Dash | **On `thj/home-test`:** Bond L2 (D-010) | Built | |
@@ -116,6 +116,17 @@ Character passives that touch the family but belong to one character (Wrath, Blo
 
 Source: `Content/Controllers/PlayerController.prefab` (`UnitsPassByHandler`: 4 entries, one preset, excluded tag `Status.Inactive`), `Features/Player/Shared/Abilities/TagFPFill/Bergson_PassBy_Ability_PointsFill.asset` (data title "Father's Resolve", copied).
 
+## Bond
+
+Bond Lite, **on `thj/bond-lite` only** (D-422, D-423). The full Bond of the Home demo is on `thj/home-test` ([Home](home.md) HO-6, PB-4); Bond Lite uses the same names and thresholds so it folds into it later. Plan: [`plans/onboarding/2026-10-26-bond-lite-tech.md`](../../plans/onboarding/2026-10-26-bond-lite-tech.md).
+
+- **BO-1.** Each pair of family members has a saved Bond score. Levels are reached at 10, 25 and 45 points (Lv 1, 2, 3). Linda–Lucy start at 15 (Lv 1); other pairs at 0 (D-233). *Built*
+- **BO-2.** Sources: a mission's **first** completion gives 5 to each pair in the mission's squad (D-427); help between a pair gives 1 per event, at most 3 per pair per mission: Sister's Rivalry, a Duo between them, and John's Family Role covering the other (the other roles don't name the helped ally, D-428); a Home activity gives 5 (the Yard scene). Finishing the Hearth gives none (D-426). Bond is never added during combat: help is tallied and paid once at mission complete, so a failed or restarted mission gives nothing (C3 constraint). The arc: 15 at start, 20 to 23 after The Trail, the Yard crosses 25. *Built*
+- **BO-3.** Bond shows only in two places: the locked node's line in the skill-tree description ("Opens with Linda & Lucy's Bond, Lv 2"), and the staged Yard scene after The Trail: The Trail's Home visit has its own Home state (Lucy training in the yard, Linda near), the camera moves to the yard, and after Y12-6 the scene says "Linda & Lucy's Bond reached Lv 2.", then Margaret gives the Family skill point and points at the sisters' nodes; the spend is free (D-425, D-433, D-436). No meter (D-231 stands). The Yard plays once per save. *Built* (the Yard staging is in build, C4)
+- **BO-4.** Bond gates Family-tree nodes only; combat reads no Bond (D-202). Linda & Lucy's Bond Lv 2 opens three nodes on Lucy's tree: Sister's Rivalry, Tempest Bloom and Marks-Sisters (D-173, D-424). The Linda–Lucy Duo itself stays open; the Marks-Sisters node upgrades it (D-441). Command Shield Dash and the Linda–Toba Duo stay open. *Built*
+
+Source: `Resources/BondSettings.asset` (thresholds, start, source values, no-Bond missions, help synergies), `Core/Systems/HomeSystem/Runtime/BondLite/` (`BondStore`, `BondSettingsSO`, `HomeLockRules`, `BondSources`), `Features/Onboarding/BondActivitySequence.cs` (the Yard's step), `Features/Onboarding/Editor/HomeVisitsWiring*.cs` (the Yard chain); read from the Bond Lite reports C1 to C5, 2026-11-06 to 2026-11-07, not from a fresh asset pass.
+
 ## Deferred and dropped
 
 | Item | State | Why | Decision | Notes |
@@ -130,6 +141,7 @@ Source: `Content/Controllers/PlayerController.prefab` (`UnitsPassByHandler`: 4 e
 ## Branch differences
 
 - **On `main`:** no Bond locks, so Sisters' Rivalry, Command Shield Dash and the Linda–Toba Duo are open from the start. Roles pay 1 FTP; before `92853a5a9` they paid 1 ATB step.
+- **On `thj/bond-lite`:** Bond Lite (BO-1 to BO-4): Sister's Rivalry, Tempest Bloom and Marks-Sisters are Family-tree nodes shut until Linda & Lucy's Bond Lv 2; Rivalry is +1 AP once per turn per sister. Command Shield Dash and the Linda–Toba Duo stay open.
 - **On `thj/home-test`:** roles pay 1 FTP until the role limits are built on `main` and merged (D-042). Bond locks are active (`HomeLockRules`). It doesn't have the `thj/linda-quiver` merge yet (D-326): no quiver, the pre-quiver Catch & Return (no stop at Mark), Lucy's follow-up without the real-damage rule, and no Watch on Toba's swap.
 ## Open questions
 
@@ -148,7 +160,7 @@ Source: `Content/Controllers/PlayerController.prefab` (`UnitsPassByHandler`: 4 e
 
 ## Related
 
-- Decisions: D-008, D-010, D-034 to D-042, D-048; Linda's Quiver and its family edges D-244, D-246, D-257, D-260, D-268, D-271, D-274, D-275, D-277, D-313, D-315, D-318, D-320, D-322, D-323, D-326; role zones D-063, D-064, D-066, D-067, D-075, D-077, D-080 to D-082, D-084, D-087 to D-089, D-091 (D-076 reversed by D-087; D-066's colour note superseded by D-091)
+- Decisions: D-008, D-010, D-034 to D-042, D-048; Linda's Quiver and its family edges D-244, D-246, D-257, D-260, D-268, D-271, D-274, D-275, D-277, D-313, D-315, D-318, D-320, D-322, D-323, D-326; role zones D-063, D-064, D-066, D-067, D-075, D-077, D-080 to D-082, D-084, D-087 to D-089, D-091 (D-076 reversed by D-087; D-066's colour note superseded by D-091); Bond Lite D-173, D-202, D-231 to D-233, D-422 to D-428, D-433, D-436, D-437, D-441
 - Plans: [`plans/2026-10-16-ap-points-model.md`](../../plans/2026-10-16-ap-points-model.md); role zones [`plans/2026-10-18-family-role-phase0-1.md`](../../plans/2026-10-18-family-role-phase0-1.md), [`plans/2026-10-19-preview-pass-design.md`](../../plans/2026-10-19-preview-pass-design.md), [`plans/2026-10-19-preview-pass-tech.md`](../../plans/2026-10-19-preview-pass-tech.md)
 - Detail: [`combat-balance.md`](../combat-balance.md) (Linda's damage share), [`player-skill-trees.md`](../player-skill-trees.md) (family tree), [Demo Spec](../demo-spec.md) (Bond)
 - Characters: [John](characters/john.md) · [Linda](characters/linda.md) · [Lucy](characters/lucy.md) · [Mark](characters/mark.md) · [Toba](characters/toba.md)

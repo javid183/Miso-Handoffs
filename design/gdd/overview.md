@@ -20,7 +20,7 @@ Owner: game designer (THJ approves) · Scope: `all` · Checked against assets: `
 | `DU` | Duos (Family systems) | `MI` | Missions and structure |
 | `SY` | Synergies (Family systems) | `HO` | Home |
 | `PB` | Pass-by (Family systems) | `NA` | Narrative and world |
-| `JO` `LI` `LU` `MA` `TO` | The five character sheets | | |
+| `JO` `LI` `LU` `MA` `TO` | The five character sheets | `BO` | Bond (Family systems) |
 
 - **Status** of every rule and value:
 

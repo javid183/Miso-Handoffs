@@ -40,7 +40,7 @@ Owner: narrative agent. Names and terms as the game uses them, with the code nam
 | --- | --- | --- |
 | AP | `ActionPoints`, `APConsumer` | Action points for Move, Attack and abilities. Usable only in the player phase |
 | Fixed AP / Shared AP | `APConsumptionMode.PerUnit` / `.Shared` | Per-unit AP vs one family pool with escalating cost per unit. **The game uses Fixed AP (PerUnit)** (D-037); Shared AP is not pursued (half-built code remains) |
-| FTP; on screen **Family Points (FP)** (D-204); formerly written Family Passive Points | `FamilyTimePoints`, `PointConsumptionMode.FTP` | Family-shared points that pay for Duos only, 2 FTP each (D-035, D-036). Fills on entering a mission, doesn't refill between levels of the same mission. Family Roles no longer cost FTP |
+| FTP; on screen **Family Points (FP)** (D-204); formerly written Family Passive Points | `FamilyTimePoints`, `PointConsumptionMode.FTP` | Family-shared points that pay for Duos only, 2 FTP each (D-035, D-036). Fills on entering a mission, doesn't refill between levels of the same mission. Family Roles no longer cost FTP. Not the **Family skill point** (the Family-tree currency, D-439): never call that one "FP" or "Family point" |
 | ATB | `ATBGauge`, `PointConsumptionMode.ATB` | Per-unit gauge; fills while the unit isn't acting; a full gauge converts to an extra AP. **Dropped as the direction** (playtesters found it confusing): the code still runs on `main` until FTP is built out there. Don't use the term in new player-facing text |
 | Family Role (family passive) | Faction Role, `FactionRoleHandlerBase`, `*FactionRoleHandler` | Each unit's one reactive passive, triggered by a simple-press QTE prompt (D-034). Costs no FTP; each role has a limit per round instead, refilled at the start of the player turn (Linda 2, Lucy 3, Mark 1, John unlimited, HP-paid) (D-036, D-042). Linda's limit is replaced by her quiver (D-244). **Intended design; the role limits are not built yet** (to be built on `main`; today's code still charges FTP or ATB) |
 | **Family Watch** (short: **Watch**) | Linda's `*FactionRoleHandler` | Linda's Family Role: the screen name has been "Family Watch"; "Watch" is its approved short form (D-328). Canon. Use only for Linda's role, not as a generic word for any role's uses per round (that counter, not built yet, has no approved name; the old "Watch 2/2" / "Watch Shots" proposal is dropped) |
@@ -50,7 +50,8 @@ Owner: narrative agent. Names and terms as the game uses them, with the code nam
 | Pass-by / tag | `UnitsPassByHandler` | One Bergson moving through another's tile; fills FTP (ATB in the old code) once per turn per pair |
 | QTE | `QuickTimeEventHandler`, `QTEBehavior` | Reaction-timing prompt, including during the enemy phase. Role QTEs are a simple press for now; a graded QTE (a small bonus for pressing inside the window) is a later experiment (D-034) |
 | Bergson Time | Reactive Interrupt | **Deferred** (D-038): not available in FTP mode, not removed. In code, ATB mode only (key L): pause the enemy turn and act with a unit whose gauge can afford its role |
-| Family Skill Point (FSP) | | Earned at certain character levels; spent in the shared Family Skill Tree |
+| **Family skill point** (FSP); formerly "Family point" in the Bond Lite plans | | On screen **Family skill point**, lower-case "skill point" (THJ, D-439). Earned at certain character levels and as story rewards (the Yard, D-173); spent in the shared Family tree (the Family tab of the skill tree). **Never shorten it to "Family point" or "FP" on screen:** **Family Points (FP)** is the combat pool that pays for Duos (D-204), a different thing. Plans and code may still say "Family point"; write Family skill point |
+| **skill points** | | Points each Bergson earns on level-up, spent in their own skill tree at the Grandma Table. On screen in the Skill Tree page: "Bergsons earn skill points as they level up." (placeholder, `thj/bond-lite`). Approved by THJ 2026-11-08 |
 | Run upgrade (rune, relic) | `RunUpgradeSO`, `RunUpgradeTracker` | In-mission upgrade, lost when the mission ends |
 
 ## Linda's Quiver
@@ -68,13 +69,13 @@ Built on `thj/linda-quiver`, merged into `main` 2026-10-29 (D-326). Global switc
 | **Catch & Return** (synergy) | `ProjectileCatchAndReturn` on `Unit_Mark`; synergy event "Catch & Return" | Open by default (D-177). When Linda's basic arrow reaches Mark from 2 or more cells (D-274), a QTE offers the catch. **Quiver on:** pressed, the arrow stops at Mark and flies back, damaging on the way, ending in Linda's hands and going back into her quiver (D-257, D-260, D-261); not pressed, it flies on past him like a normal shot. **Quiver off:** pressed, the copy returns to Linda damaging on the way, no arrow back (D-315, D-320). No AP refund, for bow and Watch arrows alike, ever (D-218, D-332) |
 | **Return to Sender** | Family-tree node (Catch & Return's upgrade) | **Effect withdrawn (D-332, reverses D-228):** Catch & Return never refunds AP, so this node's effect is open again; the name was approved for the refund and may not fit the new effect. Don't use "Return to Sender" or "shot back" in text until the designer's new effect is decided. **Not built in data** (no asset uses the name) |
 
-## Home terms (scope `thj/home-test`)
+## Home terms (scope `thj/home-test`; Bond row also `thj/bond-lite`)
 
 Rules and numbers: `design/demo-spec.md`.
 
 | Term | Meaning |
 | --- | --- |
-| Bond | Relationship level between two family members; unlocks Duos and Synergies at set levels |
+| Bond | Relationship level between two family members; unlocks Duos and Synergies at set levels. **On screen on `thj/bond-lite`** (Bond Lite), written `<A> & <B>'s Bond, Lv N`: the locked Family-tree node line "Opens with Linda & Lucy's Bond, Lv 2" (`BondNodeGate.LockLine`) and the Yard narrator line "Linda & Lucy's Bond reached Lv 2." (placeholder). Keep that exact shape (ampersand, "'s Bond", "Lv N") so the two lines read as one thing. In Bond Lite it opens Family-tree nodes for that pair (Linda & Lucy only; Lv 2 opens Sister's Rivalry and Tempest Bloom), it is raised by Home scenes (the Yard), and there is no Bond meter (D-433). Approved by THJ 2026-11-08 |
 | Sortie | Sending a squad on a mission from the map table |
 | Station | A Home room or activity a character is seated at (Homestead, Kitchen, Study, Workshop, Yard, ...) |
 | Yard Lessons | Training that raises faction stat levels |

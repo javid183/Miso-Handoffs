@@ -271,18 +271,28 @@ N7 options for M4-11 / M4-12 (the ending's key lines):
 | H5-1 | Margaret | Every one of you saved her. That's the only version I believe. | Home scene | Lets the warmth back in after the death, without a joke about it |
 | H5-2 | John | Ten Claws, Lucy. | Home scene | The laughter beat |
 | H5-3 | Lucy | At least. | Home scene | |
-| H5-4 | Lucy | Ryker? Come back by the fire. | Home scene (`WolfSitDoor`) | Ryker stays by the door |
-| H5-5 | Margaret | Let her sit. She remembers too. | Home scene | The only hint of why she leaves (drawn by her mother's memory). Night falls after this line |
-| H5-6 | Lucy | The door's open. Ryker's gone. | Home scene (morning, `FamilyDinnerSad` or `WolfSadSit` empty) | |
-| H5-7 | Mark | I'm staying. Until she's home. | Home scene | Mark stays (D-172) |
+| H5-4 | Lucy | Ryker? Come back by the fire. | Home scene (`WolfSitDoor`) | Ryker stays by the door. **Built (placeholder text), `thj/bond-lite`** |
+| H5-5 | Margaret | Let her sit. She remembers too. | Home scene | The only hint of why she leaves (drawn by her mother's memory). Night falls after this line. **Built (placeholder text), `thj/bond-lite`**: Narrator node, text "Margaret: Let her sit. She remembers too." |
+| H5-5a | Narrator | The fire burned low. By morning, the door stood open. | Home scene, between H5-5 and H5-6 | **New bridge line (D-436). Built (placeholder text), `thj/bond-lite`.** Carries the night-to-morning skip, since Home can't change state mid-scene |
+| H5-6 | Lucy | The door's open. Ryker's gone. | Home scene (morning, `FamilyDinnerSad` or `WolfSadSit` empty) | **Built (placeholder text), `thj/bond-lite`**, words unchanged (the optional trim to "Ryker's gone." was not taken) |
+| H5-7 | Mark | I'm staying. Until she's home. | Home scene | Mark stays (D-172). **Built (placeholder text), `thj/bond-lite`** |
+
+**As built on `thj/bond-lite`** (`HomeVisitsWiring.Hearth.cs`, `Hearth_Close_DialogNodeSequence.asset`): H5-4, H5-5, H5-5a, H5-6, H5-7 play at Home after the Hearth, then W6-1, then the World Map page (Step 6). H5-1 to H5-3 stay in the Memory 4 outro cutaway. Text source: `reports/bond-lite-fixes-text.md`.
 
 ## Step 6 · World map (two pins, both needed)
 
 | ID | Speaker | Line | Where | Notes |
 |---|---|---|---|---|
-| W6-1 | John | Two go out, two stay. Someone's here when she comes back. | World map, on first open | **Key line** ("searching in shifts"). A (rec.): John decides, as the father. B (Margaret): "Two of you out, two by the door. She'll come home to someone." C (Mark): "Two search, two wait. Waiting is also searching." Not an objective line: it's the family's rule, and the two pins say the rest |
+| W6-1 | John | Two go out, two stay. Someone's here when she comes back. | **As built:** Home dialogue right after H5-7, just before the World Map page (was: world map, on first open) | **Built (placeholder text), `thj/bond-lite`.** **Key line** ("searching in shifts"). A (rec.): John decides, as the father. B (Margaret): "Two of you out, two by the door. She'll come home to someone." C (Mark): "Two search, two wait. Waiting is also searching." Not an objective line: it's the family's rule, and the two pins say the rest |
 | W6-2 | Lucy | The river. She always drinks there. | World map, The River pin hover/select | Proposed habit for Ryker (Miso, open question 1) |
 | W6-3 | Linda | The ridge. She liked the wind up there. | World map, The Ridge pin hover/select | |
+
+**World Map page. Built (placeholder text), `thj/bond-lite`** (`Resources/Tutorials/WorldMap_Tutorial.asset`). Plays at Home after W6-1, once per save.
+
+| Field | Text |
+|---|---|
+| Title | World Map |
+| Body | • Open the world map at the fireplace.<br>• Pick a pin to choose a mission: The River or The Ridge, in either order.<br>• Each mission takes two Bergsons. The other two stay home. |
 
 ## Step 7 · The River (John, Lucy)
 
@@ -358,6 +368,13 @@ N7 options for M4-11 / M4-12 (the ending's key lines):
 | V2-6 | John | Someone's carrying her. And tending her. | Map Table | The two halves meet. Every family member speaks |
 | V2-7 | Lucy | Then where is he taking her? | Map Table | The M2 pin appears on this line, silently (Q11 one-at-a-time reveal) |
 
+**Skill Tree page. Built (placeholder text), `thj/bond-lite`** (`Resources/Tutorials/SkillTree_Tutorial.asset`, on the Grandma Table). Plays by itself on the first Home load where the Grandma Table is open (after River and Ridge), once per save.
+
+| Field | Text |
+|---|---|
+| Title | Skill Tree |
+| Body | • Bergsons earn skill points as they level up.<br>• Each Bergson has a tree. Spend points here to learn new skills.<br>• The Family tab opens later. |
+
 ## Step 11 · M2 · The Trail (Lucy, Linda + John or Mark)
 
 **Squad pick (Map Table): the one left behind**
@@ -390,7 +407,7 @@ N7 options for M4-11 / M4-12 (the ending's key lines):
 | T11-7M | Mark | She isn't among them. The tracks go down. Into the Rootwell. | Level dialogue (end), Mark variant | |
 | T11-8 | Lucy | If he saved her, why didn't he bring her home? | Level dialogue (end) | **Lucy's M4 motive line**, placement A (open question 3) |
 
-## Step 12 · Home visit 3 (Yard scene, night; Bond; first Family point)
+## Step 12 · Home visit 3 (Yard scene, night; Bond; first Family skill point)
 
 | ID | Speaker | Line | Where | Notes |
 |---|---|---|---|---|
@@ -398,13 +415,16 @@ N7 options for M4-11 / M4-12 (the ending's key lines):
 | Y12-2 | Lucy | Can't sleep. I keep seeing that pile. | Home scene | Coping, not training |
 | Y12-3 | Lucy | If they've hurt her… | Home scene | **Key line** (design) |
 | Y12-4 | Linda | Then we'll be ready. | Home scene | **Key line** (design). Linda picks up her bow |
-| Y12-5 | Lucy | You pin it, I burn it? | Home scene, after the first race | They find setting each other up works better |
-| Y12-6 | Linda | …That's faster. | Home scene | Bond level-up plays here |
-| Y12-7 | Margaret | First thing you two have done together all year. | Home scene, from the porch | Grants the Family point as a story reward (D-173). Option B: no Margaret; Linda: "Don't tell anyone." / Lucy: "Too late. Grandma's watching." |
+| Y12-5 | Lucy | You pin it, I burn it? | Home scene, after the first race | They find setting each other up works better. **Built (placeholder text), `thj/bond-lite`** |
+| Y12-6 | Linda | …That's faster. | Home scene | Bond level-up plays here. **Built (placeholder text), `thj/bond-lite`**: the Bond step runs right after this line |
+| Bond | Narrator | Linda & Lucy's Bond reached Lv 2. | Home scene, right after the Bond step | **New (D-436). Built (placeholder text), `thj/bond-lite`** (`Yard_BondReached_DialogNodeSequence.asset`). Same shape as the locked-node line "Opens with Linda & Lucy's Bond, Lv 2" (glossary › Bond) |
+| Y12-7 | Margaret | First thing you two have done together all year. | Home scene, from the porch | **Built (placeholder text), `thj/bond-lite`**: Narrator node, text "Margaret: First thing you two have done together all year." Grants the Family skill point (on screen "Family skill point", D-439; formerly "Family point" here) as a story reward (D-173). Option B: no Margaret; Linda: "Don't tell anyone." / Lucy: "Too late. Grandma's watching." |
 | Y12-8 | Lucy / Linda | "Your turn, then mine." / "Then mine." | Family-tree choice, Sister's Rivalry card | Flavour line on the choice, after the rules text |
 | Y12-9 | Lucy | Mark's story. The shot into my fire. | Family-tree choice, Tempest Bloom card | The callback to M4-8 |
 | Y12-10 | Linda | It never happened. | (same) | |
 | Y12-11 | Lucy | Yet. | (same) | |
+
+**As built on `thj/bond-lite`** (`HomeVisitsWiring.cs`, `HomeVisitsWiring.Yard.cs`; The Trail's own Home state with Lucy training): camera focus on the yard, Y12-1 to Y12-6, Bond step, Bond line, Y12-7, Lucy's pointer line, pan back. Night lines kept. Y12-8 to Y12-11 not built. Flag (not changed): the pointer line says "The Family Skill Tree has room for the two of us now."; the glossary term is the Family tree (its Family tab), so "Family tree" may read cleaner. THJ's call.
 
 ## M4 send-off and M4
 
