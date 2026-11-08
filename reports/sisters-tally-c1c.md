@@ -104,3 +104,11 @@ None (the tally is onboarding-only).
 3. With Linda, shoot through the Cyclone so a split copy kills an enemy. Both numbers in "Linda N · Lucy N" go up by 1 at the same moment. Linda's number must **not** go up by 2.
 4. With Linda, kill an enemy with a normal shot (no Cyclone). Only Linda's number moves. Let Lucy's Family Role finish a wounded enemy: only Lucy's number moves.
 5. Optional: with the Cyclone far from the targets, check whether a far copy's kill counts at all. If neither number moves, that is the late-copy loose end above.
+
+## Fix round (review's two should-fixes)
+
+Changed only `SistersTallyTests.Bloom.cs` (no runtime code):
+- `Bloom_LindasNormalKillAndLucysFinisherStayTheirs` now opens and closes a Bloom window first (`StartAction(); RaiseBloom(); StartAction();`, asserts it is closed), then runs Linda's normal kill and Lucy's finisher. A leaking window would make the result 2 for Lucy, so it now fails without the isolation.
+- New `Bloom_LucysReportOfARememberedDeathCountsOnceForEachSister`: Bloom raised, goblin dies, Lucy's report claims it, tally 1-1.
+
+Result: SistersTallyTests 69/69 passed (Unity MCP, EditMode). Play mode was stopped first. Full suite not re-run.
