@@ -107,3 +107,15 @@ None (the tally is onboarding-only).
 3. A normal kill afterwards still counts for the sister who landed it; Lucy's Family Role finishing Linda's target counts for Lucy only.
 4. **Hearth:** play The Hearth memory. Segments 1 (Linda alone) and 2 (Lucy alone): no counter. Segment 3 (`GB_m3-john`): the counter appears at the level start and counts from 0; segment 4 (`GB_m4-mark`): it keeps the Hearth's count. Then The Trail starts again from 0.
 5. The River and The Ridge: no counter.
+
+## Fix round (2026-11-08)
+
+Changes (feature folder only):
+1. `SistersTallyListener.OnUnitBorn` removes the unit from `_countedByDuo` before `RecordDeployed`. New test `Duo_AnEnemyTheDuoCountedCountsAgainOnceRevivedAndKilledBySister`.
+2. `Level_StaysEligibleWhenASisterFalls` is now `Level_StaysEligibleWhenASisterFalls_AndAnotherUnitIsBornAfterwards` (Lucy's `unitDied`, then John's `unitBorn`, still eligible, Linda's kill counts). It guards against eligibility ever being recomputed from a death or a later birth; it is a weak guard, kept because it now exercises the real events.
+3. Hearth asset test: a unit counts as placed only if it and every parent up to the level root are active (`IsPlaced` helper). Runtime `DeployedPlayerUnits` has no such gap: it reads `CombatLevelRunHandler.PlayerUnits`, the registered units, not the prefab hierarchy, so unchanged.
+4. Optional mid-level `Connect` eligibility: not done. The listener doesn't know whether the level has started, and reading deployed units in `Connect` would break the "not eligible until the level start reads the units" contract (and its test). Nothing re-enables the source mid-level today.
+
+Tests: EditMode full suite 1681 total, 1680 passed, 1 failed (`AIRegressionTest.Baseline_MatchesCurrentAI`, known red). No compile errors.
+
+Commit file list: unchanged (same files as before; `SistersTallyListener.cs` and `SistersTallyTests.Attribution.cs` carry the new edits).
