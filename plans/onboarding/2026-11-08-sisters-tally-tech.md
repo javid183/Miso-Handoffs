@@ -43,6 +43,8 @@ All new code in `Features/Onboarding/SistersTally/`, namespace per conventions.
 
 **C1 Counting core (opus).** `SistersTally` (static: `Enabled`, current state, `Changed` event, `ResetPlayModeState`), `SistersTallyRun` (banked + attempt, like `BondMissionRun`), `SistersTallySource` (MonoBehaviour on `LevelBase.prefab`, copy of the `BondSources` / `BondLevelListener` pattern: connect on enable with the mission key, `onUnitDamageDone`, `levelEnded`, `onRewardsGranted` "Mission complete"/"Mission failed", every handler in a guard that skips the AI worker thread and catches exceptions; serialized excluded-missions list and the two step assets for the faded check). Revert handling per the criterion. EditMode tests for the rules. Prefab edit by editor script or a minimal YAML add.
 
+**C1b Attribution + Hearth opt-in (opus; added 2026-11-08, D-449, D-450; design `plans/onboarding/2026-11-08-sisters-tally-attribution-design.md` § Lens notes/Recommendation).** (a) Duo bracket, feature-local: open on `onSynergyTriggered` id "Duo" with a sister among the partners, close on the trigger ability's `abilityPerformed`; inside it, an enemy `unitDied` with HP at its minimum (`IsAtMinimum`) counts for each sister among the partners (Linda–Lucy: both; Mark–Lucy: Lucy only); the trigger ability's own `onUnitDamageDone` inside the bracket is ignored (no double count). Lucy's role finisher stays hers. Tempest Bloom's window waits for Tally: return (Bloom locked until the Yard). (b) Eligibility from the level's deployed player units (both sisters deployed) instead of the mission roster; The Hearth leaves the excluded list, so segments 3–4 show it and 1–2 don't. Tests for each rule.
+
 **C2 HUD counter (sonnet).** Widget modelled on `LevelInfoPanelUI` (TMP labels, `UIPanelAnimator`, `Show`/`Hide`), placed in `CombatLevelContainerScene` by an editor script; follows the HUD through the core hook (D-447): one optional serialized field on `CombatLevelUIManager` and one null-safe call each in `HideHUD`/`ShowHUD`, nothing else in that file; its own commit.
 
 **C3 Results row (sonnet).** `SistersTallyResultRow` component with its own `StatRowUI`, child of `statsColumn`; fills itself on enable, active only on the mission-end panel instance, then rebuilds the layout.
@@ -75,3 +77,5 @@ Compile / EditMode (known red only) / review per chunk / THJ play check before e
 ## Log
 
 - 2026-11-08: approved by THJ (D-444 to D-448). C1 dispatched (implementer, opus).
+- 2026-11-08: C1 review APPROVE + 3 should-fixes (done); C2 review APPROVE + 1 should-fix (done). THJ play-checked the counter OK. **Committed** `74c97e819` (counting core), `c0d623cc2` (core HUD hook, D-447), `e0d09f5f6` (counter + scene).
+- 2026-11-08: THJ's attribution questions → design; D-449 to D-451. C1b added; dispatched (implementer, opus).
