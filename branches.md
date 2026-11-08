@@ -35,7 +35,7 @@ Owner: coordinator; THJ approves. `claude-handoff/` doesn't change when the shar
 
 - Created 2026-11-06 by THJ's choice (D-423) from `thj/onboarding` @ `58aa10418`, 0 ahead and 0 behind at creation. His uncommitted AI diagnostic, TMP font, `PreloadScreen` and `ProjectSettings` came along.
 - **Purpose:** Bond Lite (`plans/onboarding/2026-10-26-bond-lite-tech.md`). `thj/onboarding` stays the build without Bond, and merges as a fast-forward if nothing is committed there meanwhile. Until then, tweaks go here.
-- **Bond Lite done 2026-11-08** (C1–C5, then the fixes from THJ's first full play: highlight null ref, Hearth close + World map page, station pages on unlock, Marks-Sisters text, staged Yard with pan back; THJ's F10 win cheat). `thj/onboarding` can fast-forward to it (THJ's call). Classic fallback recipe updated (`tech/classic-fallback.md`).
+- **Bond Lite done 2026-11-08** (C1–C5, then the fixes from THJ's first full play: highlight null ref, Hearth close + World map page, station pages on unlock, Marks-Sisters text, staged Yard with pan back; THJ's F10 win cheat). **Merged into `thj/onboarding` 2026-11-08 by THJ** (fast-forward; both at `6af47eeb6`; THJ is on `thj/onboarding`). Items scoped `thj/bond-lite` now count for `thj/onboarding`. `main` is 109 behind `thj/onboarding`, 0 ahead, so it can still fast-forward. Classic fallback recipe updated (`tech/classic-fallback.md`).
 - Combat resource and AP: same as `main`.
 
 ## `thj/linda-quiver`
