@@ -157,3 +157,8 @@ A fresh save is not required. You need a save where The Trail (`M2 - The Trail`)
 6. Win the level, or press `F10` to win it: the next Trail level keeps the numbers. Restart Level drops that level's kills.
 7. The River, The Ridge and the Hearth memories show no counter.
 8. To move or restyle it, edit `SistersTallyCounter` in the scene by hand. Re-running **Tools > Onboarding > Place Sisters' Tally Counter** keeps your changes.
+
+## Fix round
+
+- `SistersTallyCounterTests.cs`: renamed `Component_FollowsTheTally_AndAThrowFreeUpdateReachesLaterListeners` to `Component_FollowsTheTally_AndStopsAfterDisable`; the `later` assert message now reads "A listener added after the counter heard both changes" (no "throw-free" wording). Nothing else changed; line endings kept.
+- Result: compiled clean; `SistersTallyCounterTests` 10/10 passed via Unity MCP (Play mode was not running). Full suite not run.
