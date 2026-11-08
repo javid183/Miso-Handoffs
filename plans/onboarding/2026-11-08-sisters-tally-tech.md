@@ -79,3 +79,4 @@ Compile / EditMode (known red only) / review per chunk / THJ play check before e
 - 2026-11-08: approved by THJ (D-444 to D-448). C1 dispatched (implementer, opus).
 - 2026-11-08: C1 review APPROVE + 3 should-fixes (done); C2 review APPROVE + 1 should-fix (done). THJ play-checked the counter OK. **Committed** `74c97e819` (counting core), `c0d623cc2` (core HUD hook, D-447), `e0d09f5f6` (counter + scene).
 - 2026-11-08: THJ's attribution questions → design; D-449 to D-451. C1b added; dispatched (implementer, opus).
+- 2026-11-08: C1b fix round done. THJ played: Duo OK; Tempest Bloom raises only Linda's. C1c added (Bloom kills count for both, per D-449; brought forward from "with Tally: return"); dispatched (implementer, opus).
