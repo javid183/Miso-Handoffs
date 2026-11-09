@@ -384,6 +384,21 @@ N7 options for M4-11 / M4-12 (the ending's key lines):
 | S11-J | John | Go. I'll keep the fire lit and the door open. | Map Table, John stays | **Key line** (design). Option B: "I'll be here. Someone should be, when she comes home." |
 | S11-M | Mark | I'll sit by the door. Someone calm should be here when she comes home. | Map Table, Mark stays | Option B: "Waiting is my part. I'm good at it." |
 
+**Proposal 2026-11-09, waiting on THJ: why The Trail restarts the tally at 0 (pacing check P8; D-445, D-450). Chosen by narrative per THJ 2026-11-09, waiting on the line pass.** Nothing above or below is changed; these are new rows, none approved (tag `[PLACEHOLDER]` when built). THJ's steer: Linda is the one who wants to change the mood, Lucy (more attached to Ryker) keeps them on finding him; plain B was also acceptable.
+
+| ID | Speaker | Line | Where | Notes |
+|---|---|---|---|---|
+| **T11-0a** | Linda | Zero–zero. Rematch? | Level dialogue (start of *The Trail*, the reworked level; counter on screen at 0–0) | Linda reaches for the old joke to lift the mood. The tally is the reason she says it: the board reads 0–0 |
+| **T11-0b** | Lucy | Later. Ryker first. | Level dialogue (same) | Lucy declines without ending the game: "Later", not "No". The counter keeps running, which is what the pile needs |
+| T11-0c (optional) | Linda | …Counting anyway. | Level dialogue (same) | Only if testers don't read that the count continues. Drop it for urgency |
+
+**Check against the pile.** T11-5 / T11-6 stay as they are: Linda asks "Still counting?", Lucy answers "…No." Lucy deferred the count at the start ("Later") and drops it at the pile, so her answer is the turn; Linda, who wanted the count, is the one who asks, as in open question 4 (a). No swap of speakers is needed (a swap would have Lucy ask about a count she postponed, and Linda let it go, which reverses the arc). One pre-existing note: T11-3 / "The rivalry barks stop from here" still holds, so the "Later" at the start is the last spoken sign of the joke before the pile.
+
+**Slot.** The start of *The Trail* (`GB_m2-tracks` as reworked in [after-Hearth design](2026-11-09-onboarding-after-hearth-design.md) › M2, where the empty Trailhead is cut), in that level's start dialogue, using an existing dialogue slot and no new tech. Where the pick's stays-home line plays, put these after it. The tally is eligible in The Trail and shows at 0–0 there. Not checked in Unity: the implementer confirms the reworked level has a start dialogue and the HUD shows at its start. Fallback slot: the Map Table send-off, one extra pair after V2-7 (worse: it lands on "Then where is he taking her?").
+
+**Rejected.** A "Stories don't count" (Lucy: "Fireside kills don't count. Grandma's stories, all of them." Linda: "Then start from zero. I'll still win."): Lucy's joke first reads as indifference to Ryker and drains the urgency. C "A stake" (Lucy: "Rematch. Loser carries the pack home." Linda: "You'll be carrying it."): same problem, and the pile has to undo the bet.
+**THJ decides:** accept T11-0a/0b (with or without 0c); nothing else.
+
 **Route choice and the pile**
 
 | ID | Speaker | Line | Where | Notes |
