@@ -220,14 +220,15 @@ Layout: the den and throat of D-331 (throat 2,1 to 2,4, den 1..3 × 5..7, niche 
 
 ```grid id=m2-lucy title="Memory 2 · Lucy: there were at least ten"
 # # # # # # # # # # # #
-# . . c # . . . . c . #
-# U . . c . . . . . c #
-# . . . # . . . . c . #
+# . . c # . c c c c c #
+# U . . c . . c c . c #
+# . . . # . c c c c . #
 # # # # # # # # # # # #
 --
 arrow 1,2 3,3 lucy ember
 arrow 1,2 4,2 lucy dy=8 sidewinder
-cells 9,3 10,2 9,1 enemy hidden until the cue
+cells 9,3 9,1 6,1 6,3 7,1 7,2 7,3 8,1 8,2 8,3 enemy hidden: group ten (9,3 and 9,1 stay, the other 8 fade out)
+cells 10,2 10,3 enemy hidden: group four
 step 4,2 2
 note 4,2 Cyclone turn 2
 level name Memory 2 · Lucy
@@ -235,23 +236,24 @@ level tier tutorial
 level alert all
 level xp none
 level fp full
-level hidden 9,3 10,2 9,1
+level hidden ten 9,3 9,1 6,1 6,3 7,1 7,2 7,3 8,1 8,2 8,3
+level hidden four 10,2 10,3
 ```
 
-Build lines (C3 step 0): no `level camera` (the 10 × 3 tiles fit one view, so it centres on the whole level). **`level hidden x,y …` is proposed:** the grid tool gains it in C3a; until then the builder doesn't know it. It marks the placed units on those tiles as out of play until a sequence reveals them (C3 plan, acceptance C3a).
+Build lines (C3 step 0): no `level camera` (the 10 × 3 tiles fit one view, so it centres on the whole level). `level hidden [group] x,y …` marks the placed units on those tiles as out of play until a sequence reveals them. Updated 2026-11-09 (D-457 to D-459, built in `e9bd6e885`, THJ played it: "fun"): 12 hidden Claws in two groups, `ten` (10) and `four` (2). **The level prefab was placed by the wiring script** (Tools › Onboarding › Wire Memory 2 (Lucy), `HearthMemoryWiring.Lucy.Claws.cs`), not rebuilt from this block: rebuilding from the block would replace the whole hand-tuned level (HP overrides, sequences) and need the wiring re-run. Report: `reports/lucy-memory-ten-two-four.md`.
 
 | Item | Plan |
 |---|---|
 | Source | Showcase A / chunk 1; room 2 lengthened to 6 tiles |
 | Teaches | **Fire Embers** (the sidewinder picks its own target) and **Cyclone** (blocks walking, drifts, 7 on contact). One kit, two halves of one lesson: "stay out of reach" |
-| Twist | The narrator's "ten": more enemies appear on cue |
+| Twist | The narrator's "ten", then Linda corrects it: ten Claws appear, Linda says "Two.", eight fade out (they were the exaggeration), Lucy says "Four." and two more arrive. Four Claws in the fight |
 | Squad | Lucy |
-| Enemies | 2 Dark Claws in play (3,3 and 4,2; in-play HP 6), 3 placed hidden on 9,3 / 10,2 / 9,1 and revealed on cue (default Tutorial HP 10; D-345: no spawns) |
+| Enemies | 2 Dark Claws in play (3,3 and 4,2; in-play HP 6), 12 placed hidden (default Tutorial HP 10, no kill XP bonus; D-345: no spawns): group `ten` = 9,3 / 9,1 (stay) + 6..8 × 1..3 except 6,2 (8 fade out); group `four` = 10,2 / 10,3. 4 Claws in the fight |
 | Turn budget | 3 (cap 4) |
 | First trigger | No Role, Synergy or Duo (she's alone). Turn 1: two Fire Embers on 3,3: main ember + sidewinder on 4,2, twice → both dead |
-| Interruption | **Stage 1** (2 enemies dead, or turn 2 reached) → `SequentialSequence`: freeze, camera to room 2, reveal 3 Claws placed hidden on 9,3 / 10,2 / 9,1 (D-345: no spawns in the memory; was `GUnitSpawn`), two lines (Lucy: "Then ten more!" · Linda, at the hearth: "Three."), camera back. They're 7+ tiles from her, so they reach the throat's far mouth on enemy turn 1 |
+| Interruption | **Stage 1** (2 enemies dead, or turn 2 reached) → `SequentialSequence`: freeze, camera to room 2, reveal group `ten` (D-345: no spawns in the memory) → Lucy: "Then ten more!" → Linda, at the hearth: "Two." → the 8 on the fading tiles fade out (0.8 s; no death, XP or kill count; they leave the board, the tiles are free) → Lucy: "Four." → reveal group `four` at 10,2 / 10,3 → camera back (D-457 to D-459). 4 Claws remain (9,3, 9,1, 10,2, 10,3), 7+ tiles from her, so they reach the throat's far mouth on enemy turn 1 |
 | Turn 2 | Cyclone in the throat (4,2): nothing passes; it drifts into them (7 each); embers finish. **Win stage 2:** all dead or turn 4 reached |
-| Alert | All start alert (the hidden three come in alert when revealed) |
+| Alert | All start alert (the hidden Claws come in alert when revealed) |
 | FTP | Topped up |
 | Fallback | If the Cyclone isn't found by turn 3, the Claws come through; she still wins at Tutorial damage. No guided action |
 | To check | Does an ember fly over a Cyclone? What does the Cyclone drift toward (level-chunks To check 2)? |
@@ -711,7 +713,7 @@ A new effect must add no AP and no arrow (the arrow already comes back), so it c
 
 **The moment designed for:** segment 4's walk to the cub. After three turns of showing off, nobody talks, and the player moves one Bergson to a crying cub. The grid fades out once they get there. It's the only input in the memory that isn't a fight, and it's the one the Hearth close calls back to when Ryker goes quiet by the door.
 
-Secondary moments: the side room's reveal and the one Explosive Arrow into the packed four (segment 1), Linda's "Three." over Lucy's "ten" (segment 2), the islands lit up at once by Shield Flare (River), the arrow coming back down the ridge (Ridge), the barks stopping at the pile (M2).
+Secondary moments: the side room's reveal and the one Explosive Arrow into the packed four (segment 1), Linda's "Two." over Lucy's "ten", the eight Claws fading out, and Lucy's "Four." (segment 2), the islands lit up at once by Shield Flare (River), the arrow coming back down the ridge (Ridge), the barks stopping at the pile (M2).
 
 ### Systems
 
