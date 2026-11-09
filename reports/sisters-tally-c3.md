@@ -73,3 +73,60 @@ none
 3. Level-won and level-lost panels never show it.
 4. Re-run `Tools/Onboarding/Place Sisters' Tally Results Row` any time; it reports "nothing to change".
 5. To remove everything: `SistersTally.Enabled` returns false.
+
+---
+
+## Fix round 2 (placement)
+
+Outcome: done. THJ's final spec (two stat rows) is implemented; an intermediate one-row widened layout was built first and then replaced. Nothing of it remains.
+
+### What changed
+
+- `SistersTallyResultRow.cs`: now owns two stat rows (`row` = Linda, new `lucyRow`). Row 1 label "Sisters' Tally:", value = Linda's count; row 2 empty label, value = Lucy's count. Both show and hide together under the same rules (`ShouldShow` unchanged). `Format(int count)` returns the plain count (no dash text). Class comment updated (no dash format any more, so should-fix 3 is moot).
+- `Editor/SistersTallyResultRowSetup.cs`: `EnsureRow` creates each row from the same `StatRow` prefab as the other rows, as a child of `StatsPanel` (right after `EnemiesKilledCountStat`, Lucy's row right after Linda's), no custom sizes or offsets. A copy outside the stats panel is removed first (migration of the earlier placement). Icons: each sister's `UnitHUDImage`. Should-fix 1: the scene is saved only if the script opened it; if it was already open it is only marked dirty and the log says "scene left unsaved, save it yourself". The blanket `AssetDatabase.SaveAssets()` is gone; only the panel prefab is saved (`SaveAsPrefabAsset`).
+- `Editor/SistersTallyResultRowTests.cs`: should-fix 2 done. The Refresh test pre-fills both rows with other text and hides them, then asserts both rows active, row 1 = "Sisters' Tally:|2", row 2 = "|1" (exact label/value, can fail). Hidden/shown tests check both rows. Wiring test now checks both rows sit in `StatsPanel`, adjacent, with the same parent as the other rows. `Format_IsJustTheCount` replaces the dash-format test.
+- `SessionEndPanel.prefab`: only additions (two nested `StatRow` instances in `StatsPanel`, the component with both references). I again restored by hand the four existing icon `m_SizeDelta.x` overrides (50) that Unity rewrites to 0 on save; `git diff` shows 0 removed lines.
+- `CombatLevelContainerScene.unity`: unchanged from round 1 (4-line flag override on the mission-end panel instance).
+
+### Lucy's portrait (read-only finding)
+
+Lucy has the same kind of sprite: `Assets/_Project/Features/UI/Panels/HUD/Avatars/Avatar_Lucy.png` (sub-sprite fileID 21300000, guid 9a4ee5f2677e64a8083cf83e5fdafd0c), set as `unitHUDImage` on `Features/Player/Lucy/Prefabs/Unit_Lucy.prefab`. Linda: `.../Avatars/Avatar_Linda.png` (guid b58c9e75823b941d698944692d07ac95). Both rows use them.
+
+### Layout evidence
+
+Measured by instantiating the panel prefab with a layout rebuild (Total Gold row inactive as in the default panel), RectTransform values in the stats panel:
+
+| Row | y | h | label x / w | value x / w | icon x / w | value right edge | icon sprite |
+|---|---|---|---|---|---|---|---|
+| EnemiesKilledCountStat | -249 | 50 | 116.92 / 240 | 292.56 / 100 | 375.64 / 50 | -117.44 | EnemyKill_Icon |
+| SistersTallyRow | -305 | 50 | 116.92 / 240 | 292.56 / 100 | 375.64 / 50 | -117.44 | Avatar_Linda |
+| SistersTallyLucyRow | -361 | 50 | 116.92 / 240 | 292.56 / 100 | 375.64 / 50 | -117.44 | Avatar_Lucy |
+
+Identical columns and sizes; row pitch is 56 for every row (50 + 6 spacing), so the vertical gap matches. Font size 23.8 on all, no autosizing, so the value is one line ("0".."99"). With the rows hidden (not eligible, faded, other panels) the panel is as before; the rows are children of the stats panel's layout group, so inactive rows take no space. Not visually screenshotted; needs the verifier's play check.
+
+### Tests
+
+EditMode run: 1715 total, 1714 passed, 1 failed = `AIRegressionTest.Baseline_MatchesCurrentAI` (known red, untouched). Compiles with no errors. Console: the usual pre-existing warnings and serialization-depth messages; one "listener failed" exception logged during the run, not from this work (not investigated). Play mode was stopped before editing; no save reset.
+
+### Decisions I made
+
+- Scene already open in THJ's editor was left unsaved by the script (flag already present, so no change was needed this round).
+- Because the row existed from the earlier layout, I removed it once with a one-off editor call and re-ran the setup; the migration branch in the script covers rows outside `StatsPanel` only.
+- The earlier mid-task message to hold Task A arrived after I had already applied a widened one-row layout; it is gone now, replaced by the final spec.
+
+### Final list of files for the C3 commit
+
+All under `miso/Assets/_Project/` (with `.meta` for the new files):
+- `Features/Onboarding/SistersTally/SistersTallyResultRow.cs` + `.meta`
+- `Features/Onboarding/SistersTally/SistersTally.cs`
+- `Features/Onboarding/SistersTally/SistersTallyRun.cs`
+- `Features/Onboarding/SistersTally/Editor/SistersTallyResultRowSetup.cs` + `.meta`
+- `Features/Onboarding/SistersTally/Editor/SistersTallyResultRowTests.cs` + `.meta`
+- `Features/UI/Panels/Prefabs/UI/Home/SessionEndPanel/SessionEndPanel.prefab`
+- `Scenes/CombatLevelContainerScene.unity`
+
+Not touched: `MissionEndPanelUI` fields, core files, `AIFactionBrain.cs`, `AIUnitBrain.cs`, `PreloadScreen.unity`, `ProjectSettings/*`.
+
+### How to see it
+
+Same as round 1 (Hearth with F10, finish the mission): left column shows "Sisters' Tally:  5" with Linda's portrait, and under it an unlabeled "7" with Lucy's portrait, same columns as the rows above.
