@@ -130,3 +130,49 @@ Not touched: `MissionEndPanelUI` fields, core files, `AIFactionBrain.cs`, `AIUni
 ### How to see it
 
 Same as round 1 (Hearth with F10, finish the mission): left column shows "Sisters' Tally:  5" with Linda's portrait, and under it an unlabeled "7" with Lucy's portrait, same columns as the rows above.
+
+---
+
+## Fix round 3 (MVP row)
+
+Outcome: done. The MVP row is hidden while the tally shows and left alone otherwise; the re-review should-fixes are in.
+
+### What changed
+
+- `SistersTallyResultRow.cs`: new serialized `mvpRow` (GameObject, the StatRow that `MissionEndPanelUI.unitWithMostKillSR` points to) and a `MvpRow` getter. `Refresh` calls `UpdateMvpRow(show)`: tally shows -> `mvpRow.SetActive(false)` and a private flag `_hidMvpRow = true`; tally hidden -> `SetActive(true)` only if the flag is set, then the flag clears. Null reference is a no-op. Class summary updated.
+- `Editor/SistersTallyResultRowSetup.cs`: wires `mvpRow` from the panel's `unitWithMostKillSR` (read through SerializedObject, no change to `MissionEndPanelUI`). `EnsureRow` creates rows inactive and sets an existing active row inactive. Class summary rewritten (two rows after EnemiesKilledCountStat, MVP wiring, scene saved only if the script opened it).
+- `Editor/SistersTallyResultRowTests.cs`: six new MVP tests (below); the wiring test is renamed `PanelPrefab_HasBothRowsInTheStatsPanel_InactiveAndWired` and now also asserts both rows are saved inactive and `MvpRow` is the same object as `unitWithMostKillSR`'s GameObject.
+- `SessionEndPanel.prefab`: both tally rows saved inactive, `mvpRow` set. I again restored by hand the four icon `m_SizeDelta.x` overrides (50) that Unity rewrites to 0 on save. Remaining removed line in `git diff`: one `m_GameObject: {fileID: 0}` on the MVP row's stripped StatRowUI changed to point at the new stripped GameObject entry; that is Unity's own bookkeeping for the new reference and is expected.
+- `.meta` files for the three new scripts: Unity rewrote them as full MonoImporter metas (forced reimport); GUIDs unchanged (`9d42d16f...`, `c078ed76...`, `f06089e3...`).
+
+### Order check (does anything re-activate the MVP row?)
+
+Read `MissionEndPanelUI`: `UpdateValues` only calls `SetValue` / `SetStatIcon` on `unitWithMostKillSR` (lines 127-135); it never calls `SetActive`. The only `SetActive` calls in the panel are `objectivesColumn`, `statsColumn` (`RefreshStatsColumn`, which looks only at the column's direct children) and `resourcesBarUI`. `CombatLevelUIManager` activates the panel (`SetActive(true)`, which runs our `OnEnable`) and then calls `UpdateValues`, so the order is OnEnable -> Refresh hides the row -> UpdateValues sets text on the hidden row. Setting text on an inactive row is harmless and nothing turns it back on. Not play-checked: needs the verifier to confirm "MVP" is gone on the mission-end panel when the tally shows.
+
+### Tests
+
+New tests, each able to fail: `Refresh_HidesTheMvpRow_WhenTheTallyShows` (starts active), `Refresh_LeavesTheMvpRowShown_WhenTheTallyIsHidden`, `Refresh_LeavesTheMvpRowShown_OnAPanelThatIsNotTheMissionEndOne`, `Refresh_BringsTheMvpRowBack_WhenItHidIt` (hide, then a later mission makes the tally hidden, row active again), `Refresh_KeepsTheMvpRowHidden_WhenSomethingElseHidIt` (no flag, stays off), `Refresh_WithNoMvpRow_DoesNotThrow` (null ref, tally still shows).
+
+EditMode: 1721 total, 1720 passed, 1 failed = `AIRegressionTest.Baseline_MatchesCurrentAI` (known red, untouched). Compiles clean. Console shows only the usual test-run noise (listener failed, ability activation-frame messages), no compile errors. Editor was not in Play mode. No save reset.
+
+### Decisions I made
+
+- The container scene was not open in THJ's editor; the setup run changed only the prefab (no scene change needed, the flag was already set, and the scene's mvpRow comes from the prefab). I did not save or dirty the scene. `CombatLevelContainerScene.unity` is unchanged this round (still the 4-line flag override from round 1).
+- Metas: forced a reimport through an editor call rather than hand-writing them.
+
+### Final list of files for the C3 commit
+
+All under `miso/Assets/_Project/`:
+- `Features/Onboarding/SistersTally/SistersTallyResultRow.cs` + `.meta`
+- `Features/Onboarding/SistersTally/SistersTally.cs`
+- `Features/Onboarding/SistersTally/SistersTallyRun.cs`
+- `Features/Onboarding/SistersTally/Editor/SistersTallyResultRowSetup.cs` + `.meta`
+- `Features/Onboarding/SistersTally/Editor/SistersTallyResultRowTests.cs` + `.meta`
+- `Features/UI/Panels/Prefabs/UI/Home/SessionEndPanel/SessionEndPanel.prefab`
+- `Scenes/CombatLevelContainerScene.unity`
+
+Not touched: `MissionEndPanelUI`, core files, `AIFactionBrain.cs`, `AIUnitBrain.cs`, `PreloadScreen.unity`, `ProjectSettings/*` (those stay THJ's, out of the commit).
+
+### How to see it
+
+Play a mission with both sisters, finish it: the left column shows Sisters' Tally rows and no "MVP" row. Finish a mission without both sisters: MVP row shows as before and no tally. The level-won and level-lost panels still show MVP.
