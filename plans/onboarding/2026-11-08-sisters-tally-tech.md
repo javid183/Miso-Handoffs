@@ -2,7 +2,7 @@
 
 Size: M    Tier: 3    Assigned to: miso-implementer (C1 opus, C2–C4 sonnet)
 Branch: thj/onboarding (feature code is onboarding-only; nothing to carry to other branches unless onboarding merges)
-Status: approved 2026-11-08 (Q1 = A, D-447; Q2 = A, D-448); C1 in progress
+Status: approved 2026-11-08 (Q1 = A, D-447; Q2 = A, D-448); done 2026-11-08
 
 ## Why
 
@@ -83,3 +83,4 @@ Compile / EditMode (known red only) / review per chunk / THJ play check before e
 - 2026-11-08: C1c review APPROVE + test fixes; THJ played Bloom OK. **Committed** `d1c178f4c` (C1b + C1c combined: the listener holds both). C3 dispatched (implementer, sonnet): results row shown if the tally was eligible in any level of the mission and isn't faded.
 - 2026-11-08: C3 placement reworked to two StatRow rows (D-453), MVP hidden while they show (D-454); reviews 2 and 3 APPROVE; THJ played OK. **Committed** `2c698e997`. Next: C4 (fade/return steps).
 - 2026-11-08: C4 dispatched (implementer, sonnet).
+- 2026-11-08: C4 built, review APPROVE, should-fixes done (EditMode 1740/1741 known AI red only); THJ played the pile OK. **Committed** `036e4ca20` (steps), `b07870da4` (Trail wiring). **Plan done.**

@@ -2607,3 +2607,30 @@ Core gets one additive, generic `CombatLog.AddCustom`.
 **Docs:** GDD progression-economy (PR-6, PR-8, unlock table), family-systems (BO-1 to BO-4), overview (BO prefix), glossary (Bond, skill points, Family skill point), narrative draft, first-hour design, `tech/home-system.md`, `tech/classic-fallback.md`, `branches.md`. Claude Doc mirror: this build-log section needs syncing.
 
 **Status:** Bond Lite done on `thj/bond-lite`. THJ's: fast-forward `thj/onboarding`, idles per visit (Linda's yard stand-in), page images. Open: Lucy's pointer says "Family Skill Tree" vs the glossary's "Family tree".
+
+
+## 2026-11-08: Sisters' tally built (running joke of the first hour)
+
+**Built** (plan `plans/onboarding/2026-11-08-sisters-tally-tech.md`, D-444 to D-454), on `thj/onboarding`:
+- Counting: per-mission kill tally for Lucy and Linda, off switch `SistersTally.Enabled` in code (`74c97e819`).
+- Core hook: the combat HUD can hide and show one extra panel (`HudPanelBase`; `c0d623cc2`).
+- HUD counter, top centre (`e0d09f5f6`).
+- Kills made together count for both: Duo bracket and the Tempest Bloom window; per-level eligibility, so Hearth segments 3–4 show it (`d1c178f4c`).
+- Mission-end panel: two stat rows with portraits, and MVP hidden while they show (`2c698e997`).
+- Steps: show alone, fade out (saved, unscaled time) and return; return is built but not placed (`036e4ca20`).
+- The Trail's pile: "Still counting?" with the counter alone, then the fade, then "…No." (`b07870da4`).
+
+**Verified:** every chunk reviewed APPROVE. Final EditMode 1740/1741, known AI red only. THJ played the counter, the Duo, Bloom, the Hearth results panel (layout, MVP hidden) and The Trail's pile fade.
+
+**Not verified:** M4 after the fade (no counter expected until return is placed); ATB mode.
+
+**Findings:**
+- No Duo's damage reaches `onUnitDamageDone`, so mission stats, John's Wrath and Mark's Barrier miss Duo hits. Backlog `duo-damage-events`; revisit MVP with it.
+- Bloom copies landing after Linda's ability ends count for no one (core limit).
+- Goblin Queen's finishing move counts for no one.
+- M1 `Level1-C2` also shows the tally (D-452).
+- Unity resets four existing icon width overrides on `SessionEndPanel.prefab` saves (layout-driven, no visual change).
+
+**Docs:** `tech/core-systems.md` (HUD extra panel). Design and glossary docs routed (first-hour design tally row, GDD); glossary row "Sisters' tally" still waits on THJ's glossary approval. Claude Doc mirror: this build-log section needs syncing.
+
+**Status:** done. Return step to place with the framed beat (D-448). Window-length concern (THJ) in backlog after the pacing check.
