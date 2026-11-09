@@ -70,7 +70,7 @@ Structured by the coordinator 2026-11-09 from the notes and the times above. All
 | P1 | **Nothing challenges what the Hearth taught.** The River, the Ridge and The Trail are too easy (abilities never feel needed), with no challenge, no real tutorial and no real story; they "feel too much", The Trail most. THJ's rhythm: first challenge what the player has, then a small situation that teaches one new thing, then challenge that | Notes; logs: Ridge 3 rounds / 5 kills, Trailhead 1 round / 0 kills, The Pile 4 rounds / 5 kills | ridge/river/trail not good, good direction, too easy, trail walk vague, river archers leave their islands | `miso-game-designer`, L, critics |
 | P2 | **Too many mechanics, too little challenge (dense).** Family Roles come too soon: John only in his memory, none before him, none again until River/Ridge **(?)**. The sight-range tutorial isn't needed. Open: should levels set up synergies (Lucy–John, Linda–Mark) or is that too much? | Notes | fr ×3, area of sight, synergies ×3 | Designer (in P1's plan) |
 | P3 | **The Pile is the weakest level.** Too much walking, enemies out of reach, too little to do; the start spawns walk back after you have left; empty. If the low tempo is meant (the sadness of the pile), put something before or after the beat | Notes; The Pile is most of The Trail's ~14 min | pile | Designer (in P1's plan) |
-| P4 | **Memory endings.** Remove the memory turn caps; Memory 4 ends when John "cuts the line" **(?)**; the first Duo should finish every enemy. Why caps exist: D-226 (Hearth was ~18 min with full fights), so removing them needs another way to keep the Hearth short | Notes; Hearth ~13 min with caps | turn limits, john in 4, first duo | Designer |
+| P4 | **Memory endings and objectives.** Remove the memory turn caps: THJ never hit one; the memories are short because each situation limits the player's options. Their cost is on the result screen: each stage's conditions show as their own lines (Linda/Lucy: kill 3 ✓, turn 2 ✓, kill 4 ✓, turn 3 ✓). Show one objective per memory. Memory 4: John's reinforcement-path objective needs a tweak (maybe take him off the board once he reaches it and keep him there). The first Duo should finish every enemy | Notes; THJ 02:13; Hearth ~13 min, no cap reached | turn limits, john in 4, first duo, objective feedback | Designer |
 | P5 | **Home.** The game should start at Home with a storytelling idle **(?)**. The visit between River and Ridge has nothing to do ("2 go, 2 stay" before it, nothing between). The Family tree should open by itself after the Linda–Lucy Yard scene (reverses Bond Lite C5's "no tab opens by itself"); THJ: the best moment in the onboarding | Notes | start at home, between ridge/river, family tree | Designer; then tech plan |
 | P6 | **Teaching and feedback.** Tutorial text pass; which tutorial the level-end result shows **(?)**; Lucy needs a multishot tutorial; Tempest Bloom needs a preview; more objective feedback; the goal tile shouldn't be green | Notes | tutorial ×3, bloom preview, objective feedback, goal tile | Designer (scope) → `miso-narrative` (text) |
 | P7 | **Rewards.** Ridge and River stone/iron rewards are the wrong way round | Notes | ridge river reward | Balance, S |
@@ -78,3 +78,18 @@ Structured by the coordinator 2026-11-09 from the notes and the times above. All
 | P9 | **Cyclone blocks the family in narrow paths.** Already covered by the Cyclone redesign's direction A (blocks enemies only), not built | Notes; `design/cyclone-redesign.md` | cyclone | Existing redesign plan |
 
 **Cut before stretching** still applies: P1–P3 should end up with fewer, tighter levels, not longer ones.
+
+## THJ's answers, 2026-11-09 02:13 (replaces the (?) readings)
+
+- **Where onboarding ends: the Hearth.** Nothing important is taught after it. River, Ridge and The Trail should challenge what the Hearth taught; anything new there adds to the challenge. Candidates to teach there: the pair synergies (players have to plan for them, and they pay off when they work). Duos may be too much for that stage: keep them as finishers, an ultimate.
+- **Family Roles don't need a tutorial for the click:** the prompt teaches itself. Off in Memories 1 and 2; John's is the first, in Memory 3 (not sure any more).
+- **Separate idea, not about roles:** John may get his own short memory 0, then Linda (1), Lucy (2), and they join forces in 3.
+- **Memory 4 "cut the line"** = John's reinforcement-path objective (folded into P4).
+- **Level-end tutorial** = the result screen's objective lines (folded into P4).
+- **Start at Home with the storytelling idle:** yes, confirmed (P5).
+- **Family Roles themselves (new topic, all branches, Tier 3):** THJ: they work and players love them, yet they feel wrong: no challenge, "just a click", you never know what you did to make one fire; FR has taken energy that should have gone to synergies. ATB, FTP, limiting Linda and removing the cost all failed to fix it. Its own design topic, not part of the onboarding plan; the onboarding plan should assume FRs need no teaching.
+
+## Bond Lite checks closed (THJ, 2026-11-09)
+
+One point at the Family tree after The Trail, the sisters' nodes unlocked, no second Yard on a replay, Sister's Rivalry works once bought (lifts a sister to 3 AP, no higher: the built cap). Station clicks during the Yard not tried (the camera is on the yard; THJ doubts a problem). Linda and Lucy stay on the Yard idle for the rest of the game: OK until M4 is done. THJ: Bond Lite gave less than expected; the scene and the unlock were what mattered.
+
