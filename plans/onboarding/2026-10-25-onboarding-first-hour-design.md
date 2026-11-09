@@ -117,10 +117,10 @@ Rough length: Hearth ~12–15 min (4 short segments, each 2–4 turns; cutaways 
 | Beat | Where | What |
 |---|---|---|
 | Setup | Hearth | The bragging contest over who saved Ryker; "You both did," and neither accepts |
-| Running joke | The River / The Ridge | They're apart but keep score: "Tell Lucy I'm ahead." Mark as go-between: "I'm not keeping score." "Yes, you are." The tally on the HUD and results screen |
-| Turn | M2, the animal pile | The barks stop; they fight back to back. The HUD tally fades: "Still counting?" / "…No." |
+| Running joke | The River / The Ridge | They're apart but keep score: "Tell Lucy I'm ahead." Mark as go-between: "I'm not keeping score." "Yes, you are." The tally on the HUD and results screen. **As built (2026-11-08):** also in Hearth segments 3–4 (own count) |
+| Turn | M2, the animal pile | The barks stop; they fight back to back. The counter shows alone: "Still counting?", then fades (saved), then "…No." |
 | Build-up and unlock | Home visit 3, the Yard | Coping, not training: Lucy burns straw targets at night, Linda joins. They find racing works better when they set each other up. Bond Lv 2 → the Family point → both nodes light up → the player chooses. Worst case, the choice is forced to Sister's Rivalry |
-| Payoff | M4, first real trigger | Framed beat: pause, both avatars (Q18 insert-shot), "Your turn." / "Watch this." After the fight, a quiet callback: "We both did." The tally returns as flavour |
+| Payoff | M4, first real trigger | Framed beat: pause, both avatars (Q18 insert-shot), "Your turn." / "Watch this." After the fight, a quiet callback: "We both did." The tally returns as flavour (**built, not placed yet:** the return step waits for this beat, D-448; until then M4 shows no tally) |
 
 - **Cap:** 1 per turn at first; higher caps open with more Bond, as skill-tree pips (S5: keep it, cap it).
 - If the player picks Tempest Bloom, it gets the same framed first trigger, and its callback is to the memory's one-off shot.
@@ -133,7 +133,7 @@ Rough length: Hearth ~12–15 min (4 short segments, each 2–4 turns; cutaways 
 | **Bond Lite** (new reusable system, THJ's yes needed) | Pair Bond store (levels at 10 / 25 / 45, as on `thj/home-test`); sources: mission end for pairs in the squad, a capped bonus when one helps the other (Synergy, Duo, Family Role between the pair), one Home evening activity per visit; lock rules (pair level → node or ability); combat gate read at level start; level-up scenes at Home | Port `HomeLockRules` and the `HomeBondLocks` pattern from `thj/home-test` (read-only check: both are plain data and rules, apart from the day sim); a small standalone store that `HomeState` absorbs on merge. Only Linda–Lucy is gated now; Command Shield Dash and the Linda–Toba Duo stay open on `main` until decided. Tuning: Linda–Lucy start ~15, earn nothing in the pair missions (they're apart), low 20s after M2, the Yard activity crosses 25 |
 | **Sister's Rivalry into the Family tree** | A family node plus its Bond lock; cap pips | Open on `main` today |
 | **First-trigger framed beat** | Pause, avatars, 2 lines, resume, on the first real trigger of a Synergy, Duo or Family Role | Extend `AbilityIntroductionTracker` (today: introductions at level start) with an on-first-trigger hook; pause pattern from `EnemyIntroductionController`; frame from Q18 |
-| **Sisters' tally** | HUD side counter while both sisters are in the squad; results screen's MVP row | Fade-out on a sequence cue (M2) |
+| **Sisters' tally** | **Built 2026-11-08** (D-444 to D-454; rules: GDD [Missions](../../design/gdd/missions-structure.md) MI-28). HUD counter at top centre in levels with both sisters. Kills count, last hit = 1; kills made together (Duo, Tempest Bloom) count for each sister; Lucy's Family Role finisher counts for Lucy. One tally per mission, not saved. Mission-end panel: two stat rows, MVP hidden while they show | Fade (saved) and show-alone steps on sequence cues (M2's pile); return step built, not placed; off switch in code. Limits: Duo damage bug (backlog `duo-damage-events`), late Bloom copies, Goblin Queen finisher |
 | **Hearth cutaways** | Painted still + dialogue between memory levels | Existing image nodes; needs the painting |
 | **Narrator interruptions** | Freeze, camera, spawn on cue | Existing sequences and `GUnitSpawn` |
 | **One-mission grants** | Tempest Bloom in the memory; possibly Catch & Return in The Ridge | Run upgrade grant at level start or a pickup |

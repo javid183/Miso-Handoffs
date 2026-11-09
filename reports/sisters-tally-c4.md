@@ -95,3 +95,49 @@ none
 5. Try opening the pause menu mid-fade: the fade should keep going.
 6. At the mission-end panel there are no tally rows and the MVP row is back. Start a later mission with both sisters (M4): no counter (return isn't placed).
 7. Optional: change the fade time on `Resources/Sequences/SistersTally/SistersTally_FadeOut.asset`.
+
+## Fix round (review should-fixes)
+
+Date 2026-11-08. Both review should-fixes done; nothing else changed.
+
+### Changed files (this round)
+
+- `E:/Work/Projects/miso/miso/Assets/_Project/Features/Onboarding/SistersTally/SistersTallyCounterUI.cs`: `FadeOut` stopping early at its guard now ends show-alone (`_shownAlone = false`) and slides back (instant), so the counter is never left pinned. Doc comment updated.
+- `E:/Work/Projects/miso/miso/Assets/_Project/Features/Onboarding/SistersTally/Editor/SistersTallyStepTests.cs`:
+  - Helper `GiveTheCounterAFadeGroup` gives the test counter a `CanvasGroup` and also calls the counter's `OnEnable` by reflection (edit mode never runs it, so the counter did not follow tally changes; the "back with the HUD" assert needed this). `OnDisable` is called in `TearDown`.
+  - `Drain` takes an optional fade group and completes its tween before each step, so the fade ends without real time.
+  - `FadeOut_WithTheHudHidden_EndsHidden` renamed `FadeOut_WithTheHudHidden_EndsShowAloneAndHidesTheNumbers`: fade runs for real, asserts alpha 0, then undoes the faded mark and asserts the counter is not showing (only a show-alone that never ended could keep it on screen).
+  - `Return_AfterTheFade_...`: now with a fade group; asserts alpha 0 after the fade, back to 1 and showing after return.
+  - New `FadeOut_StoppingEarlyAfterShowAlone_DoesNotLeaveTheCounterPinned`.
+
+### How I checked the asserts bite
+
+Temporarily removed (then restored the file from a copy, diff clean): (a) `_shownAlone = false` at the end of `FadeOut`: the HUD-hidden test failed. (b) `_shownAlone = false` in the new early-stop branch: the new test failed. (c) `StaysFadedOut` made to never clear the faded-out flag: the Return test failed on "back with the HUD". (First combined run had (c) masking (a), so (a) and (b) were rerun without (c).) Not mutation-checked: the DOFade call itself; the existing unscaled-time test covers that the tween exists.
+
+### Test result
+
+Full EditMode suite via the open editor: 1741 total, 1740 passed, 1 failed: `AIRegressionTest.Baseline_MatchesCurrentAI` (known red, untouched). `SistersTallyStepTests`: 19/19. Console errors: one Unity "Objects are trying to be loaded during a domain backup" message from recompiling, none from the code. No save reset. LF kept, no private IDs.
+
+### Updated proposed commits (full paths, each `.cs`/asset with its `.meta`)
+
+Commit 1: `feat(onboarding): sisters' tally fade out, return and show alone steps`
+- E:/Work/Projects/miso/miso/Assets/_Project/Features/Onboarding/SistersTally/SistersTallyStepRules.cs (+ .meta)
+- E:/Work/Projects/miso/miso/Assets/_Project/Features/Onboarding/SistersTally/SistersTallyFadeOutSequence.cs (+ .meta)
+- E:/Work/Projects/miso/miso/Assets/_Project/Features/Onboarding/SistersTally/SistersTallyReturnSequence.cs (+ .meta)
+- E:/Work/Projects/miso/miso/Assets/_Project/Features/Onboarding/SistersTally/SistersTallyShowAloneSequence.cs (+ .meta)
+- E:/Work/Projects/miso/miso/Assets/_Project/Features/Onboarding/SistersTally/SistersTallyCounterUI.cs
+- E:/Work/Projects/miso/miso/Assets/_Project/Features/Onboarding/SistersTally/Editor/SistersTallyStepsSetup.cs (+ .meta)
+- E:/Work/Projects/miso/miso/Assets/_Project/Features/Onboarding/SistersTally/Editor/SistersTallyStepTests.cs (+ .meta)
+- E:/Work/Projects/miso/miso/Assets/_Project/Resources/Sequences/SistersTally.meta
+- E:/Work/Projects/miso/miso/Assets/_Project/Resources/Sequences/SistersTally/ (3 step assets, each with .meta)
+- E:/Work/Projects/miso/miso/Assets/_Project/Content/Levels/LevelBase.prefab
+
+Commit 2: `feat(onboarding): the pile's closing lines show the sisters' tally, then fade it` (depends on 1)
+- E:/Work/Projects/miso/miso/Assets/_Project/Features/Onboarding/Editor/SearchWiring.Trail.cs
+- E:/Work/Projects/miso/miso/Assets/_Project/Features/Onboarding/Editor/SearchTrailTests.cs
+- E:/Work/Projects/miso/miso/Assets/_Project/Resources/Sequences/Search/Trail/Trail_Pile_End_DialogNodeSequence.asset
+- E:/Work/Projects/miso/miso/Assets/_Project/Resources/Sequences/Search/Trail/Trail_Pile_End_SequentialSequence.asset
+- E:/Work/Projects/miso/miso/Assets/_Project/Resources/Sequences/Search/Trail/Trail_Pile_End_Reply_DialogNodeSequence.asset
+- E:/Work/Projects/miso/miso/Assets/_Project/Resources/Sequences/Search/Trail/Trail_Pile_End_Reply_DialogNodeSequence.asset.meta
+
+Do not stage: AIFactionBrain.cs, AIUnitBrain.cs, PreloadScreen.unity, ProjectSettings/*.

@@ -156,6 +156,13 @@ Source: `Content/Levels/Level3/Level3-C1.prefab`, `Generic Levels/Medium/M2/Leve
 
 - **MI-26.** **On `thj/home-test`:** a prologue of three missions (M1, M2, M3 "A Wolf's Blood", in that order, skipping M5; `build-log.md` › Home M7), then one 7-day moon cycle. Side missions take 3 seats, can be played once each, take one day, and two have day windows. The Goblin Queen's Warren is open from Day 1 and forced on Day 7. Sortie missions are separate assets that pay through Home. Rules and numbers: [Demo Spec](../demo-spec.md). *Demo*
 
+## The sisters' tally
+
+- **MI-28.** **On `thj/onboarding`:** the sisters' tally, a running joke between Lucy and Linda. Each sister's kills count, last hit = 1. A kill the sisters make together (their Duo, Tempest Bloom) counts +1 for each; Lucy's Family Role finisher counts for Lucy. There is one tally per mission and it is not saved. It shows in levels with both sisters (per-level eligibility, so Hearth segments 3 and 4 show it, with their own count), as a HUD counter at top centre. At mission end it shows as two stat rows ("Sisters' Tally:", Linda's count and portrait, then Lucy's), and the MVP row is hidden while they show. At The Trail's animal pile the counter shows alone with "Still counting?", then fades, then "...No." The fade is saved. A return step is built but not placed: it waits for the first-trigger framed beat, so M4 shows no tally. One switch in code (`SistersTally.Enabled`) turns the whole feature off. Design: [first-hour design](../../plans/onboarding/2026-10-25-onboarding-first-hour-design.md), [attribution design](../../plans/onboarding/2026-11-08-sisters-tally-attribution-design.md); decisions D-444 to D-454. *Built*
+  - Known limits: no Duo damage reaches `onUnitDamageDone` (backlog `duo-damage-events`, D-451), so mission stats and MVP miss Duo hits; Bloom copies that land after Linda's ability ends count for no one; the Goblin Queen's finishing move counts for no one; M1's `Level1-C2` also shows the tally (D-452).
+
+Source: `SistersTally` feature folder (counting, HUD counter, `SistersTallyResultRow`), `SessionEndPanel.prefab`, `LevelBase.prefab` (excluded-level list), `CombatLevelUIManager` (HUD extra-panel hook).
+
 ## Deferred and dropped
 
 | Item | State |
@@ -168,6 +175,7 @@ Source: `Content/Levels/Level3/Level3-C1.prefab`, `Generic Levels/Medium/M2/Leve
 ## Branch differences
 
 - **On `main`:** the campaign graph above; no chapters, days or deadline.
+- **On `thj/onboarding`:** the sisters' tally (MI-28).
 - **On `thj/home-test`:** the prologue and moon cycle (MI-26), the Warren's route (MI-15) and Rest Room, retreat, and sortie rewards that differ (PR-25).
 
 ## Open questions
