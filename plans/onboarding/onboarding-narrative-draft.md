@@ -48,9 +48,9 @@ Narrative agent, 2026-10-26. Step **A5** of `plans/onboarding/2026-10-25-onboard
 | ID | Speaker | Line | Where | Notes |
 |---|---|---|---|---|
 | M2-1 | Lucy (off) | So. I'm in the cave. Alone. Very brave. | Level dialogue (start) | |
-| M2-2 | Lucy (off) | And then more came. At least ten! | Interruption (spawn on cue) | **Key line** from the design. Freeze, camera to the spawn points, `GUnitSpawn` |
-| M2-3 | Linda (off) | There were four. | Interruption | |
-| M2-4 | Lucy (off) | *Ten.* | Interruption | Spawn plays on this line, then resume |
+| M2-2 | Lucy (off) | Then ten more! | Interruption (spawn on cue) | **Changed by THJ 2026-11-09 (D-457, built and played).** 10 Claws appear. Freeze, camera to the spawn points, `GUnitSpawn`. History: "And then more came. At least ten!" |
+| M2-3 | Linda (off, at the hearth) | Two. | Interruption | **Changed by THJ 2026-11-09 (D-457).** 8 of the 10 fade out. History: "There were four." / "Three." |
+| M2-4 | Lucy (off) | Four. | Interruption | **Changed by THJ 2026-11-09 (D-457).** 2 new Claws appear, then resume; the fight continues with 4 Claws. History: "*Ten.*" |
 | M2-5 | Lucy | And the wind caught fire. Obviously. | Bark (scoped: memory), first Cyclone | Her story beat for Cyclone; her fire is "bigger" in her version |
 
 **Cutaway 2**
