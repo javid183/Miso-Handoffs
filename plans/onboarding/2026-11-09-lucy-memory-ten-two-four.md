@@ -42,3 +42,8 @@ Today: camera to room 2, reveal 3 hidden Claws (9,3 / 10,2 / 9,1), lines "Then t
 ## Commits (proposed in the report)
 
 1. The new hide step + tests. 2. Level and sequence data.
+
+## Commit log
+
+- `25eca99d4` the hide step + tests (review FIX → fixed; EditMode 1762/1763 known AI red only).
+- `e9bd6e885` level + sequence data (THJ played it 2026-11-09: "fun").
