@@ -119,3 +119,28 @@ None (on `main` since the onboarding merge).
    - The sisters' tally and the results show no kills for the 8.
 5. Replay with the skip (hold skip during a line): the end state should be the same 4 Claws.
 6. Lose or use Try Again: all 12 should be hidden again at the start.
+
+## Fix round (review verdict FIX, one must-fix)
+
+Review: `reports/lucy-memory-ten-two-four-review.md`. The must-fix: the fade only faded the bodies. The Claw's idle animation writes the `Shadow` colour alpha every frame, after the coroutine, so the shadow stayed opaque. The mini health bars (Canvas/Image) stayed visible too. Both then vanished at once when the unit switched off.
+
+What changed:
+- `Features/Onboarding/HideUnitsSequence.cs`: the fade now goes through a new nested `HideUnitsSequence.FadeTargets`. `FadeTargets.Prepare(units)` does three things:
+  - disables every enabled `Animator` under each picked unit (`GetComponentsInChildren<Animator>`). They are not re-enabled, because the units leave the board when the fade ends.
+  - collects every `SpriteRenderer` with its starting alpha.
+  - gets or adds a `CanvasGroup` on each outermost `Canvas` under the unit. Nested canvases fade with their parent's group, so their alpha isn't multiplied twice.
+
+  `Apply(factor)` sets each sprite's and each group's alpha to its start value × factor. Canvases are never switched off (`UnitMiniHealthBar.Refresh` turns them back on itself). The old private `SetAlpha` is gone; nothing else in the step changed.
+- `Features/Onboarding/Editor/HideUnitsSequenceTests.cs`: new `FadeTargets_StopTheAnimatorsAndFadeSpritesAndTheOuterHealthBarCanvas`. It builds a unit with an Animator, a body sprite (alpha 0.5), a shadow sprite and a health-bar canvas with a nested canvas, then checks:
+  - the animator is stopped
+  - 2 sprites and 1 canvas group are collected
+  - the group is added to the outer canvas only
+  - at factor 0.5 the body reads 0.25, the shadow 0.5 and the group 0.5
+  - at factor 0 all read 0
+  - a null list is handled
+
+Tests: full EditMode suite via Unity MCP, **1763 run, 1762 passed, 1 failed**. The failure is the known `AIRegressionTest.Baseline_MatchesCurrentAI` (42 failures in its report, unchanged and not touched).
+
+Not verified: how the fade looks in play (shadow and bars fading together with the body). That needs the play check.
+
+Proposed commits: unchanged. Both changed files are already in commit 1.
