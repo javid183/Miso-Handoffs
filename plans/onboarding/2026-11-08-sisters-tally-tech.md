@@ -81,3 +81,4 @@ Compile / EditMode (known red only) / review per chunk / THJ play check before e
 - 2026-11-08: THJ's attribution questions → design; D-449 to D-451. C1b added; dispatched (implementer, opus).
 - 2026-11-08: C1b fix round done. THJ played: Duo OK; Tempest Bloom raises only Linda's. C1c added (Bloom kills count for both, per D-449; brought forward from "with Tally: return"); dispatched (implementer, opus).
 - 2026-11-08: C1c review APPROVE + test fixes; THJ played Bloom OK. **Committed** `d1c178f4c` (C1b + C1c combined: the listener holds both). C3 dispatched (implementer, sonnet): results row shown if the tally was eligible in any level of the mission and isn't faded.
+- 2026-11-08: C3 placement reworked to two StatRow rows (D-453), MVP hidden while they show (D-454); reviews 2 and 3 APPROVE; THJ played OK. **Committed** `2c698e997`. Next: C4 (fade/return steps).
