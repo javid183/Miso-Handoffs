@@ -10,6 +10,14 @@ Owner: coordinator; THJ approves. `claude-handoff/` doesn't change when the shar
 - Agents never switch branches. THJ does.
 - On merge, a branch's differences fold into `all`. If that changes a core rule on `main`, it's Tier 3.
 
+## `thj/after-hearth`
+
+**Active; THJ's working branch from 2026-11-10 (D-460).**
+
+- Created 2026-11-10 by the coordinator at THJ's request ("create a new branch before starting new changes") from `main` @ `e9bd6e885` (0 ahead, 0 behind; `main` has the onboarding, Bond Lite, the tally and the Lucy memory gag; `e9bd6e885` and `25eca99d4` not pushed).
+- **Purpose:** the onboarding after-the-Hearth rework (`plans/onboarding/2026-11-09-onboarding-after-hearth-design.md`) once THJ answers its questions.
+- Combat resource and AP: same as `main`. Uncommitted in the tree (came along): THJ's AI diagnostic (`AIFactionBrain.cs`, `AIUnitBrain.cs`), `PreloadScreen.unity`, `ProjectSettings/EditorSettings.asset` and `ProjectSettings.asset`, the TMP fallback font; agents leave them alone.
+
 ## `main`
 
 - Combat resource: **FTP** since `92853a5a9` (2026-10-16; `GlobalSettings.asset` `pointConsumptionMode: 0`); ATB before that. Duos pay 2 FTP. Family Roles still pay 1 FTP each with no per-round limit; the design (D-036 to D-042) makes them free and limited per round, and that code is built on `main` later, not on `thj/home-test`. Rules as built: GDD [Combat rules](design/gdd/combat-rules.md#family-time-points-ftp) and [Family systems](design/gdd/family-systems.md).
