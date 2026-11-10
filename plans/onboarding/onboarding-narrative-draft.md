@@ -514,6 +514,15 @@ Narrative agent. Source: `plans/onboarding/2026-11-09-onboarding-after-hearth-de
 | AH-4 | Memory 4, stage 2 complete, before the three new Claws appear (optional) | John | Here they come. | Short, in the dread register, tells the player something arrived without explaining the Duo. Alt: "More of them. Good." (John's grit; a little hard). Skip it if the reveal already carries a beat |
 | AH-5 | Memory 4, outro, replaces M4-12 ("She held on until the last Claw fell.") | Mark (off) | She held on until we reached her. | Left-side Claws stay on the board, so no "last Claw". Says what the player watched (Lucy and Mark walk to the cub) and keeps "held on". Alt: "She held on until it was over." (looser; says nothing about who) |
 
+**Result lines (2026-11-10, proposed; build chunk C2, `LevelResultLine`).** One line per memory on the level-won / mission-end panel, replacing the stage objectives. Each is the teller's punchline. `[PLACEHOLDER] ` until THJ approves. Tier 3. Short enough for one results row (6 words or fewer where possible).
+
+| ID | Memory, teller | Recommended | Alternative | Notes |
+|---|---|---|---|---|
+| AH-6 | 1 · Linda | Seven Claws. One arrow. | Seven Claws. One Explosive Arrow. | Rec. is the approved M1-1 / design example (D-384), so panel and outro say the same thing; use it as is unless THJ wants the panel to differ. Alt names the ability (a bit longer, less Linda) |
+| AH-7 | 2 · Lucy | Alone, outnumbered, on fire. Obviously. | Very brave. Very alone. Very hot. | No Claw count, so the ten / Two. / Four. gag is not repeated or settled. Rec. echoes M2-1 and "Obviously" (M2-5). Alt echoes M2-1 "Very brave", shorter |
+| AH-8 | 3 · John | Not one of them got to my girls. | In front. Always in front. | Rec. closes M3-1 ("Not one of them got them") and M3-4. Alt closes the M3-2 / M3-3 joke; funnier, less about the win |
+| AH-9 | 4 · Mark | Her fire, my fists. The cub came home. | Her fire, my fists. Exactly on time. | Names the Duo (M4-5), claims no kill count, no "last Claw". Rec. lands on the rescue and keeps the grief register of the ending (D-171). Alt keeps Mark's boast (M4-3) but the mother has just fallen, so it may read cold on this panel: THJ's call on tone |
+
 ### What the code does (Fire Embers, `Lucy_Ability_PrimaryAttack`)
 
 - The ability is a one-effect-per-target multi-target attack: it asks the player for **one target per ember**. The effect list is the main ember (`PrimaryAttackM`) plus one sidewinder (`S1`) at base, so **2 embers, 2 targets**. Each skill level of Sidewinders adds one more sidewinder effect (S2 to S6 exist). The GDD (`lucy.md`) agrees: main 4 x damage, sidewinders 3 x each, "each pick a target"; 1 sidewinder at base, 2 or 3 with Sidewinders.
