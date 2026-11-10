@@ -25,3 +25,17 @@
 Should fix (after THJ's play): (1) `ObjectiveEntryUI.cs:117` orphaned comment: move above `PlayMetFeedback` (~130) and say "scale pulse, colour flash and one UI sound". (2) `PlayStrikethrough` (~152): call `StopPulse()` at the top next to `_strikethroughTween?.Kill()`, so a running pulse can't overwrite the per-character reveal.
 
 Notes: pending plays once (flush clears first; deferred entries have `_seenUnmet` false); Show/Hide races handled; revealing entries play via their own decide; level win defers and never flushes (unchecked risk: an outro containing a `ShowHUDSequence` would flush it); end panel doesn't use `ObjectiveEntryUI`; restart / Try Again / next level unload scenes, no carry-over; rich-text re-tint rebuilds from `_displayText`, no nested tags, restores success colour; tween cleanup fine; no core, no statics; BOM/LF as HEAD; `AudioStorage.asset` hand-edited (4 lines, placeholder clip). Minor: feedback allowed from the start of the slide-in (cosmetic).
+
+## Re-review after rounds 5–6 (2026-11-10)
+
+(Pasted by the coordinator; the reviewer runs read-only.)
+
+**Verdict: FIX.**
+
+Must fix: (1) `ObjectiveEntryUI.cs:96,115-120`: a line already on screen and met while hidden keeps the struck rich text from `UpdateVisuals`, because the Defer branch only resets the colour. It slides back in struck, then goes plain and strikes again. Fix: call `UpdateVisuals()` in the Defer branch after `_pendingFeedback` is set. The win line on screen is unaffected (the panel is off screen at about 0.75 s, the decision comes at about 1 s). (2) `ObjectivesPanelUI.cs:122-128`: in a stage advance with the HUD visible, the new line's arrival and sound start in the same frame as the met pulse and sound. Before `Show` on an `ArrivalPending` entry, wait while any entry `IsPlayingFeedback`.
+
+Checks: the win line is still struck on screen at the moment of the win (`UpdateEntries` → `UpdateVisuals`, not pending), same as HEAD; the report's "stays unstruck" is inaccurate. `NewLines` is safe because `VisibleWinObjectives` is cumulative; edge: an advance from an empty visible list gets no arrival. No stuck-invisible paths; colour restored on disable and on met-before-arrival. No statics. AudioStorage valid, 8 lines, placeholder clip. No private IDs; LF and BOM as HEAD.
+
+Notes: the outro `ShowHUDSequence` risk is still unchecked. Pacing differs between the visible path (one at a time, 1 s apart) and return from hidden (all together). Not checked in Play.
+
+Coordinator follow-up: `ShowHUDSequence` is referenced by `Sequences/Common/OutroCutscene.asset` and `OutroCutsceneKeepGridHidden.asset` (the shared win outros), so the risk is real; sent to the implementer with the two must-fixes.
