@@ -63,3 +63,12 @@ main, when this branch merges.
 2. Play; meet the first-stage objective. Expect: panel unfolds, line strikes through, then one small pulse and a click sound.
 3. After the stage advances, the earlier line replays its strikethrough but does not pulse or sound again; the new stage's line pulses when met.
 4. A failure objective (Defeat mode) strikes through with no pulse or sound.
+
+## Fix round (review verdict FIX)
+
+- `ObjectivesPanelUI`: new `_feedbackAllowed` (default true), set false when `Hide` starts, true in `Show`. `UpdateObjectives` passes `() => _feedbackAllowed` to `ObjectiveEntryUI.Show`.
+- `ObjectiveEntryUI.Show(float, Func<bool> feedbackAllowed = null)`: the pulse rule is now evaluated after the strikethrough, so a hide that began meanwhile suppresses the pulse and the sound. The level-winning line and a stage-completing line met while a sequence hides the HUD get strikethrough only (accepted trade-off).
+- `ObjectiveFeedbackRules.ShouldPulse` gained `panelVisible` (default true). New test `PanelHidden_LineMet_DoesNotPulse`; suite now 9 rule tests.
+- Correction: `AudioStorage.asset` was hand-edited YAML, 4 lines added (not 3); valid, and the placeholder reuses the `A_UI_Click` clip GUID. THJ swaps the clip in the inspector.
+- Full EditMode run: 1781 total, 1780 passed, 1 failed = known `AIRegressionTest.Baseline_MatchesCurrentAI`.
+- Changed files in this round: `ObjectiveEntryUI.cs`, `ObjectivesPanelUI.cs`, `ObjectiveFeedbackRules.cs`, `ObjectiveFeedbackRulesTests.cs` (same single proposed commit). Not checked in Play.
