@@ -6,6 +6,7 @@ Rows D-001 to D-011 were carried over on 2026-10-15 from the Home handoff and pr
 
 | Date | ID | Tier | Scope | Decided by | Decision | Why | Affects |
 | --- | --- | --- | --- | --- | --- | --- | --- |
+| 2026-11-10 | D-464 | 3 | all | THJ | Family Roles principle (direction for the redesign): no role works when its Bergson is alone; every role needs another family member involved | THJ, on round 2: the package's best idea; it was already Linda's exception and he hadn't seen it as the rule | `plans/2026-11-09-family-roles-round2-design.md`, round 3 |
 | 2026-11-09 | D-463 | 3 | all | THJ | If the Family Roles test reaches a dev switch, it lives in Global Settings beside the AP and passive modes | A combat mode flipped often during the test | Family Roles rethink step 3 tech plan |
 | 2026-11-09 | D-462 | 3 | all | THJ | In the kept-AP test John follows the same rule as the others: one guard per AP he kept | His guard becomes a choice; a 'John unlimited' value can follow if the sisters drop too fast | Family Roles rethink |
 | 2026-11-09 | D-461 | 3 | all | THJ | In the kept-AP test, roles that fire on the family's own turn stay free and automatic (v1); spending AP for them is a later variant only if v1 works | One change per test | Family Roles rethink |
