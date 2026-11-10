@@ -6,6 +6,7 @@ Rows D-001 to D-011 were carried over on 2026-10-15 from the Home handoff and pr
 
 | Date | ID | Tier | Scope | Decided by | Decision | Why | Affects |
 | --- | --- | --- | --- | --- | --- | --- | --- |
+| 2026-11-10 | D-465 | 3 | all | THJ | Same decision as the 2026-11-10 row numbered D-460 (new branch `thj/after-hearth` from `main` @ `e9bd6e885`), renumbered: that ID was already taken by the 2026-11-09 Family Roles test row. Cite D-465 for the branch | Duplicate ID | `branches.md` |
 | 2026-11-10 | D-460 | 3 | all | THJ | New work starts on a new branch `thj/after-hearth`, created from `main` @ `e9bd6e885` (THJ asked; coordinator chose the name) | `main` now holds the merged onboarding; keep it clean | `branches.md` |
 | 2026-11-10 | D-464 | 3 | all | THJ | Family Roles principle (direction for the redesign): no role works when its Bergson is alone; every role needs another family member involved | THJ, on round 2: the package's best idea; it was already Linda's exception and he hadn't seen it as the rule | `plans/2026-11-09-family-roles-round2-design.md`, round 3 |
 | 2026-11-09 | D-463 | 3 | all | THJ | If the Family Roles test reaches a dev switch, it lives in Global Settings beside the AP and passive modes | A combat mode flipped often during the test | Family Roles rethink step 3 tech plan |
