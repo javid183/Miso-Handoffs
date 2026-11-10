@@ -502,6 +502,29 @@ Nothing below is in `glossary.md` yet. "Approved" means a THJ decision already e
 | **The leaf wrapper** | Toba's poultices are wrapped in a leaf bound with grass | Proposed (Miso) |
 | Ryker's habits | Drinks at the river; likes the wind on the ridge | Proposed, flavour only (W6-2, W6-3) |
 
+## After-Hearth build, Hearth memories (2026-11-10, proposed)
+
+Narrative agent. Source: `plans/onboarding/2026-11-09-onboarding-after-hearth-design.md` (D-466 to D-475), branch `thj/after-hearth`, scope all. Every line goes in as `[PLACEHOLDER] ` until THJ approves. Tier 3 (story beats), except the two tutorial pages, which are ability-style text in the established voice (flagged, written direct). Short, one option each; alternatives in the notes.
+
+| ID | Where | Speaker | Text | Notes |
+|---|---|---|---|---|
+| AH-1 | Memory 1, tutorial page 1 (the "Watch" page is deleted). Title kept. | Page | **Moving and AP**<br>• Click a Bergson, then a tile to move, or pick an ability and a target.<br>• Units begin each turn with 2 AP. Every action costs 1 AP.<br>• Each shot spends an arrow.<br>• The phase ends when all AP is spent or End Turn is selected. | Current text kept word for word (read from `Memory1Linda_Start_Panels.asset`); one bullet added, placed after the AP bullet so the cost lines sit together. "Arrow" per the glossary (quiver). Alt: fold it into the AP bullet: "Every action costs 1 AP, and each shot spends an arrow." Page image is the current Moving and AP image; the page has no mention of Watch now |
+| AH-2 | Memory 2, tutorial page at level start | Page | **Fire Embers**<br>• Lucy's attack throws a main ember and a sidewinder ember.<br>• Each ember has its own target: click an enemy for each one.<br>• Pick the same enemy twice to hit it twice, or spread them out. | See "What the code does" below. No Claw count named. No AP mention (the basic attack costs 1 AP; page 1 of Memory 1 already says every action does). Alt title: "Embers" (shorter; the ability screen says "Fire Embers", so kept) |
+| AH-3 | Memory 4, stage 2 objective (objectives panel, while John holds the mouth and the Claws near the cub are alive) | Objective | John holds the mouth. Clear the den. | Replaces OBJ-1 "John: Cut the reinforcement path." (names the den, as the board does; matches the plan's UX row). Uses "mouth" as the one player-facing name for that tile, which also settles flag 2 in this file (the old "reinforcement path" goes). Alt: "Hold the mouth with John. Clear the den." (OBJ-3's shape) |
+| AH-4 | Memory 4, stage 2 complete, before the three new Claws appear (optional) | John | Here they come. | Short, in the dread register, tells the player something arrived without explaining the Duo. Alt: "More of them. Good." (John's grit; a little hard). Skip it if the reveal already carries a beat |
+| AH-5 | Memory 4, outro, replaces M4-12 ("She held on until the last Claw fell.") | Mark (off) | She held on until we reached her. | Left-side Claws stay on the board, so no "last Claw". Says what the player watched (Lucy and Mark walk to the cub) and keeps "held on". Alt: "She held on until it was over." (looser; says nothing about who) |
+
+### What the code does (Fire Embers, `Lucy_Ability_PrimaryAttack`)
+
+- The ability is a one-effect-per-target multi-target attack: it asks the player for **one target per ember**. The effect list is the main ember (`PrimaryAttackM`) plus one sidewinder (`S1`) at base, so **2 embers, 2 targets**. Each skill level of Sidewinders adds one more sidewinder effect (S2 to S6 exist). The GDD (`lucy.md`) agrees: main 4 x damage, sidewinders 3 x each, "each pick a target"; 1 sidewinder at base, 2 or 3 with Sidewinders.
+- The tile counter (`TargetedCounter`) is shown per added target, so the same cell can be picked again. I read that as allowed; I did not confirm in play that a second pick on the same enemy counts. THJ or the implementer: confirm before the page ships.
+- Lucy can aim an ember at John while Shield Up is on (Shield Flare); that is not in the page.
+- Not checked: Lucy's Sidewinders level in Memory 2 (if the memory starts her above base, the page's "main ember and a sidewinder" undercounts, and it should say "an ember and sidewinders").
+
+### Memory 4 outro check
+
+Lines in `Resources/Sequences/Hearth/Memory4Mark/`: M4-11 "She never left her cub. Not once." (fine), M4-12 "She held on until the last Claw fell." (**claims the last Claw; replaced by AH-5**), M4-13 "The cub cried out." (fine), M4-14 "She saved her. We only carried her home." (fine). Cutaway: H5-1 "Every one of you saved her..." (fine), H5-2/H5-3 "Ten Claws, Lucy." / "At least." (fine). Also N5-1 "I'll hold them off. You save them." (fine). The `HearthMemoryWiring.Mark*` strings and `HearthMemoryMarkTests.Flow.cs` still hold older text (flag 7 above); the implementer must update M4-12 there too, or the tool undoes AH-5.
+
 ## Open questions
 
 1. **How long since the rescue?**
