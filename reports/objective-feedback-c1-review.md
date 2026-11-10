@@ -17,3 +17,11 @@
 - DOTween: `SetLink`, killed in `OnDisable`/`OnDestroy`; fine.
 - Pre-existing: an old `UpdateObjectives` coroutine can walk destroyed entries after a rebuild (`MissingReferenceException` on TMP); not caused here.
 - No core, no statics, BOM/LF kept, no private IDs; one commit.
+
+## Re-review after rounds 2–4 (2026-11-10)
+
+**Verdict: APPROVE.** No must-fix.
+
+Should fix (after THJ's play): (1) `ObjectiveEntryUI.cs:117` orphaned comment: move above `PlayMetFeedback` (~130) and say "scale pulse, colour flash and one UI sound". (2) `PlayStrikethrough` (~152): call `StopPulse()` at the top next to `_strikethroughTween?.Kill()`, so a running pulse can't overwrite the per-character reveal.
+
+Notes: pending plays once (flush clears first; deferred entries have `_seenUnmet` false); Show/Hide races handled; revealing entries play via their own decide; level win defers and never flushes (unchecked risk: an outro containing a `ShowHUDSequence` would flush it); end panel doesn't use `ObjectiveEntryUI`; restart / Try Again / next level unload scenes, no carry-over; rich-text re-tint rebuilds from `_displayText`, no nested tags, restores success colour; tween cleanup fine; no core, no statics; BOM/LF as HEAD; `AudioStorage.asset` hand-edited (4 lines, placeholder clip). Minor: feedback allowed from the start of the slide-in (cosmetic).
