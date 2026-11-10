@@ -2,7 +2,7 @@
 
 Size: M    Tier: 3 decided (design D-466 to D-474 rule list "Small UI rules"; D-477)    Assigned to: miso-implementer (sonnet)
 Branch: `thj/after-hearth` (scope **all**: both rules apply on every branch; option off by default for the result line)
-Status: draft, waiting on THJ's OK to dispatch
+Status: approved (D-486), queued after the Hearth memories
 
 ## Why
 

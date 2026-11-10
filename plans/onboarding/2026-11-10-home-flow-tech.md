@@ -2,7 +2,7 @@
 
 Size: M    Tier: 3 decided (D-472, D-478; the after-Hearth plan "Home")    Assigned to: miso-implementer (sonnet; opus for C1 if `StartIE` ordering turns subtle)
 Branch: `thj/after-hearth` (scope all)
-Status: draft, waiting on THJ's OK to dispatch
+Status: approved (D-486), queued after the Hearth memories
 
 ## Why
 

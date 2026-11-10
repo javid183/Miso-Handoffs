@@ -6,6 +6,8 @@ Rows D-001 to D-011 were carried over on 2026-10-15 from the Home handoff and pr
 
 | Date | ID | Tier | Scope | Decided by | Decision | Why | Affects |
 | --- | --- | --- | --- | --- | --- | --- | --- |
+| 2026-11-10 | D-486 | 3 | all | THJ | The three tech plans (objective feedback, Synergy aim preview, Home flow) are approved and dispatch in that order after the Hearth memories | As recommended | `plans/onboarding/2026-11-10-*-tech.md` |
+| 2026-11-10 | D-485 | 3 | all | THJ | Memories 1–3 also lose when any Bergson falls (same rule as Memory 4), built in chunk C2 | One rule across the Hearth | Hearth memories C2 |
 | 2026-11-10 | D-484 | 3 | all | THJ | Memory 4 keeps John on the mouth in stage 3; a lose objective is added (or the current one changed) so the memory is lost if any Bergson falls; THJ's stage-2 set of 8 Claws (without Bloom (3,6) and the den's west Claw) is intended | Avoids the wait-forever case if John dies; his tuning stands | `GB_m4-mark`, Hearth memories C1 |
 | 2026-11-10 | D-483 | 3 | all | THJ | Memory 4 stage 2 shows two objectives in the same stage, each ticking on its own: "John: reach the den mouth." and "Defeat the dark claws." | His one-entry text wrapped and claimed the Claws were near the cub | Same |
 | 2026-11-10 | D-482 | 3 | all | THJ | THJ's hand edits to Memory 4 after C1 stand: stage 2 waits for 8 Claws; stage 3 also needs John on the mouth; a turn reset in the Hold sequence gives a fresh turn for the Duo. Wiring and tests follow his prefab | THJ played it; prefab is the master (D-405) | Same; `reports/hearth-memories-c1-thj-edits-review.md` |

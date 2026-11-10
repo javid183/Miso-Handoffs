@@ -2,7 +2,7 @@
 
 Size: L    Tier: 3 decided (D-467)    Assigned to: miso-implementer (opus)
 Branch: `thj/after-hearth` (scope **all**)
-Status: draft, waiting on THJ's OK to dispatch
+Status: approved (D-486), queued after the Hearth memories
 
 ## Why
 
