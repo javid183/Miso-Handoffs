@@ -2,7 +2,358 @@
 
 Size: L    Tier: 3 (the rule of a main mechanic and a USP; core role handlers and settings for any prototype)    Assigned to: miso-game-designer
 Branch: all. `main` since THJ merged `thj/onboarding` on 2026-11-09 (D-456). `thj/home-test` notes in [Branches](#branches).
-Status: waiting on THJ (critics reconciled, 2026-11-09)
+Status: round 3 draft (THJ's feedback of 2026-11-10; critics pending). Round 2 below is history
+
+## Round 3 (THJ's feedback, 2026-11-10)
+
+Status: draft (critics pending). Round 2's content below ("Why" to "Gates") stays as history. Decision IDs: the kept-AP decisions were renumbered since round 2 was written; they are now D-460 (run the test), D-461 (player-turn roles free in v1), D-462 (John one guard per kept AP), D-463 (the switch in Global Settings). D-464 is new.
+
+### What THJ said, and what it changes
+
+| THJ (2026-11-10, trimmed) | What it changes |
+|---|---|
+| **Keep (D-464):** "no role works if someone is alone. That was already the exception about Linda, and I failed to see it all along." | The stated principle of every role, below |
+| **John:** the package "makes John the only exception who has to give up something as valuable as AP in his own round to arm his role ... it might make John feel weaker"; "His Wrath was to reward his defensive play with powerful attacks. If his defence is boiled by Wrath, how does he gain Wrath? And why 3?" | Round 2's Shield-Up gate and the Wrath break are **dropped**. Wrath goes back to being a reward. John's price becomes position, not AP |
+| **Lucy:** "as the youngest, she follows the attack of whoever she's adjacent to. Feels like a little sister." Why does only John give her an extra ember? What if the target is far, if Shield Dash takes John away, before or after? | Her rule stays; the edge rules are defined; Papa's Shelter opens to the whole family |
+| **Linda:** the filter "makes her placement important and complicated", it shares the problem of melee attackers approaching family, and "we are breaking her role in the player turn ... What happens to 'Mark moves, Linda fires'?" | Her trigger is rebuilt around **cause**: the family moved it, or it came for the family |
+| **Mark:** "I was hoping for exciting new ideas, and got none." | Four new Mark roles, each with its moment; one recommended |
+
+### Three requirements, and where they pull
+
+1. **No role works alone (D-464).** Every trigger needs another Bergson. *"A role is the family answering together."*
+2. **A real decision on the family's turn.** Round 2 asked for it on *the hero's own* turn. Round 3 widens it to the family's turn: the decision can belong to the sibling who sets it up (Mark choosing where to Vault so Linda fires). Both answers must be reasonable.
+3. **The combo feeling (new, from THJ).** One family member's action causes another's role, on either side's turn. Before Synergies, this is where players felt the family fight as one: "another member's action made enemies move and Linda fired", and "Lucy fired after another member's attack".
+
+**Where they pull against each other, plainly:**
+
+| Pair | Tension | How round 3 settles it |
+|---|---|---|
+| 1 and 3 | None: a combo needs two family members by definition | Every combo below passes D-464 for free |
+| 2 and 3 | A combo that fires whenever the family's actions happen to line up is free and incidental: THJ's original "just a click" | The decision is in the **setup** (who moves first, where the setter lands, where the role hero stands); the role is its payoff. Where the line-up is accidental, it's still a free combo: accepted, because the combo feeling is now a requirement |
+| 1 and 2 (John) | John's role always needs an ally anyway; round 2 made him pay AP to arm it, which THJ rejects | His price is where he stands and where the child lands (position), paid only when he presses |
+| 3 and Linda's protection clause | Protection fires on enemies walking at the family, more often than combos, so combos feel less special | Kept, because without it Linda's enemy-turn presence nearly vanishes; cause-only is the option in Q3 |
+
+### Options compared (round 3)
+
+| | **A. As built** (free) | **P2. Round 2** | **R3. Round 3 (recommended)** |
+|---|---|---|---|
+| John | Guards within 2, unlimited | Shield Up gate, Wrath breaks at 3, swap at any range | **Swap at any range, no gate, no break**; Wrath as built |
+| Linda | Any enemy ending in her lines | Ends in her lines next to another Bergson | **The family moved it into her lines, or it ended next to another Bergson** |
+| Lucy | Any family hit within 3 of her | Follows a Bergson beside her | **Same, with defined edge rules; Family Shelter beside anyone** |
+| Mark | Counter for hits on others, within 2 | As built | **The Setter: his counter knocks the attacker off the one it hit** |
+| No role alone (D-464) | Linda and Lucy fire alone (enemies coming for Linda; Lucy needs no one beside her) | Yes | **Yes** |
+| Decision | None | John: AP; others: position | John: his tile and the press; Linda: where her lines cross the setters' pushes; Lucy: beside whom; Mark: where he stands and where the knockback goes |
+| Combo feeling | Strong, incidental | Weakened (Linda's player-turn combo broken, THJ) | **Kept on the player's turn, and new enemy-turn chains (Mark → Linda → Lucy)** |
+| Rules to learn | 0 | +5 −2 | **+4 −2** (count [below](#complexity-round-3)) |
+| Cost | 0 | Readability S–M, John S–M + M, filters S | Readability S–M (unchanged), John swap M (simpler: no gate, no break), Linda's cause S–M, Mark's knockback S–M, Lucy S |
+
+### John (round 3): his price is position
+
+**Rule.** *"When an enemy attacks a family member, John can switch places with them and take the hit, wherever they are."*
+
+- **No Shield-Up gate.** THJ is right that it made John the only hero paying AP to arm a role, on the hero the family leans on most.
+- **No break.** Wrath stays what it is (JO-1, verified): a stack for every guard, and for every hit he takes while Shield Up is armed, max 3, spent by his next damaging ability at +35% each. "Why 3?": 3 is Wrath's existing cap (it keeps the punish at +105% at most). The break at 3 was my reuse of that cap, and THJ's question shows it read as the opposite of a reward. It's gone.
+- **Shield Up stays John's defensive verb, not a gate:** ×0.6 on what he takes (so a guard costs him about 0.3 of the hit instead of 0.5), and his own hits feed Wrath too. Raising it before a guarding turn is good play, never required.
+- **The swap is the price.** Every press moves John to the child's tile and the child to John's. It's paid only when he presses, so it never makes him weaker on his own turn.
+
+**The decision, honestly.**
+
+- **On John's turn: where John stands is where a child will land.** On the front line, beside enemies, a swap drops the child into the fight. Back with the family, the child lands somewhere safe, but John isn't attacking. So the decision is between attacking from the front and covering from behind, and both are reasonable.
+- **At the prompt: press to send the child where John is**, which is safe or not, and to pull John off his post. Or let the hit land.
+- **The swaps limit themselves.** After one swap John stands on a threatened tile, so a second swap would send the next child onto it. Declining that is usually right (S6). No counter is needed.
+
+**Is position enough of a price (THJ's question)?** I think so, for three reasons. Every press has a visible consequence. Pressing is wrong often enough to make it a choice (S6's second prompt). And it costs John nothing he'd otherwise use on his turn. If he still reads as too strong, the levers are once per enemy turn, and ×0.5 → ×0.7 without Shield Up.
+
+**Combos it keeps.**
+
+- **After a swap:** John stands next to the attacker. Blood Debt (already built for guarded hits) and the Wrath he gained pay off on his turn, and the punish lands on the Claw that went for the child. Mark's counter fires on hits on John, because John is "another family member" to Mark.
+- **On the player's turn:** John's Shield Dash push is a family move that can set off Linda's Watch.
+
+**Code: M**, core (`JohnFactionRoleHandler.Activate` on `AEffectSwapper`, `GetCellsInRange` becomes every family member). It's simpler than round 2's J1 to J3 together: there's no mid-action removal of Shield Up's modifier, which was the `Stat_DR` risk the systems critic flagged. John's zone and his cover marker go (no range); the tether (FR-13) stays, at any length.
+
+### Linda (round 3): the family moved it, or it came for the family
+
+**Rule.** *"Linda's Watch fires on an enemy that ends a move in her lines when the family is involved: a family member moved it there, or it ends next to a family member."*
+
+- **Cause: the family moved it.** Any phase. Pushes (Vault, Shield Dash, Mark's counter knockback), Command, the John-Linda Dance's swaps, Toba's swap. Whether the allied Toba counts as "the family" is THJ's call (Q3); I assume yes, since he fights beside them.
+- **Protection: it came for the family.** It ends next to John, Lucy or Mark, at the end of its own move.
+- **Alone, nothing triggers it.** An enemy that walks up to Linda and ends next to her only sets off nothing, so Memory 1 (Linda alone) stays silent and corridors aren't free kill zones (round 2's gains, kept).
+
+**"Mark moves, Linda fires" is back.** A Vault or Command that puts an enemy in her lines fires Watch wherever the enemy ends (S5), which round 2's filter broke.
+
+**THJ's "same problem" point.** The protection clause does make Linda react, like John and Mark, when an enemy approaches the family. I keep it, because the three answers differ in kind:
+
+| Hero | When | How |
+|---|---|---|
+| Linda | Before the hit | Along her lines |
+| John | During the hit | Anywhere, by taking it |
+| Mark | After the hit | Within 2, by knocking the attacker away |
+
+Three family members answering one threat, each their own way, is the USP rather than a duplicate. **Cause-only** (drop protection) is the cleaner combo role and the option in Q3. Its cost is that Linda's enemy-turn Watch then comes almost only from Mark's knockback.
+
+**The decision.**
+
+- **Where Linda stands:** so that her lines cross where the setters will push (Mark's Vault and knockbacks, John's Dash) and where enemies will end next to her siblings.
+- **The order:** let Mark push first so the Watch fires, then finish with her own shot (S5).
+- It's richer than round 2's filter, which is THJ's "important and complicated". The ghost and the End Turn hover from round 2's readability pieces carry it.
+
+**Code: S–M.** `LindaFactionRoleHandler` (core) needs to know who caused a move. D-322 already raises `unitEndMoving` after a swap and a push; whether the event carries the mover is **to check**. If it doesn't, a small "last moved by" record on the moved unit is needed (core, Tier 3).
+
+### Lucy (round 3): the little sister, with edge rules
+
+**Rule.** *"Lucy follows the attack of a Bergson who was beside her when they acted."* As round 2, now with every edge defined:
+
+| Case | Fires? | Why this reads and plays best |
+|---|---|---|
+| John beside her swings his Sword at an enemy within 3 of her | Yes | The core case |
+| **John Shield Dashes away from her side** | **Yes**, if he was beside her when the Dash started, on an enemy the Dash hurt within 3 of her | "Beside her when they acted": the player sees them together and chooses the Dash, and they launch together. Judged after, Lucy would be cut off by the very move that makes the combo |
+| A sibling walks up beside her, then attacks (CR-7's move-then-attack) | Yes | The attack is its own action and starts beside her |
+| **Linda beside her shoots an enemy 4 or more from Lucy** | **No** | Her embers reach 3 (her own attack's reach), so the ghost says "Out of reach" and the preview draws no arc. Plays better than no limit: the combo stays a placement choice, not a free bonus on every one of Linda's shots. The sibling gift below is the lever |
+| A sibling two tiles away attacks | No | Not beside her |
+| Her own attacks, the Linda–Lucy Duo | No | As built |
+| Mark's counter or Linda's Watch on the enemy turn | Yes, if the striker was beside her | The enemy-turn chain (S8) |
+
+**Family Shelter (THJ: "Why does only John reward her?").** *"Beside any family member, Lucy's embers gain a level."* This opens Papa's Shelter (LU-2: +1 ember level beside John; verified as a temporary level in `LucyPassiveAbility_PapasShelter`) to the whole family. Beside John she is also Sheltered (as built; what the Sheltered tag does is **to check**). It's one rule replacing one rule, with no new element, and it gives her placement two reasons to point the same way: follow, and grow stronger.
+
+**Per-sibling gifts** (the flavour option, Q4) instead of one general rule:
+
+| Sibling | Gift beside her |
+|---|---|
+| John | +1 ember and Sheltered (as built) |
+| Linda | Her reach becomes 4, Linda's bow range, so she can follow her sister's arrow ("she follows her sister's aim") |
+| Mark | The enemy she follows up is knocked back 1, as his counter is (the Setter's mark on her) |
+
+That's richer, but it's three rules to learn instead of one. I'd start with Family Shelter, and add the gifts only if the general rule reads flat.
+
+**Code: S.** `LucyFactionRoleHandler` (core) needs the striker's tile at action start; whether `SessionLogs` holds it is **to check**. Papa's Shelter checks "a living Bergson beside her" instead of "John" (not core).
+
+### Mark (round 3): four new roles
+
+Each passes D-464 and creates its own moment. None is a cost on the existing counter.
+
+| | **M-S. The Setter (recommended)** | **M-T. Tag-in** | **M-C. Shared Calm** | **M-R. The Call** |
+|---|---|---|---|---|
+| Rule | *"When an enemy hits a family member within 2 of Mark, he strikes it and knocks it off them."* Fist Blitz, then a 1-tile push directly away from the family member it hit | *"When a Bergson beside Mark kills an enemy, Mark dashes at another within 2."* Free Fist Blitz, on the family's turn | *"Mark's Focus barrier covers the sibling beside him; when a hit breaks it, he strikes back."* | *"When an enemy starts an attack on a family member within 4 of Mark, he calls and they step 1 tile out of reach."* |
+| When | Enemy turn | Family's turn | Enemy turn | Enemy turn, before the hit |
+| The moment | A Claw hits Lucy; Mark slams it off her into Linda's row; her arrow and Lucy's embers follow (S8): **three roles from one hit** | Linda drops the Claw beside him and he's already on the next one: a kill chain across siblings | The Claw's blow shatters on Mark's calm around his sister, and he answers | "Lucy, left!" and the hit lands on air |
+| Real decision | Where Mark stands (within 2) and which side, since that sets where the knockback goes; the family lines up behind the victim | Who kills next to Mark, in what order | Whom to stand beside; his Focus, built by his own Blitzes, spent for family | Where Mark stands (within 4 of the threatened); where the dodge lands |
+| Combo feeling | **Feeds Linda (a family move) and Lucy** | Player-turn chain, like Lucy's | None | Can put a sibling beside Lucy or John |
+| Fit | The monk who already directs the family with Command and Vault | Close to Lucy's follow-up (she follows hits, he follows kills) and to his own Continuous Attack | Uses his existing resource; the barrier visual exists | Overlaps John (protection before the hit) |
+| Cost | S–M. The push effect exists (Vault, Shield Dash). The direction "away from the victim", not from Mark, may need a new option on the push (**to check**). Mark's landing tile must not be the push tile | S–M, a new trigger and phase (core) | M: the barrier on another unit's hits (`IAttributeDecrementHandler` per unit) | M, core: an ally moved during an enemy action (like the swap) |
+
+**M-S, the Setter, is recommended:**
+
+- It turns Mark's counter from damage into a **setup for the others**, on the turn when the family otherwise only reacts.
+- It restores, on the enemy's turn, the "a family move makes Linda fire" combo THJ asked to protect.
+- It's true to Mark's kit: Vault and Command already move enemies.
+- **Direction rule:** directly away from the victim, so the player reads it from the board: the line from Lucy through the Claw is where the Claw goes. If the tile is blocked, it isn't moved (as other pushes do; **to check**).
+
+M-T is the alternative if THJ wants Mark's role on the family's turn (Q5).
+
+*Coordinator, grid check 2026-11-10:* the direction rule ("directly away from the victim") and the Setter's "real decision" row ("where Mark stands … since that sets where the knockback goes") disagree: under the rule, Mark's position doesn't set the direction; the victim's side of the attacker does. S8's last line ("if Mark had stood north of the attacker, the knockback would have gone south") follows the other reading. Pick one: away from the victim (readable from the board; Mark's decision is only "within 2", the family's is "line up behind the victim"), or away from Mark (Mark's side matters; reads less from the victim). Also unchecked in S5 and S8: Watch arrows passing an ally (Mark on 2,3; Lucy on 2,2).
+
+### Complexity (round 3)
+
+| Item | Player learns (+) | Goes away (−) |
+|---|---|---|
+| Roles free | — | Roles spend FTP |
+| John | "He switches places, anywhere" | "Within 2". Round 2's gate and break are gone too |
+| Linda | One sentence with two clauses ("the family moved it, or it came for the family") | "Any enemy in her lines" (as built) |
+| Lucy | "Beside her when they acted" | — |
+| Family Shelter | — (Papa's Shelter, opened to everyone) | "Only beside John" |
+| Mark (M-S) | "Knocks it off them" | — |
+
+That's +4 −2, against round 2's +5 −2. On screen: as round 2's readability pieces (contrast fix, armed badge with reasons, End Turn hover, the "would have fired" ghost, Lucy's preview arc and "+6"), plus the swap beat. The badge's reasons change: no "Shield down"; the new ones are "Nobody beside" (Lucy) and "Out of reach". The knockback uses the existing push visual.
+
+### Paper scenarios (round 3)
+
+Same frames and assumptions as round 2 (prefab reads of 2026-11-09; Claws hit 4-way neighbours; shortest paths; order stated; Tutorial Claw 10 HP, Early 16 HP; hits ≈3 at Tutorial, ≈4 at Early, assumed). Vault: leaps to a cell within 3, and each enemy beside the landing takes 2 and is pushed 1 away from Mark (GDD Mark).
+
+#### S5. The Ridge, turn 1: Mark vaults, Linda fires (the player-turn combo), as built
+
+```grid id=rr3-s5-setter title="S5 The Ridge, round 3: Mark vaults, the push puts 2,4 up Linda's column (GB_s2-ridge)"
+# . . . # # # # # # # # # #
+# c . c # # # # # # # # # #
+# . c . # # # # # # # # # #
+# . . . # # # # # # # # # #
+# . . . . # # # # # # # # #
+# . L M . . . c c . . . . @
+# # . . # # # # # # # # # #
+--
+cells 2,2 2,4 2,5 linda her column
+arrow 3,1 2,3 mark Vault (3)
+arrow 2,4 2,5 mark dx=8 pushed
+arrow 2,1 2,5 linda dx=-10 Watch, then her shot
+step 2,3 1
+step 2,5 2
+note 2,3 Mark lands
+```
+
+| Line | Family's turn | Enemy turn (assumed) | Grade |
+|---|---|---|---|
+| **Vault to 2,3 (drawn)** | Mark Vaults 3,1 → 2,3 (3 away). 2,4, beside his landing, takes 2 (10 → 8) and is pushed north to 2,5: moved by the family, it ends in Linda's column (4 away): **Watch** (8 → 2; quiver 2). Linda's own shot up column 2 kills it (quiver 1). Each has one AP left | 1,5 and 3,5 go for Mark on 2,3. Free neighbours: 1,3, 3,3, 2,4, 2,2. Any that ends on 2,4 or 2,2 is in her column next to Mark: **Watch** (protection), if she still has an arrow. Mark doesn't counter hits on himself | ★ |
+| Vault to 3,4 | 2,4 is pushed west to 1,4 (out of her lines): no Watch. 3,5 beside the landing is pushed north to 3,6: no Watch | The rush strikes Mark | ● |
+| Round 2's filter | The same Vault: 2,5 isn't next to a Bergson, so **no Watch**: THJ's broken combo | | — |
+| **Count** | **1 setter decision** (where Mark lands decides where it goes), **1 player-turn combo prompt**, 0–1 on the enemy turn | | |
+
+#### S6. Memory 3: John's tile is where the child lands (John 1 AP, sisters 0 AP), as built
+
+```grid id=rr3-s6-john title="S6 Memory 3, round 3: free swap at any range, no gate, no break (GB_m3-john)"
+# . . . . . . . #
+# . c . . . c . #
+# c . . c . . c #
+# . . . . . . . #
+# . . . . . . . #
+# . L . J . U . #
+# # # # # # # # #
+--
+arrow 4,4 4,3 4,2 enemy first: John
+arrow 6,5 6,4 6,3 6,2 enemy on Lucy: swap
+arrow 4,1 6,1 john dy=-8 swap 1
+arrow 6,1 4,1 lucy dy=8
+arrow 7,4 7,3 7,2 7,1 enemy re-plans: John
+arrow 2,5 2,4 2,3 2,2 enemy on Linda: swap?
+arrow 1,4 1,3 1,2 1,1 enemy
+step 6,2 1
+step 2,2 2
+note 4,1 Shield Up
+```
+
+| | Round 3 | |
+|---|---|---|
+| Family's turn | John's one AP: **Shield Up** (hinted; now a choice: ×0.6 and his own hits feed Wrath) or a step (choosing his tile, which is where a child would land). No gate: the guard works either way | 1 decision |
+| Enemy turn (order as round 2: (4,4) first, then (6,5), (7,4), (2,5), (1,4)) | (4,4) → 4,2 strikes John (Wrath 1 under Shield Up). (6,5) → 6,2 on Lucy: **prompt 1**. Pressed: John and Lucy swap (4,1 ↔ 6,1), John takes ×0.5 × 0.6: Wrath 2, Blood Debt on that Claw. (7,4) re-plans and strikes John beside it on 6,1: Wrath 3 (**no break: the reward is ready**). (2,5) → 2,2 on Linda: **prompt 2**. Pressing would put Linda on 6,1, between the Claws on 6,2 and 7,1, which strike again next turn: **decline**. Linda takes ≈3. (1,4) → 1,1 strikes Linda: **prompt 3**, the same answer | |
+| The decision inside the turn | Prompt 1 is yes (Lucy lands in the middle, on John's old tile). Prompts 2 and 3 are no (John's tile is now the dangerous one). **The swaps limit themselves** | **2 real presses** |
+| Turn 2 | Wrath 3: Sword ×2.05 (16.4) on the Blood Debt Claw beside him, or a Shield Dash. The reward for having guarded, as THJ meant it | |
+| **Count** | **1–3 prompts** (today 6), **2 of them real choices**. Only John's role fires: Linda's lines have no family-moved enemy and no enemy ending next to a sibling in them; nothing hurts an enemy, so Lucy has nothing to follow | |
+
+#### S7. The River: Lucy's edge rules (John + Lucy), on `rr2-s4-river`'s board
+
+No new grid: the board and positions are round 2's S4 (John 4,3, Lucy 3,3 beside him after their steps; Claws 5,3, 6,4, 6,2).
+
+| Case | Result under round 3 |
+|---|---|
+| John's Sword on 5,3 (8 → 2) | Lucy follows (beside him when he acted; 5,3 is 2 from her): 6, dead. Family Shelter: her own embers are a level up beside him |
+| John Shield Dashes instead, from beside her | She follows if the Dash hurt an enemy within 3 of her, wherever John ends (judged at the Dash's start) |
+| Lucy stops at 2,3 instead (not beside John) | No follow-up; no Shelter. Safer at range: the placement choice |
+| John swaps to guard her on the enemy turn | Nothing to follow: a guard isn't an attack. If Mark's counter or Linda's Watch then answers from beside her, she follows that |
+
+#### S8. The family chain on the enemy turn: Mark knocks it off Lucy, Linda fires, Lucy follows
+
+Tiles from `GB_m2-pile` (prefab coordinates, no offset). **The units are in an assumed mid-fight state** (stated, not the level's start): Linda 1,2, Lucy 2,2 beside her, Mark 3,0, one awake Claw moved to 6,2; the Archer (8,5) and the Claw on 7,1 are as built. Early tier (Claw 16 HP).
+
+```grid id=rr3-s8-chain title="S8 The family chain, round 3: one hit, three roles (GB_m2-pile tiles, assumed mid-fight state)"
+. . . . . . . _ _ _
+. . . . . . . . a _
+. . . . _ _ . . . .
+. . . . _ _ . . . .
+_ L U . . . c . . .
+_ _ . . . . . c . _
+_ _ _ M . . . . . _
+--
+arrow 6,2 5,2 4,2 3,2 enemy dy=-6 hits Lucy
+arrow 3,0 3,1 mark dx=8 counter
+arrow 3,2 4,2 mark dy=6 knocked off her
+arrow 1,2 4,2 linda dy=14 Watch
+arrow 2,2 4,2 lucy dy=-14 follows Linda
+step 3,1 1
+step 4,2 2
+step 2,2 3
+```
+
+| Beat | What happens | Rule |
+|---|---|---|
+| The hit | The Claw on 6,2 runs 5,2, 4,2 to 3,2 (3 steps), next to Lucy, and strikes her (≈4 of 15) | — |
+| 1. Mark | The attacker is 2 from Mark (3,0): **counter**. He dashes to 3,1 (the only free neighbour 1 step from him; **assumed**), Fist Blitz 8 (16 → 8), and knocks it one tile directly away from Lucy, east to 4,2 | M-S |
+| 2. Linda | A family member moved it, and it ends in her row (3 away): **Watch**. The arrow passes Lucy (an ally) and hits it: 6 (8 → 2) | Linda's cause clause |
+| 3. Lucy | Linda was beside her when she shot, and 4,2 is 2 from Lucy: **follow-up**, 6: dead | Lucy's rule |
+| **Count** | **3 prompts from one enemy hit, each set off by the one before**, all three D-464 by construction. The decisions were on the family's turn: Lucy beside Linda in a row, Mark within 2 on the side away from Linda's line. If Mark had stood north of the attacker, the knockback would have gone south, out of her row, and the chain stops at beat 1 | |
+
+#### Round 3 totals
+
+| | Today | Round 2 (P2) | **Round 3** |
+|---|---|---|---|
+| S5 the Ridge, Vault | 1 Watch (incidental) | 0 player-turn combo | **1 setter decision, 1 combo prompt** |
+| S6 Memory 3 | 0 decisions, 6 prompts | 1 hinted, 1–3 prompts | **1 decision, 1–3 prompts, 2 real presses** |
+| S8 the chain | 1–2 prompts (Watch if in lane, Lucy if within 3) | 1 (Watch next to Lucy; Lucy's follow-up) | **3 chained prompts from 2 setup decisions** |
+
+### Recommendation (round 3)
+
+**R3.** Every role is the family answering together (D-464), and roles cost no FTP.
+
+| Hero | Rule | Decision | Combo it keeps |
+|---|---|---|---|
+| **John** | Switches places with the family member under attack, anywhere; no gate, no break; Wrath as built | Where he stands (where the child lands); press or not | Swap → Wrath and Blood Debt → his punish; his Dash push sets off Linda |
+| **Linda** | Watch on an enemy that ends in her lines when the family moved it there or it ends next to a sibling | Where her lines cross the setters' pushes and her siblings' flanks; the order of the turn | **"Mark moves, Linda fires"**, on both turns |
+| **Lucy** | Follows the attack of a Bergson who was beside her when they acted, on an enemy within 3 of her; Family Shelter beside anyone | Beside whom, at 15 HP | **"Lucy fires after another's attack"**, kept for whoever she stands by |
+| **Mark** | The Setter: his counter knocks the attacker directly off the family member it hit | Where he stands, and on which side | **Feeds Linda and Lucy on the enemy turn** (S8) |
+
+Round 2's readability pieces stand (the contrast fix first, the armed badge with reasons, the End Turn hover, the "would have fired" ghost, Lucy's preview). Round 2's per-hero stop rule stands, with John and Mark judged only after their code (the swap, the knockback).
+
+**The test.**
+
+- **House-rule session (THJ, no code, one evening).** Data: `requiredFTP` 0 on the four role components, and `requiredTimeScale` 0 on Linda's and Lucy's roles so their prompts pause and the rules can be judged.
+  - **Linda:** press Watch only when the family moved the enemy into her lines, or it ended next to a sibling.
+  - **Lucy:** press only when the striker was beside her when it acted.
+  - **John and Mark:** can't be house-ruled (the swap and the knockback need code), so play them as built.
+
+  Levels: the Ridge (all-alert as well), the River, The Pile, one M4 or M6 fight. Read-out: round 2's two questions per hero ("did you know why it fired?", "did you ever set it up, or not, on purpose?"), plus one more: "did you feel a combo form between two family members, and on which turn?".
+- **Code, in order** (each behind its own Global Settings toggle, D-463):
+
+  | Order | Chunk |
+  |---|---|
+  | 0 | Contrast fix, and Lucy's preview |
+  | 1 | Readability (badge, hover, ghost); roles free |
+  | 2 | John's swap |
+  | 3 | Mark's knockback |
+  | 4 | Linda's cause rule |
+  | 5 | Lucy's beside rule and Family Shelter |
+
+  After chunks 1–3, a cold player.
+
+### Questions for THJ (round 3)
+
+**Q1. Adopt the three requirements, with the decision allowed to belong to the setter?**
+- Context: D-464 (no role alone), a real decision, and the combo feeling pull against each other where combos fire from accidental line-ups. Round 3 puts the decision in the setup (who moves first, where Mark lands, where Linda stands) and accepts some free combos.
+- Options: (a) yes: the decision may be on the family's turn, by any member; (b) keep "on the hero's own turn" (round 2's bar), which makes Linda and Lucy's combos fail it; (c) drop the decision requirement and judge roles on D-464 and combos alone.
+- Recommendation: (a).
+- Blocked: how the session read-out grades each hero.
+
+**Q2. John: the swap at any range, with no Shield-Up gate and no break, Wrath as built?**
+- Context: your points: the gate made him the only hero paying AP, the break turned his reward into a fuse, and 3 was just Wrath's cap reused. His price becomes where he stands (where the child lands) and leaving his post, paid only when pressing; S6 shows the swaps limiting themselves.
+- Options: (a) swap anywhere, free, unlimited; (b) the same, once per enemy turn; (c) as built (range 2, no swap), free.
+- Recommendation: (a), with (b) as the first lever.
+- Blocked: chunk 2 (the swap tech plan).
+
+**Q3. Linda: "the family moved it, or it came for the family", or cause only?**
+- Context: cause brings back "Mark moves, Linda fires" on both turns (S5). Protection keeps her enemy-turn presence, but it's the "same problem" you named (she answers enemies approaching family, like John and Mark), though before the hit and along her lines. Also: does the allied Toba count as "the family" for the cause (his swap)?
+- Options: (a) cause or protection; (b) cause only; (c) round 2's filter (next to a sibling only).
+- Recommendation: (a), with Toba counting.
+- Blocked: chunk 4; the session's Linda rule.
+
+**Q4. Lucy: Family Shelter for everyone, or a gift from each sibling?**
+- Context: the edge rules (beside her when they acted; her reach 3 from her; a Dash away from her still counts) are defined above and need no answer unless you disagree. The open part is your "why only John": one rule (beside anyone, her embers gain a level) or three gifts (John: the ember and Shelter as built; Linda: reach 4; Mark: her follow-up knocks back).
+- Options: (a) Family Shelter; (b) per-sibling gifts; (c) Papa's Shelter as built.
+- Recommendation: (a) first, (b) if it reads flat.
+- Blocked: chunk 5.
+
+**Q5. Mark: which new role?**
+- Context: four options above, each true to "no role alone": the Setter (his counter knocks the attacker off the one it hit; feeds Linda and Lucy), Tag-in (on the family's turn he follows a sibling's kill), Shared Calm (his barrier covers the sibling beside him), the Call (he makes the threatened member dodge).
+- Options: (a) the Setter; (b) Tag-in; (c) Shared Calm; (d) the Call.
+- Recommendation: (a): it makes Mark the one who sets up the family on their worst turn, true to Command and Vault.
+- Blocked: chunk 3.
+
+**Q6. The session tests only Linda and Lucy; John and Mark are judged after their code. OK?**
+- Context: the swap and the knockback can't be house-ruled. Readability needs a cold player (round 2). FTP stays real (`requiredFTP` 0, logged).
+- Options: (a) session now for Linda and Lucy, code chunks 0–3 in parallel, a cold player after chunk 3; (b) wait and play everything after the code; (c) build John's swap first and play it alone.
+- Recommendation: (a).
+- Blocked: the session date; the tech plans for chunks 0–3.
+
+Grids in round 3, to render: `rr3-s5-setter`, `rr3-s6-john`, `rr3-s8-chain` (new). Round 2's grids are unchanged.
+
+---
+
+*Round 2 follows, as history (2026-11-09).*
 
 ## Why
 
