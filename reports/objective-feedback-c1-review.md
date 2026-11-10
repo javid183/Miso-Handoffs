@@ -39,3 +39,13 @@ Checks: the win line is still struck on screen at the moment of the win (`Update
 Notes: the outro `ShowHUDSequence` risk is still unchecked. Pacing differs between the visible path (one at a time, 1 s apart) and return from hidden (all together). Not checked in Play.
 
 Coordinator follow-up: `ShowHUDSequence` is referenced by `Sequences/Common/OutroCutscene.asset` and `OutroCutsceneKeepGridHidden.asset` (the shared win outros), so the risk is real; sent to the implementer with the two must-fixes.
+
+## Re-review after round 7 (2026-11-10)
+
+(Pasted by the coordinator.)
+
+**Verdict: FIX.**
+
+Must fix: (1) The win line shows unstruck during the outro. `_levelEnded` is set in the frame of the win, so at about 1 s the entry's Defer branch (`ObjectiveEntryUI.cs:116-120`) makes the struck win line plain. The outro's `ShowHUDSequence` then slides the panel back in with the line plain, and `DropAllPendingFeedback` (`ObjectivesPanelUI.cs:159-162, 204-209`) only runs after the slide-in and clears flags without restyling. HEAD showed it struck. Dropped new lines also stay at `HiddenColor`. Fix: `DropPendingFeedback` restores `defaultColor` and calls `UpdateVisuals()` when shown; `ObjectivesPanelUI.Show` drops pending feedback before the slide-in when `LevelEnded`.
+
+Checks: the two earlier must-fixes are done (`ObjectiveEntryUI.cs:119`, `ObjectivesPanelUI.cs:129`). (a) Try Again, level change and sandbox restart unload all scenes and reload `CombatLevelContainerScene`, so the handler is fresh each time; a stale `_levelEnded` is impossible. (b) `_levelEnded` is set in `UpdateObjectives` before `EndLevel` and `UpdateEntries` on win and loss, and also by `EndLevel` and the win cheat; that is before the Defer decision and before any outro ShowHUD. (c) Read-only use of the existing public `IsLevelEnded`; handler unchanged; stateless static property. Pacing on return matches the visible path. No private IDs; LF and BOM as HEAD. Not checked in Play.
