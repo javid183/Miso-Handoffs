@@ -163,6 +163,14 @@ Source: `Content/Levels/Level3/Level3-C1.prefab`, `Generic Levels/Medium/M2/Leve
 
 Source: `SistersTally` feature folder (counting, HUD counter, `SistersTallyResultRow`), `SessionEndPanel.prefab`, `LevelBase.prefab` (excluded-level list), `CombatLevelUIManager` (HUD extra-panel hook).
 
+## The Hearth memories
+
+- **MI-29.** **On `thj/after-hearth`:** the game opens on the Hearth, one mission of four memory levels (Linda, Lucy, John, Mark), each told by a family member and ending on a cutaway. All four levels are tutorial tier, place their own heroes, give no XP, and have **no turn cap**: no objective counts turns and none shows "Turns left". Each memory advances on its objectives alone and is **lost when any Bergson falls** (the defeat condition is "a Bergson is dead, 1 or more", not "all dead"; Lucy's decoy doesn't count). *Built* (D-471 to D-475, D-482 to D-485; played by THJ except the loss rule, still to check in play)
+- **MI-30.** The memories' stages, all queued (MI-18): **Memory 1 (Linda)** has three: kill the Claws in play, "Gather your arrows." (Linda on one tile; completing it plays the cut-in that reveals four more Claws and unlocks Explosive Arrow), then kill the rest. **Memory 2 (Lucy)** has two: stage 1 ends only on two kills (the ten-Claws gag needs them), then stage 2 on every Claw dead. **Memory 3 (John)** has one: four Claws dead. **Memory 4 (Mark)** has three: (1) the Bloom, a Synergy shot, ends when a Bloom Claw dies; (2) two objectives at once, "John: reach the den mouth." and "Defeat the dark claws." (eight named Claws), which plays the Hold (John's lines, a turn reset, three new Claws revealed, the first Duo unlocked); (3) "Clear the den while John holds the mouth.", the three new Claws dead and John still on the mouth, then the outro. *Built*
+- **MI-31.** **Memory 1 starts at 0 FTP.** Its level-start filler drains the pool (-99, clamped to 0), so Linda's Family Role (Watch) can't pay and doesn't fire; the memory has no Watch page, and its one "Moving and AP" page says each shot spends an arrow. Memory 2 opens on a "Fire Embers" page (the player picks a target for each ember; see [Lucy](characters/lucy.md)). Memories 2 to 4 start with FTP full. *Built*
+
+Source: `Content/Levels/Greybox/GB_m1-linda.prefab`, `GB_m2-lucy.prefab`, `GB_m3-john.prefab`, `GB_m4-mark.prefab` (`lObjectives` win groups, the defeat group, `LevelStartFPFiller`), `Resources/Sequences/Hearth/`, the wiring tools in `Features/Onboarding/Editor/HearthMemoryWiring.*.cs`; commits `188bfb025`, `b707cb180`; paper plan [onboarding levels](../../plans/onboarding/2026-10-26-onboarding-levels.md); reports `reports/hearth-memories-c1.md`, `hearth-memories-c2.md`.
+
 ## Deferred and dropped
 
 | Item | State |
@@ -176,6 +184,7 @@ Source: `SistersTally` feature folder (counting, HUD counter, `SistersTallyResul
 
 - **On `main`:** the campaign graph above; no chapters, days or deadline.
 - **On `thj/onboarding`:** the sisters' tally (MI-28).
+- **On `thj/after-hearth`:** the Hearth memories (MI-29 to MI-31).
 - **On `thj/home-test`:** the prologue and moon cycle (MI-26), the Warren's route (MI-15) and Rest Room, retreat, and sortie rewards that differ (PR-25).
 
 ## Open questions

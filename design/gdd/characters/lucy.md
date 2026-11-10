@@ -20,7 +20,7 @@ Source: `Features/Player/Lucy/Prefabs/Unit_Lucy.prefab`.
 
 | Ability | Kind | What it does | AP | Cooldown | Status |
 | --- | --- | --- | --- | --- | --- |
-| Fire Embers | Basic attack | Within 3 cells: a main ember (4 × damage) plus sidewinder embers (3 × damage each) that each pick a target: 1 sidewinder at base, 2 or 3 with Sidewinders, one more when Sheltered. With Lingering Embers, targets Burn. She can target John while his Shield Up is on (Shield Flare) | 1 | 0 | Built |
+| Fire Embers | Basic attack | Within 3 cells: a main ember (4 × damage) plus sidewinder embers (3 × damage each): 1 sidewinder at base, 2 or 3 with Sidewinders, one more when Sheltered. **The player picks a target for each ember** (the main ember too), and the same enemy can be picked more than once; each ember is its own hit on its pick (code, `GetRequiredTargetCount` counts the effects at her upgrade level; play-checked by THJ 2026-11-10; the Hearth's Memory 2 opens on a page that teaches it, [Missions](../missions-structure.md) MI-31). With Lingering Embers, targets Burn. She can target John while his Shield Up is on (Shield Flare) | 1 | 0 | Built |
 | Cyclone | Area | A cyclone on a cell within 3. It lasts 5 turns, moves up to 3 cells a turn toward units and blocks walking; it deals 7 × damage to enemies it reaches or that move into it (×1.2 or ×1.4 with Cyclone Power). Arrows crossing it can split (Tempest Bloom) | 1 | 2 | Built |
 | Blink | Signature (1 SP to unlock) | Teleports to a free cell within 5 and leaves a decoy on her old cell. +1 FTP | 1 | 2 (1 with Rapid Blink) | Built |
 | Cleanse | Shared family ability | 50 × damage to Corruption planted within 1 cell; doesn't hurt units ([Characters](README.md)) | 1 | 1 | Built |

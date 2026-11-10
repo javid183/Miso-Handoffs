@@ -152,7 +152,7 @@ a . _ _ _ . . a
 
 ## The Hearth memory (one mission, four levels)
 
-**Mission rules (all four segments).** Roster: John, Linda, Lucy, Mark fixed (FTP maximum 13; levels place their own heroes). Tier: Tutorial. **All enemies start alert** (`LevelAlertSettings.allEnemiesStartAlert` on every segment except segment 1, whose enemies start Unaware, D-384; no spawns, D-345: cue enemies are placed hidden and come in alert when revealed). FTP: `LevelStartFPFiller` +13 at each segment start (clamped to full). No XP: completion XP 0 **and** kill XP suppressed (A3 to check how; otherwise every Bergson gets its first SP in the memory, PR-6). Abilities used here don't count as seen (D-175, A3). Each segment's win is a **punchline stage** in an any-group with a turn cap, so it can't drag. Each segment's end sequence ends with `OutroCutsceneKeepGridHidden` (see [grid fade](#the-grid-fade-rule-d-131-re-placed)), then the Hearth cutaway (painted still + 2–4 lines).
+**Mission rules (all four segments).** Roster: John, Linda, Lucy, Mark fixed (FTP maximum 13; levels place their own heroes). Tier: Tutorial. **All enemies start alert** (`LevelAlertSettings.allEnemiesStartAlert` on every segment except segment 1, whose enemies start Unaware, D-384; no spawns, D-345: cue enemies are placed hidden and come in alert when revealed). FTP: `LevelStartFPFiller` +13 at each segment start (clamped to full). No XP: completion XP 0 **and** kill XP suppressed (A3 to check how; otherwise every Bergson gets its first SP in the memory, PR-6). Abilities used here don't count as seen (D-175, A3). Each segment's win is a **punchline stage**. **Revised 2026-11-10 (D-471 to D-475, D-482 to D-485, built in `188bfb025` and `b707cb180`): no memory has a turn cap and no objective panel shows "Turns left"; every memory is lost when any Bergson falls** (the defeat condition is "dead ≥ 1", not "all dead"; Lucy's decoy is exempt). Where the segment tables below still say "cap", they describe the older build. Reports: `reports/hearth-memories-c1.md` (incl. Round 2), `reports/hearth-memories-c2.md`. Each segment's end sequence ends with `OutroCutsceneKeepGridHidden` (see [grid fade](#the-grid-fade-rule-d-131-re-placed)), then the Hearth cutaway (painted still + 2–4 lines).
 
 ### Segment 1 · Linda's telling: "Seven Claws. One arrow."
 
@@ -196,22 +196,22 @@ Layout: the den and throat of D-331 (throat 2,1 to 2,4, den 1..3 × 5..7, niche 
 | Item | Plan |
 |---|---|
 | Source | Level1-C1-2, reworked (D-331), then THJ's rework of 2026-11-04 (side room, hidden Claws, three stages, ability unlock). Master: `Content/Levels/Greybox/GB_m1-linda.prefab`, wired by `HearthMemoryWiring.Linda.cs` |
-| Teaches | Basics (select, move, attack, 2 AP, end turn), the pierce, **Linda's Family Role** (Watch), **each shot spends an arrow** and **walking onto arrows picks them up** (stage 2, LI-7), then **Explosive Arrow** (Explosive Crescendo, GDD Linda) on a packed group |
+| Teaches | Basics (select, move, attack, 2 AP, end turn), the pierce, **each shot spends an arrow** (a line on the "Moving and AP" page; **no Watch page and no Watch, 2026-11-10**: the memory starts at 0 FTP so it can't pay) and **walking onto arrows picks them up** (stage 2, LI-7), then **Explosive Arrow** (Explosive Crescendo, GDD Linda) on a packed group |
 | Twist | The tall tale grows: once she has "gathered her arrows", the telling remembers four more Claws in the side room and hands her the tool to brag with |
 | Squad | Linda on 1,0 (quiver 3, full at level start, LI-3, LI-10). **Explosive Arrow and Encore start locked** (`LevelAbilityLock`, hidden from her bar, D-373) and unlock in the cut-in |
 | Enemies | 7 Dark Claws, Tutorial, no XP (D-376). In play: **A 2,6 ≈ 14, B 2,7 ≈ 6, C 2,9 ≈ 2** (HP factor overrides 1.4583 / 0.625 / 0.2083 on the default 10). Hidden group `hidden`, saved inactive (D-377): **6,7 / 7,6 / 7,8 / 8,7**, the four tiles next to the empty 7,7, default HP 10 |
 | Turn order | Per-enemy `turnOrder`, as THJ set it (D-374, D-380); lower acts first (`AIFactionBrain` sorts by `TurnOrder`, verified). **B 0, C 1, A 2.** Hidden: 8,7 not overridden (prefab default, assumed 0), 7,6 and 7,8 both 1 (tie, order not fixed until G5), 6,7 2 |
-| Turn budget | Caps 2 / 3 / 4, one per stage (D-377) |
-| Win / loss | Three queued stages (`queueWinGroups`), each "objective **or** its cap", every objective with a condition of its own (D-375): **(1)** "Eliminate all dark claws." or cap 2 (cap hidden). **(2)** "Gather your arrows.": Linda stands on **2,7** (`UnitTileOccupiedLOCondition`) or cap 3 (hidden); completing it plays the cut-in. **(3)** "Eliminate remaining claws. {alive_0} left." or cap 4, shown as "Turns left in the memory: {remaining_0}." Loss: the template's (family down) |
+| Turn budget | **None (2026-11-10).** The caps 2 / 3 / 4 of D-377 are gone: each stage ends on its objective alone |
+| Win / loss | Three queued stages (`queueWinGroups`), one objective each, no cap (D-375, D-471 to D-475): **(1)** "Eliminate all dark claws." **(2)** "Gather your arrows.": Linda stands on **2,7** (`UnitTileOccupiedLOCondition`); completing it plays the cut-in. **(3)** "Eliminate remaining claws. {alive_0} left." No "Turns left" line. **Loss: any Bergson falls** (D-485; was: family down) |
 | The cut-in (stage 2 done) | `Memory1Linda_Interruption_SequentialSequence`: input off, HUD hidden → camera to 7,7 → LSB call "reset" (`CurrentPhaseManipulationAction` **Reset**: a fresh player turn, D-384) → reveal group `hidden` (0.6 s) → Linda: "No matter how many I took out. More kept coming." · "But they were no match for the power of my explosive arrows." → camera back → unlock Explosive Arrow + Encore → input and HUD back |
-| First trigger | **Watch:** the first Claw that ends its move in her row or column once the Claws are awake (they start Unaware, below). **Explosive Arrow:** right after the cut-in its button pulses until first use (`GuidedAbilityHint`, WhenUnlocked, D-380, D-382). From 2,7 the room's centre 7,7 is 5 in a row, inside its reach of 5, and its blast (the cell and the 4 next to it) covers all four hidden Claws. **Encore** pulses while her quiver is empty and Encore is usable (G3; never while locked) |
+| First trigger | **No Watch (2026-11-10, D-473):** the memory starts at 0 FTP (the level's `LevelStartFPFiller` is -99, clamped to 0), so her Role can't pay and the pool shows empty. **Explosive Arrow:** right after the cut-in its button pulses until first use (`GuidedAbilityHint`, WhenUnlocked, D-380, D-382). From 2,7 the room's centre 7,7 is 5 in a row, inside its reach of 5, and its blast (the cell and the 4 next to it) covers all four hidden Claws. **Encore** pulses while her quiver is empty and Encore is usable (G3; never while locked) |
 | The punchline | End sequence: Linda **"Seven Claws. One arrow."** (D-384: a brag, true or not, whatever the player hit), grid fade, then the cutaway: Lucy "That's not how it went!" · Linda "That's exactly how it went." · Margaret "Then you tell it, Lucy." |
-| Cues | Level start: Margaret "Eldest first. Linda."; two panels (Moving and AP; Watch, with "Each shot spends an arrow.", D-333). The cut-in above. No spawn |
+| Cues | Level start: Margaret "Eldest first. Linda."; **one panel** (Moving and AP, with "Each shot spends an arrow." after the AP cost line; the Watch page is gone). The cut-in above. No spawn |
 | Alert | **Enemies start Unaware** (`allEnemiesStartAlert` off, D-384): the one memory segment that differs from the mission rule. Linda starts 7+ from every Claw, so they wake only when she stops within 3 or hits them. The revealed four are 4+ from 2,7 and come in asleep; the blast wakes them |
-| FTP | Topped up (13) |
+| FTP | **Drained to 0 at level start (2026-11-10)**, not topped up |
 | Drops / clue | None |
-| Fallback | Every stage moves on at its cap: the three in-play Claws not dead by its cap → stage 2 anyway; 2,7 not reached by its cap → the cut-in plays anyway; stage 3 ends the telling at its cap. An empty quiver is answered by walking onto her arrows (stage 2's lesson) and, after the cut-in, by Encore's pulse |
-| To check | Played OK by THJ (2026-11-04, `aff7dabec`); not re-counted on paper: the old A-B-C maths assumed A acts first, and with B first a waking B can slip round A through the den and lead down the throat (6 HP in front of 14). Explosive Arrow's 8 (GDD, before stats) against the hidden Claws' 10. Whether a later stage's cap can already be met when the stage starts (review question) |
+| Fallback | No caps: no stage moves on by itself (the stage-3 end needs every Claw dead). An empty quiver is answered by walking onto her arrows (stage 2's lesson) and, after the cut-in, by Encore's pulse |
+| To check | Played OK by THJ (2026-11-04, `aff7dabec`); not re-counted on paper: the old A-B-C maths assumed A acts first, and with B first a waking B can slip round A through the den and lead down the throat (6 HP in front of 14). Explosive Arrow's 8 (GDD, before stats) against the hidden Claws' 10. (The cap question no longer applies: caps are off.) Play check open: 0 FTP with the bar empty, and the any-death loss |
 | Time | ~3 min plus the cut-in (estimate, not timed) |
 
 ### Segment 2 · Lucy's telling: "There were at least ten!"
@@ -245,17 +245,18 @@ Build lines (C3 step 0): no `level camera` (the 10 × 3 tiles fit one view, so i
 | Item | Plan |
 |---|---|
 | Source | Showcase A / chunk 1; room 2 lengthened to 6 tiles |
-| Teaches | **Fire Embers** (the sidewinder picks its own target) and **Cyclone** (blocks walking, drifts, 7 on contact). One kit, two halves of one lesson: "stay out of reach" |
+| Teaches | **Fire Embers** (she picks a target for each ember: the main ember and the sidewinder; the same enemy can be picked twice; a "Fire Embers" page at level start, 2026-11-10, D-474) and **Cyclone** (blocks walking, drifts, 7 on contact). One kit, two halves of one lesson: "stay out of reach" |
 | Twist | The narrator's "ten", then Linda corrects it: ten Claws appear, Linda says "Two.", eight fade out (they were the exaggeration), Lucy says "Four." and two more arrive. Four Claws in the fight |
 | Squad | Lucy |
 | Enemies | 2 Dark Claws in play (3,3 and 4,2; in-play HP 6), 12 placed hidden (default Tutorial HP 10, no kill XP bonus; D-345: no spawns): group `ten` = 9,3 / 9,1 (stay) + 6..8 × 1..3 except 6,2 (8 fade out); group `four` = 10,2 / 10,3. 4 Claws in the fight |
-| Turn budget | 3 (cap 4) |
+| Turn budget | **None (2026-11-10).** No caps; the "turn 2" and "turn 4" outs below are gone |
 | First trigger | No Role, Synergy or Duo (she's alone). Turn 1: two Fire Embers on 3,3: main ember + sidewinder on 4,2, twice → both dead |
-| Interruption | **Stage 1** (2 enemies dead, or turn 2 reached) → `SequentialSequence`: freeze, camera to room 2, reveal group `ten` (D-345: no spawns in the memory) → Lucy: "Then ten more!" → Linda, at the hearth: "Two." → the 8 on the fading tiles fade out (0.8 s; no death, XP or kill count; they leave the board, the tiles are free) → Lucy: "Four." → reveal group `four` at 10,2 / 10,3 → camera back (D-457 to D-459). 4 Claws remain (9,3, 9,1, 10,2, 10,3), 7+ tiles from her, so they reach the throat's far mouth on enemy turn 1 |
-| Turn 2 | Cyclone in the throat (4,2): nothing passes; it drifts into them (7 each); embers finish. **Win stage 2:** all dead or turn 4 reached |
+| Start page | After Lucy's opening line and before input returns: a "Fire Embers" page (the player picks each ember's target; at base she throws a main ember and one sidewinder). Shown once, not in the interruption |
+| Interruption | **Stage 1** (ends only on 2 enemies dead; the gag needs them) → `SequentialSequence`: freeze, camera to room 2, reveal group `ten` (D-345: no spawns in the memory) → Lucy: "Then ten more!" → Linda, at the hearth: "Two." → the 8 on the fading tiles fade out (0.8 s; no death, XP or kill count; they leave the board, the tiles are free) → Lucy: "Four." → reveal group `four` at 10,2 / 10,3 → camera back (D-457 to D-459). 4 Claws remain (9,3, 9,1, 10,2, 10,3), 7+ tiles from her, so they reach the throat's far mouth on enemy turn 1 |
+| Turn 2 | Cyclone in the throat (4,2): nothing passes; it drifts into them (7 each); embers finish. **Win stage 2:** all dead (no cap). **Loss: any Bergson falls** (Lucy's decoy is exempt) |
 | Alert | All start alert (the hidden Claws come in alert when revealed) |
 | FTP | Topped up |
-| Fallback | If the Cyclone isn't found by turn 3, the Claws come through; she still wins at Tutorial damage. No guided action |
+| Fallback | If the Cyclone isn't found, the Claws come through; she still wins at Tutorial damage (and loses if she falls). No guided action. A player who kills nothing never triggers the interruption |
 | To check | Does an ember fly over a Cyclone? What does the Cyclone drift toward (level-chunks To check 2)? |
 | Time | ~2.25 min (+0.4 cutaway before) |
 
@@ -295,7 +296,7 @@ Build lines (C3 step 0): no `level camera` (the 7 × 6 tiles fit one view).
 | Twist | The sisters steal kills and bicker in barks (enemy-death bark graph); John at the end: "You both did." Neither accepts |
 | Squad | John, Linda, Lucy (both sisters 2 tiles from John: inside his Shield reach, not next to him, so Papa's Shelter stays for the River) |
 | Enemies | 5 Dark Claws (D-393; was 4), Tutorial (HP 10) |
-| Turn budget | 3 (cap 3, D-393) |
+| Turn budget | **None (2026-11-10):** the cap 3 of D-393 is gone; the win is 4 dead, no "Turns left" line; the memory is lost when any Bergson falls |
 | First trigger | **John's Shield on enemy turn 1 (D-350, revising D-349).** The four Claws start beside the sisters (1,1 and 2,2 by Linda, 6,2 and 7,1 by Lucy). Player turn 1: John has 1 AP and the sisters 0, so the only useful act is the hinted Shield Up; on enemy turn 1 the Claws attack without moving, so Watch has nothing to fire on; John's Role takes the hits (tether drawn, FR-13), Wrath stacks. Without Shield Up the Role still takes them, with no stacks |
 | The punish | Turn 2: a Wrath ×1.7 Sword (13.6) kills a Claw outright (10 HP); a Wrath Shield Dash (6.8 each, pushed) is the better read. Lucy's follow-up and Linda's Watch will fire too (already met; not taught here). **Win stage:** 3 enemies dead or turn 3 reached |
 | Cues | Level start: one panel; John's line "Stay where I can reach you." Kill barks. End: "You both did." |
@@ -306,6 +307,8 @@ Build lines (C3 step 0): no `level camera` (the 7 × 6 tiles fit one view).
 | Time | ~2.75 min (+0.4 cutaway) |
 
 ### Segment 4 · Mark's telling: "And then I arrived"
+
+**Revised 2026-11-10 (`188bfb025`, THJ's design D-471, D-482 to D-484): the stages table, the win/loss, turn budget and fallback rows and the `Hold` row below are updated to the new ending; the rest of the section is the 2026-11-06 sync.** The grid block is unchanged (start tiles; no grid re-render needed). New ending in one line: stage 2 is "John reaches the mouth" plus "defeat THJ's 8 Claws", then `Hold` (John's lines, a turn reset, the three `top` Claws revealed, the first Duo unlocked), then stage 3 "clear the den while John holds the mouth", then the outro; no caps; any fallen hero loses it.
 
 **As built, synced 2026-11-06.** Branch `thj/onboarding`. `Content/Levels/Greybox/GB_m4-mark.prefab` and `Resources/Sequences/Hearth/Memory4Mark/` are the master (D-405, D-417); this section records them and proposes nothing. Read from the YAML; not played for this sync. The reasoning is in the [rework plan](2026-11-05-m4-mark-rework.md) (D-398); the first tuning round is in [the review](../../reports/m4-mark-thj-tweaks-review.md), though the prefab has changed since. Every line and objective text, in playback order, is in the narrative draft: [Memory 4 as in the game](onboarding-narrative-draft.md#memory-4-as-in-the-game-synced-2026-11-06).
 
@@ -366,14 +369,14 @@ The block shows the start tiles: everything scripted before the player's first c
 | Twist | John holds the den mouth (6,5) against two pools while Lucy and Mark go up to the cub. Mark's boasts come after the player has done the thing |
 | Squad | All four, on: Lucy (3,1), Linda (3,2), John (4,2), Mark (14,2). Mark is visible from the start (D-400). Turn-1 AP cap: Linda 1, the others 0 (`TurnStartActionPointLimit`) |
 | Enemies | 15 Dark Claws, Tutorial tier, see the table below. Two pools, `CP_Spawner_Hearth`, on (-1,4) and (3,7), with specific turns 1 to 8 |
-| Turn budget | Caps by stage, see the stages table. Expected: the Bloom turn, then one full turn after the reset, then clean-up |
+| Turn budget | **None (2026-11-10):** no stage has a cap. Expected: the Bloom turn, the arrival and clearing turns, then the fresh turn after the Hold's reset for the Duo |
 | First triggers | **Synergy, turn 1:** Linda on (3,2) shoots up column 3 across the gap (3,3) into the Cyclone on (3,4). **Continuous Attack, after the reset:** Mark Blitzes (12,2), 2 away, and the QTE takes (10,2), 2 away. **Duo, once John has played the hold:** from (8,5) all six stage-3 Claws are within 4: (8,7) 2, (9,6) 2, (7,7) 3, (9,7) 3, (9,8) 4, (10,7) 4 |
-| Win / loss | Three queued stages, below. Loss: not overridden in the prefab, so the template's |
+| Win / loss | Three queued stages, below, no caps. **Loss: any Bergson falls** (the defeat condition "dead ≥ 1", D-483/D-485; Lucy's decoy is exempt). A scripted hero death (a pool spawning next to Linda, Mark's arrival fight) now ends the memory too: play check |
 | Cues | See the sequence table below. `levelStarted` tops up FTP, then plays `Bloom` |
 | Locks and hints | All Duos and Cleanse are locked on all four heroes (`LevelAbilityLock`). Linda's **Explosive Arrow is locked until the Bloom is over** (D-408: unlocked with no pulse, first step of `PostBloom`). Mark–Lucy unlocks in `Hold`, alone (`UnlockAbilitiesSequence`, `unlockAll` off). Pulses (`GuidedAbilityHint`): Linda's primary attack on turn 1; the Mark–Lucy Duo from its unlock until used |
 | Alert | All start alert (`LevelAlertSettings`) |
 | FTP, XP, clue | `LevelStartFPFiller` fills all four (99, so full). All 15 placed Claws have `lethalDamageXpBonus` 0. `LevelStartRunUpgradeGrant` gives `RU_LindaLucyCycloneSpreadUnlock` for the level. No drops, no clue |
-| Fallback | Every stage moves on at its cap. Nothing warns of the cap: no objective shows the turns left |
+| Fallback | None: no caps, so a stage waits for its objectives. Stage 3 needs John on (6,5): if he is displaced or killed (a death loses the memory) the stage waits until he is back |
 | Assets | Mother and cub are scenery placeholders under `Memory Scenery`: mother over (8,9), cub over (7,9), no cell under either (the drawing's 9,9 and 8,9). `motherFalls` swaps the mother for `Mother (fallen)` |
 | Time | ~4.7 min (+0.4 cutaway): the rework's paper estimate, not timed since the tuning |
 
@@ -389,15 +392,15 @@ The block shows the start tiles: everything scripted before the player's first c
 | By the mother, visible | (9,8) 8, (10,7) 8 | From the start | Stage 3 |
 | `top`, hidden | (8,7) 7, (9,7) 7, (9,6) 7 | `Hold` | Stage 3 |
 
-**Stages** (`queueWinGroups` on; `evaluationMode` 0 throughout). A cap is `TurnReachedLOCondition`: turns elapsed since the stage started, not the level's turn number.
+**Stages** (`queueWinGroups` on; `evaluationMode` 0 throughout). **No stage has a turn cap (2026-11-10).** The stage-3 and stage-2 rows below replace the 2026-11-06 ones (caps 1, 2 and 4; "Cut the reinforcement path."; "Kill the dark claws near the cub." plus "Hold the den mouth with John.").
 
 | Stage | Done when | Visible text | On complete |
 |---|---|---|---|
-| 1 Bloom | Any of (1,4), (5,4), (3,5), (3,6) dead, **or** cap 1 | None (both objectives hidden) | `Arrival` |
-| 2 Hold | John on (6,5), **or** cap 2 (hidden) | "John: Cut the reinforcement path." | `Hold` |
-| 3 Save | **Both:** all 6 Claws dead ((9,8), (10,7), (8,7), (9,7), (9,6), and the one that started on (6,4)) or cap 4; **and** John on (6,5) or cap 4 | "Kill the dark claws near the cub." and "Hold the den mouth with John." | Win, then the outro `End` |
+| 1 Bloom | Any of (1,4), (5,4), (3,5), (3,6) dead | None (hidden) | `Arrival` |
+| 2 Hold and clear | **Both objectives** (group `All`, each `Reevaluate`, so each ticks on its own and John stepping off unticks his): **A** John on (6,5); **B** THJ's **8 Claws** dead, listed by start tile: (9,8), (10,7), (6,4) (walks to (7,7)), Mark's pair (10,2) and (12,2), Bloom Claws (5,4), (1,4), (3,5). Not listed on purpose: Bloom (3,6), the den's west Claw, the `left` group, pool Claws | A "John: reach the den mouth." B "Defeat the dark claws." | `Hold` |
+| 3 The Duo | **One objective, both conditions:** the three `top` Claws (8,7), (9,7), (9,6) dead **and** John on (6,5) | "Clear the den while John holds the mouth." | Win, then the outro `End` ("She held on until we reached her.") |
 
-So with the six dead, the level still waits for John on the mouth or the cap. Stage 3 starts only after `Hold` has revealed `top`.
+Stage 3 starts only after `Hold` has revealed `top`; left-side and pool Claws can stay alive and don't block it.
 
 **Sequences,** in play order. Common steps are shortened: `Bloom`, `Arrival` and `Hold` open with input off and HUD hidden and close with input on and HUD shown.
 
@@ -407,12 +410,12 @@ So with the six dead, the level still waits for John on the mouth or the cap. St
 | `Bloom` | Level start | **John's gesture** (`APTransfer`, facing up), his line to Lucy, back to idle. `CastAbilitySequence`: Lucy casts the Cyclone on (3,4). Lucy's line. **Lucy runs to (8,3).** John's line to Linda. Input on |
 | `Arrival` | Stage 1 complete | The boast lines, then `PostBloom`, then camera to (6.25, 1.75), reveal `arrival`, the arrival lines, phase reset (LSB `reset`), camera on Mark (7.25, 1.75), input on, **`SelectUnitSequence` selects Mark** (D-415, D-416) |
 | `PostBloom` | Inside `Arrival` | Unlock Explosive Arrow, camera to (1.5, 2.5), reveal `left`, Claw (6,4) → (7,7), Claw (0,4) → (2,4), Claw (3,7) → (3,5), John's two lines, **John walks to (7,2)** |
-| `Hold` | Stage 2 complete | John's line, camera to (4.5, 4), reveal `top`, unlock Mark–Lucy, the Duo lines, camera to (4.25, 2.75), input on |
+| `Hold` | Stage 2 complete | John's lines ("I'll hold them off. You save them." · "Here they come."), **turn reset** (LSB `reset`, `Memory4Mark_Hold_ResetTurn`: a fresh player turn with AP refilled), camera to (4.5, 4), reveal `top`, unlock Mark–Lucy, the Duo lines, camera to (4.25, 2.75), input on |
 | `End` | Outro, on the win | Input off, camera to the ledge (4, 4.75), LSB `motherFalls`, Mark's two lines, Lucy walks to (7,8), Mark walks to (8,8), the cub lines, grid fades out, the cutaway, keep-grid-hidden step |
 
 The Claw moves find their unit by tile (`findUnitByTile`). A move that can't reach its destination cancels with a warning (D-404). `Memory4Mark_Bloom_CameraToDen` is in the folder but in no sequence.
 
-**Open** (none decided here):
+**Open** (none decided here). Since 2026-11-10 the caps are off, so the items below about a win or walk "at a cap" and John's 6 steps against stage 2's cap no longer apply. Still open: the displaced `top` reveal (a hero standing on a `top` tile pushes the Claw to a free neighbour, maybe outside the Duo's safe block), the any-death loss during scripted moments, and stage 3's need for John on (6,5).
 
 - **Win at a cap:** when a stage wins on its cap, every objective shows as Success on the end panel, though the conditions weren't met.
 - **John's gesture:** D-419 says Hold Last Frame, but `Memory4Mark_Bloom_John_UnitAnimationSequence.asset` still has `mode: 2`, Loop.
@@ -449,6 +452,8 @@ Without punchline endings (option A) the Hearth runs ~20+ min.
 ## The search
 
 ### The River (John + Lucy)
+
+> **Superseded** (2026-11-10) by [`2026-11-09-onboarding-after-hearth-design.md`](2026-11-09-onboarding-after-hearth-design.md). Kept as the first paper version.
 
 ![s1-river](onboarding-levels/s1-river.svg)
 
@@ -492,6 +497,8 @@ level tier tutorial
 | Time | ~6 min |
 
 ### The Ridge (Linda + Mark)
+
+> **Superseded** (2026-11-10) by [`2026-11-09-onboarding-after-hearth-design.md`](2026-11-09-onboarding-after-hearth-design.md). Kept as the first paper version.
 
 ![s2-ridge](onboarding-levels/s2-ridge.svg)
 
@@ -538,6 +545,8 @@ level tier tutorial
 The design rigs The River for Linda's and Mark's weapons, which assumes the River is played first. The order is the player's choice, so each pair mission drops the materials for **the other pair's** weapons: the River drops Timber + Fabric (Crescent Bow, and Mark's slot, see Q2), the Ridge drops Steel 2 (Ancestral Sword, Pyromancer's Ring). Each pays Gold 20 (two level-1 upgrades at 10 Gold; the wallet starts empty, PR-2). The second trip's drop sits unused until later; that's fine.
 
 ### M2 · The Trail
+
+> **Superseded** (2026-11-10) by [`2026-11-09-onboarding-after-hearth-design.md`](2026-11-09-onboarding-after-hearth-design.md). Kept as the first paper version.
 
 **Mission rules.** Roster: Lucy, Linda fixed + John or Mark (D-172). Levels: trailhead → mission map → "Follow the blood" **or** "Follow the tracks" → the pile. Tier: Early. Items: Health Potion 2, Family Trinket 1. FTP: **drained to 0** at the trailhead (`LevelStartFPFiller` with −99, clamped). Alert: default.
 

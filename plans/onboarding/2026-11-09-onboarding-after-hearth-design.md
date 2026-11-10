@@ -108,6 +108,8 @@ THJ: the Hearth feels like a tutorial and that is OK. Changes are small.
 
 ### Memory 4: John holds the mouth, the first Duo finishes it (D-471)
 
+> **As built (2026-11-10, `188bfb025`; THJ's hand edits, D-482 to D-484):** THJ's version replaced the table below. Stage 1 Bloom (no cap) → **stage 2 has two objectives**, "John: reach the den mouth." (John on (6,5)) and "Defeat the dark claws." (**8 Claws**: (9,8), (10,7), (6,4), Mark's pair (10,2) and (12,2), Bloom Claws (5,4), (1,4), (3,5)) → `Hold` (John's lines, then a **turn reset** so the Duo gets a fresh turn, camera, the three `top` Claws revealed, the Duo unlocked) → **stage 3 needs John on (6,5) too**: "Clear the den while John holds the mouth." (the three `top` Claws dead **and** John on the mouth) → outro "She held on until we reached her." No caps; **any fallen hero loses the memory** (all four memories, D-485). Full detail: the [paper levels' Memory 4 section](2026-10-26-onboarding-levels.md#segment-4--marks-telling-and-then-i-arrived). The table and paper check below are the design as proposed. Open from the play check: a hero on a `top` tile pushes a revealed Claw to a free neighbour, and stage 3 waits if John is displaced.
+
 THJ's design, by level data, no new code. Coordinates are **prefab cells** (the paper grid draws them at x + 1; see the [paper levels' Memory 4 section](2026-10-26-onboarding-levels.md#segment-4--marks-telling-and-then-i-arrived)). No grid in this plan changes for Memory 4: the prefab is the master and edited by hand.
 
 **Reading of D-471:** its "stage 1" is read as the first stage after the Bloom. The Bloom stays as its own opening stage (no cap) and plays `Arrival` as built. If THJ meant the Bloom stage to go too, only the first row below changes.
