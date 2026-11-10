@@ -76,4 +76,4 @@ Compile / EditMode (known red only) / `miso-reviewer` (editor code + prefab) / T
 
 ## Commit log
 
-(empty)
+- C1 `188bfb025` (incl. THJ's hand edits: 8-Claw stage 2, John in stage 3, Hold turn reset; stage 2 split in two; lose on any fallen Bergson).
