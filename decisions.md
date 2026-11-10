@@ -6,6 +6,7 @@ Rows D-001 to D-011 were carried over on 2026-10-15 from the Home handoff and pr
 
 | Date | ID | Tier | Scope | Decided by | Decision | Why | Affects |
 | --- | --- | --- | --- | --- | --- | --- | --- |
+| 2026-11-10 | D-488 | 3 | all | THJ | Met-objective pulse made more visible: scale ~1.2 over ~0.4 s plus a brief colour flash on the line; values exposed as inspector fields | THJ: the 8% pulse wasn't visible enough | Objective feedback C1 |
 | 2026-11-10 | D-487 | 3 | all | THJ | Memory result lines (won panel): Linda "Seven Claws. One arrow."; Lucy "Alone, outnumbered, on fire. Obviously."; John "Not one of them got to my girls."; Mark "Her fire, my fists. The cub came home." | All as recommended | Objective feedback C2; narrative draft AH-6 to AH-9 |
 | 2026-11-10 | D-486 | 3 | all | THJ | The three tech plans (objective feedback, Synergy aim preview, Home flow) are approved and dispatch in that order after the Hearth memories | As recommended | `plans/onboarding/2026-11-10-*-tech.md` |
 | 2026-11-10 | D-485 | 3 | all | THJ | Memories 1–3 also lose when any Bergson falls (same rule as Memory 4), built in chunk C2 | One rule across the Hearth | Hearth memories C2 |
