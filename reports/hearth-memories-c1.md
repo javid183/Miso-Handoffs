@@ -96,3 +96,86 @@ None.
 5. On completion: John says "I'll hold them off. You save them." then "Here they come.", the camera pans to the den, three Claws appear on (8,7), (9,7), (9,6), the Mark–Lucy Duo unlocks and pulses, and Mark and Lucy's lines play.
    - Also try ending stage 2 with Mark or Lucy standing on one of those tiles: a Claw should slide onto a free cell next to it.
 6. Objective: "Kill the dark claws near the cub." Fire the Duo, kill the three, and the memory wins even with left-side Claws and pool Claws still alive. The outro says "She held on until we reached her."
+
+---
+
+## Round 2 (after THJ's hand edits; D-482 to D-484)
+
+Outcome: done. THJ's edits stand. Wiring and tests now follow his prefab. Play check still open.
+
+### Memory 4 structure now (prefab read back after the edit)
+
+| Stage | Objectives (group `All`) | On complete |
+|---|---|---|
+| 1 Bloom | hidden: any Bloom Claw dead (1,4), (5,4), (3,5), (3,6) | `Arrival` |
+| 2 Hold and clear | **A** "John: reach the den mouth.": John on (6,5), `Reevaluate`. **B** "Defeat the dark claws.": THJ's 8 Claws dead (`All`, `Reevaluate`), listed by start tile: (9,8), (10,7), (6,4) (walks to (7,7)), Mark's pair (10,2) and (12,2), Bloom Claws (5,4), (1,4), (3,5). Not listed, on purpose: Bloom (3,6), the den's west Claw, the `left` group, pool Claws. | `Hold` (THJ's order, unchanged: John's lines → **ResetTurn** → camera up → reveal `top` → unlock Duo → Duo lines → camera back → input/HUD on) |
+| 3 The Duo | One objective, THJ's version unchanged: "Clear the den while John holds the mouth." = the three `top` Claws dead AND John on (6,5) | none → win → outro `End` |
+| Lose | the existing defeat condition (`LivingUnitsLOCondition`, Bergsons) changed from "alive ≤ 0" to **"dead ≥ 1"** (`NotExist`, `GreaterThanOrEqual`, 1) | standard defeat → Try Again |
+
+### What changed in round 2
+
+- `GB_m4-mark.prefab`, edited in the editor (Unity MCP `LoadPrefabContents` + `SerializedObject`). I diffed it against a copy saved just before the edit. Only these overrides moved:
+  - Stage 2's single objective split in two. Objective A keeps THJ's John condition. Objective B holds his 8-Claw condition: the same object, re-assigned, so it has a new managed-reference id but the same 8 entities.
+  - The defeat condition's `state`, `comparisonStrategy` and `count`.
+  - Untouched: stage 1, stage 3, the Hold sequence, the reset step, units, groups.
+- Lose rule. The existing defeat group was enough; no new condition type and no runtime code.
+  - Dead units stay in the faction controller's `OwnedUnits`, which is never pruned, so `_dead` counts them.
+  - Units tagged `EntityState.IgnoreObjective` are skipped. Lucy's decoy carries that tag, so it doesn't trigger a loss.
+  - Lost goes through the same defeat path as before (all dead), so Try Again is unchanged. **Not checked in play.**
+  - Memories 1 to 3 still have "all Bergsons dead" (read, not changed). That is C2's or THJ's call.
+- `HearthMemoryWiring.Mark.cs`:
+  - `HoldObjectiveText` is replaced by `HoldJohnObjectiveText` / `HoldClawsObjectiveText`.
+  - `SaveObjectiveText` is now THJ's stage 3 text.
+  - `HoldStageClaws` is THJ's 8 tiles (`TopVisibleClaws` + den east Claw + `ArrivalClaws` + the first three `BloomClaws`), with a comment on the Claws left out.
+  - Summary comment updated.
+- `HearthMemoryWiring.Mark.Level.cs` (retired `WireStages`):
+  - Stage 2 is built as two objectives.
+  - Stage 3 is built as one objective with both conditions (`TopClawsDeadAndJohnOnTheDenMouth`).
+  - The defeat group gets "any of the family falls" (`AnyOfTheFamilyFalls`).
+  - John's condition is split into a fill helper (`FillJohnOnTheDenMouth`) so it can be the second condition.
+  - The C1 helper `JohnOnTheDenMouthAndClawsDead` is gone.
+  - Not run.
+- `HearthMemoryWiring.Mark.Sequences.cs`: the Hold builder adds `BuildCall("Memory4Mark_Hold_ResetTurn", ResetCallId)` after John's lines, as in the Arrival.
+- `HearthMemoryMarkTests.Flow.cs`:
+  - The stage tests are rewritten: `StageTwoShowsJohnOnTheDenMouthAndTheClawsAsTwoObjectivesAndPlaysTheHold` and `StageThreeWinsWhenTheThreeRevealedClawsAreDeadWithJohnOnTheDenMouth`.
+  - New test `TheMemoryIsLostWhenAnyOfTheFamilyFalls`.
+  - The stage-count test allows two objectives per stage.
+  - The hidden-unit test lets stage 2 count the `arrival` group, which the Arrival reveals before stage 2 is first checked. Nothing else hidden is allowed.
+  - Stage 3 no longer uses `.Single()` on the first condition.
+  - The Hold test expects the reset step between John's lines and the camera, calling `reset`.
+
+### Acceptance (round 2)
+
+- [x] Stage 2 has two objectives in the same stage (group `All`), each with one condition, so each ticks on its own. Tested.
+- [x] Stage 3 is THJ's version, unchanged. Tested.
+- [x] Lose when any Bergson falls. Data plus test. **Not verified in play**, nor Try Again after it.
+- [x] Wiring and tests synced to the prefab. Mark tests 33/33.
+- [x] Full EditMode suite: 1764 tests, 1763 passed, 1 failed: `AIRegressionTest.Baseline_MatchesCurrentAI` (known red, 42 check failures, untouched).
+
+### Risks (round 2)
+
+- With "dead ≥ 1", any hero death now ends Memory 4 at once. That includes deaths during scripted moments: pools spawning next to Linda, Mark's arrival fight.
+- The objective panel text for stage 2 is two separate lines now. Check how each ticks in play.
+- More orphaned override lines past the array sizes in the prefab (harmless, as in round 1).
+
+### Proposed commit (replaces the round 1 list)
+
+1. `feat(onboarding): Mark's memory ends on John holding the den mouth, a fresh turn and three new Claws for the first Duo; lost if any of the family falls`. Files:
+   - `miso/Assets/_Project/Content/Levels/Greybox/GB_m4-mark.prefab`
+   - `miso/Assets/_Project/Resources/Sequences/Hearth/Memory4Mark/Memory4Mark_Hold_SequentialSequence.asset`
+   - `miso/Assets/_Project/Resources/Sequences/Hearth/Memory4Mark/Memory4Mark_Hold_ResetTurn.asset`
+   - `miso/Assets/_Project/Resources/Sequences/Hearth/Memory4Mark/Memory4Mark_Hold_ResetTurn.asset.meta`
+   - `miso/Assets/_Project/Resources/Sequences/Hearth/Memory4Mark/Memory4Mark_Hold_John_DialogNodeSequence.asset`
+   - `miso/Assets/_Project/Resources/Sequences/Hearth/Memory4Mark/Memory4Mark_End_Mother_DialogNodeSequence.asset`
+   - `miso/Assets/_Project/Features/Onboarding/Editor/HearthMemoryWiring.Mark.cs`
+   - `miso/Assets/_Project/Features/Onboarding/Editor/HearthMemoryWiring.Mark.Level.cs`
+   - `miso/Assets/_Project/Features/Onboarding/Editor/HearthMemoryWiring.Mark.Sequences.cs`
+   - `miso/Assets/_Project/Features/Onboarding/Editor/HearthMemoryMarkTests.Flow.cs`
+
+   Leave THJ's unrelated files out (`AIFactionBrain.cs`, `AIUnitBrain.cs`, `PreloadScreen.unity`, `ProjectSettings/*`, TMP fallback font).
+
+### How to see it (round 2)
+
+1. Play Memory 4. After the Arrival, the panel shows two lines: "John: reach the den mouth." and "Defeat the dark claws.". Each ticks on its own; John stepping off the mouth unticks his.
+2. When both are done: the Hold plays with a fresh turn for the Duo. Stage 3 reads "Clear the den while John holds the mouth.".
+3. Let any hero die at any point: the memory is lost at once. Try Again restarts it.
