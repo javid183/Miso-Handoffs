@@ -2,7 +2,7 @@
 
 Size: M    Tier: 3 decided (D-466 to D-475)    Assigned to: miso-implementer
 Branch: `thj/after-hearth` (scope all; D-465)
-Status: approved (THJ chose "chunks 1–2 + tech plans", 2026-11-10)
+Status: done (THJ chose "chunks 1–2 + tech plans", 2026-11-10)
 
 ## Why
 
@@ -77,3 +77,4 @@ Compile / EditMode (known red only) / `miso-reviewer` (editor code + prefab) / T
 ## Commit log
 
 - C1 `188bfb025` (incl. THJ's hand edits: 8-Claw stage 2, John in stage 3, Hold turn reset; stage 2 split in two; lose on any fallen Bergson).
+- C2 `b707cb180` (caps off, any-death loss in Memories 1–3, Memory 1 without Watch, Lucy's Fire Embers page).

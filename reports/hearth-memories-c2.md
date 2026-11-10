@@ -102,3 +102,14 @@ None.
 2. Memory 1 (Linda): after Margaret's line one page, "Moving and AP", with four bullets including "Each shot spends an arrow."; no Watch page. FTP bar is empty; Watch never offers. The objective panel never shows "Turns left in the memory". Stages move on kills, then Linda reaching the gather tile, then the last Claws. Let any hero die: the memory is lost.
 3. Memory 2 (Lucy): the grid fades in, Lucy's line, then the "Fire Embers" page, then control. Attack: pick one target per ember, try the same Claw twice and check it takes both hits. Kill two Claws: the ten, "Two.", fade, "Four." gag plays as before. No turn count, no turn ending the stage.
 4. Memory 3 (John): one stage, "Defeat four Claws: x of 4.", no turn count. A fallen hero loses it.
+
+---
+
+## Should-fixes (after review)
+
+Done, no data or prefab changes:
+1. The lose tests (`TheMemoryIsLostWhenAnyOfTheFamilyFalls` in Linda, Lucy and John, and `NoMemoryEndsOnATurnCountAndEveryOneIsLostWhenAnyOfTheFamilyFalls` in Levels) now also assert the condition's `factionRef.entityID` is "Bergsons" (read through the serialized property, since `factionRef` is protected). A slip to "Enemy" fails.
+2. The Levels test also asserts the defeat condition's managed-reference id is not among the win-group condition ids, for each of the four memories.
+3. The merged `<summary>` lines in `HearthMemoryWiring.John.cs`, `.Linda.cs` and `.Lucy.cs` are re-wrapped like the surrounding lines.
+
+Full EditMode suite: 1772 tests, 1771 passed, 1 failed: `AIRegressionTest.Baseline_MatchesCurrentAI` (known red). The commit file list is unchanged (same files).
