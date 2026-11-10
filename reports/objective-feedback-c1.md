@@ -72,3 +72,11 @@ main, when this branch merges.
 - Correction: `AudioStorage.asset` was hand-edited YAML, 4 lines added (not 3); valid, and the placeholder reuses the `A_UI_Click` clip GUID. THJ swaps the clip in the inspector.
 - Full EditMode run: 1781 total, 1780 passed, 1 failed = known `AIRegressionTest.Baseline_MatchesCurrentAI`.
 - Changed files in this round: `ObjectiveEntryUI.cs`, `ObjectivesPanelUI.cs`, `ObjectiveFeedbackRules.cs`, `ObjectiveFeedbackRulesTests.cs` (same single proposed commit). Not checked in Play.
+
+## Round 3 (pulse not visible enough)
+
+- `ObjectiveEntryUI`: pulse is now scale 1.2 over 0.4 s (out and back) plus a gold flash (`metFlashColor`, default 1.0/0.82/0.3) at the same time. Serialized fields `metPulseScale`, `metPulseSeconds`, `metFlashColor`; the prefab stores none of them, so the new defaults apply and THJ can tune them in the inspector.
+- The struck line is coloured by rich-text tags, so a text colour tween would be overridden. The flash instead re-tints the tag colour from the line's colour (success or failure) to gold and back, so the line ends in its normal strikethrough colour.
+- New `StopPulse()` (kills the tween, restores scale 1 and the strikethrough colour) runs when a new pulse starts and on disable; destroy kills the tween.
+- Hidden-panel rule and the 9 rule tests unchanged. Full EditMode run: see result line below.
+- Files: `ObjectiveEntryUI.cs` only. Not checked in Play.
