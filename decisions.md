@@ -6,6 +6,8 @@ Rows D-001 to D-011 were carried over on 2026-10-15 from the Home handoff and pr
 
 | Date | ID | Tier | Scope | Decided by | Decision | Why | Affects |
 | --- | --- | --- | --- | --- | --- | --- | --- |
+| 2026-11-10 | D-476 | 3 | all | THJ | Build order start: the implementer does the Hearth memories first (Memory 4, then Memories 1–3; data, one writer at a time, THJ play-checks each); meanwhile the coordinator writes the tech plans for objective feedback + result line, the Synergy aim preview and Home | As recommended | `plans/onboarding/2026-11-10-hearth-memories-tech.md` |
+| 2026-11-10 | D-475 | 3 | all | THJ | Memory 4 keeps the Tempest Bloom stage first (as built, no cap); D-471's paired objective is the stage after it | Confirms the designer's reading | After-Hearth plan, Memory 4 |
 | 2026-11-10 | D-474 | 3 | all | THJ | John gets no Memory 0 for now (may revisit) | Alone he can't show his role; Hearth on target | `plans/onboarding/2026-11-09-onboarding-after-hearth-design.md` |
 | 2026-11-10 | D-473 | 3 | all | THJ | Memory 1: drain Linda's FTP now (data) so Watch can't pay; Memory 3's John-only roles wait for the Family Roles redesign (against the recommendation to leave both to the redesign) | THJ's call; accepts the empty-meter risk, undone if the redesign lands | `plans/onboarding/2026-11-09-onboarding-after-hearth-design.md`, `HearthMemoryWiring.Linda` |
 | 2026-11-10 | D-472 | 3 | all | THJ | Home visit 1 gets the handover scene at the door (clue line, go-between joke, Ben's line into the Workshop pick), playing only after the first pair mission | The scene 'two go, two stay' promises | `plans/onboarding/2026-11-09-onboarding-after-hearth-design.md`, Home tech plan |
