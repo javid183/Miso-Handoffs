@@ -64,3 +64,11 @@ One per chunk; each runtime extraction in the same commit as its preview (they o
 
 - C1 `79e7ced64`: THJ dropped lanes (D-492): each copy is a faint ghost of the real projectile (pooled SpriteRenderer, alpha/scale/ring/lift/drift inspector fields) at a ring around the relaying unit, rotated to its flight; ground target icons show the landing. Sorted on the relayer's body layer at its order + offset, all in front (D-493; far-side-behind toggle off). WorldUI is unlit by the scene's 2D light, so lit sprites go black there. `ShieldFlareGeometry` extracted from `JohnShieldRelay`. Presenter `SynergyLanePresenter` (generic ghost requests) placed by `Tools/Synergies/Place Synergy Lane Presenter`.
 - C2/C3 to be reshaped the same way (ghosts, no lanes) — ask THJ before dispatch.
+
+## C2 / C3 revised (D-494, THJ, 2026-11-10)
+
+Replaces the C2/C3 bullets above where they differ.
+
+- **C2 Bloom:** 'on' = Linda's aimed lane passes a Cyclone (Bloom unlocked). On: hide her lane tiles past the Cyclone (keep Linda → Cyclone), show the copies' lanes from the Cyclone in her lane-tile look (the glowing bow tiles) with the animated ground chevrons (the blue >>> by her feet) along each; off: her real lanes return. HP preview on every enemy a copy hits (missing today), same falloff/reach as the bow. Geometry from the shared helper extracted from `LucyCycloneProjectileScatter`.
+- **C3 Catch & Return:** Linda → Mark lane and chevrons as built; animated ghost arrows in Mark's colours running back from Mark along the return lane; HP preview on the return's hits in a second colour (the catch is a QTE), reusing whatever Lucy's Fire Embers multi-step preview uses for its colour.
+- **Core risk:** Linda's lane tiles, the chevrons and the HP bar colours may be drawn by core code (`PlayerController`, `AbilityDamagePreview`, grid highlighting). Investigate first; if hiding/adding lane tiles or a second HP colour needs a core change, stop and bring it to THJ (Tier 3).
