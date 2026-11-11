@@ -112,7 +112,7 @@ Source: THJ's C3 play (`playtests/2026-11-11-trail-c3-play.md`), the balance des
 
 ### Acceptance criteria
 
-1. All four Trail blocks in `design/level-chunks.md` (owner: designer; coordinator routes the one-word change) read `level tier standard`; the four `GB_m2-*` prefabs are rebuilt from them and rewired (`Tools/Onboarding/Wire Search: Trail`, idempotent: second run, no diff). Prefab `enemyTier` = Standard on all four.
+1. All four Trail blocks in `plans/onboarding/2026-11-11-post-hearth-challenge-design.md` (owner: designer; edited 2026-11-11) read `level tier standard`; the four `GB_m2-*` prefabs are rebuilt from them and rewired (`Tools/Onboarding/Wire Search: Trail`, idempotent: second run, no diff). Prefab `enemyTier` = Standard on all four.
 2. Follow the tracks: the two Claws and the turn-2 pair have no HP override (16 HP at Standard); the Black Claw's HP factor is 0.75 (30 HP). No other level has an HP override.
 3. `Lucy_Cyclone_Effect_AttrMod` damage factor 7 → 3. Cooldown unchanged (2). The dead Linda-folder copy and the orphaned `PassByEffect_AttrMod` are not touched.
 4. `SearchTrailTests` asserts literals: tier Standard on all four levels; Tracks overrides (none on Claws, 0.75 on the Black Claw); the Cyclone asset's factor 3.
