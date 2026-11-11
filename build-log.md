@@ -2662,3 +2662,10 @@ Core gets one additive, generic `CombatLog.AddCustom`.
 - Verified: EditMode 1853/1854 (known AI red only); review APPROVE (3 rounds); THJ play check OK.
 - Not verified: multi-cell (boss) targets past a Cyclone.
 - Status: committed `22a3d1dc0`, `9054a0fea`.
+
+## 2026-11-11 · Synergy aim preview C3, Catch & Return (thj/after-hearth)
+
+- Built: catch preview (>>> on Mark's tile toward Linda, return damage in the pink second colour, works alongside the Bloom); catch checks extracted to pure rules.
+- Verified: EditMode 1872/1873 (known AI red only); review APPROVE (4 rounds); THJ play check OK.
+- Not verified: lanes blocked before Mark (assumed clear, as Bloom).
+- Status: committed `6cdd53f33`, `d13e76155`. Synergy aim preview complete.
