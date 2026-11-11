@@ -6,6 +6,7 @@ Rows D-001 to D-011 were carried over on 2026-10-15 from the Home handoff and pr
 
 | Date | ID | Tier | Scope | Decided by | Decision | Why | Affects |
 | --- | --- | --- | --- | --- | --- | --- | --- |
+| 2026-11-11 | D-511 | 3 | all | THJ | Post-Hearth challenge design revision 2 approved (Tracks "the bell" with a Black Claw leader; Pile without the Archer; Blood reach two of you; turn-2 arrivals; HP per level); build it as M2 plan C3 | THJ: "approved, write the C3 plan and build it" | `plans/onboarding/2026-11-11-post-hearth-challenge-design.md`; M2 tech plan C3 |
 | 2026-11-11 | D-510 | 3 | all | THJ | Follow the tracks is redesigned: the two perch Archers and the arrow-budget puzzle go ("those archers are not good"; Encore is already taught earlier); Encore's cue question is moot | Against the recommendation (move the cue) | Challenge design, Tracks |
 | 2026-11-11 | D-509 | 3 | all | THJ | Late arrivals: two Claws revealed at the start of turn 2 on the tracks and blood routes, with camera and bark, a full player turn before they act, never next to the start tiles | As recommended | Challenge design Q3 |
 | 2026-11-11 | D-508 | 3 | all | THJ | Follow the blood becomes a reach level: two Bergsons on the end tiles win; kill-all stays as a hidden fallback | As recommended | Challenge design Q2 |

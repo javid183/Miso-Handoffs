@@ -72,3 +72,34 @@ Docs: after build — design plan as-built note + `design/gdd/missions-structure
 ## Gates
 
 Compile clean / EditMode (known red only) / `miso-reviewer` (editor code + tests) / THJ play check: Trailhead → each route → Pile, a win played through (M2 win path; check FTP full, Duo hidden, alert, Pile reveal on the search tile) / docs above.
+
+---
+
+## C3 · The challenge rebuild (D-511)
+
+Status: approved by THJ 2026-11-11 (D-505 to D-511); in progress.
+Design: `plans/onboarding/2026-11-11-post-hearth-challenge-design.md` **revision 2** (blocks `m2-trailhead`, `m2-tracks`, `m2-blood`, `m2-pile`; the River and Ridge blocks are out of scope, chunk 4). Text: working lines from `reports/m2-trail-c3-lines.md` (`miso-narrative`), revisited at the line pass (D-504 precedent). Assigned: `miso-implementer` (sonnet). Base: `e3a45983b`.
+
+### Acceptance criteria
+
+All four levels:
+- [ ] Rebuilt from the revision-2 blocks with the grid tool, then **Wire Search: Trail**; a second wiring run changes nothing.
+- [ ] HP factors: Trailhead, Blood, Pile Claws ×1.0 (no override); Tracks Dark Claws ×0.8, Black Claw ×0.5. No other overrides.
+- [ ] All enemies alert, revealed ones too; sisters' Duo locked; FTP full; no Pass-by/Items panels (unchanged from C1).
+- [ ] Every "late arrival" is a hidden group revealed by a stage that completes at the **start of the family's turn 2** (before input): onComplete = input off → camera to the group → reveal → bark → camera back → input on. If `TurnReachedLOCondition` 2 completes at a different moment, use the closest existing way and report it; stop and report if it needs runtime code.
+
+Per level:
+- [ ] **Trailhead:** 12 × 2, rock 6,0; Lucy 3,1, Linda 4,1, slot 3,0; Claws 0,1, 1,0 (behind) and 8,1, 9,1 (ahead). Opening camera shows both pairs; the pick's bark ("Behind us!" working line) at the start, after the existing intro lines. Win = defeat all → mission map.
+- [ ] **Follow the tracks ("the bell"):** 10 × 5, rocks 4,3 and 6,1; Linda 0,2, Lucy 1,2, slot 0,1; Black Claw (`Unit_BlackClaw`) 7,2; Dark Claws 5,2, 8,0; hidden `pack` 9,3, 9,1 revealed at turn 2 with camera + bark. The Black Claw's first-appearance close-up (EN-10, as built) shows with its intro line, and the pick's bark ("That big one leads them." working line) plays at the start. The old Archer/Encore stages are gone. Win = defeat all.
+- [ ] **Follow the blood:** 20 × 5 per the block; Linda 0,1, Lucy 1,1, slot 0,0; Claws 4,2, 9,3, 9,0, 14,2; hidden `gullies` 4,4, 14,4 revealed at turn 2 with camera + bark. Objective line "Follow the blood. Two of you, to its end." Win group: `TilesOccupiedLOCondition`, player faction, `AggregationMode.AtLeast` 2 of 18,1 / 19,1 / 19,0 (the wiring's `Tiles()` helper gets an aggregation parameter) **or** every enemy dead, the second **hidden from the objectives panel**. If the panel can't hide one objective without runtime code, stop and report (don't build a workaround). Opening camera on the end tiles (`level camera 18,1`), then back. Reaching the end plays the clue close-up line, then the win. "Her blood." intro stays.
+- [ ] **The Pile:** 11 × 6 per the block; Lucy 3,5, Linda 4,5, slot 5,4; pile props on 4,2–5,3; search = any Bergson on 3,3 or 6,3 → Lucy's "No white fur… she's not here." (D-504) → reveal `west` (1,4, 1,0) and `east` (9,3, 10,1); no Archer; Claws ×1.0. Outro unchanged.
+- [ ] Reveal on an occupied tile: find what `HiddenLevelUnits.Reveal` does (skip / shift / fail) and report it; if it fails silently, make the wiring choose free reveal tiles only if the tool already supports that, otherwise report.
+- [ ] `SearchTrailTests` updated to the new layouts and rules (positions, factors, hidden groups and turn-2 stages, Blood's AtLeast-2 objective and hidden fallback, Tracks' Black Claw, Pile without the Archer). Full EditMode suite: all pass except the known red `AIRegressionTest.Baseline_MatchesCurrentAI`.
+
+### Out
+
+The River and the Ridge (chunk 4), Cyclone changes, runtime or core code (stop and report if needed), new UI, the rematch / "stays home" lines (C2), deleting old unreferenced assets (list them).
+
+### Gates
+
+Compile clean / EditMode (known red only) / `miso-reviewer` / coordinator reads the report / THJ's timed play of M2 with each pick, both routes (win path; to-check rows 3, 4, 5, 7, 8, 9 of the design are play checks) / docs: GDD `missions-structure.md` M2 rows, `level-chunks.md` knobs, 11-09 plan sections marked superseded (designer); narrative draft lines (narrative); build log (coordinator).
