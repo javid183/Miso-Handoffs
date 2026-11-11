@@ -23,3 +23,13 @@ Notes
 - Duo arrow (Linda–Lucy) and Mark's catch are not previewed.
 - Single commit acceptable; optionally split the extraction.
 - No AI-regression impact.
+
+## Re-review after round 2
+Verdict: APPROVE.
+
+- Back-skip fix: the real split reads "back" from the shooter's cell to the Cyclone's cell along the main axis (LucyCycloneProjectileScatter.cs:58-64), the same helper the preview uses (Bloom.cs:214). Straight lanes give 3 copies. Both whitelisted arrows (LindaAttackArrow, LindaAttackFireArrow) are owned by Linda, including the Duo (UnitsCooperationHandler.cs:621-625); she doesn't move while her arrow flies. Fallback to projectile.Direction only with no shooter cell (doesn't happen today). Mark's returned copies never split.
+- Give-back on hover-out (SynergyLanePresenter.cs:107-109), redraw in LateUpdate; listener order no longer matters; approach-preview transitions traced both ways. Possible glow-animation restart on cell change: play check.
+- Caching: shot re-read every frame; range list and count in the lane key. Unit dying/moving with the same shot stays stale until next hover (doesn't happen during the player's aim).
+- WouldScatter null guards fine. Tests behavioural; trigger shooter lookup untested (MonoBehaviour), minor.
+- No core edits, no private IDs, LF no BOM.
+- Suggest two commits: (1) scatter fix + TempestBloomGeometry + tests, (2) preview.
