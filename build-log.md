@@ -2641,3 +2641,10 @@ Core gets one additive, generic `CombatLog.AddCustom`.
 - Verified: EditMode 1803/1804 (known AI red only); review APPROVE after 8 rounds; THJ play check OK.
 - Not verified: real clips (placeholders = click).
 - Status: committed `736a39325`.
+
+## 2026-11-10 · Objective feedback C2 (thj/after-hearth)
+
+- Built: `LevelResultLine` (Core/UI/Runtime/SessionEndPanel, not core-list) shows one line instead of objective rows on a win; four Hearth memory lines (D-487) via `Tools/Onboarding/Wire Hearth Result Lines` + Linda/Lucy/John tools.
+- Verified: EditMode 1815/1816 (known AI red only); review APPROVE; THJ play check OK.
+- Findings: green Success tag shows beside the line (THJ: remove later); readability should-fix at `MissionEndPanelUI.cs:188` open.
+- Status: committed `089bd17af`, `2001fef06`.

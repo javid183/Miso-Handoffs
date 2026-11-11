@@ -56,3 +56,4 @@ C1 one commit; C2 code + tests, then the Hearth level data.
 ## Commit log
 
 - C1 `736a39325` (tick/pulse/flash/sound; deferred to HUD return after cut-ins incl. the strikethrough (D-489, D-490); new lines fade in with flash + own sound (D-491); nothing after a win or loss).
+- C2 `089bd17af` (component + panel + wiring tools + tests), `2001fef06` (four Hearth memory prefabs). Lines live in `HearthMemoryWiring.ResultLines.cs` (master) and on each level root's `LevelResultLine`.
