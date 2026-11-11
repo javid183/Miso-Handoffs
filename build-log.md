@@ -2655,3 +2655,10 @@ Core gets one additive, generic `CombatLog.AddCustom`.
 - Verified: EditMode 1833/1834 (known AI red only); review APPROVE (4 rounds); THJ play check OK.
 - Not verified: two-pick persistence (ghosts follow the hovered pick only); fireball blocked before John.
 - Status: committed `79e7ced64`.
+
+## 2026-11-11 · Synergy aim preview C2, Tempest Bloom (thj/after-hearth)
+
+- Built: Bloom preview in Linda's lane look (other lanes dark, copy lanes lit, one >>> each, HP bars on copy hits); real Bloom fixed to 3 copies (back copy skipped).
+- Verified: EditMode 1853/1854 (known AI red only); review APPROVE (3 rounds); THJ play check OK.
+- Not verified: multi-cell (boss) targets past a Cyclone.
+- Status: committed `22a3d1dc0`, `9054a0fea`.
