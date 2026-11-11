@@ -2669,3 +2669,11 @@ Core gets one additive, generic `CombatLog.AddCustom`.
 - Verified: EditMode 1872/1873 (known AI red only); review APPROVE (4 rounds); THJ play check OK.
 - Not verified: lanes blocked before Mark (assumed clear, as Bloom).
 - Status: committed `6cdd53f33`, `d13e76155`. Synergy aim preview complete.
+
+## 2026-11-11 · M2 The Trail rebuilt (after-Hearth chunk 3)
+
+**Built:** the four Trail levels rebuilt from the after-Hearth design's `m2-*` grid blocks (one-turn Trailhead fight; both routes reworked; The Pile with a tile search, Lucy's working line, then hidden west/east groups revealed). All enemies alert, sisters' Duo locked, no FTP drain, Pass-by/Items panels and the rear wave removed; Claw factor 0.6, Archer 0.25. `Wire Search: Trail` and `SearchTrailTests` updated. Commit `e3a45983b` (shared repo, `thj/after-hearth`). Plan `plans/onboarding/2026-11-11-m2-trail-levels-tech.md`.
+**Verified:** compile clean; EditMode 1875/1876 (known AI red only); wiring idempotent; review APPROVE; THJ played both picks and both routes to a win.
+**Not verified:** nothing open on the build itself.
+**Findings:** THJ: no challenge ("all HP"); the first volley decided every fight (`playtests/2026-11-11-trail-rework-play.md`). Starts-alert Claw prefab has no repair path.
+**Status:** base committed; challenge redesign in design (D-505).

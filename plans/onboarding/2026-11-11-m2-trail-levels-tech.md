@@ -2,7 +2,7 @@
 
 Size: L (data + editor wiring, no runtime code)    Tier: 2 (tech choices; design approved D-466 to D-475, order D-501)    Assigned to: `miso-implementer` (sonnet)
 Branch: `thj/after-hearth` (onboarding content; counts as `all` once merged)
-Status: approved 2026-11-11 (D-503); C0 done (ids renamed, grids re-rendered and identical to the 11-10 checked drawings); C1 in progress
+Status: C1 committed `e3a45983b` (2026-11-11, D-506) as the base; challenge redesign follows (D-505, `plans/onboarding/2026-11-11-post-hearth-challenge-design.md`). C2 text still open.
 
 ## Why
 

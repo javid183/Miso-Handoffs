@@ -91,3 +91,11 @@ none (onboarding content on this branch)
 2. Play the M2 mission: Trailhead (one-turn fight, FTP shows full, Linda-Lucy Duo not on the bar), map opens, pick a route, then the Pile.
 3. Pile: walk any Bergson to 4,5 or 5,5 (goal tiles lit); Lucy says the relief line, then the west lane and east perch appear alert; defeat all for the tally outro.
 4. Re-run Tools > Onboarding > Wire Search: Trail: nothing should change in `git status`.
+
+## Follow-up: Blood win test
+
+- Changed only `miso/Assets/_Project/Features/Onboarding/Editor/SearchTrailTests.cs` (LF, no BOM, as before). The Trailhead win assertions moved into a private helper `AssertOneStageFightWonByDefeatingEveryEnemy(levelPath)`. The existing test calls it with the Trailhead, and the new test `FollowTheBloodIsAOneStageFightWonByDefeatingEveryEnemy` calls it with `BloodPath`.
+- It asserts one win group, queued groups off, one objective, a `LivingUnitsLOCondition` on faction Enemy with count 0.
+- If the condition were missing, the slot's managed reference would be null, its type name empty, and `StringAssert.EndsWith("LivingUnitsLOCondition")` would fail. Reasoned, not run.
+- Both tests pass. After recompile the full EditMode suite ran 1876 tests: 1875 passed, 1 failed, and the failure is the known red `AIRegressionTest.Baseline_MatchesCurrentAI`.
+- Console after recompile: no compile errors. Only the usual warnings (CS0108, CS0618, CS0414), serialization-depth notices and the Bond test logs.
