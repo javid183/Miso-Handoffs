@@ -136,7 +136,7 @@ cells 8,1 9,1 enemy ahead: reach Linda now
 arrow 4,1 8,1 linda dy=-8 Explosive, then the bow
 arrow 3,0 1,0 mark dy=8 the pick turns round
 level name The Trailhead
-level tier early
+level tier standard
 level alert all
 level deploy 3,0
 ```
@@ -173,7 +173,7 @@ arrow 1,2 7,2 linda dy=-8 the trap: the pierce reaches the leader
 note 4,3 rock
 note 6,1 rock
 level name Follow the tracks
-level tier early
+level tier standard
 level alert all
 level deploy 0,1
 level hidden pack 9,3 9,1
@@ -185,7 +185,7 @@ level hidden pack 9,3 9,1
 | Why this route | Contrast with the blood route. Blood asks *where do you go* (tempo against safety, a reach goal). Tracks asks *who takes the hits* (whose HP pays), with defeat-all as the goal |
 | Question | Strike the leader with the one who can take it, or never strike it until the rest are gone? |
 | Squad | Linda 0,2, Lucy 1,2, the pick 0,1 (deploy) |
-| Enemies | **Black Claw** 7,2, ×0.5 (20); Dark Claws 5,2 and 8,0, ×0.8 (13). **Hidden:** Dark Claws 9,3, 9,1, revealed at the start of turn 2 (stage "turn 2 reached", onComplete camera + bark + reveal). All alert, Early. 72 HP in all |
+| Enemies | **Black Claw** 7,2, ×0.75 (30); Dark Claws 5,2 and 8,0, no override (16). **Hidden:** Dark Claws 9,3, 9,1, no override (16), revealed at the start of turn 2 (stage "turn 2 reached", onComplete camera + bark + reveal). All alert, Standard. 94 HP in all (D-516) |
 | The call (EN-1, built) | Any ability used on the Black Claw makes every Dark Claw within 5 of it (eight-way) target the user through their next turn. All four Dark Claws, the late pair included, start within 5 of 7,2 (5,2: 2; 8,0: 2; 9,3: 2; 9,1: 2) |
 | Threat on turn 1 (verified) | 5,2 is 4 from Lucy: it walks to 2,2 and hits her. 8,0 (9 from the nearest hero) and the Black Claw (6 from Lucy) arrive; the Black Claw on 3,2 or 4,2 ends in Linda's row within 4: **Watch prompts on it**, and pressing rings the bell on Linda. The press is the player's (FR-2: a missed or declined press costs nothing) |
 | Decision turn | **Player turn 2.** The leader is near, the late pair has just appeared inside its call, and every hit on the leader now pulls four Claws onto whoever lands it |
@@ -224,7 +224,7 @@ note 16,1 choke
 arrow 5,1 8,1 mark dy=-8 Vault
 note 5,0 Cyclone seals the trail behind
 level name Follow the blood
-level tier early
+level tier standard
 level alert all
 level deploy 0,0
 level hidden gullies 4,4 14,4
@@ -264,7 +264,7 @@ cells 3,3 6,3 note search (either tile)
 arrow 4,5 1,4 linda dy=8 Explosive west
 arrow 6,4 9,3 linda dy=-8 Explosive east
 level name The Pile
-level tier early
+level tier standard
 level alert all
 level deploy 5,4
 level hidden west 1,4 1,0
