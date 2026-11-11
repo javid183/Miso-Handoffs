@@ -59,3 +59,8 @@ Compile / EditMode / review per chunk / THJ play check per chunk / docs: GDD `co
 ## Proposed commits
 
 One per chunk; each runtime extraction in the same commit as its preview (they only work together), tests with it.
+
+## As built / commit log
+
+- C1 `79e7ced64`: THJ dropped lanes (D-492): each copy is a faint ghost of the real projectile (pooled SpriteRenderer, alpha/scale/ring/lift/drift inspector fields) at a ring around the relaying unit, rotated to its flight; ground target icons show the landing. Sorted on the relayer's body layer at its order + offset, all in front (D-493; far-side-behind toggle off). WorldUI is unlit by the scene's 2D light, so lit sprites go black there. `ShieldFlareGeometry` extracted from `JohnShieldRelay`. Presenter `SynergyLanePresenter` (generic ghost requests) placed by `Tools/Synergies/Place Synergy Lane Presenter`.
+- C2/C3 to be reshaped the same way (ghosts, no lanes) — ask THJ before dispatch.

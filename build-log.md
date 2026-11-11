@@ -2648,3 +2648,10 @@ Core gets one additive, generic `CombatLog.AddCustom`.
 - Verified: EditMode 1815/1816 (known AI red only); review APPROVE; THJ play check OK.
 - Findings: green Success tag shows beside the line (THJ: remove later); readability should-fix at `MissionEndPanelUI.cs:188` open.
 - Status: committed `089bd17af`, `2001fef06`.
+
+## 2026-11-10 · Synergy aim preview C1 (thj/after-hearth)
+
+- Built: Shield Flare preview as ghost fireballs around John facing each copy's flight (no lines), on John's layer in front of him; shared geometry with the real shot.
+- Verified: EditMode 1833/1834 (known AI red only); review APPROVE (4 rounds); THJ play check OK.
+- Not verified: two-pick persistence (ghosts follow the hovered pick only); fireball blocked before John.
+- Status: committed `79e7ced64`.
