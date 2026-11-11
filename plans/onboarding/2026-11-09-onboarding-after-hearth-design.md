@@ -258,7 +258,7 @@ level tier early
 
 The as-built enemy-free corridor, widened to 9 cells, with two awake Claws in the trail. One turn, Linda's pierce from Memory 1. Winning it opens the map, as before (the map opens only after a won level).
 
-```grid id=after-trailhead title="M2 · The Trailhead, a one-turn fight"
+```grid id=m2-trailhead title="M2 · The Trailhead, a one-turn fight"
 # # # # # # # # #
 J U L . . c c . .
 # # # # # # # # #
@@ -287,7 +287,7 @@ Prefab coordinates. The as-built map widened by two columns at the east end (9,1
 
 **Fix (coordinator's flag):** the first revision had Linda pierce both ledge Archers from 4,1, but 4,6 is 5 from 4,1 and her bow reaches 4. Now she fires from **4,2** in the pocket: 4,5 is 3 away and 4,6 is 4, both inside her 4; she stands inside 4,5's reach (3), which doesn't matter when both die on her turn. Still to check: arrows cross the gap row (y4) (the as-built Duo shot through it relied on it too).
 
-```grid id=after-trail title="M2 · Follow the tracks (prefab coordinates)"
+```grid id=m2-tracks title="M2 · Follow the tracks (prefab coordinates)"
 # # # # a # # # # # #
 # # # # a # # # # # #
 _ _ _ _ _ _ _ _ _ _ _
@@ -320,7 +320,7 @@ level deploy 0,1
 
 Prefab coordinates, as-built cells (read back before rebuilding). Lucy's "Her blood." stays the route's story beat; the trail of blood runs east along row 1.
 
-```grid id=after-blood title="M2 · Follow the blood (prefab coordinates)"
+```grid id=m2-blood title="M2 · Follow the blood (prefab coordinates)"
 # # # # c # c # #
 # # # # c # c # #
 # # # # c # . # #
@@ -354,7 +354,7 @@ level deploy 0,1
 
 Unchanged by THJ's answers. Prefab coordinates, same 10 × 7 footprint, new cells. The search comes first, is one move long and answers something; the fight comes after it, from both sides.
 
-```grid id=after-pile title="The Pile (prefab coordinates)"
+```grid id=m2-pile title="The Pile (prefab coordinates)"
 # # L U J . # # # a
 # # . . . . . . . #
 c c c . _ _ . . . c
@@ -634,4 +634,4 @@ Now that the plan is approved, in this order.
 
 Each build chunk: compile / EditMode (known red only) / review for code / THJ play check (feel and level chunks). Play check needs THJ's time: yes, the Family Roles session on the River and Ridge, then a timed run Home → M4 send-off, then a cold playtest.
 
-Grids in this revision, to re-render: **changed** `after-trail` (renamed *Follow the tracks*: deploy order, the shot from 4,2), `after-river`, `after-ridge` and `after-pile` (unchanged since the last render, re-render is harmless); **new** `after-trailhead`, `after-blood`. Command: `python claude-handoff/tools/grid_render.py claude-handoff/plans/onboarding/2026-11-09-onboarding-after-hearth-design.md`.
+Grids in this revision, to re-render: **changed** `m2-tracks` (renamed *Follow the tracks*: deploy order, the shot from 4,2), `after-river`, `after-ridge` and `m2-pile` (unchanged since the last render, re-render is harmless); **new** `m2-trailhead`, `m2-blood`. Command: `python claude-handoff/tools/grid_render.py claude-handoff/plans/onboarding/2026-11-09-onboarding-after-hearth-design.md`.
