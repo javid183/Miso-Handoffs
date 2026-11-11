@@ -2634,3 +2634,10 @@ Core gets one additive, generic `CombatLog.AddCustom`.
 **Docs:** `tech/core-systems.md` (HUD extra panel). Design and glossary docs routed (first-hour design tally row, GDD); glossary row "Sisters' tally" still waits on THJ's glossary approval. Claude Doc mirror: this build-log section needs syncing.
 
 **Status:** done. Return step to place with the framed beat (D-448). Window-length concern (THJ) in backlog after the pacing check.
+
+## 2026-11-10 · Objective feedback C1 (thj/after-hearth)
+
+- Built: met objective line strikes, pulses (1.2/0.4 s), flashes gold and plays `A_UI_ObjectiveMet`; new lines after a stage advance fade in from gold with `A_UI_ObjectiveNew`, after the met feedback; while the HUD is hidden (cut-ins) both wait and play on return in that order, 1 s apart; once the level ends lines strike at once, silent, nothing replayed (win outros' ShowHUD). Pure rules in `ObjectiveFeedbackRules` + tests.
+- Verified: EditMode 1803/1804 (known AI red only); review APPROVE after 8 rounds; THJ play check OK.
+- Not verified: real clips (placeholders = click).
+- Status: committed `736a39325`.

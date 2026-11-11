@@ -52,3 +52,7 @@ Compile / EditMode / review / THJ play check (a Hearth memory and one normal lev
 ## Proposed commits
 
 C1 one commit; C2 code + tests, then the Hearth level data.
+
+## Commit log
+
+- C1 `736a39325` (tick/pulse/flash/sound; deferred to HUD return after cut-ins incl. the strikethrough (D-489, D-490); new lines fade in with flash + own sound (D-491); nothing after a win or loss).
