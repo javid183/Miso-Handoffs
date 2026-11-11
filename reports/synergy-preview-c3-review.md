@@ -10,3 +10,10 @@ M1. Bloom + Catch bar toggling (`SynergyLanePresenter.Bloom.cs:75-83, 493-500`; 
 S1. `SynergyLanePresenter.Catch.cs:159`: replace `GetCell(...)?.OccupantEntity` with an explicit Unity-null check.
 
 Notes: give-back on an ability switch can hide a bar the controller just drew (same as C2). Assumed nothing blocks the arrow before Mark. THJ calls: ghost colour field (default green), no return >>>, scene not re-saved (code defaults).
+
+## Re-review after round 2
+**APPROVE.**
+- M1 fixed: both previews computed before either draws (`SynergyLanePresenter.Bloom.cs:75-85`); while the catch is on the Bloom skips the return's units for shows and hides (`Bloom.cs:495-505`). One look per unit per frame in Bloom only, Catch only, both.
+- Toggles clean: catch on → one switch; catch off with Bloom on → hidden by ClearCatch (`Catch.cs:344-347`) and re-shown by the Bloom the same frame; catch alone off → shot value on same aim; Bloom off under catch → one change, then FinalPick.
+- No C2 regression. S1 fixed (`Catch.cs:159-160`). LF, no statics, no IDs, no per-frame allocations.
+- Play check: Memory 4, Cyclone past Mark: pink segment pulses, skull steady.
