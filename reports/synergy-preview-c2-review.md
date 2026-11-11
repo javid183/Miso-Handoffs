@@ -33,3 +33,13 @@ Verdict: APPROVE.
 - WouldScatter null guards fine. Tests behavioural; trigger shooter lookup untested (MonoBehaviour), minor.
 - No core edits, no private IDs, LF no BOM.
 - Suggest two commits: (1) scatter fix + TempestBloomGeometry + tests, (2) preview.
+
+## Re-review after round 3
+Verdict: APPROVE.
+
+- Dimming: every range tile KeepsGlow rejects (her other three lanes and the aimed lane past the Cyclone); her own tile skipped (Bloom.cs:239-248, TempestBloomPreviewRules.cs:70-71).
+- Restore: relit with the controller's own call while the same ability is aimed and the tile is in range (Bloom.cs:272-284, 309-319 = FactionControllerBase.cs:513-521). Hover-out gives back before anyone draws (SynergyLanePresenter.cs:107-109). Cancel/switch/end turn/level end hand the range back to the controller.
+- Shared tiles: a dimmed tile a copy flies over is neither hidden nor lit (forward copy keeps the controller's glow); full-board test.
+- Chevrons: one per copy lane, next to the Cyclone; Linda's own >>> untouched (Direction hover mode).
+- No fight with the controller or approach preview either way. Tests behavioural; restore is play-check only. No core edits, no IDs, LF.
+- Notes: multi-cell overlay edge (S4) can come up more often now; keep the boss check. A future flow nulling the aimed ability without a cancel would leave three lanes dark until reselect (none today).
