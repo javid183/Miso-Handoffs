@@ -103,3 +103,20 @@ The River and the Ridge (chunk 4), Cyclone changes, runtime or core code (stop a
 ### Gates
 
 Compile clean / EditMode (known red only) / `miso-reviewer` / coordinator reads the report / THJ's timed play of M2 with each pick, both routes (win path; to-check rows 3, 4, 5, 7, 8, 9 of the design are play checks) / docs: GDD `missions-structure.md` M2 rows, `level-chunks.md` knobs, 11-09 plan sections marked superseded (designer); narrative draft lines (narrative); build log (coordinator).
+
+## C4 · Trail balance values (D-516, D-518)
+
+Source: THJ's C3 play (`playtests/2026-11-11-trail-c3-play.md`), the balance design (`plans/2026-11-11-trail-balance-design.md`), decisions D-516 to D-518. Size S, data only, `sonnet`. Runs after the C3 fix round is committed. Chained Assault is untouched (D-517: THJ tunes it). Bloom and the sisters' Duo node (D-519, D-520) are a separate plan.
+
+### Acceptance criteria
+
+1. All four Trail blocks in `design/level-chunks.md` (owner: designer; coordinator routes the one-word change) read `level tier standard`; the four `GB_m2-*` prefabs are rebuilt from them and rewired (`Tools/Onboarding/Wire Search: Trail`, idempotent: second run, no diff). Prefab `enemyTier` = Standard on all four.
+2. Follow the tracks: the two Claws and the turn-2 pair have no HP override (16 HP at Standard); the Black Claw's HP factor is 0.75 (30 HP). No other level has an HP override.
+3. `Lucy_Cyclone_Effect_AttrMod` damage factor 7 → 3. Cooldown unchanged (2). The dead Linda-folder copy and the orphaned `PassByEffect_AttrMod` are not touched.
+4. `SearchTrailTests` asserts literals: tier Standard on all four levels; Tracks overrides (none on Claws, 0.75 on the Black Claw); the Cyclone asset's factor 3.
+5. EditMode suite: all pass except the known red `AIRegressionTest.Baseline_MatchesCurrentAI` (it may move with the Cyclone data; never re-baselined).
+6. THJ plays the Trail both picks (play-test before commit).
+
+### Commits
+
+One for the Trail data (blocks-built prefabs, wiring, tests); the Cyclone value in its own commit (global, revertable alone).
