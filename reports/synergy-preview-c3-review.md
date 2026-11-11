@@ -27,3 +27,10 @@ Notes: give-back on an ability switch can hide a bar the controller just drew (s
 - Chevron rule tested (`CatchReturnPreviewTests.cs:63-94`). No core edits; LF no BOM.
 - Nit: comment at `Catch.cs:286-290` breaks mid-sentence.
 - Open for THJ: tinted chevron needs a small new core method on `GridCell` (Tier 3).
+
+## Re-review after round 4
+**APPROVE.**
+- `TryGetReturnChevronTile` returns Mark's own tile pointing one step toward Linda; false off a straight line or on a shared tile (`CatchReturnPreviewRules.cs:46-55`); tested (`CatchReturnPreviewTests.cs:63-85`).
+- Nothing else draws on Mark's tile while Linda aims (controller: active/approach cell, `PlayerController.cs:1065, 1213, 1216, 1501`; Duo: Linda's cell, `UnitsCooperationHandler.cs:584, 600`; Bloom copy chevrons past the Cyclone).
+- Cleared on every exit through ClearCatch, with or without Bloom; previews never clear each other's cells.
+- GridCell.cs and Bloom chevron placement unchanged (D-500). No core edits. LF, no BOM.
