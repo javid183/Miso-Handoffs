@@ -37,6 +37,7 @@ Source: `abilityOrchestrator` on `Unit_Mark.prefab`; presets in `Resources/UnitS
 - **MA-2. Continuous Attack.** When his Fist Blitz kills, a press QTE swings again at the lowest-health enemy in range. It costs 1 FTP, then +1 for each further use in the same turn. *Built, differs.* **Planned (D-216):** free, with a per-turn limit (value not set); FTP pays for Duos only.
 - **MA-3. Catch & Return.** Once bought, when Linda's bow or Watch arrow reaches him from 2 or more cells away along its line, the arrow stops at Mark and a press QTE offers the catch (D-257, D-260; a shorter prompt wait than other QTEs, D-273). *Built* (on `main` since 2026-10-29, D-326):
   - **Pressed:** the arrow is caught at Mark and never reaches the enemy behind him. A return copy flies from Mark back to Linda, damaging enemies on the way, and ends at her (D-261, D-276). An enemy between them is hit on the way out and again on the way back (D-274). With the quiver on, the arrow goes straight back into her quiver ([Linda](linda.md) LI-9); with it off, no arrow is involved and the damaging return is all (D-315, D-320).
+  - **Aim preview:** while Linda aims through Mark, the return shows on the board and its damage as a second segment on the HP bar ([Combat rules](../combat-rules.md) CR-56).
   - **Not pressed:** the same arrow carries on with its remaining range and falloff, and lands as usual.
   - No refund: bounce only; the node text that promises a refund gets fixed (D-218). **Planned (D-228):** the node becomes "Return to Sender", once per turn refunding Linda's shot (+1 AP).
 
