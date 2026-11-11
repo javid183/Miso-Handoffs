@@ -258,6 +258,10 @@
 <rect x="211" y="27" width="44" height="44" fill="#d35400" fill-opacity="0.22" stroke="#d35400" stroke-width="1.5"/>
 <rect x="671" y="27" width="44" height="44" fill="#d35400" fill-opacity="0.22" stroke="#d35400" stroke-width="1.5"/>
 <text x="214.0" y="38.0" font-size="10" text-anchor="start" font-weight="bold" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#ffffff" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">hidden: come down on turn 2</text><text x="214.0" y="38.0" font-size="10" text-anchor="start" font-weight="bold" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#d35400">hidden: come down on turn 2</text>
+<g><path d="M233.0,34.0 L248.0,49.0 L233.0,64.0 L218.0,49.0 z" fill="#d9822b" stroke="#2b1035" stroke-width="1.5"/><title>4,4  Dark Claw</title></g>
+<text x="233.0" y="53.5" font-size="12" text-anchor="middle" font-weight="bold" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#fff">c</text>
+<g><path d="M693.0,34.0 L708.0,49.0 L693.0,64.0 L678.0,49.0 z" fill="#d9822b" stroke="#2b1035" stroke-width="1.5"/><title>14,4  Dark Claw</title></g>
+<text x="693.0" y="53.5" font-size="12" text-anchor="middle" font-weight="bold" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#fff">c</text>
 <g><path d="M463.0,80.0 L478.0,95.0 L463.0,110.0 L448.0,95.0 z" fill="#d9822b" stroke="#2b1035" stroke-width="1.5"/><title>9,3  Dark Claw</title></g>
 <text x="463.0" y="99.5" font-size="12" text-anchor="middle" font-weight="bold" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#fff">c</text>
 <g><path d="M233.0,126.0 L248.0,141.0 L233.0,156.0 L218.0,141.0 z" fill="#d9822b" stroke="#2b1035" stroke-width="1.5"/><title>4,2  Dark Claw</title></g>

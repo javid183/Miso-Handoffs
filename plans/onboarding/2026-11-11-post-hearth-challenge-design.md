@@ -162,9 +162,9 @@ The tracks are big, and a pack's: a Black Claw leads two Dark Claws down the hol
 
 ```grid id=m2-tracks title="M2 · Follow the tracks: the bell (prefab coordinates)"
 # # . . . . . . . #
-. . . . # . . . . .
+. . . . # . . . . c
 L U . . . c . b . .
-J . . . . . # . . .
+J . . . . . # . . c
 # # . . . . . . c #
 --
 range 7,2 5 enemy the Black Claw's call
@@ -211,7 +211,7 @@ level hidden pack 9,3 9,1
 The blood runs east through two 1-tile chokes, past three gullies. **The objective is to reach the end of the trail, two of you**, not to kill everything. Claws come down the gullies, and more follow.
 
 ```grid id=m2-blood title="M2 · Follow the blood: two of you, to its end (prefab coordinates)"
-# # # # . # # # # . # # # # . # # # # #
+# # # # c # # # # . # # # # c # # # # #
 # # # # . # # # # c # # # # . # # # # #
 # # # # c # # # # . # # # # c # # # # #
 L U . . . . . . . . . . . . . . . . . .
