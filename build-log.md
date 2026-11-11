@@ -2677,3 +2677,11 @@ Core gets one additive, generic `CombatLog.AddCustom`.
 **Not verified:** nothing open on the build itself.
 **Findings:** THJ: no challenge ("all HP"); the first volley decided every fight (`playtests/2026-11-11-trail-rework-play.md`). Starts-alert Claw prefab has no repair path.
 **Status:** base committed; challenge redesign in design (D-505).
+
+## 2026-11-11 · M2 Trail C3: the challenge rebuild (D-511, D-513 to D-515)
+
+**Built:** the four Trail levels rebuilt from revision 2 of the post-Hearth challenge design: Trailhead front and back; Follow the tracks with a Black Claw leader and a turn-2 pair; Follow the blood as a two-hero reach (end tiles 18,1 / 19,1 / 19,0, hidden kill-all fallback) with a turn-2 pair; the Pile without the Archer. Arrivals: input off → camera on group → reveal → bark → camera on Linda → input on. Blood's stage-2 row has the working line "Keep moving. Claws on both sides." Committed `9e9e0ca63` (one commit: prefabs, wiring, tests, sequence assets).
+**Verified:** EditMode 1875/1876 (known AI red only); wiring idempotent (md5); review FIX → must-fixes done (literal asserts), coordinator read; THJ played C3 both picks before the fix round (`playtests/2026-11-11-trail-c3-play.md`).
+**Not verified:** the camera on Linda after arrivals and its dead-Linda path (in THJ's C4 replay).
+**Findings:** still low threat in play (Cyclone walked into by the AI, Mark–Lucy Duo wipe, free reactions, Claw hits 3–4) → balance round (D-512, D-516 to D-520). Possible bug: Lucy's skill-tree point gone after level 1.
+**Status:** C3 done. Next: C4 values (Standard tier, Tracks HP, Cyclone damage 3); Bond tree note (Bloom open, sisters' Duo as a Lv 2 node).
