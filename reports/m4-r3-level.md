@@ -176,3 +176,22 @@ Files touched in the fix-ups (same commit as before): `HearthMemoryWiring.Mark.S
 - `HearthMemoryMarkTests` (28) + `HearthMemoryLevelsTests` (3): 31/31 passed, including `NothingInTheHearthGivesExperience`. No full suite (THJ runs All).
 - Nothing deleted; `_GuidedSpendScratch.unity` left alone.
 - The "Status: NOT compiled" note above is superseded: compiled, re-run, tested.
+
+## Pools (THJ's play: the pools never summoned)
+
+**Root cause: the two pool cells weren't part of the grid.** In the hand-edited prefab, `GridCell - (-1, 4)` and `GridCell - (3, 7)` (the drawing's 0,4 and 4,7) sat directly under `Grid`, beside `Grid/Tilemap`, not under it. The grid takes in only the cells under its tilemap: `GridManager.GatherCells` does `tilemap.GetComponentsInChildren<GridCell>()` (Core/Systems/GridSystem/Runtime/GridManager.cs:58-60). Neither cell was ever initialized, so `GridCell.Initialize` never plugged what stood on it (GridCell.cs:198-199). The pool's `HazardEntity.Plug` never ran (HazardEntity.cs:103-115), so it never registered with the Enemy controller for phase ticks (HazardEntity.cs:118-133) and never ticked, whatever its turn list. The spawner, its turn list (1 to 8), its spawn limit and both effects match the stock ones field for field; they weren't the cause. The two cells had no neighbours either, so nothing could walk onto them. The tool kept these cells as they were (it never moved cells), so the problem came in with the hand edit.
+
+Evidence (edit mode, the same calls the level start makes): before the fix the grid gathered 61 of 63 cells and neither pool. After it: 63 of 63, with a pluggable `CP_Spawner_Hearth` on both pool cells. A read-only scan of every level prefab under `Content/Levels` found no other level with cells outside its tilemap. I did not enter Play mode; THJ's replay is the final check.
+
+**Fix (no core change):** `HearthMemoryWiring.Mark.Layout.cs` now starts the layout step by moving any cell that isn't under the grid manager's tilemap under it, keeping its world position (`AdoptCellsOutsideTheTilemap`; `Tilemap(root)` is public for the test). New test `HearthMemoryMarkTests.EveryCellIsOneTheGridTakesIn`. The Hearth pool tool and its assets are unchanged (not the cause).
+
+**Runs and tests:**
+- Not in Play mode; compiled with no errors.
+- Before run 1, md5s matched the fix-up record.
+- Run 1: only `GB_m4-mark.prefab` changed (`c74f39f0…` → `8b4690b3…`); every `Memory4Mark` asset was unchanged.
+- Run 2: identical to run 1.
+- `HearthMemoryMarkTests` (now 29), `HearthMemoryLevelsTests` (3) and `HearthPoolClawTests` (6): 38/38 passed. No full suite.
+
+**Commits:** this all goes into the single Memory 4 commit already proposed (the layout file, the test file and the prefab are already in it). Nothing new for the Hearth pool tool's commit.
+
+**For THJ's play check:** on enemy turn 1 each pool summons a Claw (both pools are empty at the start). After that, a pool summons again on an enemy turn only once its own Claw is dead (turns 1 to 8). The pool tiles can now also be walked next to and targeted like any cell.

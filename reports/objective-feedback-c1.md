@@ -80,3 +80,48 @@ main, when this branch merges.
 - New `StopPulse()` (kills the tween, restores scale 1 and the strikethrough colour) runs when a new pulse starts and on disable; destroy kills the tween.
 - Hidden-panel rule and the 9 rule tests unchanged. Full EditMode run: see result line below.
 - Files: `ObjectiveEntryUI.cs` only. Not checked in Play.
+
+## Round 4 (deferred feedback after the cut-in)
+
+- `ObjectiveFeedbackRules`: new `Decide(seenUnmet, pending, satisfied, mode, panelVisible)` returning None / PlayNow / Defer, plus `PendingAfter` and `ShouldFlushPending`. `ShouldPulse` kept as a wrapper (PlayNow only).
+- `ObjectiveEntryUI`: a Win line met while the panel is hidden or hiding is marked pending (after its strikethrough) instead of dropped. `FlushPendingFeedback(withSound)` plays pulse, flash and sound once and clears the flag; a line not yet revealed or still striking through keeps waiting and plays when its own reveal finishes. `Initialize` takes the pending flag.
+- `ObjectivesPanelUI`: `SetObjectives` carries pending by `LevelObjective` reference like the seen-unmet flag, so a rebuilt entry plays once, not once per rebuild. After `Show` finishes, waiting lines pulse together with one sound.
+- Level win: the HUD is never shown again, so nothing flushes and the last objective stays silent. Next level: `SetObjectives` runs before `ShowHUD` and only carries flags for the same objective objects, so stale pending cannot replay.
+- Tests added (15 rule tests now): met while hidden is deferred, plays on show, level ends never plays, pending survives a rebuild and plays once, defeat not deferred.
+- Full EditMode run: "summary":{"total":1787,"passed":1786,"failed":1,"skipped":0,"durationSeconds":213.2318554,"resultState":"Failed(Child)"}. Only the known AIRegressionTest.Baseline_MatchesCurrentAI failed.
+- Files: ObjectiveFeedbackRules.cs, ObjectiveEntryUI.cs, ObjectivesPanelUI.cs, ObjectiveFeedbackRulesTests.cs. Not checked in Play.
+
+## Round 5 (defer the strikethrough too)
+
+- A Win line met while the panel is hidden is no longer struck: it stays plain (pending) and, when the panel shows again, strikes, then pulses, flashes and plays the sound (`PlayDeferred`). `UpdateVisuals` skips the struck style while a line is pending, so it is never shown pre-struck.
+- A deferred line rebuilt by a stage advance while hidden carries its pending flag, stays plain, and plays once on return. If the HUD starts hiding during a visible strikethrough, the line goes back to pending and replays whole on return.
+- Unchanged: lines met with the panel visible, failure lines (no deferral), old met lines rebuilt (silent). The level-winning line is met while hidden, so it stays unstruck and silent; that panel is never shown again, so nothing is visible either way. Try Again / level change: pending is carried only by the same objective objects, as in round 4.
+- Reviewer fixes: orphaned comment moved above `PlayMetFeedback` and reworded ("Scale pulse, colour flash and one UI sound"); `StopPulse()` at the top of `PlayStrikethrough`.
+- New rule `StrikesNow(action)` and tests (hidden+met deferred strike, visible+met strikes with feedback, old line rebuilt silent, failure immediate, rebuilt-while-hidden plays once on return).
+
+## Round 6 (new lines get feedback)
+
+- `ObjectiveFeedbackRules.NewLines<T>(old, now)`: lines added by a stage advance. Counts only when the old list is non-empty and all of it is still present, so a first list, level change and Try Again (old lines gone) give none. `DecideArrival` and `FlushOrder` (met line before new lines) are pure and tested.
+- `ObjectiveEntryUI`: new line stays invisible until its arrival, then fades from the gold flash colour to its normal colour over `newLineSeconds` (default 0.3, field) with its own sound `newSoundID` (default `A_UI_ObjectiveNew`); no scale pulse. While the panel is hidden it stays invisible and arrives on return. Tween killed on disable/destroy.
+- `ObjectivesPanelUI`: `SetObjectives` marks new lines and carries unplayed arrivals across a rebuild; one arrival sound per stage advance (`ClaimArrivalSound`); on `Show` a flush coroutine plays met lines first (together, one sound), waits for them, then the new lines. Visible stage advances play in list order (met line first) through the existing reveal loop. A level win never shows the panel again, so it stays silent.
+- `AudioStorage.asset`: hand-edited, 4 lines appended for `A_UI_ObjectiveNew`, same placeholder (click) clip as the met entry; LF kept. THJ supplies the real clip.
+- Full EditMode run (rounds 5 and 6 together): "summary":{"total":1801,"passed":1800,"failed":1,"skipped":0,"durationSeconds":195.0405723,"resultState":"Failed(Child)"}. Only the known AIRegressionTest.Baseline_MatchesCurrentAI failed. Not checked in Play.
+- Files: ObjectiveEntryUI.cs, ObjectivesPanelUI.cs, ObjectiveFeedbackRules.cs, ObjectiveFeedbackRulesTests.cs, AudioStorage.asset.
+
+## Round 7 (re-review fixes)
+
+1. Defer branch now calls `UpdateVisuals()` after the pending flag is set, so a line already on screen that is met while hidden returns plain (not struck, not struck twice) and strikes on return.
+2. A new line waits (in `UpdateObjectives`) while any entry is still playing met feedback, so arrivals come after the met pulse and sound.
+3. Outro guard: the panel reads `CombatLevelRunHandler.Instance.IsLevelEnded` (public, read only, set for both win and loss before the HUD hides; no core edit). Feedback is allowed only while the level is running (`FeedbackAllowed()`); the flush on HUD return drops all pending met feedback and arrivals when the level has ended and never plays them. Pure rule: `ShouldFlushPending(pending, visible, levelEnded)`. Loss path: same gate, so no success feedback after a loss. Note: `_levelEnded` is never reset in the handler, so this relies on each combat level starting a fresh handler (it already does for `IsLevelEnded` elsewhere).
+4. On return from hidden, new lines arrive one after another with the same 1 s spacing as the visible path (shared `LineRevealSeconds`), after the met feedback.
+- Tests: level ended never flushes; level running flushes when visible.
+- Full EditMode run: "summary":{"total":1803,"passed":1802,"failed":1,"skipped":0,"durationSeconds":176.9717821,"resultState":"Failed(Child)"}. Only the known AIRegressionTest.Baseline_MatchesCurrentAI failed. Not checked in Play.
+- Files: ObjectiveEntryUI.cs, ObjectivesPanelUI.cs, ObjectiveFeedbackRules.cs, ObjectiveFeedbackRulesTests.cs.
+
+## Round 8 (win line stays struck)
+
+1. `ObjectiveFeedbackRules.Decide` takes `levelEnded`: once the level has ended the result is None (strike now, no pulse, no sound, no deferral). `ObjectiveEntryUI.Show` gets a `levelEnded` callback from the panel (`CombatLevelRunHandler.Instance.IsLevelEnded`); when it is true the entry drops any waiting feedback first, then shows the completed style. The win line never goes plain.
+2. Safety net: `DropPendingFeedback` now, for a shown entry that was waiting, restores the default colour and calls `UpdateVisuals()`, so a dropped met line is struck and a dropped new line is visible. `ObjectivesPanelUI.Show` calls `DropAllPendingFeedback` before the slide-in when the level has ended.
+3. Test: level ended + met (visible or hidden, pending or not) gives None, strikes now, no pending.
+- Full EditMode run: "summary":{"total":1804,"passed":1803,"failed":1,"skipped":0,"durationSeconds":186.7150178,"resultState":"Failed(Child)"}. Only the known AIRegressionTest.Baseline_MatchesCurrentAI failed. Not checked in Play.
+- Files: ObjectiveEntryUI.cs, ObjectivesPanelUI.cs, ObjectiveFeedbackRules.cs, ObjectiveFeedbackRulesTests.cs.

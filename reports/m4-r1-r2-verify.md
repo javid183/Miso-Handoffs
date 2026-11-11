@@ -81,3 +81,10 @@ none
 - The earlier `tests_running` block cleared once THJ freed the editor. `clear_stuck` reported "No running job to clear" and `refresh_unity` then worked. Worth a line in `tech/editor-checks.md`: `tests_running` with no MCP job means the Test Runner is busy in the editor, so ask THJ.
 - Confirmed: `execute_menu_item` runs a Tools menu item and the item's `Debug.Log` shows in `read_console` (use `types: ["all"]`). Test-name filtering by full namespace worked (all three filters matched).
 - Confirmed: a forced `refresh_unity` with `compile: request` compiled in about 14 s; a second `refresh_unity` with `wait_for_ready` returned idle.
+
+## Addendum: GridToLevelTests failures from THJ's Run All
+
+- `Content/Levels/Greybox/__Test` is absent (checked before and after both runs).
+- `MISO.Core.Levels.CEditor.GridToLevel.EditorTests.GridToLevelTests` run twice in a row through the MCP: run 1 20 of 20 passed (13.3 s), run 2 20 of 20 passed (12.9 s). That includes `Builder_StripsTheTemplatesExtrasAndLeavesNoMissingReferences` and `Builder_WritesNothingWhenThePaletteLacksAPrefab`. No failure messages.
+- The folder was absent after both runs too, so TearDown cleans up. `git status` for `Content/Levels` shows only the already-modified `GB_m4-mark.prefab`; nothing left behind.
+- Reading: consistent with the leftover-folder hypothesis (the failures were "already exists" and `File.Exists` true, which a stale `__Test` folder from the interrupted 01:07 run would cause; the test's own TearDown deleted it afterwards). I did not see the failing state, so this is not proven. No R1 or R2 file touches these tests or that folder.
