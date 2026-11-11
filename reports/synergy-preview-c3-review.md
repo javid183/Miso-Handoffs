@@ -17,3 +17,13 @@ Notes: give-back on an ability switch can hide a bar the controller just drew (s
 - Toggles clean: catch on → one switch; catch off with Bloom on → hidden by ClearCatch (`Catch.cs:344-347`) and re-shown by the Bloom the same frame; catch alone off → shot value on same aim; Bloom off under catch → one change, then FinalPick.
 - No C2 regression. S1 fixed (`Catch.cs:159-160`). LF, no statics, no IDs, no per-frame allocations.
 - Play check: Memory 4, Cyclone past Mark: pink segment pulses, skull steady.
+
+## Re-review after round 3
+**APPROVE.**
+- Chevrons don't clear each other: catch never clears a Bloom-held or shooter cell (`SynergyLanePresenter.Catch.cs:262-274`); Bloom never clears `_catchChevronCell` (`Bloom.cs:345-347`); Linda's own >>> untouched (`Catch.cs:156, 264`).
+- Never share a tile (return chevron before Mark; copy chevrons past a Cyclone past Mark); nothing would stick if they did.
+- Cleared on every exit (`Catch.cs:307`; polling `Catch.cs:78-81` with `CatchHoldsNothing` counting the chevron; OnDisable/OnDestroy).
+- Ghost removal complete (no refs in code, scenes, prefabs); one-bar-per-frame fix intact (`Bloom.cs:496-506`).
+- Chevron rule tested (`CatchReturnPreviewTests.cs:63-94`). No core edits; LF no BOM.
+- Nit: comment at `Catch.cs:286-290` breaks mid-sentence.
+- Open for THJ: tinted chevron needs a small new core method on `GridCell` (Tier 3).
