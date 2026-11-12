@@ -1,7 +1,24 @@
 # Report: Cyclone redesign, C2 (who walks through the Cyclone, and how the AI treats its cross)
 
 Plan: plans/2026-11-11-cyclone-redesign-tech.md    Agent: miso-implementer (opus)    Branch: thj/cyclone
-Outcome: done (THJ play check pending). Core changes as approved (D-533), each in its own proposed commit.
+Outcome: done, fix round applied (THJ play check pending). Core changes as approved (D-533, plus the dash and duo stop fix THJ approved in the review round), each in its own proposed commit. Review: `reports/cyclone-c2-review.md` (FIX, addressed below).
+
+## Fix round (after the C2 review)
+
+1. **Must fix 1: ranged reach never lands on a pass-only cell.** In `GridCell.GetRangeCells`, the ranged-reach block now skips a cell when the mode isn't Unconstrained and any cell of the mover's footprint there holds a planted `OnGridEntity` with `DisallowWalk` (other than the mover itself). The new `GridCell.FootprintHasWalkBlocker`, public static, lives in `GridCell.PlantedPass.cs`. This restores the pre-C2 result for Blink/teleports, Mark's Vault/Primary, the Mark–Lucy Duo and the allied AI's ranged moves. The BFS and straight branches already filtered stops through `IsWalkable`. Test: `CyclonePassTests.RangedReach_NeverOffersTheCycloneCellAsALanding(True/False)` (SelfWalkable with ranged reach, family, with and without a source).
+2. **Must fix 2: dash approach cell (core, approved by THJ in this round).** In `AEffectDashAttack.TryResolveApproachCell`, when `path[^2]` holds a planted walk blocker, the dash attacks from the nearest cell next to the target that the owner can stand on (`IsFootprintEmpty`, no blocker, shortest path with the same pathing flags). When there is none, it returns false, the existing no-dash result. `TryResolveGhostCell`, `CollectPreviewCells`, the Command Shield Dash preview and `AbilityPushPreview` all read this method, so they follow. Tests: `CycloneStopShortTests.Dash_WithoutTheCyclone_ApproachesFromTheCellBefore` (control), `Dash_ThroughTheCyclone_ApproachesFromTheNearestStandableCellNextToTheTarget`, `Dash_NoStandableCellNextToTheTarget_DoesntDash`.
+3. **Should fix 1: Mark–Linda Duo loser stop (core, approved by THJ in this round).** In `UnitsCooperationHandler`, `Mark_Linda_LoserStop` now takes the loser and the walk relation and returns its own path. When `path[^2]` holds a planted walk blocker, the loser stops on the nearest standable cell next to the tile, with a fresh path. When there is none it returns null, so the duo fails as it already does with no stop. All three uses (the race result, the alternative paths and the pass/stand step-back) go through it; the step-back also steps past a pass-only cell. Preview and walk both read `loserStop`/`loserPath`. Tests: `DuoLoserStop_ThroughTheCyclone_StopsOnTheNearestStandableCellNextToTheTile` and the control `DuoLoserStop_WithoutTheCyclone_IsTheCellBeforeTheTile` (the private static is called through reflection).
+   - *Same-behaviour deviation:* "not standable" is tested as "holds a planted walk blocker", not as plain `!IsFootprintEmpty`. That is exactly the set of cells C2 made newly passable. A stop on an ally's cell (the winner's start cell, say) stays as it was before C2, so nothing else changes. The replacement cell itself must be `IsFootprintEmpty`.
+4. **Should fix 2: the tests drive the brain's decision.** The keep-or-drop decision is now the pure `AIEndOfTurnDanger.RefusesEndingOn(footprint, danger, canAttackFromThere)`. The predicate is lazy: it is asked only for a dangerous destination. `AIUnitBrain.RefusesEndingOn` calls it, and `CycloneAIDangerTests` calls the same helper. `AllowsEndingOn` is removed. New test: `RefusesEndingOn_OnlyDangerousCellsWithNoAttack_AndAsksForTheAttackOnlyThere`. The brain's one-line hook in `GenerateScoredTurnActions` stays a play check (deleting it wouldn't fail a test). The decoy assertion duplicated the family one and was merged: `FamilyAlliesAndNeutrals_PassThrough_ButCantStop`, with a note that decoys are in the family's faction.
+5. **Should fix 3:** on the live turn the follow-up attack must be `a.Active` (cooldown, AP as things stand, not marked, feasibility). Predictions still use the simulated cooldown.
+6. **Should fix 4:** an area attack around the unit counts its reach from every cell of the footprint at the destination (large units).
+7. **Unused sync `AIFactionBrain.PredictNextTargets(GUnit)`:** smallest guard. When called off the worker thread, it takes a fresh danger snapshot before predicting, so it never reads the last job's danger. No signature change.
+
+Files touched in this round: `Core/Systems/GridSystem/Runtime/GridCell.cs`, `GridCell.PlantedPass.cs`, `Core/Systems/AbilitySystem/Effects/Runtime/AEffectDashAttack.cs`, `Core/Systems/AbilitySystem/Abilities/Runtime/UnitsCooperationHandler.cs`, `Core/Systems/AISystem/Runtime/AIEndOfTurnDanger.cs`, `AIUnitBrain.EndOfTurnDanger.cs`, `AIFactionBrain.cs`; tests `CyclonePassTests.cs`, `CycloneAIDangerTests.cs`, new `Features/Player/Lucy/Scripts/Editor/CycloneStopShortTests.cs` (+ .meta). Line endings (LF) and BOMs kept: `AEffectDashAttack.cs` has none, `UnitsCooperationHandler.cs` keeps its BOM.
+
+**EditMode after the fix round:** 1973 run, 1972 passed. The only failure is the known red `AIRegressionTest.Baseline_MatchesCurrentAI`: still 42 inner failures, the same list as before this round, not re-baselined. All 66 Cyclone tests pass (26 for C2: 14 pass, 7 AI, 5 stop-short). Compile clean.
+
+The sections below describe the first build; where the fix round changed something, the fix round wins.
 
 ## What changed
 
@@ -21,7 +38,7 @@ Relations: levels have only Ally and Enemy, and the level base makes Neutral an 
   - static `AIEndOfTurnDanger`, stateless:
     - `Snapshot(faction)`: main thread. Scans `GridManager.GridCells` for planted entities that implement the interface and returns plain coordinates.
     - `Touches(footprint, danger)`.
-    - `AllowsEndingOn(dangerous, canAttackFromThere)`.
+    - `RefusesEndingOn(footprint, danger, canAttackFromThere)` (fix round; replaced `AllowsEndingOn`).
 - `AIBlackboard.cs`: holds the job's danger set (`SetEndOfTurnDanger`, `HasEndOfTurnDanger`, `EndOfTurnDanger`).
 - `AIFactionBrain.cs`: `PrepareUnitTurn` and `RequestPredictAllTargets` take the snapshot on the main thread before `AIWorker.Run`. The job sets it on the blackboard first. So the real turn and the intent preview see the same danger.
 - `AIUnitBrain.cs`: now `partial`. In `GenerateScoredTurnActions` the target loop has one added line: `if (RefusesEndingOn(ability, targets[t], sim)) continue;`.
@@ -36,13 +53,13 @@ No new statics: the snapshot travels with each job and lives on the blackboard i
 
 ### D. Tests (new, in `Features/Player/Lucy/Scripts/Editor/`, + .meta each)
 - `CycloneTestFactions.cs`: a test combat level with family, ally, neutral and enemy factions. The level instance is set by reflection and restored on Dispose.
-- `CyclonePassTests.cs` (12 cases) and `CycloneAIDangerTests.cs` (6).
+- `CyclonePassTests.cs` (14 cases after the fix round), `CycloneAIDangerTests.cs` (7) and `CycloneStopShortTests.cs` (5, fix round).
 
 ## Acceptance criteria (C2)
 
 - [x] **Enemies can't enter or path through the Cyclone's cell:** `Enemies_CantEnterOrPathThrough` (walk check false; no path in a one-cell corridor; the move reach stops at the cell before).
 - [x] **A push or pull into it stops on the cell before:** `APushIntoTheCyclone_StopsOnTheCellBefore(True/False)` runs the real `AEffectPusher.TryGetPushPreview` with distance 5 on an enemy and on a family unit. Both stop at the cell before. The control `APushWithoutTheCyclone_GoesItsFullDistance` covers the empty row. `NoFaction_IsBlocked`. The Whirl's own pull already never lands on the centre (C1b).
-- [x] **The family, allies, neutrals and decoys path through but can't end a move on it:** `FamilyAlliesNeutralsAndDecoys_PassThrough_ButCantStop` (walk check true for each; `IsWalkable` false) and `Family_PathsThroughTheCyclone` (the A* path crosses its cell). The real move (`AEffectTransporter`) plugs a passing unit on the cell for one step. `CycloneEntity.Activate` does nothing, and the next step moves it on. That runtime pass is a **play check**.
+- [x] **The family, allies, neutrals and decoys path through but can't end a move on it:** `FamilyAlliesAndNeutrals_PassThrough_ButCantStop` (walk check true for each, decoys being family-faction units; `IsWalkable` false). Ranged reach, dash approach cells and the duo's stop never pick the cell (fix round) and `Family_PathsThroughTheCyclone` (the A* path crosses its cell). The real move (`AEffectTransporter`) plugs a passing unit on the cell for one step. `CycloneEntity.Activate` does nothing, and the next step moves it on. That runtime pass is a **play check**.
 - [x] **Linda's grounded arrow still never lands on it:** `TheGroundedArrow_IsStillRefusedOnItsCell`. `LivePrefab_LetsAlliesOfLucyPass` pins `disallowWalk` 1 and `passRelation` Ally on the prefab.
 - [x] **Other planted blockers unchanged:** `OtherPlantedBlockers_KeepEveryoneOut` (default pass relation 0, blocked for family, neutral, enemy and no faction, even when the family owns it) and `PlantedEntityThatDoesntBlock_StaysWalkableForEveryone`.
 - [x] **The family's own move range is unchanged:** `FamilyMoveRange_IsUnchangedByTheCross` (the same reach as an empty row, minus the Cyclone's own cell, which can't be a stop; every cross cell costs 1). `GetCellCost` isn't touched.
@@ -97,17 +114,19 @@ None.
 - An enemy already standing on the cross with nothing to attack isn't pushed to leave. Only destinations are filtered, so its graph decides whether it moves.
 - "Can attack after the move": for targeted attacks it uses the brain's own range. For area attacks around the unit it uses the ability radius from the destination. It ignores `IgnoreRelationOnSelection` and the target-cell conditions of individual effects, so it may rarely allow a destination whose attack the graph then doesn't pick.
 - The dead Cyclone copies under the Linda folders keep `passRelation` 0 (they block everyone, as before).
+- Play checks from the fix round: Blink and Vault never offer the Cyclone's cell; Mark's dash beside the Cyclone attacks from a side cell; the Mark–Linda Duo with the loser's last step on the Cyclone; John and Linda walking through; Command Shield Dash crossing the cell; an Archer on an arm; a large enemy.
+- The review's note stands: only "not on the arms" is guaranteed. "3 or more cells away" holds along the arm lines; in open ground an enemy can wait diagonally next to the Cyclone.
 - The AI regression test stays red with 42 inner failures (see above).
 
 ## Proposed commits
 
-C2 comes after C1 commits 1–8 in `cyclone-c1b.md`. Two staging notes:
-- **Exclude `Features/Player/Lucy/Scripts/Cyclone/CycloneEntity.AIDanger.cs` (+ .meta) from C1 commit 3**: it needs the AI interface from commit 10. C1 commit 3 adds the untracked `Cyclone/` folder, so name its files explicitly.
-- `Cyclone.prefab` and `CycloneEntity.Whirl.cs` are C1 files too. The Whirl comment fix just rides in commit 3. The prefab's `passRelation: 1` line can ride in commit 3 as well (Unity ignores an unknown field until commit 9 adds it, so no behaviour changes in between), or be staged by hunk into commit 11.
+In the review's order. The core commits come first because they are inert or self-contained without the Cyclone: the default pass relation is none, and nothing implements the AI interface yet. Then the C1 commits from `cyclone-c1b.md`, then the Lucy C2 files. Every commit takes whole files.
 
-9. `feat(core): a planted entity can let units of chosen relations to its owner path through its cell without stopping there; pushes and enemies stay blocked` (**core**): `Core/Entities/Runtime/OnGridEntity.cs`, `Core/Systems/GridSystem/Runtime/GridCell.cs`, `Core/Systems/GridSystem/Runtime/GridCell.PlantedPass.cs` (+ .meta). It changes no behaviour by itself (default none).
-10. `feat(core): the AI keeps its units from ending a move on ground that hurts them at turn end unless they can attack from there` (**core**, risky: AI behaviour): `Core/Systems/AISystem/Runtime/AIEndOfTurnDanger.cs` (+ .meta), `AIBlackboard.cs`, `AIFactionBrain.cs`, `AIUnitBrain.cs`, `AIUnitBrain.EndOfTurnDanger.cs` (+ .meta). It is inert until something implements the interface.
-11. `feat(lucy): the family passes through the Cyclone and enemies treat its cross as dangerous ground` (plain; depends on 3, 9 and 10): `Features/Player/Lucy/Scripts/Cyclone/CycloneEntity.AIDanger.cs` (+ .meta), `Features/Player/Lucy/Prefabs/Cyclone.prefab` (the `passRelation` line, if not in 3), plus in `Features/Player/Lucy/Scripts/Editor/` (each + .meta): `CycloneTestFactions.cs`, `CyclonePassTests.cs`, `CycloneAIDangerTests.cs`.
+- **A.** `feat(core): a planted entity can let units of chosen relations to its owner path through its cell without stopping there; pushes, ranged landings and enemies stay out` (**core**): `Core/Entities/Runtime/OnGridEntity.cs`, `Core/Systems/GridSystem/Runtime/GridCell.cs`, `Core/Systems/GridSystem/Runtime/GridCell.PlantedPass.cs` (+ .meta).
+- **A2.** `fix(core): a dash attack and the Mark and Linda duo never stop short on a cell that can only be passed through; they take the nearest cell next to the target instead` (**core**; depends on A for `FootprintHasWalkBlocker`): `Core/Systems/AbilitySystem/Effects/Runtime/AEffectDashAttack.cs`, `Core/Systems/AbilitySystem/Abilities/Runtime/UnitsCooperationHandler.cs`. One commit, since both are the same rule. Split into A2 (dash) and A3 (duo) if THJ prefers; the two files don't depend on each other.
+- **B.** `feat(core): the AI keeps its units from ending a move on ground that hurts them at turn end unless they can attack from there` (**core**, risky: AI behaviour): `Core/Systems/AISystem/Runtime/AIEndOfTurnDanger.cs` (+ .meta), `AIBlackboard.cs`, `AIFactionBrain.cs`, `AIUnitBrain.cs`, `AIUnitBrain.EndOfTurnDanger.cs` (+ .meta).
+- **C1 commits 1–8** as listed in `cyclone-c1b.md` (2b folded into 2). Commit 3 takes the whole `Features/Player/Lucy/Scripts/Cyclone/` folder **except `CycloneEntity.AIDanger.cs` (+ .meta)**, and the whole `Cyclone.prefab`, including `passRelation: 1` (the field exists after A). It also carries the Whirl comment fix.
+- **C.** `feat(lucy): the family passes through the Cyclone and enemies treat its cross as dangerous ground` (plain; depends on A, A2, B and C1 3): `Features/Player/Lucy/Scripts/Cyclone/CycloneEntity.AIDanger.cs` (+ .meta); in `Features/Player/Lucy/Scripts/Editor/` (each + .meta): `CycloneTestFactions.cs`, `CyclonePassTests.cs`, `CycloneAIDangerTests.cs`, `CycloneStopShortTests.cs`.
 
 Don't stage THJ's files (PreloadScreen, ProjectSettings, the TMP fallback font).
 
