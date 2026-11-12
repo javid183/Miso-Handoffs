@@ -2692,3 +2692,11 @@ Core gets one additive, generic `CombatLog.AddCustom`.
 **Verified:** EditMode 1876/1877 (known AI red only); wiring idempotent; review APPROVE; THJ's replay (Mark pick): 28 taken (was 14), "much much better, okay for now".
 **Not verified:** John pick and blood route at Standard (not replayed).
 **Status:** the Trail's challenge is okay for now. Next: the Bond tree change (Bloom open, sisters' Duo node).
+
+## 2026-11-11 · Merge into main + wiring leaves dialogue (D-525 to D-527)
+
+**Built:** local `main` fast-forwarded to `origin/main` (8 teammate commits), `thj/after-hearth` merged (`b1f9d1f68`; conflicts: scene roots kept both, Memory 4 mother dialogue kept main's). The wiring seeds dialogue and step lists only when it creates them (`27030ad4e`); the teammate's HomeMemoryOpening tests run in edit mode (`228b830c1`). Nothing pushed (`main` 17 ahead of `origin/main`).
+**Verified:** EditMode 1892/1893 in the editor (known AI red only); all 8 wiring menus run twice, 396 sequence/mission assets unchanged by md5; review APPROVE (should-fixes done).
+**Not verified:** the teammate's restructured Hearth endings in play (Linda's end no longer re-enables input/HUD itself; Mark's walks over a faded grid; Lucy's cutaway unused).
+**Findings:** the 3 GridToLevel `m_LockCount` failures are command-line only. The wiring warns on Memories 1–3 (structure differs from the teammate's); a follow-up could align the wiring with the teammate's flow.
+**Status:** done.
