@@ -1,6 +1,6 @@
 # Lucy
 
-Owner: game designer (THJ approves) · Scope: `all` · Checked against assets: `main` @ `92853a5a9`, 2026-10-16 (ability presets read from the live project); Family Role line from `main` @ `8c2e8617c`, 2026-10-29 (`LucyFactionRoleHandler.cs` read); Cyclone on `main` from the Cyclone tech plan's code facts and report C1b (`main` @ `aaae8a7db`); [Cyclone (Pulling Gale)](#cyclone-pulling-gale) LU-3 to LU-7 and the Steer row from the `thj/cyclone` build reports C1a to C4, 2026-11-12 (not play-checked yet) · Mirror: Claude Doc "Miso — Game Design", tab Characters › Lucy · Up: [Overview](../overview.md)
+Owner: game designer (THJ approves) · Scope: `all` · Checked against assets: `main` @ `92853a5a9`, 2026-10-16 (ability presets read from the live project); Family Role line from `main` @ `8c2e8617c`, 2026-10-29 (`LucyFactionRoleHandler.cs` read); Cyclone on `main` from the Cyclone tech plan's code facts and report C1b (`main` @ `aaae8a7db`); [Cyclone (Pulling Gale)](#cyclone-pulling-gale) LU-3 to LU-7 and the Steer row from the `thj/cyclone` build reports C1a to C5, 2026-11-12 (not play-checked yet) · Mirror: Claude Doc "Miso — Game Design", tab Characters › Lucy · Up: [Overview](../overview.md)
 
 Lucy is the daughter and the family's fire mage: a fragile skirmisher whose embers chase targets, whose Cyclone reshapes the board, and whose Family Role follows up every attack the others make. Many of the family's combos run through her (Papa's Shelter, Shield Flare, Tempest Bloom, Sisters' Rivalry).
 
@@ -34,7 +34,7 @@ Source: `abilityOrchestrator` on `Unit_Lucy.prefab`; presets in `Resources/UnitS
 
 ## Cyclone (Pulling Gale)
 
-**On `thj/cyclone`** (D-529 to D-541), until it merges. On `main` the Cyclone is still the drifting one in the table above. Design and reasoning: [`cyclone-redesign.md`](../../cyclone-redesign.md); build: [`plans/2026-11-11-cyclone-redesign-tech.md`](../../../plans/2026-11-11-cyclone-redesign-tech.md), reports `reports/cyclone-c1a.md` to `cyclone-c4.md`. None of it is play-checked yet (D-534).
+**On `thj/cyclone`** (D-529 to D-545), until it merges. On `main` the Cyclone is still the drifting one in the table above. Design and reasoning: [`cyclone-redesign.md`](../../cyclone-redesign.md); build: [`plans/2026-11-11-cyclone-redesign-tech.md`](../../../plans/2026-11-11-cyclone-redesign-tech.md), reports `reports/cyclone-c1a.md` to `cyclone-c4.md`. None of it is play-checked yet (D-534).
 
 > Lucy's Cyclone holds a cross. At the end of the enemy turn, enemies on its arms are dragged in and hit. The family passes through but can't stop in it.
 
@@ -45,7 +45,7 @@ Source: `abilityOrchestrator` on `Unit_Lucy.prefab`; presets in `Resources/UnitS
   3. **Hit:** 3 × damage (×1.2 or ×1.4 with Cyclone Power) to each enemy on a touching cell, once each; a large unit is hit once if any of its cells touches. An enemy pulled in from 2 cells out is hit by the same Whirl.
 
   On cast, the pull is part of Lucy's action and the hit lands just after her action ends. Two enemy factions make two Whirls a round; an enemy turn that is skipped makes none. With one enemy faction a cast makes at most 4 Whirls (12 × to an enemy that stays touching). The combat log shows "✦ Whirl · Lucy: pulled N, hit M". *Built*
-- **LU-5. Whirl damage is real damage, but no one's action.** Each hit is reported like any ability hit, credited to Lucy's cast: mission stats, barks, kill XP and gold, the sisters' tally (once per kill). It is nobody's action, so Lucy's own Family Role doesn't follow up on it (D-277) and the Masher's counter ignores it (D-537). A Whirl hit wakes an Unaware enemy (it loses HP, EN-14a). A pull alone, Whirl or Gust, doesn't: no ability effect lands on it (read in code, to check in play). *Built*
+- **LU-5. Whirl damage is real damage, but no one's action.** Each hit is reported like any ability hit, credited to Lucy's cast: mission stats, barks, kill XP and gold, the sisters' tally (once per kill). It is nobody's action, so Lucy's own Family Role doesn't follow up on it (D-277) and the Masher's counter ignores it (D-537). A Whirl hit or a pull (Whirl or Gust) wakes an Unaware enemy, and the wake spreads to its Unaware neighbours as any wake does (EN-14, EN-15; D-542). *Built* (wake on pull: play check pending)
 - **LU-6. Steer and Gust.** While her Cyclone is out, the Cyclone button (same slot, same key) is **Steer**: 1 AP, once a turn (its own cooldown 1; the cast's cooldown is untouched). The Cyclone moves up to 3 straight steps; it can cross the family, allies and hazards that don't block, but not walls, enemies or planted entities that block walking; it must end on an empty cell (LU-3's rule). Then a **Gust** at the new cell only: LU-4's pull, no hit, no report; nothing is pulled along the path. The aim preview shows the path, a faint Cyclone on the landing cell, and a ghost and step arrow for every enemy the Gust will move. Log: "✦ Gust · Lucy: pulled N". The Steer is not available while a Whirl, a Steer or a pull is running, and never to an AI-controlled Lucy (D-540). Placeholder: the Cyclone's icon and cast animation, title "Steer". *Built*
 - **LU-7. What it stops.** Enemies can't enter or path through its cell; the family, allies, neutrals and decoys path through it but can't end a move there; pushes and pulls stop on the cell before it ([Combat rules](../combat-rules.md) CR-58). Enemy shots whose line runs through its tile are refused (CR-57); family projectiles pass, and Linda's straight arrows still split (Tempest Bloom). Enemies treat its cross as dangerous ground ([Enemies](../enemies.md) EN-18, EN-19). Linda's arrows never land on its cell ([Linda](linda.md) LI-6, D-252 unchanged). *Built*
 
@@ -107,7 +107,7 @@ One free slot takes the shared Vitality Brooch. Source: `Resources/Unit Equipmen
 | --- | --- |
 | Stoked Embers | Fire Embers damage +1 level |
 | Lingering Embers | Fire Embers apply Burn for 2 turns (same as the skill node) |
-| Howling Gale | Cyclone applies Weak for 2 turns. **On `thj/cyclone`:** applied with each Whirl hit; its Weak effect still has radius 1 around the hit unit, so whether it matches "every enemy a Whirl hits" is unchecked (C5) |
+| Howling Gale | Cyclone applies Weak for 2 turns. **On `thj/cyclone`:** every enemy a Whirl hits is Weak for 2 turns; a Gust (no hit) applies nothing. The Weak effect is targeted at the hit unit only (its radius field is ignored), locked by tests (D-545). Text: "Lucy's Cyclone applies Weak for 2 turns to every enemy it hits." (D-544) |
 | Tempest Bloom | Projectiles split through her Cyclone (same as the family node) |
 | Sisters' Bond | Linda–Lucy Duo damage +1 level |
 
@@ -122,7 +122,7 @@ Source: `Resources/RunUpgrades/*/RU_*.asset`.
 1. **Q1.** Sidewinders is set up differently from every other numeric node (upgrade mode 0 instead of 1). It likely explains the "Maxed Out" with no points spent and the "+3 in game" seen in playtests. Fix the data?
 2. **Q2.** Names for the Linda–Lucy pair: Sisters' Rivalry (synergy), Marks-Sisters (Duo node), Sisters' Bond (run upgrade). Keep three names?
 3. **Q3.** In the John–Lucy Duo, Lucy's QTE uses Linda's input binding (`LindaQTE`). Data slip?
-4. **Q4.** **On `thj/cyclone`:** the Cyclone's ability description still reads "Creates a tornado that moves and damages enemies.", and the Steer text is a placeholder; Cyclone Power and Howling Gale texts are not reworded to the Whirl yet (plan C5, narrative).
+4. **Q4.** **On `thj/cyclone`:** Cyclone texts are working text, applied (D-544, `reports/cyclone-c5-text.md`); THJ approves the wording at play, and the terms Whirl, Gust, Steer, arms and cross stay glossary proposals. Cyclone: "Summons a Cyclone for 3 enemy turns. On cast and after each enemy turn, it pulls enemies on its arms one cell in, then hits those beside it. Enemies can't pass or shoot through it." Steer: "Moves the Cyclone up to 3 cells, not through walls or enemies. Then it pulls enemies on its arms one cell in, without hitting them. Once a turn." Cyclone Power unchanged ("Lucy's Cyclone hits harder."). Howling Gale: "Lucy's Cyclone applies Weak for 2 turns to every enemy it hits." (its unlock entry is now titled Howling Gale). Still open: the Steer's own icon.
 
 ## Related
 
