@@ -101,7 +101,7 @@ None. Both earlier questions are answered: Super Time stays skip; the Masher ign
 - **Not playtested at all.** Every runtime path (real pusher move, hazards on landing, Watch timing, the report's resource awards, the beat) is a play check.
 - `CycloneHitContext` hides the cast from effects. Anything in the hit compound that needs the `RuntimeAbility` itself (area-shape run upgrades via `RunUpgradeTracker.ResolveAreaShape`) doesn't apply to Whirl hits. Nothing in today's compound uses it.
 - Howling Gale's Weak compound has radius 1 and runs per hit as before; whether its area matches "every enemy a Whirl hits" is a C5 check.
-- The cast Whirl's pull holds Lucy's ability open. If a pull's move never finishes, the 300-frame cap releases it.
+- The cast Whirl's pull holds Lucy's ability open. If a pull's move never finishes, the 3 s pull cap (real seconds, paused time not counted) releases it.
 - `ReportDamageOutsideAbility` raises `onUnitDamageDone` from outside any action, so listeners that expect an action in flight (Wrath, Blood Debt, Atman Barrier, AP providers) filter by basic attack or owner and ignore it. Barks and mission stats now see Cyclone damage.
 - The cross and beat still don't hide in cutscenes (from C1a).
 - The AI doesn't know the cross yet (C2). Enemies still can't walk through the Cyclone (`disallowWalk`).
