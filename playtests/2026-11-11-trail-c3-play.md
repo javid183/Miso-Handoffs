@@ -40,3 +40,8 @@ So the layouts now set up the situations; the family's free and area damage (Cyc
 - Cyclone kills are credited to the victim or "other" in the summary (`Kills by unit: DarkClaw #05-02 1 · other 1`). Covered by the Cyclone plan's damage-report chunk.
 - **Possible bug, lost skill-tree point:** John run, Lucy's loadout shows `Tree: Sidewinders 1` at the Trailhead and no tree from the Tracks on. In the morning's C1 run (`120958`) the same point stayed on all three levels. The line prints only when the tree has points (`CombatLog.Units.cs:306`), so either the point was really lost between levels or the log reads a stale source. Backlog: Explore, then a fix.
 - No notes yet from THJ on the arrival camera, the Black Claw caption order or Blood's blank panel row.
+
+## C4 replay (22:23, Mark pick, tracks route; log `20261111-222313_The_Trail.log`)
+
+THJ: "It was much much better. I think it is okay for now."
+Numbers: 8 rounds, 9m02s, 28 taken (C3 Mark run: 14), family down 0. Trailhead 6 taken (Claw 6 on Linda); Tracks 10 taken + a potion: the Black Claw's pack was called and the leader hit Mark for 10 (15 → 5); Pile 12 taken (Claws 6 on Lucy and Mark turn 1). Chained Assault not used. Camera on Linda after arrivals: no complaint.

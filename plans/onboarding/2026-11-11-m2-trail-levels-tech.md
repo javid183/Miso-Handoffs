@@ -106,7 +106,7 @@ Compile clean / EditMode (known red only) / `miso-reviewer` / coordinator reads 
 
 ## C4 · Trail balance values (D-516, D-518)
 
-C3 committed `9e9e0ca63` (2026-11-11).
+C3 committed `9e9e0ca63` (2026-11-11). C4 committed `33fdb4566` (Cyclone), `75d97cd05` (Trail values) after THJ's replay.
 
 Source: THJ's C3 play (`playtests/2026-11-11-trail-c3-play.md`), the balance design (`plans/2026-11-11-trail-balance-design.md`), decisions D-516 to D-518. Size S, data only, `sonnet`. Runs after the C3 fix round is committed. Chained Assault is untouched (D-517: THJ tunes it). Bloom and the sisters' Duo node (D-519, D-520) are a separate plan.
 

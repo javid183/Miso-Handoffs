@@ -2685,3 +2685,10 @@ Core gets one additive, generic `CombatLog.AddCustom`.
 **Not verified:** the camera on Linda after arrivals and its dead-Linda path (in THJ's C4 replay).
 **Findings:** still low threat in play (Cyclone walked into by the AI, Mark–Lucy Duo wipe, free reactions, Claw hits 3–4) → balance round (D-512, D-516 to D-520). Possible bug: Lucy's skill-tree point gone after level 1.
 **Status:** C3 done. Next: C4 values (Standard tier, Tracks HP, Cyclone damage 3); Bond tree note (Bloom open, sisters' Duo as a Lv 2 node).
+
+## 2026-11-11 · M2 Trail C4: balance values (D-516, D-518)
+
+**Built:** the Trail at Standard tier (Claw 6, Black Claw 10); Tracks' Claws at 16 HP, Black Claw ×0.75 (30); Lucy's Cyclone damage factor 7 → 3 (global, cooldown 2). Committed `33fdb4566` (Cyclone, alone) and `75d97cd05` (Trail prefabs, wiring, tests).
+**Verified:** EditMode 1876/1877 (known AI red only); wiring idempotent; review APPROVE; THJ's replay (Mark pick): 28 taken (was 14), "much much better, okay for now".
+**Not verified:** John pick and blood route at Standard (not replayed).
+**Status:** the Trail's challenge is okay for now. Next: the Bond tree change (Bloom open, sisters' Duo node).
