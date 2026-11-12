@@ -2,7 +2,7 @@
 
 Size: M    Tier: 3 (core `RuntimeAbility`; Duos and Synergies)    Assigned to: miso-implementer
 Branch: all (built on `thj/after-hearth`)
-Status: in progress (C1 core dispatched 2026-11-11, after M2 C4 committed)
+Status: parked (THJ 2026-11-11: "leave that for now, not critical"); approved, nothing built. C1 was started and stopped; its edits reverted
 
 ## Why
 
