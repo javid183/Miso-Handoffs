@@ -22,3 +22,6 @@ Reviewer: `miso-reviewer` (read-only; saved by the coordinator), 2026-11-12. Bra
 ## Notes
 - `core-systems.md`: add `GridLineOfFire`, `ILineOfFireBlocker`, `AEffectSpawner.IsProjectileShot` (top-level effects only).
 - Play: Shaman still moves to heal/summon with a Cyclone out; blocked Archer doesn't retreat out of range when a clear cell is reachable.
+
+## Re-review of the should-fix round (2026-11-12): APPROVE
+`AILineOfFire.HasValidTarget` worker-safe, matching follows the brain's candidate rule (light: may over-keep, never wrongly drops). Per-job cache fresh, per brain, no statics. `GetEffects` correct. Archers fully filtered. Shaman: summon (cooldown 3) keeps every destination while ready (acceptable); heal keeps a cell whenever any ally is in range regardless of HP, so the filter rarely moves Shamans; option for THJ: count the heal only for a hurt ally. Any non-Targeted ability always keeps a destination (noted in `core-systems.md`). Cosmetic: no test for the Surrounding summon path.

@@ -3,6 +3,45 @@
 Plan: plans/2026-11-11-cyclone-redesign-tech.md    Agent: miso-implementer (opus)    Branch: thj/cyclone
 Outcome: done (THJ play check pending). Core touches as approved (D-533): the AI candidate loop and intent, the `AEffectSpawner` execution check; plus one new additive core file, `GridLineOfFire.cs` in `GridSystem/` (flagged below).
 
+## Fix round (after the C4 review)
+
+Review: `reports/cyclone-c4-review.md` (APPROVE, three should-fixes).
+
+1. **The firing-spot filter keeps cells where something else has a target.**
+   - `RefusesBlockedFiringSpot` now asks `AnythingElseToDoFrom`: any ability other than a shot that is still usable after the move.
+     - A melee attack needs an enemy in reach.
+     - A heal, buff or summon needs a valid target in its range.
+     - An ability aimed at the area around the unit always has one.
+   - The target match is the new pure `AILineOfFire.HasValidTarget(rangeCells, targetType, relation, unit)`. It is a light version of the candidate-target rule; `GetAbilityCandidateTargets` can't be reused because its buffers are in use while candidates are scored.
+   - `AnyUsableAttackAfterMove` gains `attacksOnly` (default true, so C2's dangerous-ground check is unchanged).
+   - `CanAttackAfterMovingTo` loses the now-unused `includeShots`.
+   - `RefusesFiringSpot`'s predicate is renamed `anythingElseFromThere`.
+   - So the Dark Shaman still walks to heal or summon: the summon is aimed at the area around it, so it keeps every destination while it is off cooldown.
+   - Test: `AI_HasValidTarget_KeepsCellsWhereAHealOrSummonHasATarget`:
+     - a heal on an ally in range: kept;
+     - only an enemy in range: not kept;
+     - never itself;
+     - an empty cell for a cell-targeted summon: kept;
+     - an occupied cell for a cell target: not kept.
+   - The existing `RefusesFiringSpot` test covers the "something else is left" keep.
+2. **`IsProjectileShot`** reads `EffectSetLevel?.GetEffects(Preset.BaseEffectSetLevels)`, so a level that only updates parameters counts the base level's effects. No enemy has upgrade levels today, so no test changed.
+3. **Worker cost.**
+   - All three brain hooks first call `LineOfFireApplies()`. It is false at once when the board has no blockers, or when the unit has no projectile ability.
+   - The "has a shot" scan runs once per AI job: the key is the blocker set the faction brain hands the blackboard per job. It is an instance field on the brain, not a static.
+   - The firing-spot buffers (spot footprint, enemy list, a footprint pool, the seen set) are reused instead of allocated per destination.
+4. **Backing off out of range:** not changed. Preferring a clear-line cell over a cell out of range needs a pre-pass over all of a move's destinations (or a score nudge, which is AI content), so it isn't a tiny change. Without care it would also change how unblocked archers pick cells. Left as a **play check**: a blocked Archer with a reachable clear-line cell should take it rather than retreat.
+
+Files touched in this round:
+- `Core/Systems/AISystem/Runtime/AIUnitBrain.LineOfFire.cs`, `AIUnitBrain.EndOfTurnDanger.cs`, `AILineOfFire.cs`
+- `Core/Systems/AbilitySystem/Effects/Runtime/AEffectSpawner.cs`
+- `Features/Player/Lucy/Scripts/Editor/CycloneLineOfFireTests.cs` (now 20 cases)
+
+Line endings and BOMs are kept. The commit order is unchanged.
+
+**EditMode after the fix round:** 2010 run, 2009 passed. The only failure is the known red `AIRegressionTest.Baseline_MatchesCurrentAI`: 714 checks, still **43** inner failures, not re-baselined. Compile clean.
+
+The sections below describe the first build; where the fix round changed something, the fix round wins.
+
 ## What changed
 
 Paths under `miso/Assets/_Project/`. All files LF. New core files follow their siblings: `GridLineOfFire.cs` and `AILineOfFire.cs` have a BOM, `AIUnitBrain.LineOfFire.cs` has none (like `AIUnitBrain.cs`). Edited files keep theirs (`AEffectSpawner.cs`, `AIBlackboard.cs`, `AIFactionBrain.cs` BOM; the others none). Metas made by Unity.
