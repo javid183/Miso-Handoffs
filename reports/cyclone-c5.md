@@ -78,3 +78,12 @@ Unity regenerates nothing else. Don't stage PreloadScreen, ProjectSettings or th
 5. John adjacent to an ally in range of Shield Dash: a pull of an enemy shows no Shield Dash prompt; the prompt still shows during a Command move.
 6. Howling Gale (Run upgrade): hit enemies show Weak for 2 turns; a neighbour that was not hit does not.
 7. Read the Cyclone and Steer tooltips and the Howling Gale text in the run-upgrade list and unlock list.
+
+## Fix round (review should-fixes)
+
+1. `EnemyAlertTracker.ForcedMove.cs`: `WakeMovedUnit` returns on the AI worker thread, like every other path into the wake.
+2. `EnemyAlertForcedMoveTests.cs` rewritten so it can fail: the tracker is seeded by reflection (level active, Unaware tag, unit held as Unaware, unit given a tag set), and the test asserts `UnitAlerted` fires exactly once at depth 0, the unit is no longer Unaware, and a second call does nothing. Also kept: a not-Unaware unit wakes nobody, a null unit is ignored. This covers the real wake in edit mode; the end-to-end pull is still a play check.
+3. `CycloneSteerSetup.cs`: comment now reads "Working text until THJ signs off the wording; keep in step with Lucy_Ability_Steer.asset."
+4. `CycloneHowlingGaleTests`: the hit-compound test now also asserts the parent's `targetType` is CellOccupant.
+
+Suite: 2016 run, 2015 pass, only `AIRegressionTest.Baseline_MatchesCurrentAI` fails, 43 inner failures (unchanged). Commit plan unchanged (the new test sits in commit F; its helper `CycloneTestGrid` lives in C1 commit 4, so F's test file must go after it: stage `EnemyAlertForcedMoveTests.cs` (+ .meta) with commit G instead, and keep only `EnemyAlertTracker.ForcedMove.cs` (+ .meta) in F).
