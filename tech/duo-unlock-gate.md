@@ -18,3 +18,10 @@ Node A: UnlockableLiteral, new ID (e.g. `_LindaLucyDuo`), 1 FSP, Bond Lv 2. Edge
 
 ## Side finding
 `RangedEnchantDuo_TargetAdjust` writes the Duo factor into Linda's partner-ability Stat_DMG entry, which is shared with its preset: it mutates ScriptableObject data at runtime (domain reload is off). Backlog.
+
+## Notes from the stopped C1 run (implementer, 2026-11-11; nothing was built)
+- `FactionTracker.GetUnlockableState` isn't strictly plain data: it goes through `GlobalSettingsSO.Instance` (getter does a Unity-object null check and may `Resources.Load`) and `GetRegistry<UnlockableRegistry>().ResolveEntity`. The AI already does the same on the worker (`UtilityVariables.cs:332, 387`; `GTagSet`), so it's safe once the settings asset is loaded on the main thread — needs an explicit OK when the work resumes.
+- In the editor `ResolveEntity` rebuilds its lookup on every call: cache the resolved unlockable, or resolve it once per check.
+- A missing ID throws `KeyNotFoundException` (would kill AI planning): C2 data must use a valid ID; consider a safe lookup.
+- Reach the faction with `_owner?.Unit?.Faction?.Tracker` (as `IsRunUnlocked` does), not `AEffectCompound`'s Unity-object check.
+- `AbilityPreset` isn't partial: field goes in `AbilityPreset.cs` or the class gets `partial`. `AbilityPreset.cs` and `RuntimeAbility.cs` are LF with BOM.
