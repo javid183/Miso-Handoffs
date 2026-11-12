@@ -24,3 +24,6 @@ Reviewer: `miso-reviewer` (read-only; saved by the coordinator), 2026-11-12. Bra
 - Commit order A, A2, B, D1, C1 1–8, C, D2, D3 compiles with whole files; widen C1 commit 3's message (inert Steer code until D2).
 - Hygiene OK; `Unit_Lucy` diff has 2 harmless default QTE lines; stale `data[8]` stat-profile override now applies to Steer (matches others); setup tool re-runnable.
 - Play checks: Steer right after a cast; Mark's role doesn't answer a Steer; walk highlight flicker on relocate.
+
+## Re-review of the fix round (2026-11-12): APPROVE
+Must fix done (`CycloneEntity.Ready.cs:17-24`, called from Whirl/Steer `finally` and `Dispose`; main thread; skips with no selection; safe after level end and unload; a few extra refreshes, no flicker). AI-Lucy refusal worker-safe (`AEffectCycloneSteer.cs:88-92`). Should fixes 2–5 done. Item 7 skip justified (only the Masher's preview ghosts enemies, Masher never pulled). Commit order still compiles with `Ready.cs` in C1 commit 3. Play checks: Steer clickable once the first Whirl ends, also after a Super Time cast while Lucy is selected.

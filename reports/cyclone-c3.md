@@ -3,6 +3,37 @@
 Plan: plans/2026-11-11-cyclone-redesign-tech.md    Agent: miso-implementer (opus)    Branch: thj/cyclone
 Outcome: done (THJ play check pending). One small additive core touch (the Steer's target range), flagged below.
 
+## Fix round (after the C3 review)
+
+THJ approved the core hook (D-539); it ships as its own commit D1. Review: `reports/cyclone-c3-review.md` (FIX).
+
+1. **Must fix: the Steer button was greyed for the rest of the turn after a cast.** The cast ends while its first Whirl is still running, and nothing refreshed the bar when the Whirl ended.
+   - New partial `Cyclone/CycloneEntity.Ready.cs` with `event ReadyChanged` and `NotifyReadyChanged()`.
+   - It is raised at the end of every Whirl, at the end of every Steer (after its Gust) and on Dispose.
+   - It refreshes the shown unit's panel (`CombatLevelUIManager.Instance.RefreshUnitControlPanel(SessionLogs.Instance.CurrentSelectedUnit)`). The bar's existing swap check then rebuilds the button when needed.
+   - The cast still doesn't wait for the whole Whirl.
+   - Super Time is covered: its cast runs the same first Whirl, whose end raises the refresh.
+   - Test: `TheEndOfAWhirlOrASteer_SaysTheCycloneIsReady`. The refresh itself is a play check.
+2. **Should fix 1 (coordinator): an AI-controlled Lucy never gets the Steer.**
+   - `AEffectCycloneSteer.CheckActivationFeasibility` refuses when the owner's faction controller has `ControllerHandler.AI` (`AEffectCycloneSteer.IsAIControlled`). Plain references only, so it is worker-safe.
+   - Test: `SteerEffect_IsNeverAvailableToAnAIControlledLucy` (no controller and a Player controller pass; an AI controller refuses).
+   - **Correction:** the first build's report said an AI Lucy's candidate cells were filtered by the Steer rule. That was wrong: `AIUnitBrain.GetAbilityCandidateTargets` never calls `CheckTargetSelectionCondition`. Now moot.
+3. **The test assertion that couldn't fail was dropped.** It compared the cast's cooldown with a fresh object. The remaining assertion is relabelled: after one use the Steer waits one family turn.
+4. **`TargetSelectionRange.TryGetProvided` test:** `TargetSelectionRange_SuppliedByTheSteerOnly_AroundTheCyclone`. False for the cast and for null; true for the live Steer, with exactly the cells the Cyclone can reach and nothing around Lucy.
+5. **Main-thread-only doc** on `ITargetSelectionRangeProvider` and `TryGetProvided`.
+6. **`|| IsSteering` guards** in `StartWhirl` and `OnTurnEnding`. Test: `WhileSteering_NoWhirlStarts`.
+7. **Optional preview item, not done.** `Clear()` already hides only the ghosts of units this preview drew. Telling whether another preview has since redrawn the same unit's ghost would need `GUnit`'s private ghost state (a core change), so I left it. The only preview that ghosts an enemy is the Masher's, and Masher is Immovable, so it is never in the Gust plan.
+
+Files touched in this round:
+- New: `Features/Player/Lucy/Scripts/Cyclone/CycloneEntity.Ready.cs` (+ .meta).
+- Edited in `Features/Player/Lucy/Scripts/Cyclone/`: `CycloneEntity.cs`, `CycloneEntity.Whirl.cs`, `CycloneEntity.Steer.cs`, `AEffectCycloneSteer.cs`.
+- `Core/Systems/AbilitySystem/Effects/Runtime/ITargetSelectionRangeProvider.cs` (doc comment only).
+- `Features/Player/Lucy/Scripts/Editor/CycloneSteerTests.cs` (now 17 cases).
+
+**EditMode after the fix round:** 1990 run, 1989 passed. The only failure is the known red `AIRegressionTest.Baseline_MatchesCurrentAI`: 714 checks, still **43** inner failures, not re-baselined. Compile clean.
+
+The sections below describe the first build; where the fix round changed something, the fix round wins.
+
 ## Button swap: the design choice
 
 **A second ability, shown in the Cyclone button's place.** `Lucy_Ability_Steer` is a new ability on Lucy (appended to `Unit_Lucy`'s list). The ability bar asks `CycloneButtonSwap` what goes in each slot: while her Cyclone is out, the cast's slot shows the Steer. The Steer has no slot of its own. So the button keeps its position and its number key, and changes icon-less in place (placeholder: same icon, title "Steer").
@@ -136,7 +167,7 @@ No.
 
 ## Needs THJ
 
-1. **Core touch (additive):** `ITargetSelectionRangeProvider` (new file) and the 4-line check in `FactionControllerBase.ComputeAbilityRangeCells`. It is needed so the Steer's range highlight and in-range check are around the Cyclone, not around Lucy. With no effect implementing it, behaviour is identical. Recommend: approve, in its own commit (1 below).
+1. **Answered: approved by THJ (D-539).** **Core touch (additive):** `ITargetSelectionRangeProvider` (new file) and the 4-line check in `FactionControllerBase.ComputeAbilityRangeCells`. It is needed so the Steer's range highlight and in-range check are around the Cyclone, not around Lucy. With no effect implementing it, behaviour is identical. Recommend: approve, in its own commit (1 below).
 
 ## Docs to update
 
@@ -159,10 +190,7 @@ No.
   - Watch firing after a Gust pull;
   - an enemy pulled onto spikes by a Gust.
 - **Placeholder text** (not tagged in the asset, per conventions): Steer title "Steer"; description "Move the Cyclone up to 3 cells, not through walls or enemies. It then pulls enemies on its arms one cell in. Once a turn." The icon is the Cyclone's. The narrative pass is C5.
-- **AI-controlled Lucy** (dev auto-player): the Steer is in her ability list.
-  - Its checks are worker-safe, but it has no score graph (score 0). An AI Lucy could pick it when nothing else scores above 0.
-  - The AI's range code wasn't changed, so the AI only considers Steer cells within 3 of Lucy (still filtered by the Steer rule).
-  - Harmless, but odd. A one-line refusal for AI controllers is possible if it shows up.
+- **AI-controlled Lucy** (dev auto-player): refused by the Steer's activation check since the fix round. The AI never sees the Steer as available.
 - **Memory 4 / scripted casts:** if a level's ability lock hides the Cyclone, the Steer is hidden too. If the Cyclone isn't locked and Lucy is playable after a scripted cast, the Steer appears. Worth a look in the Memory 4 check (C5).
 - The bar rebuilds on the next `Refresh` after a change. If some path changes the Cyclone without a following refresh (Super Time cast while Lucy is shown?), the swap shows on the next refresh or selection. Play check.
 - Relocation uses `GridCell.PlugEntity`, whose fallback slides an entity to the nearest free cell when the plug fails. The Steer checks the end cell right before relocating and otherwise goes back to its start, so the fallback isn't reached.
@@ -170,20 +198,24 @@ No.
 
 ## Proposed commits
 
-These come after the order in `cyclone-c2.md` (A, A2, B, C1 1–8, C). Whole files per commit.
+Full order: **A, A2, B, D1, C1 1–8, C, D2, D3**, with whole files per commit. This builds at every step: D1 adds the core interface that the Steer effect implements, and C1 commit 3 carries the inert Steer code.
 
-1. **D1.** `feat(core): an ability effect can supply its own target cells, used by the player's range highlight and target check` (**core**): `Core/Systems/AbilitySystem/Effects/Runtime/ITargetSelectionRangeProvider.cs` (+ .meta), `Core/Interactions/Runtime/FactionControllerBase.cs`. Inert alone. It is independent of the other commits, so it could also come first.
-2. **D2.** `feat(lucy): while her Cyclone is out, Lucy's Cyclone button is Steer: 1 AP once a turn, up to three straight cells through the family, then a Gust pulls enemies on its arms one cell in, with an aim preview` (plain; depends on D1 and on C1 3 / C). Note: `Cyclone/` here is `Features/Player/Lucy/Scripts/Cyclone/`.
-   - New in `Cyclone/`, each + .meta: `CycloneSteerRules.cs`, `AEffectCycloneSteer.cs`, `CycloneEntity.Steer.cs`, `ICycloneSteerSteps.cs`, `CycloneSteerSteps.cs`, `CycloneSteerPreview.cs`, `CycloneButtonSwap.cs`.
-   - Changed in `Cyclone/`: `CycloneEntity.cs`, `CycloneEntity.Whirl.cs`, `CycloneWhirlPlanner.cs`.
-   - `Features/Player/Lucy/Scripts/LucyCycloneProjectileScatter.cs`.
-   - `Features/UI/Panels/Scripts/AbilitiesBarHUDUI.cs`, `AbilitiesBarHUDUI.CycloneSteer.cs` (+ .meta).
-   - `Features/Player/Lucy/Scripts/Editor/CycloneSteerSetup.cs` (+ .meta).
-   - In `Resources/UnitSpecific/Player/Lucy/Abilities/Cyclone/`: `Lucy_Ability_Steer.asset`, `Lucy_Ability_Steer_Effect_Steer.asset` (+ .meta each).
-   - `Features/Player/Lucy/Prefabs/Unit_Lucy.prefab`.
-   - Caveat: `Cyclone/` files from C1 commit 3 are also edited here. Because commits take whole files, `CycloneEntity.cs`, `CycloneEntity.Whirl.cs` and `CycloneWhirlPlanner.cs` will already hold the C3 edits when C1 commit 3 is staged, unless D2 is folded into the C1/C sequence.
-   - Options: (a) commit C1–C3 files of the `Cyclone/` folder in C1 commit 3 as they now stand. The C3 hunks there are inert without the Steer ability: the preview binds but never sees a Steer, `IsSteering` is always false, and `vacating` defaults to null. Then D2 carries only the new files and the rest. (b) Hunk-stage (THJ runs `git add -p`). I recommend (a). But `CycloneEntity.cs` references the new `CycloneSteerPreview` type, so under (a) commit 3 must also include `CycloneSteerPreview.cs`, `CycloneEntity.Steer.cs` (whose `IsSteering` Dispose reads) and their dependencies, `CycloneSteerSteps.cs`, `ICycloneSteerSteps.cs`, `CycloneSteerRules.cs`, `CycloneButtonSwap.cs`, `AEffectCycloneSteer.cs`, plus D1 before it. In practice: put D1 before C1 commit 3, and have commit 3 take the whole `Cyclone/` folder (except `CycloneEntity.AIDanger.cs`, which goes in C). D2 then carries the scatter, the bar, the setup tool, the assets and `Unit_Lucy`.
-3. **D3.** `test(lucy): Steer rules, Gust, button swap, scatter and AI danger after a Steer` (plain; depends on D2): `Features/Player/Lucy/Scripts/Editor/CycloneSteerTests.cs` (+ .meta), `Features/Player/Lucy/Scripts/Editor/CycloneTestGrid.cs` (if C1 commit 4 is already staged, otherwise it rides there whole).
+- **A, A2, B:** as in `cyclone-c2.md`.
+- **D1.** `feat(core): an ability effect can supply its own target cells, used by the player's range highlight and target check` (**core**, approved by THJ): `Core/Systems/AbilitySystem/Effects/Runtime/ITargetSelectionRangeProvider.cs` (+ .meta), `Core/Interactions/Runtime/FactionControllerBase.cs`. Inert on its own.
+- **C1 1–8:** as in `cyclone-c1b.md` (2b folded into 2), with one change to commit 3.
+  - **C1 commit 3**, with a wider message: `feat(lucy): the Cyclone stays where it is cast, whirls on cast and at the end of each enemy turn (pull one cell in, then 3x on touching enemies), shows its cross and pips, and casts only on an empty cell; carries the Steer and Gust code, unused until Lucy has the Steer ability`.
+  - It takes the whole `Features/Player/Lucy/Scripts/Cyclone/` folder, each file with its .meta, **except `CycloneEntity.AIDanger.cs`** (+ .meta), which goes in C.
+  - That includes the C3 files: `CycloneSteerRules.cs`, `AEffectCycloneSteer.cs`, `CycloneEntity.Steer.cs`, `CycloneEntity.Ready.cs`, `ICycloneSteerSteps.cs`, `CycloneSteerSteps.cs`, `CycloneSteerPreview.cs`, `CycloneButtonSwap.cs`.
+  - The Steer code is inert here: no ability uses the Steer effect, so the preview never sees a Steer, `IsSteering` stays false, and `vacating` defaults to null.
+  - The rest of commit 3 is unchanged (setup tool, `Cyclone.prefab`, the cast assets, the pusher). It depends on D1.
+- **C:** as in `cyclone-c2.md`.
+- **D2.** `feat(lucy): while her Cyclone is out, Lucy's Cyclone button is Steer: 1 AP once a turn, up to three straight cells through the family, then a Gust pulls enemies on its arms one cell in, with an aim preview` (plain; depends on C1 3):
+  - `Features/Player/Lucy/Scripts/LucyCycloneProjectileScatter.cs`
+  - `Features/UI/Panels/Scripts/AbilitiesBarHUDUI.cs`, `Features/UI/Panels/Scripts/AbilitiesBarHUDUI.CycloneSteer.cs` (+ .meta)
+  - `Features/Player/Lucy/Scripts/Editor/CycloneSteerSetup.cs` (+ .meta)
+  - `Resources/UnitSpecific/Player/Lucy/Abilities/Cyclone/Lucy_Ability_Steer.asset`, `Lucy_Ability_Steer_Effect_Steer.asset` (+ .meta each)
+  - `Features/Player/Lucy/Prefabs/Unit_Lucy.prefab`
+- **D3.** `test(lucy): Steer rules, Gust, button swap, ready refresh, scatter and AI danger after a Steer` (plain; depends on D2): `Features/Player/Lucy/Scripts/Editor/CycloneSteerTests.cs` (+ .meta). The `CycloneTestGrid.cs` `holes` change rides whole in C1 commit 4.
 
 Don't stage THJ's files (PreloadScreen, ProjectSettings, the TMP fallback font).
 
