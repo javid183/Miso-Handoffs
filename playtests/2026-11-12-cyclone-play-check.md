@@ -39,4 +39,4 @@ Built back to back without per-chunk play (D-534). THJ plays everything here, th
 - Linda's arrows still pass through and split; Toba/allied shooters unaffected.
 - Dark Shaman with a Cyclone out still moves to heal or summon.
 - A blocked Archer doesn't back off out of range when a cell with a clear line is reachable.
-- Shamans with an ally in heal range don't reposition for a clear shot (support first). Question for THJ: count the heal only when an ally in range is hurt?
+- Shamans with an ally in heal range don't reposition for a clear shot (support first, D-543).

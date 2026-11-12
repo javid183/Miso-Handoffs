@@ -1,6 +1,6 @@
 # Level chunks: enemy and challenge patterns
 
-Owner: game designer (THJ approves) · Scope: `all` · Status: **Proposed**, a working catalogue (33 chunks; 19–32 added 2026-10-23, 33 on 2026-10-24) · Supersedes the level sequence in [`plans/2026-10-21-showcase-levels-design.md`](../plans/2026-10-21-showcase-levels-design.md) (THJ, 2026-10-22: patterns and chunks, not a sequence of levels)
+Owner: game designer (THJ approves) · Scope: `all` · Status: **Proposed**, a working catalogue (33 chunks; 19–32 added 2026-10-23, 33 on 2026-10-24; Cyclone answers moved to Pulling Gale as built on `thj/cyclone`, 2026-11-12) · Supersedes the level sequence in [`plans/2026-10-21-showcase-levels-design.md`](../plans/2026-10-21-showcase-levels-design.md) (THJ, 2026-10-22: patterns and chunks, not a sequence of levels)
 
 A chunk is a small piece of a level (up to about 11 × 11 tiles) that asks the player one question. Each chunk has **several answers**, and each answer is a family mechanic: the best ones (★) are the smart solves, the plain ones (●) work at a cost, and the traps (✗) punish a careless play. Chunks combine into levels; this page doesn't order them.
 
@@ -30,6 +30,7 @@ A cell can hold a unit and its terrain: c^ is a Claw on spikes, J@ is John on th
 - **Enemy movement**, read from the presets: Dark Claw 4, Archer 3 (shoots 3), Dark Shaman 3 (shoots 2), Masher 1, Dark Worm 1. So a Claw reaches anyone within 5 this turn, and a Worm almost never surprises you.
 - **Dark Shaman heal**: the starting values in [`plans/2026-10-23-dark-shaman-heal-design.md`](../plans/2026-10-23-dark-shaman-heal-design.md) (its questions are open): one wounded dark ally (75% HP or less) within 3, +10, never itself, ends its turn, cooldown 2, and it never walks to heal.
 - **Hazards** beyond spikes and pools: see the [hazard reference](#hazard-reference).
+- **Lucy's Cyclone** is Pulling Gale, as built on `thj/cyclone` ([Lucy](gdd/characters/lucy.md#cyclone-pulling-gale) LU-3 to LU-7; not play-checked yet). The chunks' Cyclone answers assume it. In short: cast range 3 on an empty cell; it never moves on its own; at cast and at the end of each enemy turn its Whirl pulls enemies on its arms (2 cells, straight) one cell in, then hits each enemy on its 4 touching cells for 3 ×; it lasts 3 enemy turns, and cooldown 4 leaves a round without it. Enemies can't pass it and won't end a move on its cross unless they can attack from there (EN-18); the family passes through (CR-58); enemy shots through its tile are blocked (CR-57). On `main` it still drifts toward units.
 - **Enemy alert state** ([Enemies](gdd/enemies.md#alert-state-unaware-and-alerted) EN-12 to EN-17, built on `main`; decided after chunks 1–32 were drawn): enemies start Unaware and don't act until a family member (or ally, protectee, decoy) stops within their sight (3 Manhattan steps through walls by default, the Masher 2), something happens to them (any hit, damage, status or taunt), or a family ability lands within their alert range (2). Waking spreads to every sleeper within 2 of the one that woke, and an enemy that starts the level seeing the family spreads too. Bosses always start alert; a level can set "all enemies start alert" ([Missions and structure](gdd/missions-structure.md) MI-27), and one unit can be set "starts alert". Most chunks are drawn as if the enemies were already alert; with the rule on, most of them gain an opening question (who wakes what, and from where). Where a drawing wakes the pack at level start, its knobs say so; see also the [pattern knobs](#pattern-knobs) and [to check](#to-check).
 
 ## Contents
@@ -100,11 +101,11 @@ note 4,2 Cyclone here
 | Answer | How | |
 | --- | --- | --- |
 | Fire Embers | One cast on 3,3: the sidewinder finds the Claw on 4,2 by itself | ★ |
-| Cyclone | Once 4,2 is clear, a Cyclone there: nothing walks through it, and it drifts into the three | ★ |
+| Cyclone | Once 4,2 is clear, a Cyclone there (3 from Lucy): no enemy walks through it, and it pulls them in. Its cast Whirl pulls the Claw on 6,2 to 5,2 and hits it; any Claw that ends on 5,2 or 6,2 is pulled in and hit at the end of the enemy turn. With nothing to attack past the seal, the rest wait off its arms (EN-18) | ★ |
 | Blink | Step back; the decoy draws them into the throat, where the embers reach them in a line | ● |
 | Fight in the open | Trade embers with three Claws | ✗ |
 
-**Knobs:** throat 2 wide (the Cyclone no longer seals it); enemies act first; an Archer behind the three.
+**Knobs:** throat 2 wide (the Cyclone no longer seals it); enemies act first; an Archer behind the three (its shots through the throat are blocked while the Cyclone stands on 4,2, CR-57). The seal now has a clock: 3 enemy turns, then a round open while the cooldown runs.
 
 ### 2. The chasm
 
@@ -176,7 +177,7 @@ step 3,0 1
 | --- | --- | --- |
 | Shield Dash | Down the corridor: both Claws beside the path take 4 × and are shoved (the walls stop the push here; on spikes it matters) | ★ |
 | Lucy's Role | Fires right after: her two embers finish one of them | ★ |
-| Cyclone | In the corridor: the Claws step out into it | ● |
+| Cyclone | On 3,1 (3 from Lucy on 0,1): its touching cells include both west alcoves, so the Claws on 3,2 and 3,0 take 3 × on cast and at the end of each enemy turn, and can't get out (its cell is their only exit). It also seals the corridor against the east pair, and the family still walks through it | ● |
 | Sword, one by one | Four turns of trading hits | ● |
 
 ### 5. Chorus
@@ -268,7 +269,7 @@ step 4,2 1
 | --- | --- | --- |
 | Shield Up + Wrath | John rings it with Shield Up on: the pack piles onto him at 60%, every hit stacks Wrath, his next swing lands at up to +105% | ★ |
 | John's Shield + Papa's Shelter | Lucy stays beside him: covered and stronger | ★ |
-| Cyclone | Ring it from behind a Cyclone: the pack runs into it | ★ |
+| Cyclone | Ring it from behind a Cyclone: the pack can't pass it, and a Claw that ends on its cross to reach the ringer is pulled in and hit at the end of the enemy turn (EN-18) | ★ |
 | Linda's Role | The pack's path crosses her row; 2 Watch Shots a round | ● |
 | Burst the leader | Mark–John Family Watchers (Vulnerable), then Linda–Lucy Marks-Sisters through it | ● |
 | Mark rings | His Role answers each hit, but he has 15 HP | ● |
@@ -414,7 +415,7 @@ zone 5,7 5,9 linda Watch column
 | Answer | How | |
 | --- | --- | --- |
 | Linda's Role | On 5,6 her row runs down both side arms, her column up the north arm: one tile watches three arms, with only 2 Watch Shots a round | ★ |
-| Cyclone | Walls an arm (5,8 here); two can stand at once from turn 3 | ★ |
+| Cyclone | Holds the north arm from 5,8. The arm is 3 wide, so the Claws on 4,9 and 6,9 can still pass beside it on 4,8 and 6,8, but they won't stop on its cross unless they can strike from there (EN-18), and any that end on a touching cell are hit at the end of the enemy turn. 5,8 is 4 from Lucy on 6,5, so she moves first (range 3). Only one at a time: the Second Cyclone upgrade isn't built (D-531), and cooldown 4 against a 3-turn life leaves a round with none | ★ |
 | Tempest Bloom | Her arrows split inside the Cyclone into the side files (chunk 13) | ★ |
 | Catch & Return | Mark behind a queue in a side arm (chunk 14) | ★ |
 | John–Lucy Hide and Seek | Decoys around the plaza draw the wave off the protectee | ● |
@@ -445,10 +446,10 @@ arrow 3,3 3,5 linda
 
 | Answer | How | |
 | --- | --- | --- |
-| Tempest Bloom | Her arrow enters the Cyclone and splits toward every side but back: one shot, three Claws | ★ |
+| Tempest Bloom | Her arrow enters the Cyclone and splits toward every side but back: one shot, three Claws. Cast the Cyclone in the same turn, before the shot: its cast Whirl pulls all three onto its touching cells, where the copies start | ★ |
 | Linda's Role | Her Role arrows bloom too: the crossing guards itself | ★ |
 | Explosive Crescendo | One side at a time | ● |
-| Cyclone alone | Drifts into one side | ● |
+| Cyclone alone | Pulls them in: each Claw stands 2 out on an arm (1,3, 5,3, 3,5), so one Whirl pulls all three onto its touching cells and hits each 3 ×; then again at the end of each enemy turn while they stay. Slow on its own | ● |
 
 ### 14. The gauntlet
 
@@ -584,7 +585,7 @@ arrow 3,4 2,2 enemy
 | Shield Dash rings | John dashes west along row 3; the end tile is beside the Black Claw: the pack turns on John, away from 3,1 | ★ |
 | Father's Resolve | Someone gives John +1 AP so he can Shield Up as well | ★ |
 | John–Lucy Hide and Seek | Decoys around the protectee | ● |
-| Cyclone | Between the pack and the protectee | ● |
+| Cyclone | Between the pack and the protectee: on 3,2 (2 from Lucy) it closes the protectee's north side, and its cast Whirl pulls the Claw on 3,4 to 3,3 and hits it (not the Black Claw, so the bell doesn't ring). The pack can still reach 2,1 and 4,1 | ● |
 | Toba's taunt | When Toba is in the squad | ● |
 
 ---
@@ -762,7 +763,7 @@ arrow 6,5 6,2 5,2 enemy
 | Linda's Watch | 4,2 and 1,2 (the only tile beside her) are in her row: whatever lands there is shot | ★ |
 | Shield Up + Wrath | One attacker a turn, each hit a stack | ★ |
 | Papa's Shelter, Lucy's Role | Lucy behind John: Sheltered, and following up on everything he hits | ★ |
-| Cyclone on 4,2 | Nothing can reach John at all, until it drifts | ● |
+| Cyclone on 4,2 | Nothing can reach John at all for 3 enemy turns (it no longer drifts), then a round open while the cooldown runs. With nothing to attack from its cross, the Claws wait off it (EN-18) and go for Linda through 1,2, in her own Watch row | ● |
 | Lucy out front | From 5 tiles away a Claw lands beside her this turn | ✗ |
 
 ## Hazard chunks
@@ -968,7 +969,7 @@ note 2,3 rise next turn
 | --- | --- | --- |
 | Kill it on the spikes' eve | Linda from 2,0 kills the worm on 2,3 the turn before the rise: its children land on the spikes around it | ★ |
 | Kill it beside a cap | John kills the worm on 6,3; Lucy's ember on the mushroom blasts the children (if the blast reaches diagonals: to check) | ★ |
-| Cyclone beside it | The children land in its path | ● |
+| Cyclone beside it | On 6,2 (3 from Lucy), beside the worm on 6,3: the worm is on a touching cell and takes 3 × at each Whirl, and children that land on its arms are pulled in and hit at the end of each enemy turn (where they land: to check, row 11) | ● |
 | Kill it in the open | Three children, three more targets | ✗ |
 
 ### 32. The nest
@@ -1163,7 +1164,7 @@ The same few variables turn one chunk into many:
 | # | Question | Chunks |
 | --- | --- | --- |
 | 1 | Spike timing (round 3, then every 4th), strike on the rise and on step-on, 3 damage? Does the AI avoid raised spikes? | 9, 15, 17 |
-| 2 | What does the Cyclone drift toward? | 1, 12, 13 |
+| 2 | ~~What does the Cyclone drift toward?~~ **Answered on `thj/cyclone`:** nothing; it moves only when Lucy Steers it (LU-3, LU-6). On `main` it still drifts | 1, 12, 13 |
 | 3 | Does each ember that reaches a shielded John flare on its own? | 6 |
 | 4 | Who wins the Footrace, and where do both end? | 11 |
 | 5 | Does a caught arrow split in a Cyclone; does Mark catch Role arrows? | 12, 14 |
@@ -1177,6 +1178,7 @@ The same few variables turn one chunk into many:
 | 13 | Traps: whom they Cripple (the trap is Neutral, its effect hits its enemies), single use or not, does the AI avoid them? | 27 |
 | 14 | Do Blink, Vault, Shield Dash, Command walks and the Dance pay web cost? | 26 |
 | 15 | Which way do Shield Dash and Vault push, and does a push into rock do anything? | 17, 27 |
+| 16 | Cyclone (`thj/cyclone`): do sealed-off enemies wait off its cross in play, and where (EN-18)? In 13, do the side Claws back off to 0,3 and 6,3, beyond the Bloom copies' reach, before the Cyclone pulls them? Does an Archer behind it move to a clear line (EN-19)? | 1, 13, 24 |
 | 16 | Chained Assault's "within 4": of Mark, of Lucy, or of the activator? | 21 |
 | 17 | Does a kill by Lucy's follow-up count for Sisters' Rivalry? | 30 |
 | 18 | The Black Claw's move (assumed 4, like the Dark Claw) | 7, 28 |
