@@ -2,7 +2,7 @@
 
 Size: M    Tier: 3 (core `RuntimeAbility`; Duos and Synergies)    Assigned to: miso-implementer
 Branch: all (built on `thj/after-hearth`)
-Status: approved (THJ, D-519 to D-523); runs after M2 C4 is committed
+Status: in progress (C1 core dispatched 2026-11-11, after M2 C4 committed)
 
 ## Why
 
