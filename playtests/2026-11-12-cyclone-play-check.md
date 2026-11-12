@@ -32,3 +32,8 @@ Built back to back without per-chunk play (D-534). THJ plays everything here, th
 - Mark's role doesn't answer a Steer; walk highlight doesn't flicker on the relocate; Tempest Bloom arrow during a Steer glide.
 - Placeholders: Steer title/description/icon, cast animation and SFX reused.
 - Character select: Steer is Lucy's 9th ability entry; check it doesn't show as a spare button.
+
+## C4 · enemy ranged attacks
+- Archers/Dark Shamans don't shoot through the Cyclone: no pick, no intent arrow, threat preview leaves those cells out; a corner graze is allowed (D-541), adjacent shots always allowed.
+- Archers move to a cell with a clear line (new move filter); melee enemies behave as before.
+- Linda's arrows still pass through and split; Toba/allied shooters unaffected.
