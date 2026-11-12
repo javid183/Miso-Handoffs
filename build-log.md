@@ -2700,3 +2700,10 @@ Core gets one additive, generic `CombatLog.AddCustom`.
 **Not verified:** the teammate's restructured Hearth endings in play (Linda's end no longer re-enables input/HUD itself; Mark's walks over a faded grid; Lucy's cutaway unused).
 **Findings:** the 3 GridToLevel `m_LockCount` failures are command-line only. The wiring warns on Memories 1–3 (structure differs from the teammate's); a follow-up could align the wiring with the teammate's flow.
 **Status:** done.
+
+## 2026-11-12 · Hearth Memory 4 no longer stuck at Home (D-528)
+
+**Built:** `HomeMemoryTransition.TransitionToNextLevel` on a mission's completed last level ends the mission from the Home view (`EndMission(true)`, timer frozen as the panel did), no panel; pure `ResolveNextStep` + 4 tests. Committed `aaae8a7db`.
+**Verified:** EditMode 1896/1897 (known AI red only); review APPROVE; THJ played the Hearth through Memory 4 into Home: works.
+**Findings:** cause was the teammate's Memory 4 end (`TransitionToNextLevel` on the mission's last level), not the merge. Backlog: `HomeMemoryTransition.ResetPlayModeState` uses `[RuntimeInitializeOnLoadMethod]` instead of the `PlayModeStaticReset` hook.
+**Status:** done. `main` 18 ahead of `origin/main` (not pushed).
