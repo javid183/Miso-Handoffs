@@ -2707,3 +2707,17 @@ Core gets one additive, generic `CombatLog.AddCustom`.
 **Verified:** EditMode 1896/1897 (known AI red only); review APPROVE; THJ played the Hearth through Memory 4 into Home: works.
 **Findings:** cause was the teammate's Memory 4 end (`TransitionToNextLevel` on the mission's last level), not the merge. Backlog: `HomeMemoryTransition.ResetPlayModeState` uses `[RuntimeInitializeOnLoadMethod]` instead of the `PlayModeStaticReset` hook.
 **Status:** done. `main` 18 ahead of `origin/main` (not pushed).
+
+## 2026-11-12 · Lucy's Cyclone redesign, Pulling Gale v2 (`thj/cyclone`, D-529 to D-545)
+
+**Built** (uncommitted, built back to back without per-chunk play, D-534; plan `plans/2026-11-11-cyclone-redesign-tech.md`; reports `reports/cyclone-c1a.md` to `cyclone-c5.md`):
+- C1: anchored `CycloneEntity` (3 pips, one per family turn start; cast 1 AP, range 3, empty cell, cooldown 4; enemies can't target it; cross and pips drawn). Whirl on cast and on each enemy faction's turn end (pull 1 on straight 2-cell arms, Immovable and large units not pulled, then 3× to touching enemies), reported once per hit through the new `ReportDamageOutsideAbility`; `TurnEnding` hold; watchdog ignores paused time (D-536); Masher ignores Whirl hits (D-537); tally counts a kill once.
+- C2: family/allies/neutrals pass through, can't stop; enemies and pushes blocked; Blink/Vault/dash/Duo stops kept off it (D-538); AI drops end-of-turn spots on the cross unless it can attack from there.
+- C3: Steer (second ability on the same button, 1 AP, once a turn, 3 cells, range centred on the Cyclone via `ITargetSelectionRangeProvider`, D-539) + Gust (pull only); bar refresh when ready; AI-controlled Lucy refuses Steer (D-540).
+- C4: enemy projectile shots blocked through the Cyclone tile (centre-to-centre, corner grazes allowed, D-541) in AI pick, intent, execution and threat preview; firing-spot filter (Shaman support first, D-543).
+- C5: pulls wake Unaware enemies (D-542); Howling Gale hit-only confirmed and tested (D-545); Watch/Command Shield Dash checked by reading; working texts (D-544).
+- 20 proposed commits, exact files and messages in `reports/cyclone-verify.md`. THJ's AI diagnostic discarded before C2 (backup `reports/ai-diagnostic-backup-2026-11-12.patch`).
+**Verified:** every chunk reviewed (APPROVE after fix rounds); final gate (`reports/cyclone-verify.md`): compile clean, EditMode 2015/2016 (only the known AI red, 43 inner: was 41 earlier from main drift, +1 from the new Steer preset); every changed file in exactly one commit, no missing metas.
+**Not verified:** anything in play. Full list: `playtests/2026-11-12-cyclone-play-check.md` (Whirl beat with Watch, AI waiting outside the cross, Archers repositioning, pulls into hazards and waking, Steer button after a cast, Memory 4 and the Lucy memory, the Trail levels).
+**Findings:** design §5 holds only as "not on the arms" (diagonal waiting possible); a blocked Archer may stay or back off; camera ease and wind sound not built; Steer icon, animation and SFX are placeholders; two enemy factions → two Whirls a round. Docs synced: GDD Lucy, Combat rules, Enemies, Family systems, level chunks (designer), `core-systems.md`, `combat-architecture.md`.
+**Status:** built and reviewed; waiting on THJ's play check, then the commits (Claude Docs mirror sync owed for the four GDD pages).
