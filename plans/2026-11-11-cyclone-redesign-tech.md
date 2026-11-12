@@ -1,8 +1,8 @@
 # Lucy's Cyclone redesign (Pulling Gale v2): tech plan
 
 Size: L    Tier: 3 (core: grid walking, damage reporting, turn switch, AI)    Assigned to: `miso-implementer` (opus for C1–C4, sonnet for C5)
-Branch: `all` (code); where it's built is a question for THJ (Q5)
-Status: **waiting on THJ** (planned 2026-11-11 at THJ's request: "just plan for it"; nothing dispatched)
+Branch: `all` (code), built on `thj/cyclone` (D-529, from `main` @ `aaae8a7db`)
+Status: **approved 2026-11-12** (Q1–Q5 answered as recommended: D-529 to D-533); ready to dispatch C1a. Planned 2026-11-11.
 
 ## Why
 
