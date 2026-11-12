@@ -40,3 +40,10 @@ Built back to back without per-chunk play (D-534). THJ plays everything here, th
 - Dark Shaman with a Cyclone out still moves to heal or summon.
 - A blocked Archer doesn't back off out of range when a cell with a clear line is reachable.
 - Shamans with an ally in heal range don't reposition for a clear shot (support first, D-543).
+
+## C5 · checks and texts
+- A Gust or Whirl pull wakes a sleeping enemy, and its Unaware neighbours in alert range (D-542).
+- Howling Gale: Weak for 2 turns on every enemy a Whirl hits, no one else.
+- Watch fires on a Gust pull (Lucy's turn) and on end-of-turn Whirl pulls; Command Shield Dash never fires on a pull.
+- Read the new texts in the tooltips: Cyclone, Steer, Howling Gale (working text, D-544); approve or change.
+- Onboarding: Hearth Memory 4 Bloom stage (cast at 3,4) and the Lucy memory still play as intended.
