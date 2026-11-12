@@ -1,7 +1,25 @@
 # Report: Cyclone redesign, C1b (Whirl) + C1a review fixes
 
 Plan: plans/2026-11-11-cyclone-redesign-tech.md    Agent: miso-implementer (opus)    Branch: thj/cyclone
-Outcome: done (THJ play check pending for C1 as a whole). Review of C1a: `reports/cyclone-c1a-review.md`.
+Outcome: done, fix round applied (THJ play check pending for C1 as a whole). Reviews: `reports/cyclone-c1a-review.md`, `reports/cyclone-c1b-review.md` (FIX, addressed below).
+
+## Fix round (after the C1b review)
+
+Every item from the C1b review, plus THJ's Masher decision:
+1. **Must fix: Whirl caps in real seconds.** `CycloneEntity.Whirl.cs` caps are now `PullTimeoutSeconds = 3` and `ReactionTimeoutSeconds = 15`, counted on the steps' clock: `ICycloneWhirlSteps.DeltaTime()`, which in the real steps is `Time.unscaledDeltaTime` and 0 while the time scale is 0, so a pause never uses up a cap. The settle rule is unchanged (10 quiet frames). Tests step the clock: `Whirl_AReactionLongerThanManyFastFrames_IsStillWaitedFor` (4 s of reactions at 1000 frames a second is waited out), `Whirl_AStuckReaction_HitsAfterTheReactionCap`, `Whirl_PausedTime_DoesNotRunOutTheReactionCap`, `Whirl_AStuckPull_StopsHoldingAfterThePullCap`.
+2. **Watchdog (core).** `TurnSwitchHoldSet.IsHeld` has a new overload with `paused`; while paused, held time doesn't grow and counting resumes where it stopped. `IsTurnSwitchHeld` passes `Time.timeScale == 0f`. Otherwise the watchdog is unchanged (5 s real time). The old signature stays and forwards with `paused: false`. Test: `TurnSwitchHoldTests.Watchdog_DoesNotCountPausedTime`; all earlier hold tests pass.
+3. **After the level ended** the Whirl lands no hit, reports nothing and logs nothing (`ICycloneWhirlSteps.LevelEnded()`, the real steps read `CombatLevelRunHandler.IsLevelEnded`). Test: `Whirl_AfterTheLevelEnded_NoHitNoReportNoLog`.
+4. **Hold registration.** `StartWhirl` returns early when the Cyclone isn't `isActiveAndEnabled`; the routine registers its own hold when it starts and releases it in `finally`.
+5. **Effect-level test** `CycloneHitContextTests`: a compound run with the cast raises `onAbilityEffectPerformedOn` and uses John's relay (control); the same compound run with `CycloneHitContext` does neither.
+6. **Deferred Dispose waits for pull moves too.** The Cyclone counts pull moves still under way (`HasPendingPulls`; each move's landing counts once). A `Dispose` while a Whirl runs waits for the Whirl; a `Dispose` while moves are still under way (they can outlast the 3 s pull cap) waits for them, queued once. Test: `Dispose_WithAPullStillMoving_WaitsForItToLand`.
+7. **Watchdog risk text** in this report corrected (Risks below).
+8. **Masher ignores Whirl hits (THJ).** `MasherCounterRules.Classify` gains an overload with `isCycloneWhirlHit`: a Whirl hit is `Ignore`, everything else is passed to the unchanged rule. `MasherGoblinFactionRoleHandler.Counter.ClassifyHit` passes `CycloneRules.IsCycloneCast(source)`. The new `CycloneRules.IsCycloneCast` is true when the ability's effects hold the Cyclone spawner; the cast itself deals no damage, so any damage credited to it is a Whirl, on cast or at the end of the enemy turn. Tests `MasherCounterWhirlTests`: Ignore in every case for a Whirl hit; every other hit classified as before (all 32 combinations); the live Cyclone ability is recognised and another of Lucy's abilities is not. The existing Masher tests pass. This is a rules-level test; that no provocation is actually queued in a level is a play check.
+
+Files touched in this round: `Core/Managers/CombatLevelRunHandler.TurnSwitchHolds.cs`, `Core/Interactions/Editor/TurnSwitchHoldTests.cs`; in `Features/Player/Lucy/Scripts/Cyclone/`: `CycloneEntity.cs`, `CycloneEntity.Whirl.cs`, `ICycloneWhirlSteps.cs`, `CycloneWhirlSteps.cs`, `CycloneRules.cs`; `Features/Player/Lucy/Scripts/Editor/CycloneWhirlTests.cs`; new `Features/Player/Lucy/Scripts/Editor/CycloneHitContextTests.cs` (+ .meta); `Features/Enemy/Masher Goblin/Scripts/MasherCounterRules.cs`, `MasherGoblinFactionRoleHandler.Counter.cs`; new `Features/Enemy/Masher Goblin/Editor/MasherCounterWhirlTests.cs` (+ .meta).
+
+Super Time stays skip (THJ).
+
+**EditMode after the fix round:** 1947 run, 1946 passed; the only failure is the known red `AIRegressionTest.Baseline_MatchesCurrentAI` (not re-baselined). That full run came before a final edit that only moved the new Masher overload below the original method (no logic change). After it, the whole `MISO.Core.Features.Bergsons.EditorTests` namespace was rerun: 459 run, 459 passed (Lucy, Masher, Linda and the rest). Compile clean.
 
 ## What changed
 
@@ -63,13 +81,12 @@ No.
 - Whirl damage goes through the existing hit compound, run with a stats wrapper (`CycloneHitContext`) so it isn't treated as the cast's own hit, and is reported once through the new core API, credited to the cast's `RuntimeAbility`. Damage listeners already require an ability (`ability.Preset`, `ability.Owner`). Passing the cast keeps them working and gives Lucy the credit in stats and barks.
 - The log line is a synergy note (`GlobalEventBus.RaiseSynergy(lucy, "Whirl", "pulled N, hit M", targets)`). The combat log stays record-only and unchanged; no listener reacts to that id.
 - The cast stays open only while its first Whirl pulls; the hit lands after Lucy's action ends. Reason: Family Roles (Watch) run when actions complete, so this keeps the pull → reactions → hit order on cast too. Side effect: the hit lands a moment after the cast ends.
-- Reaction wait: 10 quiet frames, capped at 600 frames; pull wait capped at 300 frames. Frames rather than seconds, so the routine can be stepped in tests.
+- Reaction wait: 10 quiet frames, capped at 15 s; pull wait capped at 3 s. Both caps run on real seconds that stop while paused, read through the steps so tests can step the clock (fix round).
 - The Whirl does nothing if its caster's object is gone (no pull, no hit: the enemy check needs her faction). A downed Lucy still exists, so her Cyclone keeps whirling.
 
 ## Needs THJ
 
-1. **Super Time while her Cyclone is out** (from C1a, still open): skip with a warning (built) or replace the old Cyclone. Recommendation: replace.
-2. **Masher counters a Whirl hit.** Now that Whirl damage is reported, the Masher's counter treats Lucy as the attacker (as with any of her hits) and may answer her at the end of the enemy turn. That's consistent with the rules, but new compared to today's unreported Cyclone. Play check; say if Whirl hits should be ignored by provocation.
+None. Both earlier questions are answered: Super Time stays skip; the Masher ignores Whirl hits (built in the fix round).
 
 ## Docs to update
 
@@ -80,7 +97,7 @@ No.
 
 ## Risks and loose ends
 
-- **Hold watchdog (5 s).** The Whirl holds the switch for swell (0.2 s) + pull (~0.25 s a cell) + 10 frames + reactions. The watchdog only counts frames where nothing else blocks the switch, and a Watch prompt (QTE) is not one of the switch's own blockers. So a slow Watch prompt plus the Whirl can reach 5 s; the watchdog then logs a warning and switches the turn, the hold is dropped, and the Whirl's hit may land at the start of the next turn. Play check with Watch. If it bites, raising `TurnSwitchHoldSet.TimeoutSeconds` or adding QTE to the blocker list is a one-line core change.
+- **Hold watchdog (5 s).** The watchdog counts only frames where the hold is the switch's sole blocker. Linda's Watch runs as a player-controller action (`PhaseData.IsInProgress`, `PlayerController.cs:1592`), which the switch's own condition (`isActionInProgress`) already waits on, so Watch's time doesn't count toward the 5 s. The hold-only time of a normal Whirl (swell, pull, the 10 quiet frames) is under a second. The watchdog could have fired during a pause; it no longer counts paused time (fix round). If it ever fires, the holds are cleared, the turn switches, and the rest of the Whirl lands at the start of the family turn.
 - **Not playtested at all.** Every runtime path (real pusher move, hazards on landing, Watch timing, the report's resource awards, the beat) is a play check.
 - `CycloneHitContext` hides the cast from effects. Anything in the hit compound that needs the `RuntimeAbility` itself (area-shape run upgrades via `RunUpgradeTracker.ResolveAreaShape`) doesn't apply to Whirl hits. Nothing in today's compound uses it.
 - Howling Gale's Weak compound has radius 1 and runs per hit as before; whether its area matches "every enemy a Whirl hits" is a C5 check.
@@ -94,16 +111,19 @@ No.
 C1a + C1b together, in dependency order. Core changes each in their own commit.
 
 1. `feat(core): report damage dealt outside an ability's span, credited to the ability that left its source on the board` (**core**): `Core/Managers/CombatLevelRunHandler.DamageReport.cs` (+ .meta).
-2. `feat(core): raise an end-of-turn event after the turn's actions finish, so an end-of-turn effect can hold the switch` (**core**, risky: turn flow): `Core/Managers/CombatLevelRunHandler.cs`, `Core/Managers/CombatLevelRunHandler.TurnSwitchHolds.cs`.
+2. `feat(core): raise an end-of-turn event after the turn's actions finish, so an end-of-turn effect can hold the switch` (**core**, risky: turn flow): `Core/Managers/CombatLevelRunHandler.cs`, `Core/Managers/CombatLevelRunHandler.TurnSwitchHolds.cs` (the `TurnEnding` event and `RaiseTurnEnding` hunks only).
+2b. `fix(core): the turn-switch hold watchdog doesn't count time while the game is paused` (**core**): `Core/Managers/CombatLevelRunHandler.TurnSwitchHolds.cs` (the `IsHeld` overload, `_lastCheckTime` and the `IsTurnSwitchHeld` call hunks), `Core/Interactions/Editor/TurnSwitchHoldTests.cs`. It shares a file with 2, so stage it by hunk (`git add -p`, which THJ runs) or fold it into 2; the change stands alone (no dependency on 2).
 3. `feat(lucy): the Cyclone stays where it is cast, whirls on cast and at the end of each enemy turn (pull one cell in, then 3x on touching enemies), shows its cross and pips, and casts only on an empty cell` (plain; depends on 1 and 2):
    - `Features/Player/Lucy/Scripts/Cyclone.meta` and `Features/Player/Lucy/Scripts/Cyclone/` (each with .meta): `CycloneEntity.cs`, `CycloneEntity.Whirl.cs`, `CycloneRules.cs`, `CycloneRegistry.cs`, `AEffectCycloneSpawner.cs`, `CycloneCrossView.cs`, `CyclonePipsView.cs`, `CycloneSprites.cs`, `CycloneWhirlPlanner.cs`, `ICycloneWhirlSteps.cs`, `CycloneWhirlSteps.cs`, `CycloneHitContext.cs`.
    - `Features/Player/Lucy/Scripts/Editor/CycloneAnchoredSetup.cs` (+ .meta).
    - `Features/Player/Lucy/Prefabs/Cyclone.prefab`.
    - In `Resources/UnitSpecific/Player/Lucy/Abilities/Cyclone/`: `Lucy_Cyclone_Effect_Spawn.asset`, `Lucy_Cyclone_Ability.asset`, `Lucy_Cyclone_Whirl_Pusher.asset` (+ .meta).
-4. `test(lucy): Cyclone life, cast, Whirl and shared grid-entity lifetime tests` (plain; depends on 3): `Features/Player/Lucy/Scripts/Editor/CycloneTestGrid.cs`, `CycloneLifeTests.cs`, `CycloneCastTests.cs`, `CycloneWhirlTests.cs`, `GridEntityLifetimeTests.cs` (+ .meta each).
+4. `test(lucy): Cyclone life, cast, Whirl, hit-context and shared grid-entity lifetime tests` (plain; depends on 3): `Features/Player/Lucy/Scripts/Editor/CycloneTestGrid.cs`, `CycloneLifeTests.cs`, `CycloneCastTests.cs`, `CycloneWhirlTests.cs`, `CycloneHitContextTests.cs`, `GridEntityLifetimeTests.cs` (+ .meta each).
 5. `chore(core): reset the live Cyclone list between play sessions` (**core**; depends on 3): `Core/Managers/PlayModeStaticReset.cs`.
 6. `fix(lucy): Super Time casts the Cyclone only on an empty cell and skips with a warning when none is free or hers is already out` (**core**: role handler; depends on 3): `Features/Player/Lucy/Scripts/LucyFactionRoleHandler.cs`.
 7. `fix(onboarding): the sisters' tally counts each kill once; Cyclone kills count through the damage report` (plain; depends on 1 and 3 for the Cyclone path): `Features/Onboarding/SistersTally/SistersTallyListener.cs`, `Features/Onboarding/SistersTally/Editor/SistersTallyTests.cs`, `SistersTallyTests.Attribution.cs`, `SistersTallyTests.Whirl.cs` (+ .meta).
+
+8. `fix(masher): the reckless counter ignores hits from Lucy's Cyclone` (plain; depends on 3 for `CycloneRules.IsCycloneCast`): `Features/Enemy/Masher Goblin/Scripts/MasherCounterRules.cs`, `Features/Enemy/Masher Goblin/Scripts/MasherGoblinFactionRoleHandler.Counter.cs`, `Features/Enemy/Masher Goblin/Editor/MasherCounterWhirlTests.cs` (+ .meta).
 
 Commits 3 and 5 can merge if THJ prefers (3 adds the static that 5 resets). Don't stage THJ's uncommitted files (AI brains, PreloadScreen, ProjectSettings, TMP fallback font).
 

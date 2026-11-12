@@ -29,3 +29,8 @@ Reviewer: `miso-reviewer` (read-only; saved by the coordinator), 2026-11-12. Bra
 - Design: `WhirlsAtEndOf` true for every enemy faction (two enemy factions = two Whirls a round); a skipped enemy turn raises no `TurnEnding` (no Whirl that round).
 - Pre-existing: Watch queued if an AI brain is computing when a pull lands; play-check Watch on end-of-turn pulls.
 - `TurnEnding` test uses reflection on `RaiseTurnEnding`; `SwitchTurnIE` wiring covered by play.
+
+## Re-review of the fix round (2026-11-12): APPROVE
+All FIX items done; D-536 (watchdog pause) and D-537 (Masher ignores Whirl hits) built as decided; no other classification changes (32 combinations tested); nothing but Whirls carries the Cyclone cast as a damage source (Bloom copies keep Linda's owner). Super Time Cyclones' Whirls are ignored by the Masher too.
+Should fix (low): stale comment `CycloneEntity.Whirl.cs:84-85` (hold now registered in `WhirlRoutine`); report Risks still says "300-frame cap" (3 s); commit 2b needs hunk staging → coordinator: fold 2b into commit 2.
+Notes: `TheCycloneCast_IsRecognisedAsTheWhirlSource…` compares against the first Lucy ability `FindAssets` returns (fragile). Play checks open: Masher queues nothing in a level, Watch on end-of-turn pulls, kill hand-back for Whirl kills, one Whirl per enemy faction.

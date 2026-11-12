@@ -1,0 +1,133 @@
+diff --git a/miso/Assets/_Project/Core/Systems/AISystem/Runtime/AIFactionBrain.cs b/miso/Assets/_Project/Core/Systems/AISystem/Runtime/AIFactionBrain.cs
+index fbfc328bb..64f6665c5 100644
+--- a/miso/Assets/_Project/Core/Systems/AISystem/Runtime/AIFactionBrain.cs
++++ b/miso/Assets/_Project/Core/Systems/AISystem/Runtime/AIFactionBrain.cs
+@@ -35,6 +35,7 @@ namespace MISO.Core.Systems.AI
+         private volatile bool _unitTurnReady;
+         private volatile bool _computing;
+         private volatile bool _predictReady;
++        private volatile int _diagRequestFrame; // TEMP diagnostic: remove after the restore race is confirmed
+ 
+         public AIFactionBrain(Faction faction, GUnit[] units, LevelObjective[] objectives)
+         {
+@@ -171,6 +172,7 @@ namespace MISO.Core.Systems.AI
+             _predictResult = null;
+             _predictReady = false;
+             _computing = true;
++            _diagRequestFrame = Time.frameCount; // TEMP diagnostic: remove after the restore race is confirmed
+             GUnit[] units;
+             lock (_brainsGate)
+                 units = _unitBrains.Keys.ToArray();
+@@ -212,13 +214,19 @@ namespace MISO.Core.Systems.AI
+         {
+             var result = new Dictionary<GUnit, (GUnit[], AIUnitTurnAction)>();
+             var originals = new List<(GUnit unit, GridCell cell)>();
++            // TEMP diagnostic: remove after the restore race is confirmed.
++            // Where the simulation left each unit; anything else at restore time moved it from outside.
++            var diagExpected = new Dictionary<GUnit, GridCell>();
+ 
+             _PrepareUnitTurnInternal();
+             var order = UpcomingTurnOrder().ToArray();
+             try
+             {
+                 foreach (var unit in order)
++                {
+                     originals.Add((unit, unit.CurrentCell));
++                    diagExpected[unit] = unit.CurrentCell; // TEMP diagnostic
++                }
+ 
+                 Action refresh = () =>
+                 {
+@@ -239,7 +247,15 @@ namespace MISO.Core.Systems.AI
+                         }
+                     }
+ 
++                    // TEMP diagnostic: remove after the restore race is confirmed.
++                    if (diagExpected.TryGetValue(unit, out var diagSaved) && !ReferenceEquals(unit.CurrentCell, diagSaved))
++                        DiagLogRestoreRace(unit, "before its own simulation", diagSaved, diagSaved, unit.CurrentCell);
++
+                     result[unit] = (brain.PredictNextTargets(out var chosenAction, refresh).ToArray(), chosenAction);
++
++                    // TEMP diagnostic: remove after the restore race is confirmed.
++                    if (!ReferenceEquals(brain.DiagLastSimCell, null))
++                        diagExpected[unit] = brain.DiagLastSimCell;
+                 }
+             }
+             finally
+@@ -247,6 +263,11 @@ namespace MISO.Core.Systems.AI
+                 for (var i = originals.Count - 1; i >= 0; i--)
+                 {
+                     var (unit, cell) = originals[i];
++                    // TEMP diagnostic: remove after the restore race is confirmed. Logs only; the restore below is unchanged.
++                    if (unit && cell && diagExpected.TryGetValue(unit, out var diagSimCell)
++                        && !ReferenceEquals(unit.CurrentCell, diagSimCell))
++                        DiagLogRestoreRace(unit, "at restore", cell, diagSimCell, unit.CurrentCell);
++
+                     if (unit && cell && unit.CurrentCell != cell)
+                         unit.SimMoveTo(cell, true);
+                 }
+@@ -259,6 +280,27 @@ namespace MISO.Core.Systems.AI
+             return result;
+         }
+ 
++        // TEMP diagnostic: remove after the restore race is confirmed.
++        // Runs on the AI worker: reads only plain managed fields (title, turn order, cell coordinates).
++        private void DiagLogRestoreRace(GUnit unit, string phase, GridCell saved, GridCell expected, GridCell live)
++        {
++            static string Cell(GridCell c) => ReferenceEquals(c, null) ? "none" : c.Coordinates.ToString();
++
++            var thread = Thread.CurrentThread;
++            var threadLabel = AIWorker.IsWorkerThread
++                ? $"AI worker thread (id {thread.ManagedThreadId})"
++                : $"thread '{thread.Name}' (id {thread.ManagedThreadId}, not the AI worker)";
++            var frameLabel = AIWorker.IsWorkerThread
++                ? $"prediction requested on frame {_diagRequestFrame}"
++                : $"frame {Time.frameCount}, prediction requested on frame {_diagRequestFrame}";
++
++            Debug.LogWarning(
++                $"[AI-RESTORE-RACE] {unit.Nickname} (turn order {unit.TurnOrder}) was moved outside the AI target prediction, detected {phase}. " +
++                $"Saved cell {Cell(saved)}, simulation expected {Cell(expected)}, live cell {Cell(live)}. " +
++                $"The restore forces it back to {Cell(saved)} in the grid logic while its sprite stays where it was moved. " +
++                $"{threadLabel}, {frameLabel}.");
++        }
++
+         public (IReadOnlyList<GUnit>, AIUnitTurnAction) PredictNextTargets(GUnit unit)
+         {
+             if (!unit || !unit.IsAlive)
+diff --git a/miso/Assets/_Project/Core/Systems/AISystem/Runtime/AIUnitBrain.cs b/miso/Assets/_Project/Core/Systems/AISystem/Runtime/AIUnitBrain.cs
+index 9e357f586..2e0c7a5e0 100644
+--- a/miso/Assets/_Project/Core/Systems/AISystem/Runtime/AIUnitBrain.cs
++++ b/miso/Assets/_Project/Core/Systems/AISystem/Runtime/AIUnitBrain.cs
+@@ -54,7 +54,11 @@ namespace MISO.Core.Systems.AI
+         private readonly List<GameEntity> _candidateTargets = new();
+         private readonly HashSet<GridCell> _candidateSeen = new();
+         private readonly List<GridCell> _filteredCells = new();
+-        
++
++        // TEMP diagnostic: remove after the restore race is confirmed.
++        // The last cell this brain's target prediction moved its unit to (null when it didn't move it).
++        internal GridCell DiagLastSimCell;
++
+         public AIUnitBrain(GUnit unit, AIBlackboard blackboard) // todo: add metric override + difficulty attributes
+         {
+             _unit = unit;
+@@ -148,7 +152,8 @@ namespace MISO.Core.Systems.AI
+ // >>>>>>> Arsham/ai-improvements
+         {
+             chosenAction = null;
+-            
++            DiagLastSimCell = null; // TEMP diagnostic: remove after the restore race is confirmed
++
+             if (!_unit || !_unit.IsAlive || !_unit.CurrentCell)
+                 return Array.Empty<GUnit>();
+ 
+@@ -236,7 +241,8 @@ namespace MISO.Core.Systems.AI
+             if (action.Target is not GridCell dest || !dest || !HasTransporter(action.Action))
+                 return;
+ 
+-            _unit.SimMoveTo(dest);
++            // TEMP diagnostic: remove after the restore race is confirmed (was a plain `_unit.SimMoveTo(dest);`).
++            if (_unit.SimMoveTo(dest)) DiagLastSimCell = dest;
+             sim.Origin = dest;
+         }
+ 
