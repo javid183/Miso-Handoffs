@@ -2725,6 +2725,6 @@ Core gets one additive, generic `CombatLog.AddCustom`.
 ## 2026-11-16 · Cyclone redesign committed before the full play (D-546)
 
 **Built:** nothing new. The 20 Cyclone commits landed on `thj/cyclone` as planned in `reports/cyclone-verify.md`: `281d33866` (grid line of fire) through `e1203b02d` (Howling Gale text and tests); core changes each in their own commit. Not pushed.
-**Verified:** every changed Cyclone file in exactly one commit, every new file with its `.meta`; tree left with only THJ's local files (TMP fallback font, `PreloadScreen.unity`, two `ProjectSettings` files, `GlobalSettings.asset` test settings).
+**Verified:** every changed Cyclone file in exactly one commit, every new file with its `.meta`; tree left with only THJ's local files (TMP fallback font, `PreloadScreen.unity`, two `ProjectSettings` files, `GlobalSettings.asset` test settings, then committed at THJ's request as `b88c004f1`: intro/outro sequences off; revert before merging to `main` if intros should play).
 **Not verified:** the full play check (THJ played part of it); intermediate commits were not compiled one by one, only the final tree.
 **Status:** committed so THJ can test from the office PC; play findings go in new commits.

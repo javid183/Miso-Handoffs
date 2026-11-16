@@ -14,7 +14,7 @@ Owner: coordinator; THJ approves. `claude-handoff/` doesn't change when the shar
 
 - Created 2026-11-12 by the coordinator at THJ's request ("create a new branch for it") from `main` @ `aaae8a7db` (0 ahead, 0 behind at creation; `main` matches `origin/main`). THJ's working branch (D-529).
 - **Purpose:** Lucy's Cyclone redesign, Pulling Gale v2 (`plans/2026-11-11-cyclone-redesign-tech.md`; design `design/cyclone-redesign.md`; D-529 to D-533).
-- 2026-11-16: the 20 Cyclone commits landed (`281d33866`..`e1203b02d`, D-546); 20 ahead of `main`, no upstream, not pushed.
+- 2026-11-16: the 20 Cyclone commits landed (`281d33866`..`e1203b02d`, D-546); plus THJ's test settings `b88c004f1` (intro/outro sequences off; revisit before merging to `main`); 21 ahead of `main`, no upstream, not pushed.
 - Combat resource and AP: same as `main`.
 - Uncommitted in the tree (came along, THJ's, agents leave them alone): `PreloadScreen.unity`, `ProjectSettings/EditorSettings.asset` and `ProjectSettings.asset`, the TMP fallback font. The AI diagnostic was discarded 2026-11-12 before C2 (D-534); backup `reports/ai-diagnostic-backup-2026-11-12.patch`.
 
