@@ -2721,3 +2721,10 @@ Core gets one additive, generic `CombatLog.AddCustom`.
 **Not verified:** anything in play. Full list: `playtests/2026-11-12-cyclone-play-check.md` (Whirl beat with Watch, AI waiting outside the cross, Archers repositioning, pulls into hazards and waking, Steer button after a cast, Memory 4 and the Lucy memory, the Trail levels).
 **Findings:** design §5 holds only as "not on the arms" (diagonal waiting possible); a blocked Archer may stay or back off; camera ease and wind sound not built; Steer icon, animation and SFX are placeholders; two enemy factions → two Whirls a round. Docs synced: GDD Lucy, Combat rules, Enemies, Family systems, level chunks (designer), `core-systems.md`, `combat-architecture.md`.
 **Status:** built and reviewed; waiting on THJ's play check, then the commits (Claude Docs mirror sync owed for the four GDD pages).
+
+## 2026-11-16 · Cyclone redesign committed before the full play (D-546)
+
+**Built:** nothing new. The 20 Cyclone commits landed on `thj/cyclone` as planned in `reports/cyclone-verify.md`: `281d33866` (grid line of fire) through `e1203b02d` (Howling Gale text and tests); core changes each in their own commit. Not pushed.
+**Verified:** every changed Cyclone file in exactly one commit, every new file with its `.meta`; tree left with only THJ's local files (TMP fallback font, `PreloadScreen.unity`, two `ProjectSettings` files, `GlobalSettings.asset` test settings).
+**Not verified:** the full play check (THJ played part of it); intermediate commits were not compiled one by one, only the final tree.
+**Status:** committed so THJ can test from the office PC; play findings go in new commits.
