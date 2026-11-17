@@ -121,3 +121,8 @@ None. Only `main` has the teammate's dialogue.
 3. Run Wire Search: River, Ridge, Trail and Wire Home Visits. There are no warnings, and `git status` shows no asset changes.
 4. Open `Resources/Sequences/Hearth/Memory1Linda/Memory1Linda_Start_DialogNodeSequence.asset`. It still has the teammate's line ("I remember… I saw Ryker…").
 5. Test Runner > EditMode > Run All. Everything passes except `AIRegressionTest.Baseline_MatchesCurrentAI`.
+
+## Follow-up (2026-11-11)
+
+- `AnExistingStepListThatDiffersOnlyInDialogueIsKeptQuietly` now subscribes to `Application.logMessageReceived` around the `WiringSeed.StepList` call and asserts that no Warning arrived. The old `LogAssert.NoUnexpectedReceived()` only catches errors, asserts and exceptions, so it could not fail on a warning. Checked by reasoning, not by flipping the test: the sibling test shows the changed-structure path logs a Warning through the same log pipe, so the handler would have caught it. WiringSeedTests 6/6 pass, full EditMode 1892/1893 (only the known red AIRegressionTest.Baseline_MatchesCurrentAI).
+- Line endings: the claim above stays as written for these files. I checked on disk (no CR bytes) and with `git ls-files --eol` (`attr/text eol=lf`, working copy `w/lf`) for the new and the changed Onboarding Editor files. They are LF, not CRLF. Likely the CRLF figure came from other files in the repo, not these.

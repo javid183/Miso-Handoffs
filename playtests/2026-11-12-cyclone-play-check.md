@@ -47,3 +47,16 @@ Built back to back without per-chunk play (D-534). THJ plays everything here, th
 - Watch fires on a Gust pull (Lucy's turn) and on end-of-turn Whirl pulls; Command Shield Dash never fires on a pull.
 - Read the new texts in the tooltips: Cyclone, Steer, Howling Gale (working text, D-544); approve or change.
 - Onboarding: Hearth Memory 4 Bloom stage (cast at 3,4) and the Lucy memory still play as intended.
+
+## THJ Play Feedback
+1. Gust should damage like whirl
+2. the x3 and the arrows shown on tiles send wrong information. They show double -> to the direction of its center on adjacent tiles, while it does not pull adjacent tiles to center, it pulls tiles 2 tiles away. the x3 is the damage? there is no need for that.
+3. the first cast that conjures it does not preview damage or pull
+4. gust and pull do not preview damage.
+5. overall right now it is too weak and feels underwheliming
+6. cyclone had a ghost preview showing damage as well. Am I wrong? anyway, lets add it.
+7. What is the catch if it pulls enemies inside itself?
+8. What happens if once pull is active and an enemy is locked, moving cyclone keeps moving locked enemies with it?
+9. Cyclone could easily block masher goblin which turns it to a useless enemy. I think both masher goblin and goblin queen should walk through it taking damage but destrpying the cyclone.
+10. If the cyclone is going to change from damage output to a tool, it should be super fun steering around. Otherwise, right now spending all ap on embers are always the better option. current pull is very minimal.
+11. maybe steering it through enemies pushes them away, if they can't stay inside. Thus steering cyclone always relocates enemies in the direction relative to the cyclone, either pushing them or pulingg.
