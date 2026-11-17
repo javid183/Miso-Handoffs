@@ -123,6 +123,7 @@ Source: `Resources/RunUpgrades/*/RU_*.asset`.
 2. **Q2.** Names for the Linda–Lucy pair: Sisters' Rivalry (synergy), Marks-Sisters (Duo node), Sisters' Bond (run upgrade). Keep three names?
 3. **Q3.** In the John–Lucy Duo, Lucy's QTE uses Linda's input binding (`LindaQTE`). Data slip?
 4. **Q4.** **On `thj/cyclone`:** Cyclone texts are working text, applied (D-544, `reports/cyclone-c5-text.md`); THJ approves the wording at play, and the terms Whirl, Gust, Steer, arms and cross stay glossary proposals. Cyclone: "Summons a Cyclone for 3 enemy turns. On cast and after each enemy turn, it pulls enemies on its arms one cell in, then hits those beside it. Enemies can't pass or shoot through it." Steer: "Moves the Cyclone up to 3 cells, not through walls or enemies. Then it pulls enemies on its arms one cell in, without hitting them. Once a turn." Cyclone Power unchanged ("Lucy's Cyclone hits harder."). Howling Gale: "Lucy's Cyclone applies Weak for 2 turns to every enemy it hits." (its unlock entry is now titled Howling Gale). Still open: the Steer's own icon.
+5. **Q5.** **On `thj/cyclone`, proposal (not approved):** Cyclone round 2 after THJ's first play. The proposal covers the Steer carrying the enemies beside the Cyclone and then Whirling (D-547), the cross drawing, the previews, heavies bursting it, and Cyclone Power 3 / 4 / 5. LU-4 to LU-7 stay as built until THJ answers the plan's questions: [`plans/2026-11-17-cyclone-round2-design.md`](../../../plans/2026-11-17-cyclone-round2-design.md).
 
 ## Related
 

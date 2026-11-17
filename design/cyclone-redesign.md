@@ -13,6 +13,16 @@
 > - **Family Super Time:** Lucy's cast lands only on an empty cell, and is skipped while her Cyclone is out (D-535).
 > - **§10:** `radiusV` is now 3. The live hit was already 3 × before this build (D-518), not 7 × as §2 says.
 
+> **Round 2: PROPOSAL, not approved (2026-11-17).** After THJ's first play, [`plans/2026-11-17-cyclone-round2-design.md`](../plans/2026-11-17-cyclone-round2-design.md) proposes:
+> - the Steer carries the enemies beside the Cyclone, then Whirls (D-547), and "Gust" is retired;
+> - carrying is not a push;
+> - the cross is drawn as an eye tint plus arm-tip chevrons;
+> - full previews for the cast and the Steer;
+> - heavies walk through and burst it;
+> - Cyclone Power becomes 3 / 4 / 5.
+>
+> Nothing below changes until THJ answers its Q1 to Q6.
+
 Status: **Built on `thj/cyclone`** (see the note above). Earlier: **Direction picked by THJ** (2026-11-05: A, Pulling Gale; blocks enemies only; stops enemy ranged attacks). Version 2 folds in the review of 2026-11-06 and THJ's answers of 2026-11-10 (AI treats the cross as dangerous ground; a visible Whirl beat; Steer pulls once, at the end; Linda's Watch reacts to pulls). Numbers still to tune; nothing built; not yet in `decisions.md` · Owner: game designer (THJ approves) · Closes the open pass from D-055 (Q21 damage timing, S10 movement and pull) · Read from: `main` code and presets in the working tree, GDD `characters/lucy.md`, `characters/linda.md`, `family-systems.md`, `combat-rules.md`, `enemies.md`, decisions D-055, D-188, D-249, D-252, `level-chunks.md`.
 
 ## 1. The problem
