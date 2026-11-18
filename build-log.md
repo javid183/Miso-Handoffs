@@ -2744,3 +2744,11 @@ Core gets one additive, generic `CombatLog.AddCustom`.
 **Not verified:** all drawing in play (grey, chevron, pink bars, clearing on cancel/click/level end, off-lane Bloom copy enemy grey); the real freeze/prompt path; inner failure count of the known red not recorded.
 **Findings:** the refund-only branch of `TryCatch` is not used by any shipped unit (Mark's prefab is BounceBack; reachable from the Inspector only). A "CRLF" claim in two implementer reports was wrong: all files are LF (a `grep -c $'\r'` check miscounts; use `git ls-files --eol`).
 **Status:** C3 docs (designer GDD pages running; tech docs done); then THJ's short play check (`playtests/2026-11-17-catch-offer-play-check.md`).
+
+## 2026-11-18 · Catch & Return offer, C3 (grey tint removed; on `main`)
+
+**Built:** THJ played the preview and did not like the grey (D-556). The forward hits past Mark, and any Bloom copy hit the return doesn't reach, now keep the shot's normal red preview; only the units the return hits keep the pink bar. The lost-hit bookkeeping and helpers in the presenter, the preview rules and their tests were removed; the unused core grey overload, `lostDamage` and `lostDecreaseColor` were removed by hand to the pre-`5426a16d7` state. **Committed** `baa77da19` (synergies preview + tests) and `9e8d82434` (core revert, own commit); `miso.slnx` left out. Report: `reports/catch-offer-c3.md`.
+**Verified:** offline Roslyn build of both assemblies, 0 errors; the three core files diff-empty against `5426a16d7^`; no references left to the removed members.
+**Not verified:** EditMode after the change (THJ runs it); the drawing in play; cache and cleanup have no edit-mode tests (the presenter can't be unit-tested).
+**Findings:** the C2 reports' "core files are CRLF" was wrong, all LF (`git ls-files --eol`). GDD CR-56, Mark MA-3, `tech/` notes, decisions, status and the play check updated for D-556.
+**Status:** waiting on THJ's play check; Claude Docs mirror resync still owed (Mark, Linda, Family systems, Combat rules).

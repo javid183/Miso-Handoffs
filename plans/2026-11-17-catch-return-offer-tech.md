@@ -2,7 +2,7 @@
 
 Size: M    Tier: 3 (a game-rule change, answered by THJ 2026-11-17); code is feature-folder only    Assigned to: miso-implementer (sonnet), then miso-reviewer, miso-verifier
 Branch: `main` (scope: all)
-Status: approved by THJ 2026-11-17; C1 committed `521742a74`; C2 in progress
+Status: approved by THJ 2026-11-17; C1 `521742a74`, C2 `5426a16d7` + `2cf617358`, C3 docs done. **2026-11-18 (D-556): the grey lost-hit tint was dropped after THJ saw it; forward hits past Mark show the normal red preview, and the core grey overload was removed (`baa77da19`, `9e8d82434`). The grey wording below is history.**
 
 ## Why
 
