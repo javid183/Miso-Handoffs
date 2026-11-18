@@ -110,3 +110,5 @@ Note 2026-11-17, **on `thj/cyclone`, uncommitted until THJ's play check** (Cyclo
 - *AI:* the end-of-turn danger snapshot (`AIEndOfTurnDanger.Snapshot`) is now a `HashSet<Vector2Int>` subclass (`AIEndOfTurnDangerCells`) with per-unit `CellsFor(unit)`; `IAIEndOfTurnDangerSparesMover` lets a source spare a mover (heavies); a spent Cyclone adds no danger. Worker-thread safe (plain references only). AI intent prediction ignores the mover: open item.
 - *Known core limit:* `FactionControllerBase.ProcessFRApplyWaitList` fires one queued Family Role answer per action (Watch fires once for several riders). Changing it is Tier 3, decide after play.
 - *Cyclone code (not core):* `CycloneAimState`, `CycloneCastPreview(+Attach)`, `CycloneOutcome(+View)`, `CycloneHitPreview`, `CycloneWobble`, `CycloneCarryPlanner`, `CycloneBurst*`; no new statics (the cast-preview watcher is a hidden object per Play session).
+
+Note 2026-11-18 (D-564): the `lost` overload of `GUnit.ShowDamagePreview` added on 2026-11-17 (`5426a16d7`, grey tint, `lostDamage`, `lostDecreaseColor`) was removed again in `9e8d82434`; the three files are as before it. No caller uses it.

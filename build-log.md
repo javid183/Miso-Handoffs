@@ -2744,3 +2744,27 @@ Core gets one additive, generic `CombatLog.AddCustom`.
 **Verified:** the working tree afterwards holds only THJ's four local files (TMP fallback font, `PreloadScreen.unity`, two `ProjectSettings`), so the committed tree is the one that passed the full EditMode run (2114, known red only, count 43).
 **Not verified:** commits 3 and 4 were staged with pre-C4 copies of shared files, so commit 3 was not compiled on its own; only the final tree was. Play check still owed (`playtests/2026-11-17-cyclone-round2-play-check.md`, item 0 first).
 **Status:** committed; play findings go in new commits. Revert `b88c004f1` intro/outro settings before any merge to `main`.
+
+## 2026-11-17 · Catch & Return offer, C1 (rule and runtime; on `main`)
+
+**Built:** Mark's catch prompt opens only if the return copy would hit an enemy (`CatchOfferRules`, `CatchReturnHits` shared hit walk, `TryCatch` asks before freezing; declined arrows fly on and aren't re-asked). Bloom preview's contact walk moved into the shared helper unchanged. 19 edit-mode tests (`CatchOfferTests`). Plan `plans/2026-11-17-catch-return-offer-tech.md`; decisions D-560, D-561. Review APPROVE (3 should-fixes: slnx kept out of the commit, enemy/ally/neutral/dead check made a pure function with tests, safe test lookup; all done).
+**Verified:** THJ recompiled and ran EditMode: all green except the known red `AIRegressionTest.Baseline_MatchesCurrentAI`. **Committed `521742a74`** (8 files, `miso.slnx` left out).
+**Not verified:** the real freeze/prompt path and the faction lookup in play (enemy only past Mark, between, both, none); inner failure count of the known red not recorded.
+**Findings:** an ally alone in front of Mark with no enemy no longer gets the prompt (follows the rule). The C2 preview must call the shared hit counter so neutral units can't get a pink bar with no chevron.
+**Status:** C2 (preview: hide chevron and pink bars when not offered, grey the lost forward hits) dispatched; C3 docs after; one play check at the end.
+
+## 2026-11-17 · Catch & Return offer, C2 (preview, real grey; on `main`)
+
+**Built:** the aim preview asks the same shared rule and hit counter as the real catch: no chevron and no pink bars when the catch isn't offered; when it is, the forward hits past Mark (and every Tempest Bloom copy hit, on or off the lane) show in grey, because taking the catch gives them up. First built as hidden bars, escalated by the reviewer (a missed prompt hits them at full damage while the preview showed nothing); THJ chose real grey (D-563). Additive core overload `GUnit.ShowDamagePreview(..., lost)` + grey tint (`lostDecreaseColor`, 0.55, serialized, no prefab edit). Offer decision cached per aim. Reviews: C2 ESCALATE (grey), revision APPROVE (3 should-fixes, done). 14 `CatchPreviewOfferTests`.
+**Verified:** THJ recompiled and ran EditMode: all green except the known red `AIRegressionTest.Baseline_MatchesCurrentAI`. **Committed** `5426a16d7` (core overload + HP bar tint, own commit) and `2cf617358` (preview + tests); `miso.slnx` left out.
+**Not verified:** all drawing in play (grey, chevron, pink bars, clearing on cancel/click/level end, off-lane Bloom copy enemy grey); the real freeze/prompt path; inner failure count of the known red not recorded.
+**Findings:** the refund-only branch of `TryCatch` is not used by any shipped unit (Mark's prefab is BounceBack; reachable from the Inspector only). A "CRLF" claim in two implementer reports was wrong: all files are LF (a `grep -c $'\r'` check miscounts; use `git ls-files --eol`).
+**Status:** C3 docs (designer GDD pages running; tech docs done); then THJ's short play check (`playtests/2026-11-17-catch-offer-play-check.md`).
+
+## 2026-11-18 · Catch & Return offer, C3 (grey tint removed; on `main`)
+
+**Built:** THJ played the preview and did not like the grey (D-564). The forward hits past Mark, and any Bloom copy hit the return doesn't reach, now keep the shot's normal red preview; only the units the return hits keep the pink bar. The lost-hit bookkeeping and helpers in the presenter, the preview rules and their tests were removed; the unused core grey overload, `lostDamage` and `lostDecreaseColor` were removed by hand to the pre-`5426a16d7` state. **Committed** `baa77da19` (synergies preview + tests) and `9e8d82434` (core revert, own commit); `miso.slnx` left out. Report: `reports/catch-offer-c3.md`.
+**Verified:** offline Roslyn build of both assemblies, 0 errors; the three core files diff-empty against `5426a16d7^`; no references left to the removed members.
+**Not verified:** EditMode after the change (THJ runs it); the drawing in play; cache and cleanup have no edit-mode tests (the presenter can't be unit-tested).
+**Findings:** the C2 reports' "core files are CRLF" was wrong, all LF (`git ls-files --eol`). GDD CR-56, Mark MA-3, `tech/` notes, decisions, status and the play check updated for D-564.
+**Status:** waiting on THJ's play check; Claude Docs mirror resync still owed (Mark, Linda, Family systems, Combat rules).
