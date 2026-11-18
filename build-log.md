@@ -2728,3 +2728,12 @@ Core gets one additive, generic `CombatLog.AddCustom`.
 **Verified:** every changed Cyclone file in exactly one commit, every new file with its `.meta`; tree left with only THJ's local files (TMP fallback font, `PreloadScreen.unity`, two `ProjectSettings` files, `GlobalSettings.asset` test settings, then committed at THJ's request as `b88c004f1`: intro/outro sequences off; revert before merging to `main` if intros should play).
 **Not verified:** the full play check (THJ played part of it); intermediate commits were not compiled one by one, only the final tree.
 **Status:** committed so THJ can test from the office PC; play findings go in new commits.
+
+## 2026-11-17 · Cyclone round 2 built, not yet played or committed (D-547 to D-559)
+
+**Built:** C1 Steer ends in a Whirl and Power 3/4/5; C2 carry; C3a-c heavies walk through and burst it (core Grid and AI additions); C4 cross redraw, cast and Steer previews with ghosts and damage, first-frame fix, Cyclone-only wobble; C5 texts (D-559) and GDD sync. Reports `reports/cyclone-r2-c1.md` to `-c5.md`, reviews beside them.
+**Verified:** every chunk reviewed (several fix rounds); final gate `reports/cyclone-r2-final-verify.md`: compile clean, EditMode 2114 run, only the known AI red, inner count 43; C5 re-run the same.
+**Not verified:** all Play-mode behavior; item 0 of `playtests/2026-11-17-cyclone-round2-play-check.md` first (cast preview in the normal Preload > Home > level flow).
+**Findings:** the Cyclone files are LF, not CRLF. One-Watch-per-action core limit; AI intent prediction ignores the Cyclone as a mover; detour reachability (D-553) to judge in play. Backlog: stray old Cyclone assets under `Resources/UnitSpecific/Player/Linda/Abilities/Cyclone/`.
+**Status:** built and reviewed, uncommitted; waiting on THJ's play check, then commits (shared files C1/C2/C3b/C4 need hunk-level staging; `Lucy_Cyclone_Ability.asset` carries both Power factors and description). Claude Docs mirror sync owed: GDD Lucy, Enemies, Combat rules, Family systems.
+

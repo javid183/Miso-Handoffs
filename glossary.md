@@ -69,6 +69,26 @@ Built on `thj/linda-quiver`, merged into `main` 2026-10-29 (D-326). Global switc
 | **Catch & Return** (synergy) | `ProjectileCatchAndReturn` on `Unit_Mark`; synergy event "Catch & Return" | Open by default (D-177). When Linda's basic arrow reaches Mark from 2 or more cells (D-274), a QTE offers the catch. **Quiver on:** pressed, the arrow stops at Mark and flies back, damaging on the way, ending in Linda's hands and going back into her quiver (D-257, D-260, D-261); not pressed, it flies on past him like a normal shot. **Quiver off:** pressed, the copy returns to Linda damaging on the way, no arrow back (D-315, D-320). No AP refund, for bow and Watch arrows alike, ever (D-218, D-332) |
 | **Return to Sender** | Family-tree node (Catch & Return's upgrade) | **Effect withdrawn (D-332, reverses D-228):** Catch & Return never refunds AP, so this node's effect is open again; the name was approved for the refund and may not fit the new effect. Don't use "Return to Sender" or "shot back" in text until the designer's new effect is decided. **Not built in data** (no asset uses the name) |
 
+## Lucy's Cyclone
+
+Scope `thj/cyclone` until it merges. Round 2 texts proposed in `plans/2026-11-17-cyclone-round2-texts.md`. Rows marked **proposed** are not approved; the rest are names already in the game.
+
+| Term (player-facing) | Code name | Meaning |
+| --- | --- | --- |
+| **Cyclone** | `Lucy_Cyclone_Ability`, `CycloneEntity` | Lucy's storm, summoned on an empty cell within 3. Lasts 3 enemy turns. Always capital C ("Lucy's Cyclone"); the Tempest Bloom node text still writes "cyclone" (to fix) |
+| **Whirl** (proposed as an on-screen verb: "it Whirls") | `CycloneWhirlSteps`, log id `Whirl` | What the Cyclone does on cast, after each enemy turn and at the end of every Steer: pulls enemies on its arms 1 cell in, then hits the enemies beside it. Capital W, used as a verb ("then it Whirls") and a noun ("the Whirl"). The log already says "Whirl" |
+| **Steer** | `Lucy_Ability_Steer` | Takes the Cyclone's button while it is out. 1 AP, once a turn: glides the Cyclone up to 3 steps, carrying the enemies beside it, then it Whirls |
+| **beside it** (proposed) | touching cells, `CycloneRules.TouchLabel` | The 4 cells touching the Cyclone: where the Whirl hits and who rides a Steer. On screen always "beside it" / "beside the Cyclone"; "touching cells" is a design word |
+| **arms** (proposed) | arm cells | The 4 straight lines out from the Cyclone, 2 cells long; enemies on them are pulled 1 cell in. Already on screen in the Cyclone description ("enemies on its arms"). Keep it |
+| **carry / carried** (proposed) | carry planner, log "carried N" | Enemies beside the Cyclone move with it during a Steer (shoved ahead, dragged beside, following behind) and land once at the end. Not a push. Prefer "carried" on screen, to match the log; "drags" only as flavour |
+| **burst** (proposed) | C3b burst | When a heavy enemy walks into the Cyclone, it bursts: one hit on that enemy and every enemy beside it, then it is gone |
+| heavy (design word, not on screen) | `EntityState.Unmovable` or footprint larger than 1 cell | Masher Goblin, Goblin Queen, Mountain Deev. On screen, name the enemy or write "this enemy"; don't show "heavy" |
+| cross (design word, not on screen) | `CycloneCrossView` | The Cyclone's area (arms plus the cells beside it). The board no longer draws a cross shape (eye tint and arm-tip chevrons), so keep it off screen |
+| **Cyclone Power** | skill-tree node `Stat_DMG` on the cast | Cyclone hits deal 3 times Lucy's damage without it, 4 at level 1, 5 at level 2 |
+| **Howling Gale** | `LucyCycloneWeak` (unlockable and `RU_LucyCycloneWeak`) | Weak for 2 turns on every enemy a Cyclone hit lands on (cast, Steer, end of turn, burst) |
+| ~~Gust~~ (**retired**) | | The old name for the Steer's closing pull. Retired everywhere by THJ (2026-11-17, round 2): a Steer ends in a Whirl. Never write "Gust" |
+| Eye of the Storm (suggestion only) | | Possible name for the carry rule or round 2 as a whole. A design label for now; not on screen unless THJ picks it |
+
 ## Home terms (scope `thj/home-test`; Bond row also `thj/bond-lite`)
 
 Rules and numbers: `design/demo-spec.md`.
