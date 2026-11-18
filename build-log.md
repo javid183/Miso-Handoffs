@@ -2737,3 +2737,10 @@ Core gets one additive, generic `CombatLog.AddCustom`.
 **Findings:** the Cyclone files are LF, not CRLF. One-Watch-per-action core limit; AI intent prediction ignores the Cyclone as a mover; detour reachability (D-553) to judge in play. Backlog: stray old Cyclone assets under `Resources/UnitSpecific/Player/Linda/Abilities/Cyclone/`.
 **Status:** built and reviewed, uncommitted; waiting on THJ's play check, then commits (shared files C1/C2/C3b/C4 need hunk-level staging; `Lucy_Cyclone_Ability.asset` carries both Power factors and description). Claude Docs mirror sync owed: GDD Lucy, Enemies, Combat rules, Family systems.
 
+
+## 2026-11-17 · Cyclone round 2 committed before play (THJ: commit, play tomorrow)
+
+**Built:** nothing new. Five commits on `thj/cyclone`: `5f89cca91` core Grid (mover pass, burst hook), `6a6bbbd27` core AI (danger cells per source), `a427a08b2` Cyclone gameplay (C1 to C3b, tests, Cyclone description), `54e03cd94` visuals and previews (C4), `6990b93a2` texts (Steer, Power, Howling Gale, Tempest Bloom). Not pushed.
+**Verified:** the working tree afterwards holds only THJ's four local files (TMP fallback font, `PreloadScreen.unity`, two `ProjectSettings`), so the committed tree is the one that passed the full EditMode run (2114, known red only, count 43).
+**Not verified:** commits 3 and 4 were staged with pre-C4 copies of shared files, so commit 3 was not compiled on its own; only the final tree was. Play check still owed (`playtests/2026-11-17-cyclone-round2-play-check.md`, item 0 first).
+**Status:** committed; play findings go in new commits. Revert `b88c004f1` intro/outro settings before any merge to `main`.
