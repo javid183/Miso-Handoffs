@@ -13,17 +13,21 @@
 > - **Family Super Time:** Lucy's cast lands only on an empty cell, and is skipped while her Cyclone is out (D-535).
 > - **§10:** `radiusV` is now 3. The live hit was already 3 × before this build (D-518), not 7 × as §2 says.
 
-> **Round 2: PROPOSAL, not approved (2026-11-17).** After THJ's first play, [`plans/2026-11-17-cyclone-round2-design.md`](../plans/2026-11-17-cyclone-round2-design.md) proposes:
-> - the Steer carries the enemies beside the Cyclone, then Whirls (D-547), and "Gust" is retired;
-> - carrying is not a push;
-> - the cross is drawn as an eye tint plus arm-tip chevrons;
-> - full previews for the cast and the Steer;
-> - heavies walk through and burst it;
-> - Cyclone Power becomes 3 / 4 / 5.
->
-> Nothing below changes until THJ answers its Q1 to Q6.
+> **Round 2: as built (2026-11-17, `thj/cyclone`, uncommitted, not play-checked; D-547 to D-559).** Design and reasoning: [`plans/2026-11-17-cyclone-round2-design.md`](../plans/2026-11-17-cyclone-round2-design.md) (THJ took every recommendation: D-548 to D-551); build: [`plans/2026-11-17-cyclone-round2-tech.md`](../plans/2026-11-17-cyclone-round2-tech.md), reports `reports/cyclone-r2-c1.md` to `cyclone-r2-c4.md`; texts D-559. The rules live in the GDD: [Lucy](gdd/characters/lucy.md#cyclone-pulling-gale) LU-3 to LU-7, [Combat rules](gdd/combat-rules.md) CR-58 (heavy exception), [Enemies](gdd/enemies.md) EN-2, EN-3, EN-6, EN-18. It supersedes §4.3 to §4.7, §5, §6 and §7 of the text below and the round 1 notes above that name the Gust:
+> - **§4.4:** the Steer carries the enemies beside the Cyclone (front shoved, sides dragged, rear follows; riders re-counted each step) and ends in a full Whirl. "Gust" is retired from text, log and code; the log reads "Whirl · Lucy: carried N, pulled N, hit M". The path may turn.
+> - **Carrying is not a push** (D-549): one landing; Watch, landing hazards and the wake fire on landing only, then the Whirl (D-555 keeps that order). No hold (Q4 not adopted).
+> - **Crippled, corrected:** round 2's design (§5 Interactions) and tech plan said the Whirl's 1-cell pull still pays Crippled once. As built it doesn't: the Cyclone's pusher has no per-cell effect, so no Cyclone move (pull or carry) deals Crippled damage. The Harmonic Slam guard holds with more margin than planned.
+> - **§4.6 and §5:** heavies (Immovable or larger than one cell; only units hostile to Lucy's faction) walk through the Cyclone and burst it (one hit on the heavy and each enemy beside, then it's gone); jumps never burst it (D-557); heavies don't treat the cross as dangerous ground. Built as an additive core interface on the walk check (D-556) and a per-unit danger snapshot in the AI, with no path cost.
+> - **§4.7:** no Cyclone hit is anyone's action (Whirl, Steer, burst; D-551); Howling Gale applies on every hit.
+> - **§6:** the cross is a cool tint on the touching cells plus one chevron per arm tip, no number, dimmed while aiming; the cast and the Steer preview every move (ghost and tether) and hit (damage and skull on the ghost). The heavy warning is a Cyclone-only wobble on the path to the nearest family unit (D-558), not on an intent path, which the game doesn't have.
+> - **§7:** Cyclone Power is a flat 3 / 4 / 5 × (level factors 1.333333 / 1.666667).
+> - **Open, for THJ at the play check:**
+>   1. **One Watch per action** (core): a faction answers one queued Family Role per action (`FactionControllerBase.ProcessFRApplyWaitList`), so several riders landing in Linda's lane get one Watch. The design's "Watch fires twice" moment doesn't happen; lifting it is a core change.
+>   2. **AI intent ignores the Cyclone as a mover:** the next-targets prediction ranges moves without the mover, so it never predicts a heavy walking through the Cyclone while the real turn does; a heavy's target can be under-predicted. Making the prediction mover-aware is core and could move the AI regression count (D-558 chose not to).
+>   3. **Detour reachability** (D-553): a cell past a blocked front enemy is still offered by another route within 3 steps (the straight blocked line never is). Keep, or refuse every cell past it?
+>   4. Enemy dash attacks path without the mover, so a heavy's dash goes around the Cyclone and never bursts it (only walks and the Queen's charge do).
 
-Status: **Built on `thj/cyclone`** (see the note above). Earlier: **Direction picked by THJ** (2026-11-05: A, Pulling Gale; blocks enemies only; stops enemy ranged attacks). Version 2 folds in the review of 2026-11-06 and THJ's answers of 2026-11-10 (AI treats the cross as dangerous ground; a visible Whirl beat; Steer pulls once, at the end; Linda's Watch reacts to pulls). Numbers still to tune; nothing built; not yet in `decisions.md` · Owner: game designer (THJ approves) · Closes the open pass from D-055 (Q21 damage timing, S10 movement and pull) · Read from: `main` code and presets in the working tree, GDD `characters/lucy.md`, `characters/linda.md`, `family-systems.md`, `combat-rules.md`, `enemies.md`, decisions D-055, D-188, D-249, D-252, `level-chunks.md`.
+Status: **Built on `thj/cyclone`**, with round 2 on top (see the notes above). Earlier: **Direction picked by THJ** (2026-11-05: A, Pulling Gale; blocks enemies only; stops enemy ranged attacks). Version 2 folds in the review of 2026-11-06 and THJ's answers of 2026-11-10 (AI treats the cross as dangerous ground; a visible Whirl beat; Steer pulls once, at the end; Linda's Watch reacts to pulls). Numbers still to tune; nothing built; not yet in `decisions.md` · Owner: game designer (THJ approves) · Closes the open pass from D-055 (Q21 damage timing, S10 movement and pull) · Read from: `main` code and presets in the working tree, GDD `characters/lucy.md`, `characters/linda.md`, `family-systems.md`, `combat-rules.md`, `enemies.md`, decisions D-055, D-188, D-249, D-252, `level-chunks.md`.
 
 ## 1. The problem
 

@@ -1,6 +1,6 @@
 # Level chunks: enemy and challenge patterns
 
-Owner: game designer (THJ approves) · Scope: `all` · Status: **Proposed**, a working catalogue (33 chunks; 19–32 added 2026-10-23, 33 on 2026-10-24; Cyclone answers moved to Pulling Gale as built on `thj/cyclone`, 2026-11-12) · Supersedes the level sequence in [`plans/2026-10-21-showcase-levels-design.md`](../plans/2026-10-21-showcase-levels-design.md) (THJ, 2026-10-22: patterns and chunks, not a sequence of levels)
+Owner: game designer (THJ approves) · Scope: `all` · Status: **Proposed**, a working catalogue (33 chunks; 19–32 added 2026-10-23, 33 on 2026-10-24; Cyclone answers moved to Pulling Gale as built on `thj/cyclone`, 2026-11-12; chunks 1, 12, 13, 24 updated for its round 2 (Steer carries, heavies burst it), text only, 2026-11-17) · Supersedes the level sequence in [`plans/2026-10-21-showcase-levels-design.md`](../plans/2026-10-21-showcase-levels-design.md) (THJ, 2026-10-22: patterns and chunks, not a sequence of levels)
 
 A chunk is a small piece of a level (up to about 11 × 11 tiles) that asks the player one question. Each chunk has **several answers**, and each answer is a family mechanic: the best ones (★) are the smart solves, the plain ones (●) work at a cost, and the traps (✗) punish a careless play. Chunks combine into levels; this page doesn't order them.
 
@@ -101,11 +101,11 @@ note 4,2 Cyclone here
 | Answer | How | |
 | --- | --- | --- |
 | Fire Embers | One cast on 3,3: the sidewinder finds the Claw on 4,2 by itself | ★ |
-| Cyclone | Once 4,2 is clear, a Cyclone there (3 from Lucy): no enemy walks through it, and it pulls them in. Its cast Whirl pulls the Claw on 6,2 to 5,2 and hits it; any Claw that ends on 5,2 or 6,2 is pulled in and hit at the end of the enemy turn. With nothing to attack past the seal, the rest wait off its arms (EN-18) | ★ |
+| Cyclone | Once 4,2 is clear, a Cyclone there (3 from Lucy): no enemy walks through it, and it pulls them in. Its cast Whirl pulls the Claw on 6,2 to 5,2 and hits it; any Claw that ends on 5,2 or 6,2 is pulled in and hit at the end of the enemy turn. With nothing to attack past the seal, the rest wait off its arms (EN-18). A Steer carries whatever stands beside it, but moving it off 4,2 opens the throat: here the Cyclone pays by standing still (LU-6) | ★ |
 | Blink | Step back; the decoy draws them into the throat, where the embers reach them in a line | ● |
 | Fight in the open | Trade embers with three Claws | ✗ |
 
-**Knobs:** throat 2 wide (the Cyclone no longer seals it); enemies act first; an Archer behind the three (its shots through the throat are blocked while the Cyclone stands on 4,2, CR-57). The seal now has a clock: 3 enemy turns, then a round open while the cooldown runs.
+**Knobs:** throat 2 wide (the Cyclone no longer seals it); enemies act first; an Archer behind the three (its shots through the throat are blocked while the Cyclone stands on 4,2, CR-57). The seal now has a clock: 3 enemy turns, then a round open while the cooldown runs. With the throat 2 wide, a Masher in the pack ignores the seal: it walks through the Cyclone and bursts it (LU-7), so the Cyclone holds only against light enemies.
 
 ### 2. The chasm
 
@@ -415,14 +415,14 @@ zone 5,7 5,9 linda Watch column
 | Answer | How | |
 | --- | --- | --- |
 | Linda's Role | On 5,6 her row runs down both side arms, her column up the north arm: one tile watches three arms, with only 2 Watch Shots a round | ★ |
-| Cyclone | Holds the north arm from 5,8. The arm is 3 wide, so the Claws on 4,9 and 6,9 can still pass beside it on 4,8 and 6,8, but they won't stop on its cross unless they can strike from there (EN-18), and any that end on a touching cell are hit at the end of the enemy turn. 5,8 is 4 from Lucy on 6,5, so she moves first (range 3). Only one at a time: the Second Cyclone upgrade isn't built (D-531), and cooldown 4 against a 3-turn life leaves a round with none | ★ |
+| Cyclone | Holds the north arm from 5,8. The arm is 3 wide, so the Claws on 4,9 and 6,9 can still pass beside it on 4,8 and 6,8, but they won't stop on its cross unless they can strike from there (EN-18), and any that end on a touching cell are hit at the end of the enemy turn. On Lucy's turn, Steer it one cell south to 5,7: Claws on 4,8 and 6,8 ride down to 4,7 and 6,7 and the Steer's Whirl hits them again; a Claw that ended on 5,9 follows into 5,8 and lands in Linda's Watch column first (LU-6). 5,8 is 4 from Lucy on 6,5, so she moves first (range 3). Only one at a time: the Second Cyclone upgrade isn't built (D-531), and cooldown 4 against a 3-turn life leaves a round with none | ★ |
 | Tempest Bloom | Her arrows split inside the Cyclone into the side files (chunk 13) | ★ |
 | Catch & Return | Mark behind a queue in a side arm (chunk 14) | ★ |
 | John–Lucy Hide and Seek | Decoys around the plaza draw the wave off the protectee | ● |
 | Shield Up, John's Shield | John plugs the south arm; his Shield covers Lucy and Linda, not the protectee | ● |
 | Cleanse sortie | Faster win, protectee exposed | ● |
 
-**Knobs:** a Black Claw in one arm (chunk 18); the Masher down a wide arm; Toba's taunt and heals; two arms only.
+**Knobs:** a Black Claw in one arm (chunk 18); the Masher down a wide arm (it walks through the Cyclone and bursts it, LU-7: the north arm's hold becomes a trade); Toba's taunt and heals; two arms only.
 
 ### 13. The prism
 
@@ -449,7 +449,7 @@ arrow 3,3 3,5 linda
 | Tempest Bloom | Her arrow enters the Cyclone and splits toward every side but back: one shot, three Claws. Cast the Cyclone in the same turn, before the shot: its cast Whirl pulls all three onto its touching cells, where the copies start | ★ |
 | Linda's Role | Her Role arrows bloom too: the crossing guards itself | ★ |
 | Explosive Crescendo | One side at a time | ● |
-| Cyclone alone | Pulls them in: each Claw stands 2 out on an arm (1,3, 5,3, 3,5), so one Whirl pulls all three onto its touching cells and hits each 3 ×; then again at the end of each enemy turn while they stay. Slow on its own | ● |
+| Cyclone alone | Pulls them in: each Claw stands 2 out on an arm (1,3, 5,3, 3,5), so one Whirl pulls all three onto its touching cells and hits each 3 ×; then again at the end of each enemy turn while they stay. A Steer south to 3,2 splits them: the side Claws are walled in and drop out (now diagonal, off the cross), the north one follows into 3,3, in Linda's column (Watch), and only it takes the Steer's Whirl (LU-6). Better to leave the Cyclone where it is. Slow on its own | ● |
 
 ### 14. The gauntlet
 
@@ -763,7 +763,7 @@ arrow 6,5 6,2 5,2 enemy
 | Linda's Watch | 4,2 and 1,2 (the only tile beside her) are in her row: whatever lands there is shot | ★ |
 | Shield Up + Wrath | One attacker a turn, each hit a stack | ★ |
 | Papa's Shelter, Lucy's Role | Lucy behind John: Sheltered, and following up on everything he hits | ★ |
-| Cyclone on 4,2 | Nothing can reach John at all for 3 enemy turns (it no longer drifts), then a round open while the cooldown runs. With nothing to attack from its cross, the Claws wait off it (EN-18) and go for Linda through 1,2, in her own Watch row | ● |
+| Cyclone on 4,2 | Nothing can reach John at all for 3 enemy turns (it no longer drifts), then a round open while the cooldown runs. With nothing to attack from its cross, the Claws wait off it (EN-18) and go for Linda through 1,2, in her own Watch row. A Steer reopens the nook, so here it's a last resort: 2 cells west puts the Cyclone on 2,2, beside a Claw on 1,2, and its Whirl hits it; a third step isn't offered, since that Claw can't be shoved into Linda (LU-6) | ● |
 | Lucy out front | From 5 tiles away a Claw lands beside her this turn | ✗ |
 
 ## Hazard chunks
