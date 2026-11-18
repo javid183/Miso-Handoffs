@@ -63,3 +63,9 @@ Setup that helps: a level with Lucy, Linda, a few Claws, and a Masher or the Gob
 
 - The aim cross, tint, chevrons, tether and hazard ring are placeholder sprites made in code.
 - The intent avatars of a heavy may under-predict a target reachable only through the Cyclone (the AI prediction does not use the heavy's walk-through; reported in C3c).
+
+## THJ Playtest feedbackw
+1. As a visual addiotional feedback and juice, the adjacent units who will receive the damage should be pulled towards the center of the cyclone for a brief moment and then pushed back to where they were and receive damage. (As if the cyclone is sucking them in and spitting them out)
+2. I think the above could also apply when the cyclone has grabbed enemies and is moving them. At the start of movement they are pulled twoards the cyclone, moved with it, then finally pushed away to where they should be. The movement now is too mechanical. It should feel more like push, pull, and dragged than feel like a chess pawn picked up and placed somewhere else.
+3. I think it is much more fun if we allowed the cyclone to be placed inside tiles occuopied by enemies too. In this situation, the enemy who is occupying the tile will be pushed to an adjacent tile.
+4. Add more transparency to both the pull directional arrow and the circle of damage images on tiles.
