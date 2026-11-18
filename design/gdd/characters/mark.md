@@ -1,6 +1,6 @@
 # Mark
 
-Owner: game designer (THJ approves) · Scope: `all` · Checked against assets: `main` @ `92853a5a9`, 2026-10-16 (ability presets read from the live project); MA-3 from `main` @ `8c2e8617c`, 2026-10-29 (`ProjectileCatchAndReturn.cs`, `Unit_Mark.prefab` read) · Mirror: Claude Doc "Miso — Game Design", tab Characters › Mark · Up: [Overview](../overview.md)
+Owner: game designer (THJ approves) · Scope: `all` · Checked against assets: `main` @ `92853a5a9`, 2026-10-16 (ability presets read from the live project); MA-3 from `main` @ `8c2e8617c`, 2026-10-29 (`ProjectileCatchAndReturn.cs`, `Unit_Mark.prefab` read); MA-3 offer rule and preview from `main` @ `2cf617358`, 2026-11-17 (from the build reports, code not re-read) · Mirror: Claude Doc "Miso — Game Design", tab Characters › Mark · Up: [Overview](../overview.md)
 
 Mark is the monk and Zen master: a fast melee fighter who chains kills, builds Focus into a barrier, commands allies across the board, and strikes back at anyone who hurts the family. He joins after "No More Waiting" (M3) and has a Duo with every sibling and John.
 
@@ -35,13 +35,14 @@ Source: `abilityOrchestrator` on `Unit_Mark.prefab`; presets in `Resources/UnitS
 
 - **MA-1. Atman's Focus.** Each basic attack he lands adds 1 Focus (max 5). Focus adds damage (+1 to +5) and a barrier that soaks incoming damage before health (3, 5, 7, 8, 9). A hit costs 2 Focus; a hit bigger than the barrier breaks it. *Built* (the tooltip says Focus comes from kills; Q1)
 - **MA-2. Continuous Attack.** When his Fist Blitz kills, a press QTE swings again at the lowest-health enemy in range. It costs 1 FTP, then +1 for each further use in the same turn. *Built, differs.* **Planned (D-216):** free, with a per-turn limit (value not set); FTP pays for Duos only.
-- **MA-3. Catch & Return.** Once bought, when Linda's bow or Watch arrow reaches him from 2 or more cells away along its line, the arrow stops at Mark and a press QTE offers the catch (D-257, D-260; a shorter prompt wait than other QTEs, D-273). *Built* (on `main` since 2026-10-29, D-326):
+- **MA-3. Catch & Return.** Once bought, when Linda's bow or Watch arrow reaches him from 2 or more cells away along its line, and the return copy would hit at least one enemy, the arrow stops at Mark and a press QTE ("Catch Arrow") offers the catch (D-257, D-260; a shorter prompt wait than other QTEs, D-273). *Built* (on `main` since 2026-10-29, D-326; the offer rule since 2026-11-17, D-552):
+  - **Offered only with an enemy between:** the catch is offered only if the return copy (Mark back to Linda) would hit an enemy. Allies and neutral units don't count. With no enemy between Linda and Mark there is no prompt and the arrow flies on as if Mark weren't there, whether or not enemies stand past him (D-552). If the return can't be worked out, the catch is offered as before.
   - **Pressed:** the arrow is caught at Mark and never reaches the enemy behind him. A return copy flies from Mark back to Linda, damaging enemies on the way, and ends at her (D-261, D-276). An enemy between them is hit on the way out and again on the way back (D-274). With the quiver on, the arrow goes straight back into her quiver ([Linda](linda.md) LI-9); with it off, no arrow is involved and the damaging return is all (D-315, D-320).
-  - **Aim preview:** while Linda aims through Mark, the return shows on the board and its damage as a second segment on the HP bar ([Combat rules](../combat-rules.md) CR-56).
+  - **Aim preview:** while Linda aims through Mark and the catch would be offered, the return shows on the board and its damage as a second segment on the HP bar; the forward hits past Mark that the catch gives up show in grey (D-553, D-555; [Combat rules](../combat-rules.md) CR-56). When it wouldn't be offered, only the normal shot shows.
   - **Not pressed:** the same arrow carries on with its remaining range and falloff, and lands as usual.
   - No refund: bounce only; the node text that promises a refund gets fixed (D-218). **Planned (D-228):** the node becomes "Return to Sender", once per turn refunding Linda's shot (+1 AP).
 
-Source: `Features/Player/Mark/Scripts/MarkPassiveAbility_AtmanFocus.cs`, `MarkPassiveAbility_ContinuousAttack.cs`, `ProjectileCatchAndReturn.cs` (with `CatchSweep.cs`) and their components on `Unit_Mark.prefab` (catch: `returnMode` BounceBack, `triggerWithQTE` on, `minTileDistance` 2, one whitelisted arrow, `returnPrefab` `LindaAttackArrowReturn`, unlock `_MarkLindaSynergy`). (`MarkPassiveAbility_AtmanBarrier.cs` exists but is not on the prefab.)
+Source: `Features/Player/Mark/Scripts/MarkPassiveAbility_AtmanFocus.cs`, `MarkPassiveAbility_ContinuousAttack.cs`, `ProjectileCatchAndReturn.cs` (with `CatchSweep.cs`; the offer rule in `CatchOfferRules.cs`) and their components on `Unit_Mark.prefab` (catch: `returnMode` BounceBack, `triggerWithQTE` on, `minTileDistance` 2, one whitelisted arrow, `returnPrefab` `LindaAttackArrowReturn`, unlock `_MarkLindaSynergy`). (`MarkPassiveAbility_AtmanBarrier.cs` exists but is not on the prefab.)
 
 ## Skill tree
 
