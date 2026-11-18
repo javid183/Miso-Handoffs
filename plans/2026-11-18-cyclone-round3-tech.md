@@ -2,7 +2,7 @@
 
 Size: L    Tier: 3 (the rule change and the feel were approved by THJ in D-566 to D-568; no core API change planned, see Risks)    Assigned to: miso-implementer (opus for C2 and C3, sonnet for C1), then miso-reviewer, miso-verifier
 Branch: `thj/cyclone` (scope: this branch; checked out 2026-11-18)
-Status: draft, shown to THJ before dispatch
+Status: approved by THJ 2026-11-18 (all chunks one after the other, he plays them together)
 
 ## Why
 
