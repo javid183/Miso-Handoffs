@@ -2736,3 +2736,11 @@ Core gets one additive, generic `CombatLog.AddCustom`.
 **Not verified:** the real freeze/prompt path and the faction lookup in play (enemy only past Mark, between, both, none); inner failure count of the known red not recorded.
 **Findings:** an ally alone in front of Mark with no enemy no longer gets the prompt (follows the rule). The C2 preview must call the shared hit counter so neutral units can't get a pink bar with no chevron.
 **Status:** C2 (preview: hide chevron and pink bars when not offered, grey the lost forward hits) dispatched; C3 docs after; one play check at the end.
+
+## 2026-11-17 · Catch & Return offer, C2 (preview, real grey; on `main`)
+
+**Built:** the aim preview asks the same shared rule and hit counter as the real catch: no chevron and no pink bars when the catch isn't offered; when it is, the forward hits past Mark (and every Tempest Bloom copy hit, on or off the lane) show in grey, because taking the catch gives them up. First built as hidden bars, escalated by the reviewer (a missed prompt hits them at full damage while the preview showed nothing); THJ chose real grey (D-555). Additive core overload `GUnit.ShowDamagePreview(..., lost)` + grey tint (`lostDecreaseColor`, 0.55, serialized, no prefab edit). Offer decision cached per aim. Reviews: C2 ESCALATE (grey), revision APPROVE (3 should-fixes, done). 14 `CatchPreviewOfferTests`.
+**Verified:** THJ recompiled and ran EditMode: all green except the known red `AIRegressionTest.Baseline_MatchesCurrentAI`. **Committed** `5426a16d7` (core overload + HP bar tint, own commit) and `2cf617358` (preview + tests); `miso.slnx` left out.
+**Not verified:** all drawing in play (grey, chevron, pink bars, clearing on cancel/click/level end, off-lane Bloom copy enemy grey); the real freeze/prompt path; inner failure count of the known red not recorded.
+**Findings:** the refund-only branch of `TryCatch` is not used by any shipped unit (Mark's prefab is BounceBack; reachable from the Inspector only). A "CRLF" claim in two implementer reports was wrong: all files are LF (a `grep -c $'\r'` check miscounts; use `git ls-files --eol`).
+**Status:** C3 docs (designer GDD pages running; tech docs done); then THJ's short play check (`playtests/2026-11-17-catch-offer-play-check.md`).

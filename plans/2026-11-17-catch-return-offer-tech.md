@@ -31,7 +31,7 @@ Out: the prompt text and its visuals (`QuickTimeEventHandler`, `QTEBehavior`, `Q
 
 ## Touches
 
-Systems (all feature-folder, none core): `Features/Player/Mark/Scripts/ProjectileCatchAndReturn.cs` (`TryCatch`, `PassesCatchGates`, `CatchSweep.LateUpdate` caller), `CatchAndReturnRules.cs`, `Features/Player/Shared/Synergies/SynergyLanePresenter.Catch.cs` (`TryReadCatchShot`, `ComputeCatchDamage`, `ApplyCatchDamage`), `CatchReturnPreviewRules.cs`, `TempestBloomPreviewRules.CollectHits` (reused read-only), the existing editor tests in those folders. Core files listed in `tech/core-systems.md` (`Projectile.cs`, QTE files) are read but not edited; if the prediction can't be made without editing one, stop and report the minimal additive hook (that is a core change THJ approves first).
+Systems (feature-folder, plus one additive core overload approved by THJ 2026-11-17 for the grey lost-hit bars, D-555: `GUnit.ShowDamagePreview(..., lost)` and a grey tint in the HP bar UI; own commit): `Features/Player/Mark/Scripts/ProjectileCatchAndReturn.cs` (`TryCatch`, `PassesCatchGates`, `CatchSweep.LateUpdate` caller), `CatchAndReturnRules.cs`, `Features/Player/Shared/Synergies/SynergyLanePresenter.Catch.cs` (`TryReadCatchShot`, `ComputeCatchDamage`, `ApplyCatchDamage`), `CatchReturnPreviewRules.cs`, `TempestBloomPreviewRules.CollectHits` (reused read-only), the existing editor tests in those folders. Core files listed in `tech/core-systems.md` (`Projectile.cs`, QTE files) are read but not edited; if the prediction can't be made without editing one, stop and report the minimal additive hook (that is a core change THJ approves first).
 USPs: Synergies (Mark and Linda), Family Roles untouched.
 Docs: see below.
 
@@ -49,7 +49,7 @@ Commit 1 (own commit: it changes live combat behavior).
 ### C2. Preview and feedback (sonnet)
 
 - `TryReadCatchShot`/`ComputeCatchDamage` use the same rule: when no, return false for the catch (no chevron, no pink bars); the normal shot preview stays.
-- When yes: mark the forward hits past Mark as lost: grey or strike the second-colour/stepped bar for those enemies (reuse the bar's existing colour options; no new asset). The pink return bars stay.
+- When yes: mark the forward hits past Mark as lost: grey or strike the second-colour/stepped bar for those enemies (the bar had no grey: a serialized grey tint with a code default, no prefab edit, was added with THJ's OK, D-555). The pink return bars stay.
 - The preview survives the player's hover refresh as it does today and clears on cancel, click and level end.
 - Tests: preview decision equals the runtime decision; lost-hit set equals the forward hits past Mark.
 Commit 2.
