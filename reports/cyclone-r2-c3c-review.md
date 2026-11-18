@@ -1,0 +1,17 @@
+# Review: Cyclone round 2, C3c (AI heavy handling, core AI), branch `thj/cyclone`, uncommitted
+
+Reviewer: `miso-reviewer` (saved by the coordinator). Verdict: **APPROVE**. No must-fix, no should-fix. Implementer run: EditMode 2089/2090, known red only, count 43. The wobble is not in C3c (D-558, built in C4).
+
+## Notes
+- Additive: every reader (3 `AIFactionBrain` sites, `AIBlackboard` Set/EndOfTurnDanger/HasEndOfTurnDanger, tests) takes the snapshot as a `HashSet<Vector2Int>`/`ICollection`; the blackboard stores the reference without copying. With no sparing source `_spared` stays null and `For()` returns `this` (test `AreSame`), so non-heavy units read the same object with the same contents. `Snapshot`'s return type is a public signature change in a core system, source-compatible and inside the approved additive scope. The only `IAIEndOfTurnDanger` implementer is `CycloneEntity`.
+- Worker thread: the snapshot is built in full on the main thread and never written again; `For`/`CellsFor` read references only; `SparesMover` -> `CycloneHeavy.IsHeavy` runs on the main thread only; units moved in a prediction keep their reference.
+- Cost: one extra pass over the grid cells times the sources, only when a sparing source has cells. Large units counted once; a large heavy with part of its footprint on an arm is covered by a test; a unit off the board at snapshot time reads the full set (conservative).
+- `IAIEndOfTurnDangerSparesMover` is opt-in; core mentions the Cyclone only in a comment.
+- `HasBurst` early returns correct (both collectors run only from main-thread snapshots). `NotifyReadyChanged()` runs synchronously inside the plug; no production subscriber to `ReadyChanged`; no re-entrancy into the grid or the AI.
+- AI regression: scenarios put no `CycloneEntity` on a grid; same path without a sparing source; 43 plausible (reviewer did not re-run; the implementer's run shows 43).
+- Tests are real, except that `ChooseDestination` stands in for the brain's scoring (the one-line brain change is covered only by reading and by the play check) and the worker-thread test is light.
+- Line endings and BOM: no file changed from HEAD. The four existing files are `eol=lf` (`.gitattributes`), zero CRs; `AIEndOfTurnDanger.cs` has a BOM at HEAD and still does; new files LF no BOM like their neighbours; both `.meta` present. **The earlier "CRLF" claim in the C2 and C3b reviews and in my briefs was wrong: the Cyclone files are LF.** No private IDs.
+- Commit grouping sound: core commit (`AIEndOfTurnDangerCells.cs`+meta, `AIEndOfTurnDanger.cs`, `AIUnitBrain.EndOfTurnDanger.cs`) builds alone; the Cyclone commit depends on C3a and C3b; the should-fix lines in `CycloneEntity.Burst.cs` / `CycloneBurstTests.cs` fold into the C3b commit.
+- Plan drift (fine): the per-unit heavy flag is resolved on the main thread inside the snapshot, not from blackboard data; path-walkable for heavies came from C3a.
+- Loose ends: the prediction's simulated move range ignores the mover (predicted heavy moves never cross the Cyclone; intent avatars can under-predict); `AEffectDashAttack` still finds paths without a mover; `tech/core-systems.md` AI row needs `IAIEndOfTurnDangerSparesMover`, `AIEndOfTurnDangerCells`, `CellsFor`, and "a burst Cyclone is no danger and blocks no shot" (coordinator).
+- Further OK from THJ: none. Making the prediction consider the mover would be a new Tier 3 core change, not part of C3c.
