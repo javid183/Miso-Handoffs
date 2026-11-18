@@ -2,7 +2,7 @@
 
 Size: M    Tier: 3 (a game-rule change, answered by THJ 2026-11-17); code is feature-folder only    Assigned to: miso-implementer (sonnet), then miso-reviewer, miso-verifier
 Branch: `main` (scope: all)
-Status: waiting on THJ (plan approval)
+Status: approved by THJ 2026-11-17; C1 committed `521742a74`; C2 in progress
 
 ## Why
 

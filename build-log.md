@@ -2728,3 +2728,11 @@ Core gets one additive, generic `CombatLog.AddCustom`.
 **Verified:** every changed Cyclone file in exactly one commit, every new file with its `.meta`; tree left with only THJ's local files (TMP fallback font, `PreloadScreen.unity`, two `ProjectSettings` files, `GlobalSettings.asset` test settings, then committed at THJ's request as `b88c004f1`: intro/outro sequences off; revert before merging to `main` if intros should play).
 **Not verified:** the full play check (THJ played part of it); intermediate commits were not compiled one by one, only the final tree.
 **Status:** committed so THJ can test from the office PC; play findings go in new commits.
+
+## 2026-11-17 · Catch & Return offer, C1 (rule and runtime; on `main`)
+
+**Built:** Mark's catch prompt opens only if the return copy would hit an enemy (`CatchOfferRules`, `CatchReturnHits` shared hit walk, `TryCatch` asks before freezing; declined arrows fly on and aren't re-asked). Bloom preview's contact walk moved into the shared helper unchanged. 19 edit-mode tests (`CatchOfferTests`). Plan `plans/2026-11-17-catch-return-offer-tech.md`; decisions D-552, D-553. Review APPROVE (3 should-fixes: slnx kept out of the commit, enemy/ally/neutral/dead check made a pure function with tests, safe test lookup; all done).
+**Verified:** THJ recompiled and ran EditMode: all green except the known red `AIRegressionTest.Baseline_MatchesCurrentAI`. **Committed `521742a74`** (8 files, `miso.slnx` left out).
+**Not verified:** the real freeze/prompt path and the faction lookup in play (enemy only past Mark, between, both, none); inner failure count of the known red not recorded.
+**Findings:** an ally alone in front of Mark with no enemy no longer gets the prompt (follows the rule). The C2 preview must call the shared hit counter so neutral units can't get a pink bar with no chevron.
+**Status:** C2 (preview: hide chevron and pink bars when not offered, grey the lost forward hits) dispatched; C3 docs after; one play check at the end.
