@@ -1,7 +1,7 @@
 # Plan: a faster loop (process changes, draft for THJ)
 
 Branch: all    Type: process    Size: M    Tier: 3 (changes `CLAUDE.md`, the rubric and agent roles)
-Status: **ALL FIVE APPROVED by THJ 2026-11-19 and applied to the docs and masters** (D-575 change 1, D-576 change 2, D-577 change 3, D-578 change 4 without its optional Tier 1 item, D-579 change 5). Owed: THJ's `.claude/` sync; 5a's code change (report `reports/ai-regression-explicit.md`) verified and committed.
+Status: **ALL FIVE APPROVED by THJ 2026-11-19 and applied to the docs and masters** (D-575 change 1, D-576 change 2, D-577 change 3, D-578 change 4 without its optional Tier 1 item, D-579 change 5). THJ ran the `.claude/` sync; 5a verified and committed as `ecba8ecef` on `thj/cyclone` (report `reports/ai-regression-explicit.md`).
 
 ## Why
 

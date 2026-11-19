@@ -2803,3 +2803,14 @@ Plan `plans/2026-11-18-masher-plow-tech.md`, decision D-573.
 **Not verified.** The look (bulldozer or not, which lead reads best), a unit dying mid-slide, the Masher disabled mid-walk. Tuning knobs: `plowWalkLeadSeconds`; the push speed on `MasherGoblin_Ability_Counter_Effect_Push.asset` is 5 against the walk's 2.5 (set 2.5 to move as one block).
 
 **Status.** Committed on `main`, not pushed. Waiting on THJ's second play check.
+
+## 2026-11-19: faster loop, and the AI regression test runs on request (all; built on thj/cyclone)
+
+Plan `plans/2026-11-19-faster-loop-process.md`, decisions D-575 to D-579.
+
+**Built:** five process changes in `CLAUDE.md`, `escalation.md`, `templates/report.md`, the coordinator, implementer and verifier definitions and the tech-plan skill (reviews once per feature, one report per plan, covering tests per chunk, serialized presentation values at Tier 2, the AI regression test out of the suite). Game code: `[Explicit]` plus a comment on `AIRegressionTest.Baseline_MatchesCurrentAI`.
+**Verified:** verifier quiet check through the Unity MCP: compile clean, console 0 errors; full EditMode run 2174 total, 2173 passed, 0 failed, 1 skipped (the Explicit test, `runstate="Explicit" result="Skipped"` in `TestResults.xml`), 403 s. THJ ran the `.claude/` sync.
+**Not verified:** Play mode state was not read before the script edit or the run (no resource-read tool); the test by name and the `Tools/AI/Run Regression Test` menu were not run after the change. No reviewer (size S outside core systems, D-575).
+**Findings:** the run was 403 s against 293 s on 2026-11-18, so no time saving is shown yet; the verifier's guess is the editor running in the background. An Explicit test still counts in `total`, as skipped. The editor-open Test Runner writes `%USERPROFILE%/AppData/LocalLow/Dead Mage/miso/TestResults.xml`.
+**Commit (not pushed):** `ecba8ecef` on `thj/cyclone`. `main` gets it when the branch merges.
+**Status:** done. Effect of the five changes is checked at the Sunday review on or after 2026-12-06.

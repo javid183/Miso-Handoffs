@@ -36,3 +36,9 @@ main (and any other branch that carries AIRegressionTest.cs).
 ## How to see it
 
 1. In Unity, wait for recompile, open Test Runner > EditMode: `Baseline_MatchesCurrentAI` is not run by Run All; select it by name and Run Selected to run it.
+
+## Reviews and checks
+
+- Feature: no reviewer (size S outside core systems).
+- Verifier quiet check, 2026-11-19: PASS. Compile clean, console 0 errors. Full EditMode run 2174 total, 2173 passed, 0 failed, 1 skipped, 403 s; `Baseline_MatchesCurrentAI` shows `runstate="Explicit" result="Skipped"`. Play mode state not read (no resource-read tool).
+- Committed by THJ's yes as `ecba8ecef` on `thj/cyclone`, not pushed.
