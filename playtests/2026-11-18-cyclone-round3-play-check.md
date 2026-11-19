@@ -39,3 +39,16 @@ Everything is built, reviewed and uncommitted (C1 alphas, C2 cast on an enemy, C
 
 - Placeholder sprites; the lean depth (35% of a cell inhale, 30% grab) and times are start values to tune.
 - If Lucy is destroyed mid-fling (scene teardown), the shoved enemy's hop offset isn't restored (low risk).
+
+## THJ's play feedback, 2026-11-19 (after `main` was merged in)
+
+THJ stopped the list here: the Cyclone has become too complex to predict. Screenshots in `playtests/img/`.
+
+1. **Row of Dark Claws** (`2026-11-19-cyclone-1-row-of-claws.png`): four Claws in a row ahead of the Cyclone. The intuitive move is to steer the Cyclone along that row, through them, breaking the formation, with the Claws pushed to the row above or below. Today it can't go through them.
+2. **Can't steer at all** (`2026-11-19-cyclone-2-cannot-steer.webp`): Cyclone with a Claw on the cell above and family around it; no Steer is offered. Feels very wrong.
+3. **No idea what a move will do** (`2026-11-19-cyclone-3-unclear-move.webp`): Cyclone with Claws beside and above; THJ couldn't tell what moving it would do.
+
+**THJ's direction:**
+- The rules have lost their simplicity. Go back to the original problems that caused the redesign, solve only those first, then add fun on top with a minimal approach.
+- Proposal: the Steer runs through enemies, damaging them as it passes; on its final cell it pushes away any enemy standing there (to any free cell if the natural one isn't free); then, still, its usual Whirl: pull and damage.
+- Drop the side drag; only drag the enemies against the direction of the pull (designer to confirm what that should mean).
