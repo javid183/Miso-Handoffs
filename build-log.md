@@ -2803,3 +2803,13 @@ Plan `plans/2026-11-18-masher-plow-tech.md`, decision D-573.
 **Not verified.** The look (bulldozer or not, which lead reads best), a unit dying mid-slide, the Masher disabled mid-walk. Tuning knobs: `plowWalkLeadSeconds`; the push speed on `MasherGoblin_Ability_Counter_Effect_Push.asset` is 5 against the walk's 2.5 (set 2.5 to move as one block).
 
 **Status.** Committed on `main`, not pushed. Waiting on THJ's second play check.
+
+## 2026-11-19: `main` merged into `thj/cyclone`
+
+**Built.** At THJ's go, `git merge main` on `thj/cyclone` (merge commit `ff16e25b4`, no trailers). It brings in `main`'s 9 commits (`db9cf6ae9` and back to `ce7be3800`): the Masher plow with its overlap, the Catch & Return offer and preview, and a teammate's MS1/MS2 dialogue fix. 33 files changed, no conflicts (a `merge-tree` dry run before the merge said the same). When the merge started, THJ was already on `thj/cyclone` and the shared tree held only the untracked `.mcp.json` (the earlier font and slnx edits were gone); `origin/thj/cyclone` now exists at `031c3a5a1`.
+
+**Verified.** Read the one file both sides changed, `MasherGoblinFactionRoleHandler.Counter.cs`: the sides touched different lines (the Cyclone side only passes `IsCycloneCast` into `Classify`; the plow side adds the push plan, `StopPlow` and the walk callback). The plow's free-step check and the Cyclone fix both use `GridPluggableEntity.IsFootprintEmpty`, which now accepts a clearing planted cell for a heavy mover, so a free step onto a live Cyclone stays an ordinary walk step and the plow plans only steps over units.
+
+**Not verified.** No compile and no EditMode run (Unity closed, nothing run); nothing played. Open question for the play check: a 2x2 Masher step that covers a Cyclone cell and a pushable unit at once (the plow sees a non-free footprint, the Cyclone fix treats the Cyclone part as free).
+
+**Status.** Merged locally, not pushed (10 ahead of `origin/thj/cyclone`). THJ: open Unity, recompile (Ctrl+R), run EditMode (expect only the known red, AI count about 43), then the Masher + Cyclone + plow play check (Linda [8,-1], Cyclone [10,-2], Masher [12,-2], units in its way).
