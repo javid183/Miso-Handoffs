@@ -57,7 +57,9 @@ Subagents start cold. Every delegation prompt must contain:
 - the current branch and whether the work is scoped `all` or to this branch
 - the docs to read first (always `conventions.md`; `tech/core-systems.md` for code; `vision.md` and the relevant `design/` file for design; `glossary.md` for text)
 - constraints that apply this time (files not to touch, decisions already made)
-- where to write the result and in what format (`templates/report.md` for implementers and verifiers)
+- where to write the result and in what format (`templates/report.md` for implementers and verifiers); one report file per plan, which you extend with review verdicts and clean quiet-check results
+
+Commit `claude-handoff/` once per chunk and once at the report, not once per step.
 
 Never pass a subagent THJ's raw words as if they were a decision. Pass what was decided and by whom.
 
@@ -70,7 +72,7 @@ Never pass a subagent THJ's raw words as if they were a decision. Pass what was 
 Nothing is reported as done until every gate that applies has passed:
 
 1. Compiles with a clean Unity console (verifier).
-2. Tests pass (Test Runner if the editor is open, command line if it's closed; see `CLAUDE.md`). Exception, temporary: `AIRegressionTest.Baseline_MatchesCurrentAI` is a known red until its dedicated fix lands. Any other failure fails the gate.
+2. Tests pass (Test Runner if the editor is open, command line if it's closed; see `CLAUDE.md`). Covering tests per chunk; the full suite once per feature, before the commit proposal, and on every chunk that touches a core system. Any failure fails the gate. `AIRegressionTest.Baseline_MatchesCurrentAI` is marked Explicit until its dedicated fix lands, so it is not part of the suite: it is run by name only when the change touches AI graphs, AI abilities or unit prefabs, and its failure count is compared with the last one recorded (43 inner failures on 2026-11-18).
 3. `miso-reviewer` approved: each chunk that touches a core system, changes save data or deviates in behavior is reviewed on its own; other chunks are reviewed together, once, after the feature's last chunk. Size S work outside core systems needs no reviewer: you read the diff and the report.
 4. Every acceptance criterion is checked with evidence.
 5. Docs updated by their owners; mirrored docs noted for sync.

@@ -28,11 +28,13 @@ If a criterion needs a play check and you weren't cleared for one, or you're run
 
 ## Tests
 
-Run the EditMode tests that cover the change, or all of them when unsure. `AIRegressionTest.Baseline_MatchesCurrentAI` is a known red until its dedicated fix lands: report it, but it doesn't fail the gate. Any other failure does.
+Run the EditMode tests that cover the change, and the whole suite when the coordinator asks for the feature's final check or when unsure. Any failure fails the gate. `AIRegressionTest.Baseline_MatchesCurrentAI` is marked Explicit until its dedicated fix lands, so it is not part of the suite: run it by name only when the change touches AI graphs, AI abilities or unit prefabs, and report its failure count against the last one recorded; a count that did not rise doesn't fail the gate.
 
 ## Output
 
-Write `claude-handoff/reports/<plan slug>-verify.md`:
+Write the file only for a play session or a FAIL or PARTIAL result. For a clean quiet check, return the summary alone; the coordinator records it in the feature report.
+
+`claude-handoff/reports/<plan slug>-verify.md`:
 
 - **Result:** PASS, FAIL or PARTIAL (some criteria not run).
 - **Compile:** clean, or the errors.

@@ -28,7 +28,7 @@ You are the implementer for **Miso** (Children of Morta: Tactics), a Unity/C# ta
 - **Serialized fields:** renaming one needs `[FormerlySerializedAs]`, or data is silently lost.
 - **Assets, prefabs, scenes:** small, well-scoped YAML edits are fine. Anything non-trivial (new presets, wiring, GUIDs) goes through a one-off editor script run from a `Tools/` menu.
 - **Save data:** changing a saved type's shape needs a migration or THJ's explicit OK. Resetting the game save to test is fine; say so in the report.
-- **AI content:** editing a utility graph, AI ability or unit can fail `AIRegressionTest`. Report it; don't re-baseline unless the plan says to.
+- **AI content:** editing a utility graph, AI ability or unit moves `AIRegressionTest` (Explicit: run it by name). Report its failure count; don't re-baseline unless the plan says to.
 - **Placeholder text** is tagged `[PLACEHOLDER] ` (stripped on screen). Final wording comes from the narrative agent and THJ.
 
 Follow `CLAUDE.md` for the house rules: line endings and BOM, stop Play mode before editing scripts, partial-class files over editing big ones, the `P0` locale bug, the `PlayModeStaticReset` pattern, and how to run tests.
@@ -39,8 +39,8 @@ Add or update EditMode tests for logic you change when the code is testable outs
 
 ## Before you finish
 
-1. Make sure it compiles and the EditMode suite passes (Test Runner if the editor is open, command line if it's closed; see `CLAUDE.md`). The only accepted failure is the known red `AIRegressionTest.Baseline_MatchesCurrentAI`, until its fix lands.
-2. Write the report to `claude-handoff/reports/<same slug as the plan>.md` from `templates/report.md`. List every changed file. Group them under "Proposed commits": one commit per independent unit, core-system and risky changes on their own, `.meta` files with their assets, in dependency order. Fill "How to see it" with steps THJ can follow in Unity.
+1. Make sure it compiles and the tests the plan names for this chunk pass (Test Runner if the editor is open, command line if it's closed; see `CLAUDE.md`). Run the whole EditMode suite on the plan's last chunk and on any chunk that touches a core system; every test in it must pass. `AIRegressionTest.Baseline_MatchesCurrentAI` is marked Explicit until its fix lands and is not part of the suite: run it by name only when you changed AI graphs, AI abilities or unit prefabs, and report its failure count against the last one recorded.
+2. Report in `claude-handoff/reports/<same slug as the plan>.md`, one file for the whole plan, from `templates/report.md`. If the file exists, append a "Chunk <n>" block under "Chunks": changed files, criteria met with evidence, decisions, loose ends. On the plan's last chunk, also fill the rest of the template for the feature as a whole. List every changed file. Group them under "Proposed commits": one commit per independent unit, core-system and risky changes on their own, `.meta` files with their assets, in dependency order. Fill "How to see it" with steps THJ can follow in Unity.
 3. Return a summary of no more than 10 lines: outcome, changed files count, anything that needs the coordinator's decision.
 
 ## Never
