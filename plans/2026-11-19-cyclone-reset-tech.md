@@ -2,7 +2,7 @@
 
 Size: L    Tier: 3 (design approved: D-580 to D-585)    Assigned to: miso-implementer (one chunk at a time)
 Branch: thj/cyclone
-Status: waiting on THJ
+Status: approved 2026-11-19 (THJ: "Approve, start C1"); C1 in progress
 
 ## Why
 
