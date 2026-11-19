@@ -2,7 +2,7 @@
 
 Size: M    Tier: 3 (changes an enemy rule; Masher handler; THJ approved the design 2026-11-18, D-566)    Assigned to: miso-implementer (opus)
 Branch: `main` (the Masher handler is the same on `thj/cyclone` except the Cyclone pass-through in its walk; expect a merge conflict there later, see Risks)
-Status: built, committed (`89bd4763e`, `62ed9b895`); play check pending
+Status: built, committed (`89bd4763e`, `62ed9b895`, `db9cf6ae9`); play check pending
 
 ## Why
 

@@ -106,3 +106,59 @@ no
 3. Attack: the unit slides one tile, the Masher steps in, then slams if adjacent. The shoved unit takes no damage.
 4. Repeat with the cell beyond blocked (wall, grid edge, another unit), and with an Immovable unit (another Masher, the Deev) in the way: no shove, the Masher picks another step or stays.
 5. With Linda's lane covering where a shoved goblin lands: toggle off, no shot; toggle on, see the hard stop.
+
+---
+
+# C3: overlap (shove and step together)
+
+Approved by THJ 2026-11-18 after playing C2 (committed as `62ed9b895`): "overlap only", no new animation. Outcome: built and EditMode-verified, nothing committed, not play-checked. No scene, prefab or asset changes; no Play mode.
+
+## Investigation (step 1)
+
+- **(a) When a shoved unit leaves its cell:** at once, inside the `TryMoveTo` call. `StartMove` → `owner.StartCoroutine(MoveEntity(...))` runs synchronously up to its first `yield`. Before that yield it raises `unitStartMoving` and calls `entity.CurrentCell.UnplugEntity(entity)`. The unit is plugged into its destination only at the end of its slide (`path[i + 1].PlugEntity`).
+- **(b) When the walk reads the step's cells, and when the Masher moves:** also at once. `MasherGoblin_Ability_Walk` is `activationMode: 1` (InstantAnimated) with no minimum duration or wait. So `Orchestrator.ActivateAbility` → `RuntimeAbility.Activate` → `_ActivateAbility` → `StartCoroutine(preset.Activate(...))` → `ApplyMapped` → `AEffectTransporter.ApplyUnguarded` all run in the same call, with no animation-frame delay. `ApplyUnguarded` finds its path right then (`FindPathTo(..., mover)`; `goShortestWhileWalkable: 0`, so the goal needs `IsFootprintEmpty`) and checks the budget. Its `MoveEntity` (started synchronously, no start-tile effects) checks `IsFootprintEmpty` and `IsFootprintWalkable` for the last step again before the first lerp frame, then moves. The Masher starts moving in that same frame. If the cells are not free, the transporter returns early (no path) or plugs the Masher back and ends the move. Either way its completion still fires, so the answer cannot get stuck.
+- **(c) Before or only after the pushes?** **Only after the pushes have started.** The walk reads the cells the moment it is activated, and they are free only once each shoved unit's `TryMoveTo` has run. It can start in the very same frame as the pushes (lead 0), but never before. So I made the lead a single non-negative value; a negative value is clamped to 0.
+- Speeds, for the play check: the pusher asset slides at speed 5 (one tile in about 0.2 s); the Masher's transporter walks at 2.5 (about 0.4 s). With the overlap, the shoved unit moves ahead faster than the Masher follows. If THJ wants them to move as one block, set the push asset's `speed` to 2.5 (one number on `MasherGoblin_Ability_Counter_Effect_Push.asset`; not changed here).
+
+## Built
+
+- `MasherPlowTiming.cs` (new, pure): `MasherPlowWalkState` (NotStarted, Skipped, Running, Done), `MasherPlowNext` (Wait, StartWalk, Continue, FinishWithoutActing), `ClampLead`, `MaxWaitSeconds = 10`, `TimedOut(elapsed)`, and `Next(allPushesStarted, pushesDone, walk, elapsed, lead)`. The walk starts once the lead has passed, or as soon as every push has ended. The answer goes on only when the walk is done or skipped *and* every push has ended. If a push failed to start, the walk never starts and the answer goes on once the started pushes end. A tripped guard always ends the answer without acting.
+- `.Plow.cs`: new `[SerializeField, Min(0)] float plowWalkLeadSeconds = 0.05f`, with a tooltip saying why it can't be negative. The prefab has no saved value, so it takes the default; no prefab change. `PlowIE` now re-plans (unchanged), starts the pushes (unchanged), then loops on `MasherPlowTiming.Next`. At StartWalk it checks `Unit.IsFootprintEmpty(stepCell)` (unchanged rule: a unit that did not leave means no step) and starts the walk with a callback that marks it ended. At Continue it calls the slam step (`Attack`, which checks adjacency). At the safety stop it ends the answer without acting. `elapsed` counts game time (summed `Time.deltaTime`, like the slides; it stays 0 while paused). The safety stop covers the whole push and walk wait, and trips at `MasherPlowTiming.MaxWaitSeconds` (10 s) of that game time. This is the reviewer's should-fix: the old 600-frame guard could trip after 1 to 2 s at 300 to 500 fps, while the walk was still running, and end the answer mid-walk with no slam. The frame counter and `PlowWaitMaxFrames` are gone. `StartPlow` now takes the walk as `Action<Action>` (start the walk, with what to do when it ends).
+- `.Counter.cs` (one small edit in `Activate`): the local `Walk` takes its completion callback. The normal path calls `Walk(Attack)` (same as before); the plow path passes `Walk` to `StartPlow`.
+- Unchanged: the plan, re-plan, push list, preview, role handling, `StopCounter` → `StopPlow` (stops the wait and ends the answer without acting; a walk still running then ends on its own and only sets a flag nobody reads), and the no-step fallback.
+
+Default lead 0.05 s: the slides take about 0.2 s, so the Masher starts after about a quarter of the slide, while the units are still clearly moving. 0 is safe too (same frame).
+
+## Verified
+
+- After the safety-stop fix: compiles clean (assemblies rebuilt 19:40; no Masher errors in the console).
+- Full EditMode suite in the open editor after the fix: **2015 of 2016 passed**. The only failure is the known red `AIRegressionTest.Baseline_MatchesCurrentAI`. The run before the fix was 2012 of 2013.
+- New `Editor/MasherPlowTimingTests.cs` (15 tests). The safety-stop tests now work in seconds: `TimedOut` at exactly `MaxWaitSeconds` and not before; the stop is at least 5 s; at the stop every walk state ends the answer without acting (pushes started or not, done or not); just before the stop a running walk still waits. The other tests are unchanged: lead clamp; waits before the lead; starts at the lead; lead 0 starts in the same frame; a negative lead acts as 0; pushes ending before the lead start the walk at once; waits while the walk runs; waits for the pushes after the walk is done; goes on when both are done; a skipped walk goes on once the pushes end; a failed push start never walks and goes on once the started pushes end.
+
+## Not verified (only a play check can show)
+
+- Whether it reads as a bulldozer: the Masher visibly carrying the units ahead of it, and whether 0.05 s (or 0, or matching the push speed to 2.5) looks best.
+- Whether a unit ever ends up under the Masher, or the two sprites overlap mid-slide. By the code it can't end under it: the shoved unit's destination is beyond the Masher's new footprint, and both cells are reserved by the plan. Mid-slide overlap is purely visual and depends on the two speeds (with the current 5 vs 2.5, the unit stays ahead).
+- Two units on the leading edge sliding together while the Masher steps; the slam right after the step.
+- Abort paths in play (a shoved unit dying mid-slide; the Masher disabled mid-step).
+
+## Findings
+
+- The C2 order (wait for every push, then walk) was never needed for correctness: the cells are free the moment the pushes start.
+- A walk started too early can't stall the answer. The transporter ends a blocked move gracefully and still completes, and the plan also checks the footprint just before starting it.
+- Family Roles: no change. The pushed units' `unitEndMoving` events now fire while the Masher is walking, still inside the answer, so Linda's deferred check still runs after the whole answer, as before (toggle off: suppressed; toggle on: the known gap).
+
+## Files (C3, all under `miso/Assets/_Project/Features/Enemy/Masher Goblin/`)
+
+- `Scripts/MasherPlowTiming.cs` (new, BOM, LF) + `Scripts/MasherPlowTiming.cs.meta` (new)
+- `Scripts/MasherGoblinFactionRoleHandler.Plow.cs` (lead field, `StartPlow` signature, `PlowIE` loop with the game-time safety stop, header comment; `PlowWaitMaxFrames` removed)
+- `Scripts/MasherGoblinFactionRoleHandler.Counter.cs` (`Activate`: `Walk` takes its completion)
+- `Editor/MasherPlowTimingTests.cs` (new, BOM, LF) + `Editor/MasherPlowTimingTests.cs.meta` (new)
+
+Proposed commit: `feat(masher): the counter step walks while the units it shoves are still sliding, so it carries them ahead of it` (all six files; they only work together).
+
+## How to see it
+
+1. Same setup as C2: a unit in the Masher's way with a free cell beyond, provoke the Masher.
+2. The unit starts sliding and the Masher starts its step a moment later (0.05 s), so both move together; then the slam if adjacent.
+3. To tune: on `Unit_MasherGoblin` › Masher handler › Counter step plow › **Plow Walk Lead Seconds** (0 = same frame). For a "one block" look, set **Speed** on `MasherGoblin_Ability_Counter_Effect_Push` to 2.5 (the Masher's walk speed).

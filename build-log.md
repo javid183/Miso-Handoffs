@@ -2782,3 +2782,15 @@ Plan `plans/2026-11-18-masher-plow-tech.md`, decision D-566.
 **Findings.** (1) With `counterCanProvokeFamilyRoles` on, a shoved enemy landing in Linda's lane can still draw her lane shot, because she reacts to `unitEndMoving`; THJ declined the additive fix (small `SuppressMover` set plus one check in Linda's handler). With the toggle off there is also a small gap when pushes happen but neither walk nor slam follows. (2) A later push failing after an earlier started leaves units shoved and the Masher not stepping (rare). (3) If the Masher is torn down mid-push, the pushed unit may be left between cells. (4) `AEffectPusher` plugs a unit that dies mid-lerp onto the destination (existing behavior). (5) The builder re-saved `Move/MasherGoblin_Ability_Walk.asset` with new default fields; not committed, left modified in the tree for THJ to discard. (6) `thj/cyclone` changes the counter's walk and will conflict in `MasherGoblinFactionRoleHandler.Counter.cs` (`TryPlanAnswer`, `Activate`).
 
 **Status.** Built and committed on `main`, not pushed. Waiting on THJ's play check.
+
+### 2026-11-18, later: Masher plow overlap (`db9cf6ae9`)
+
+**Why.** THJ's first play check of the plow: it works, but the shoved units slid away alone and only then did the Masher walk. THJ chose "overlap only" before any animation (if it isn't enough: a wind-up animation on the activation-frame mechanism, or a real ability, are the fallbacks; options discussed 2026-11-18).
+
+**Built.** The walk starts `plowWalkLeadSeconds` (serialized on the Masher handler, default 0.05 s, 0 = same frame, negative acts as 0) after the shoves start; the answer goes on when both have ended; the footprint-free check before the walk stays (a unit that has not left in time means no step). The walk cannot start before the shoves: it checks and claims its cells in the same call that starts it. Pure timing decisions in `MasherPlowTiming` (15 tests). The safety stop is 10 s of game time (not frames), covering the push and the walk wait. Files: `MasherPlowTiming.cs`, `MasherPlowTimingTests.cs` (+ metas), `.Plow.cs`, `.Counter.cs` (the walk takes its completion callback).
+
+**Verified.** Compile clean; EditMode 2015 of 2016 (only the known red). Reviewer APPROVE, its one should-fix (frame guard) applied.
+
+**Not verified.** The look (bulldozer or not, which lead reads best), a unit dying mid-slide, the Masher disabled mid-walk. Tuning knobs: `plowWalkLeadSeconds`; the push speed on `MasherGoblin_Ability_Counter_Effect_Push.asset` is 5 against the walk's 2.5 (set 2.5 to move as one block).
+
+**Status.** Committed on `main`, not pushed. Waiting on THJ's second play check.
