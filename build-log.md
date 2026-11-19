@@ -2780,7 +2780,7 @@ Core gets one additive, generic `CombatLog.AddCustom`.
 
 ## 2026-11-18: Masher counter step plows through units (branch `main`)
 
-Plan `plans/2026-11-18-masher-plow-tech.md`, decision D-566.
+Plan `plans/2026-11-18-masher-plow-tech.md`, decision D-573.
 
 **Built.** Two commits. `89bd4763e`: pure `MasherPlowRules` (which cells a one-cell cardinal step enters, who stands there, where each is pushed, whether the step is allowed) with tests. `62ed9b895`: the runtime. `TryPlanAnswer` also plans steps whose entered cells hold only pushable units (single-cell, not `Unmovable`, a free cell behind, and the walk's own path-cost budget allows it); `Activate` shoves them with `AEffectPusher.TryMoveTo` (new no-effect push asset `MasherGoblin_Ability_Counter_Effect_Push`, built by the Masher preset builder, referenced on the handler of `Unit_MasherGoblin.prefab`) and then walks; the hover preview shows where each pushed unit lands. New partial `MasherGoblinFactionRoleHandler.Plow.cs` and `MasherPlowGrid.cs`. Reports: `reports/masher-plow-c1.md`, `-c1-review.md`, `-c2.md`, `-c2-review.md`.
 

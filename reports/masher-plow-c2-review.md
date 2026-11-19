@@ -29,7 +29,7 @@ No new stateful statics; shared Core untouched; conventions OK (new partial, no 
 
 ## Linda finding (correct) and THJ's answer
 
-Only Linda's role reacts to a move (`OnUnitEndMoving`, checked late through the wait list). With `counterCanProvokeFamilyRoles` on, a pushed enemy landing in her lane can still draw her shot. Reviewer's smallest additive fix: a `HashSet<GUnit>` of suppressed movers in `FactionRoleProvocationSuppression` (`SuppressMover`, `ReleaseMover`, `IsSuppressedMover`, cleared in `ResetPlayModeState`) plus one check line in `LindaFactionRoleHandler.CheckTriggerConditions`, and the Masher suppressing each pushed unit around its push. **THJ declined it (2026-11-18, D-566 amended): known gap.**
+Only Linda's role reacts to a move (`OnUnitEndMoving`, checked late through the wait list). With `counterCanProvokeFamilyRoles` on, a pushed enemy landing in her lane can still draw her shot. Reviewer's smallest additive fix: a `HashSet<GUnit>` of suppressed movers in `FactionRoleProvocationSuppression` (`SuppressMover`, `ReleaseMover`, `IsSuppressedMover`, cleared in `ResetPlayModeState`) plus one check line in `LindaFactionRoleHandler.CheckTriggerConditions`, and the Masher suppressing each pushed unit around its push. **THJ declined it (2026-11-18, D-573 amended): known gap.**
 
 Also noted by the reviewer: with the toggle off there is a small gap when pushes happen but neither the walk nor the slam follows (a later push fails to start, the footprint stays occupied, or the Masher dies): the last action is the provoker's, which isn't suppressed. Same gap, same decision.
 

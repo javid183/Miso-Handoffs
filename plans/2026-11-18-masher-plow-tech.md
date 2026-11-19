@@ -1,6 +1,6 @@
 # Masher Goblin: the counter step plows through units
 
-Size: M    Tier: 3 (changes an enemy rule; Masher handler; THJ approved the design 2026-11-18, D-566)    Assigned to: miso-implementer (opus)
+Size: M    Tier: 3 (changes an enemy rule; Masher handler; THJ approved the design 2026-11-18, D-573)    Assigned to: miso-implementer (opus)
 Branch: `main` (the Masher handler is the same on `thj/cyclone` except the Cyclone pass-through in its walk; expect a merge conflict there later, see Risks)
 Status: built, committed (`89bd4763e`, `62ed9b895`); play check pending
 
@@ -12,7 +12,7 @@ THJ's request (2026-11-18): "change the masher goblin's reaction in a way that i
 
 When the Masher's counter step enters cells held by other units, it shoves each of them one cell onward in the direction it moves, then takes the step.
 
-## Decisions (THJ, 2026-11-18, D-566)
+## Decisions (THJ, 2026-11-18, D-573)
 
 1. **Scope:** the counter step only. The Masher's own-turn walk is unchanged.
 2. **Nowhere to go:** a pushed unit's next cell must be free (walkable for that unit, empty, not outside the grid). If any unit in the entered cells can't be pushed, that step candidate is not valid (as an occupied cell is today); the planner tries the other candidates, and with none left the Masher doesn't step. No chain pushes.
@@ -48,7 +48,7 @@ Out: the Masher's own-turn walk and AI; pushing Immovable or multi-cell units; c
 
 Systems: Masher Goblin handler and rules (`Features/Enemy/Masher Goblin/`); reads the grid (`GridCell`, `GUnit` footprint APIs) and `AEffectPusher` (core, used, not changed); `FactionRoleProvocationSuppression` (core, used, not changed unless it needs only an additive overload: ask first).
 USPs: Family Roles (reactions are kept from firing on pushes).
-Docs: `design/gdd/enemies.md` (Masher counter rule, new EN entry or edit), `design/gdd/combat-rules.md` (CR-18 note: the Masher's plow is a forced move that never moves Immovable units), `tech/combat-architecture.md` (Masher section), `plans/2026-10-20-masher-reckless-tank-design.md` (a revision note), `decisions.md` (D-566), `build-log.md`, `status.md`.
+Docs: `design/gdd/enemies.md` (Masher counter rule, new EN entry or edit), `design/gdd/combat-rules.md` (CR-18 note: the Masher's plow is a forced move that never moves Immovable units), `tech/combat-architecture.md` (Masher section), `plans/2026-10-20-masher-reckless-tank-design.md` (a revision note), `decisions.md` (D-573), `build-log.md`, `status.md`.
 
 ## Approach
 
