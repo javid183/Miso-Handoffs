@@ -4,7 +4,7 @@ Owner: coordinator; THJ approves changes. Code and file naming for Miso. **Start
 
 ## Repo and project
 
-- Repo root `E:\Work\Projects\miso\`. The Unity project is `miso\` inside it (Unity 6000.3.4f1). Game code: `miso/Assets/_Project/` (`Core/`, `Features/`, `Content/`, `Resources/`).
+- Repo root `C:\THJ Work Folder\Miso\` (was `E:\Work\Projects\miso\` on the previous machine). The Unity project is `miso\` inside it (Unity 6000.3.4f1). Game code: `miso/Assets/_Project/` (`Core/`, `Features/`, `Content/`, `Resources/`).
 - Namespaces: `MISO.*`, following folders (e.g. `MISO.Core.Systems.AbilitySystem.Effects`). Legacy: the ATB gauge views use `JRPGCombat`.
 - New systems go under `Core/Systems/<SystemName>/{Runtime,Editor}`; per-character content under `Features/Player/<Name>/`.
 - Inspector buttons use Alchemy's `[Button]`.
