@@ -2813,3 +2813,9 @@ Plan `plans/2026-11-18-masher-plow-tech.md`, decision D-573.
 **Not verified.** No compile and no EditMode run (Unity closed, nothing run); nothing played. Open question for the play check: a 2x2 Masher step that covers a Cyclone cell and a pushable unit at once (the plow sees a non-free footprint, the Cyclone fix treats the Cyclone part as free).
 
 **Status.** Merged locally, not pushed (10 ahead of `origin/thj/cyclone`). THJ: open Unity, recompile (Ctrl+R), run EditMode (expect only the known red, AI count about 43), then the Masher + Cyclone + plow play check (Linda [8,-1], Cyclone [10,-2], Masher [12,-2], units in its way).
+
+### 2026-11-19, later: `thj/cyclone` after the `main` merge, compile and EditMode
+
+**Verified.** Forced refresh and recompile in THJ's open editor (Unity MCP): no console errors. EditMode suite: 2293 run, 2292 passed, 1 failed, the known red `AIRegressionTest.Baseline_MatchesCurrentAI` (714 checks, 43 failures, the same count as before the merge). So the merge compiles and the Masher plow, Catch & Return, Cyclone and Masher-on-Cyclone tests all pass together (about 138 s).
+
+**Not verified.** Nothing played: the Masher + Cyclone + plow check (including the 2x2 step that covers a Cyclone cell and a pushable unit) is still THJ's.
