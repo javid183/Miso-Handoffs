@@ -2768,3 +2768,12 @@ Core gets one additive, generic `CombatLog.AddCustom`.
 **Not verified:** EditMode after the change (THJ runs it); the drawing in play; cache and cleanup have no edit-mode tests (the presenter can't be unit-tested).
 **Findings:** the C2 reports' "core files are CRLF" was wrong, all LF (`git ls-files --eol`). GDD CR-56, Mark MA-3, `tech/` notes, decisions, status and the play check updated for D-564.
 **Status:** waiting on THJ's play check; Claude Docs mirror resync still owed (Mark, Linda, Family systems, Combat rules).
+
+## 2026-11-18: Cyclone round 3 and the Masher fix (thj/cyclone)
+
+**Built:** C1 fainter cross alphas (serialized fields); C2 cast on an enemy (shove one cell away from Lucy, preview, own range provider); C3 inhale/exhale, grab/drag/fling, input lock held until the hit (public `PlayerInputController` lock, `swellSeconds` 0.1); fix round for review findings; Masher core hook (`IPlantedClearsOnEntry`, `FootprintEndsOnClearing`, AI landing filter) so a heavy enemy can end a walk on a live Cyclone and burst it, jumps, summons and teleports still refused. Plans: `plans/2026-11-18-cyclone-round3-design.md`, `-tech.md`. Reports: `reports/cyclone-r3-*.md`, `cyclone-masher-*.md`. Decisions D-566 to D-572.
+**Verified:** compile clean; EditMode 2174 run, only `AIRegressionTest.Baseline_MatchesCurrentAI` red (inner count 43); every chunk reviewed (C1, C2, C3 APPROVE; core fix FIX then fixed).
+**Not verified:** nothing played; verifier play session not run. Play list: `playtests/2026-11-18-cyclone-round3-play-check.md` (plus round 2's).
+**Findings:** the Masher bug was `IsFootprintEmpty` refusing the Cyclone cell for every can-end-here check (speed 1, 2x2). Cast range highlight never filtered before; now lights only castable cells.
+**Commits (not pushed):** `76cd17c77`, `c9ad26e7e`, `031c3a5a1`.
+**Status:** committed, awaiting THJ's play check. Docs owed: GDD lucy.md, CR-58, EN-2/EN-6, cyclone-redesign.md note, narrative clause, Claude Docs mirror.
