@@ -4,7 +4,7 @@ Owner: coordinator. Every item has a scope: `all` or a branch. Started 2026-10-1
 
 ## Current state
 
-- **2026-11-19: `main` merged into `thj/cyclone`** (`ff16e25b4`, clean, not pushed; THJ is on `thj/cyclone`). **Waiting on THJ:** recompile, EditMode (known red only), then play Masher + Cyclone + plow together. Details: `build-log.md`, `branches.md`.
+- **2026-11-19: `main` merged into `thj/cyclone`** (`ff16e25b4`, clean, not pushed; THJ is on `thj/cyclone`). Compiles clean and EditMode 2292/2293 (known red only, count 43; run 2026-11-19). **Waiting on THJ:** play Masher + Cyclone + plow together. Details: `build-log.md`, `branches.md`.
 - **2026-11-18: Masher counter step plows through units** (D-573; `main` @ `89bd4763e`, `62ed9b895`, not pushed). Built, EditMode green except the known red; **waiting on THJ's play check** (list in `build-log.md`). Linda lane-shot gap with the toggle on accepted. `Move/MasherGoblin_Ability_Walk.asset` is modified in the tree by the builder: not committed, THJ to discard.
 - **2026-11-18: handoff repo merged across devices** (this PC's Cyclone round 2 commits + the Catch & Return / Crippled commits pushed from the other device). Both had used D-552 to D-556: the Catch & Return / Crippled decisions are now **D-560 to D-564** (map in D-565); Cyclone round 2 keeps D-552 to D-559. Older commit messages keep the old numbers.
 - **2026-11-09: THJ merged `thj/onboarding` into `main`** (fast-forward, `main` @ `d5e8c8b86`, in sync with `origin/main`; D-456). THJ is on `main`. Items below scoped `thj/onboarding` or `thj/bond-lite` now count as `all`.
