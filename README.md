@@ -57,11 +57,21 @@ THJ's private working folder for Claude on Miso. It is **excluded from the share
 Claude Code reads agents and skills from `.claude/agents` and `.claude/skills` in the repo root. The masters live in `claude-config/` so they get history here. `.claude/` holds plain copies (D-030: the previous machine's `E:` drive was exFAT, with no junctions or symlinks; the repo now lives on `C:` but the copy workflow stays).
 
 - Edit only the files in `claude-config/`, never the copies in `.claude/`: the next sync overwrites them.
-- After an approved change, sync. `/MIR` makes each `.claude` folder match its master, deletions included:
+- After an approved change, sync. `/MIR` makes each `.claude` folder match its master, deletions included. The repo root differs per machine: `C:\THJ Work Folder\Miso` on one, `E:\Work\Projects\miso` on the other. Use the command for the machine you are on.
+
+  On `C:\THJ Work Folder\Miso`:
 
   ```
   powershell.exe -NoProfile -Command "robocopy 'C:\THJ Work Folder\Miso\claude-handoff\claude-config\agents' 'C:\THJ Work Folder\Miso\.claude\agents' /MIR /NJH /NJS /NDL; robocopy 'C:\THJ Work Folder\Miso\claude-handoff\claude-config\skills' 'C:\THJ Work Folder\Miso\.claude\skills' /MIR /NJH /NJS /NDL"
   ```
+
+  On `E:\Work\Projects\miso`:
+
+  ```
+  powershell.exe -NoProfile -Command "robocopy 'E:\Work\Projects\miso\claude-handoff\claude-config\agents' 'E:\Work\Projects\miso\.claude\agents' /MIR /NJH /NJS /NDL; robocopy 'E:\Work\Projects\miso\claude-handoff\claude-config\skills' 'E:\Work\Projects\miso\.claude\skills' /MIR /NJH /NJS /NDL"
+  ```
+
+- Pull the handoff repo before syncing on the other machine, so the masters there are current.
 
 - Claude Code's auto mode refuses writes into `.claude/`, so THJ runs the sync (or a session in manual permission mode does).
 

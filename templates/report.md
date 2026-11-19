@@ -12,6 +12,18 @@ Outcome: done | partial | blocked
 - [x] <criterion>: <evidence>
 - [ ] <criterion>: <why not met>
 
+## Chunks
+
+### Chunk <n>: <title>
+
+- Changed: <files>
+- Criteria met: <criterion: evidence>
+- Decisions and loose ends: <one line each, or "none">
+
+## Reviews and checks
+
+- <chunk or "feature">: <reviewer verdict, or quiet-check result> (written by the coordinator)
+
 ## Save reset
 
 <yes or no>

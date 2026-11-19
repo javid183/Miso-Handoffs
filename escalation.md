@@ -10,7 +10,7 @@ Owner: THJ. The coordinator sorts every decision into a tier. All three tiers ge
 
 | Domain | Tier 1: decide and log | Tier 2: decide and flag | Tier 3: ask first |
 | --- | --- | --- | --- |
-| Design | Tune a value inside an agreed range; fill a gap the spec clearly implies | Pick between options the spec leaves open; clarify a rule without changing how it feels | Anything touching Family Roles, Synergies, Duos or the Home; a new mechanic; changing an approved design; pacing of a key moment |
+| Design | Tune a value inside an agreed range; fill a gap the spec clearly implies | Pick between options the spec leaves open; clarify a rule without changing how it feels; presentation values on an approved design (durations, delays, alphas, tints, easing, preview details) when each is a serialized field THJ can tune in the Inspector | Anything touching Family Roles, Synergies, Duos or the Home; a new mechanic; changing an approved design; pacing of a key moment |
 | Code | Bugfix with obvious intent; refactor inside an approved plan; tests; internal naming | Deviate from the tech plan with the same behavior; add a helper or pattern inside one system; any bugfix inside a core system | New package or dependency; save-data format; changing the public API or behavior of a core system (listed in `tech/core-systems.md`); deleting scenes, prefabs or assets |
 | Content and narrative | Typo and consistency fixes against the glossary | New ability or UI text in an established voice; placeholder names | Character names, lore facts, story beats; anything touching Children of Morta canon |
 | Scope and schedule | Reorder tasks inside a milestone | Split a task; defer a nice-to-have within the milestone | Milestone order or content; cutting a feature; work outside the backlog |
@@ -29,13 +29,11 @@ First version, 2026-10-15. Start tight, loosen at the Sunday review.
 
 - **Core mechanic rules:** how combat, AP, Family Roles, Synergies, Duos and the Home work, and any change to them.
 - **Major design decisions:** anything that changes what the player can do, choose or own.
-- **Game feel:** timing, feedback, hit reactions, camera and animation pacing.
+- **Game feel:** what a beat is (what plays, in what order, what the player reads from it), hit reactions, camera, and the first pass of any new beat. Tuning values of an approved beat are Tier 2 when they are serialized fields.
 - **Dramatic moments:** boss beats, story beats, first-time reveals, Duo and Synergy showcases.
 - **New reusable systems:** anything other features will build on, including core systems.
 - **New tools and technology:** editor tools, pipelines, packages, Unity features, outside services.
 - **Past calls:** prologue flow, Home presentation rules, showcase duo choice.
-
-**Until 2026-10-29** (the first two weeks), anything in these areas is Tier 3 even when small.
 
 ## How to ask
 
@@ -61,3 +59,4 @@ In session, the question comes as a multiple-choice prompt. When THJ is away, it
 | Date | Change |
 | --- | --- |
 | 2026-10-15 | First version. THJ's areas set; Tier 3 for anything in them until 2026-10-29. |
+| 2026-11-19 | Presentation values on an approved design move to Tier 2 when serialized; Game feel narrowed to what a beat is and its first pass; the two-week "everything is Tier 3" line removed (expired 2026-10-29). D-578. |

@@ -19,7 +19,7 @@ A tech plan is what the implementer builds from, the reviewer checks against, an
 - Each chunk is buildable and checkable on its own (compiles, has a visible or testable result).
 - Order chunks so the riskiest one comes first.
 - One chunk = one implementer run. Don't plan chunks for parallel writers.
-- For each chunk: goal, files likely touched, acceptance criteria, model (`opus` if it touches a core system or is subtle, otherwise `sonnet`).
+- For each chunk: goal, files likely touched, acceptance criteria, model (`opus` if it touches a core system or is subtle, otherwise `sonnet`), review (its own review if it touches a core system, changes save data or is risky; otherwise "with the feature").
 - Shape chunks so they become clean commits: independent units apart, core-system and risky changes in their own chunk, so each can be reverted alone.
 
 ## 3. Name the risks this project always has
@@ -31,14 +31,14 @@ Go through each; write down the ones that apply and how the plan handles them:
 - [ ] Serialized field renames → `[FormerlySerializedAs]`.
 - [ ] Saved data shape changes → migration, or THJ's OK.
 - [ ] Assets, prefabs, scenes → small YAML edits, or an editor script for anything non-trivial.
-- [ ] AI content touched → `AIRegressionTest` will move; say whether the plan includes a deliberate re-baseline (only with THJ's OK).
+- [ ] AI content touched → `AIRegressionTest` will move (it is Explicit: the plan says to run it by name); say whether the plan includes a deliberate re-baseline (only with THJ's OK).
 - [ ] Event subscriptions, coroutines that hide or lock state → cleanup on abort.
 - [ ] Other branches that will need the same change.
 
 ## 4. Define done
 
 - Acceptance criteria: checkable outcomes, not activities. "The Workshop report card shows the ordered weapon's icon" beats "add icon support".
-- Test plan: which criteria get EditMode tests, which need quiet checks, which need a play session (and therefore THJ's time). If the work touches M2's win path, per-level drops or rollback, include a win playthrough.
+- Test plan: which criteria get EditMode tests, which need quiet checks, which need a play session (and therefore THJ's time). Name the test fixtures each chunk runs; the full suite runs on the last chunk and on core chunks. If the work touches M2's win path, per-level drops or rollback, include a win playthrough.
 - Docs to update: which `tech/`, `design/` or other docs change, and who owns each.
 
 ## 5. Check the plan before dispatch

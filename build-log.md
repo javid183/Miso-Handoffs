@@ -2804,18 +2804,13 @@ Plan `plans/2026-11-18-masher-plow-tech.md`, decision D-573.
 
 **Status.** Committed on `main`, not pushed. Waiting on THJ's second play check.
 
-## 2026-11-19: `main` merged into `thj/cyclone`
+## 2026-11-19: faster loop, and the AI regression test runs on request (all; built on thj/cyclone)
 
-**Built.** At THJ's go, `git merge main` on `thj/cyclone` (merge commit `ff16e25b4`, no trailers). It brings in `main`'s 9 commits (`db9cf6ae9` and back to `ce7be3800`): the Masher plow with its overlap, the Catch & Return offer and preview, and a teammate's MS1/MS2 dialogue fix. 33 files changed, no conflicts (a `merge-tree` dry run before the merge said the same). When the merge started, THJ was already on `thj/cyclone` and the shared tree held only the untracked `.mcp.json` (the earlier font and slnx edits were gone); `origin/thj/cyclone` now exists at `031c3a5a1`.
+Plan `plans/2026-11-19-faster-loop-process.md`, decisions D-575 to D-579.
 
-**Verified.** Read the one file both sides changed, `MasherGoblinFactionRoleHandler.Counter.cs`: the sides touched different lines (the Cyclone side only passes `IsCycloneCast` into `Classify`; the plow side adds the push plan, `StopPlow` and the walk callback). The plow's free-step check and the Cyclone fix both use `GridPluggableEntity.IsFootprintEmpty`, which now accepts a clearing planted cell for a heavy mover, so a free step onto a live Cyclone stays an ordinary walk step and the plow plans only steps over units.
-
-**Not verified.** No compile and no EditMode run (Unity closed, nothing run); nothing played. Open question for the play check: a 2x2 Masher step that covers a Cyclone cell and a pushable unit at once (the plow sees a non-free footprint, the Cyclone fix treats the Cyclone part as free).
-
-**Status.** Merged locally, not pushed (10 ahead of `origin/thj/cyclone`). THJ: open Unity, recompile (Ctrl+R), run EditMode (expect only the known red, AI count about 43), then the Masher + Cyclone + plow play check (Linda [8,-1], Cyclone [10,-2], Masher [12,-2], units in its way).
-
-### 2026-11-19, later: `thj/cyclone` after the `main` merge, compile and EditMode
-
-**Verified.** Forced refresh and recompile in THJ's open editor (Unity MCP): no console errors. EditMode suite: 2293 run, 2292 passed, 1 failed, the known red `AIRegressionTest.Baseline_MatchesCurrentAI` (714 checks, 43 failures, the same count as before the merge). So the merge compiles and the Masher plow, Catch & Return, Cyclone and Masher-on-Cyclone tests all pass together (about 138 s).
-
-**Not verified.** Nothing played: the Masher + Cyclone + plow check (including the 2x2 step that covers a Cyclone cell and a pushable unit) is still THJ's.
+**Built:** five process changes in `CLAUDE.md`, `escalation.md`, `templates/report.md`, the coordinator, implementer and verifier definitions and the tech-plan skill (reviews once per feature, one report per plan, covering tests per chunk, serialized presentation values at Tier 2, the AI regression test out of the suite). Game code: `[Explicit]` plus a comment on `AIRegressionTest.Baseline_MatchesCurrentAI`.
+**Verified:** verifier quiet check through the Unity MCP: compile clean, console 0 errors; full EditMode run 2174 total, 2173 passed, 0 failed, 1 skipped (the Explicit test, `runstate="Explicit" result="Skipped"` in `TestResults.xml`), 403 s. THJ ran the `.claude/` sync.
+**Not verified:** Play mode state was not read before the script edit or the run (no resource-read tool); the test by name and the `Tools/AI/Run Regression Test` menu were not run after the change. No reviewer (size S outside core systems, D-575).
+**Findings:** the run was 403 s against 293 s on 2026-11-18, so no time saving is shown yet; the verifier's guess is the editor running in the background. An Explicit test still counts in `total`, as skipped. The editor-open Test Runner writes `%USERPROFILE%/AppData/LocalLow/Dead Mage/miso/TestResults.xml`.
+**Commit (not pushed):** `ecba8ecef` on `thj/cyclone`. `main` gets it when the branch merges.
+**Status:** done. Effect of the five changes is checked at the Sunday review on or after 2026-12-06.
