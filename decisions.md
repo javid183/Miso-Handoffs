@@ -6,6 +6,14 @@ Rows D-001 to D-011 were carried over on 2026-10-15 from the Home handoff and pr
 
 | Date | ID | Tier | Scope | Decided by | Decision | Why | Affects |
 | --- | --- | --- | --- | --- | --- | --- | --- |
+# Decision log
+
+Owner: coordinator. One row per decision, newest first. A reversal is a new row citing the old ID; old rows are never edited. Scope is `all` or a branch.
+
+Rows D-001 to D-011 were carried over on 2026-10-15 from the Home handoff and project notes; dates are as recorded there.
+
+| Date | ID | Tier | Scope | Decided by | Decision | Why | Affects |
+| --- | --- | --- | --- | --- | --- | --- | --- |
 | 2026-11-18 | D-572 | 3 | thj/cyclone | THJ | Heavy jump landings, dash approach cells and the Mark-Linda duo stop still never end on or burst the Cyclone: the new hook applies to walks only | Keeps D-557 | Masher fix |
 | 2026-11-18 | D-571 | 3 | thj/cyclone | THJ | Core hook approved for the Masher fix: additive `IPlantedClearsOnEntry` in `GridCell.PlantedPass.cs` plus one condition in `GridPluggableEntity.IsFootprintEmpty`, so a heavy enemy of the caster may end a step on a live Cyclone cell (it bursts on entry). Amends round 2 CR-58 / LU-7 "heavies pass but cannot stop on it"; round 2 heavy tests updated; own commit | Root cause (`reports/cyclone-masher-fix.md`): every can-end-here check uses `IsFootprintEmpty`, so a speed 1, 2x2 Masher can never enter the Cyclone | `tech/core-systems.md`, GDD CR-58 and lucy.md LU-7 |
 | 2026-11-18 | D-570 | 2 | thj/cyclone | coordinator | Round 3 C2 and C3 go in as one combined commit after C1: C3 had to edit C2's uncommitted files, so they cannot be two clean commits by file | Commit grouping | Commit plan in `plans/2026-11-18-cyclone-round3-tech.md` |

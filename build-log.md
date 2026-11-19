@@ -2777,3 +2777,17 @@ Core gets one additive, generic `CombatLog.AddCustom`.
 **Findings:** the Masher bug was `IsFootprintEmpty` refusing the Cyclone cell for every can-end-here check (speed 1, 2x2). Cast range highlight never filtered before; now lights only castable cells.
 **Commits (not pushed):** `76cd17c77`, `c9ad26e7e`, `031c3a5a1`.
 **Status:** committed, awaiting THJ's play check. Docs owed: GDD lucy.md, CR-58, EN-2/EN-6, cyclone-redesign.md note, narrative clause, Claude Docs mirror.
+
+## 2026-11-18: Masher counter step plows through units (branch `main`)
+
+Plan `plans/2026-11-18-masher-plow-tech.md`, decision D-566.
+
+**Built.** Two commits. `89bd4763e`: pure `MasherPlowRules` (which cells a one-cell cardinal step enters, who stands there, where each is pushed, whether the step is allowed) with tests. `62ed9b895`: the runtime. `TryPlanAnswer` also plans steps whose entered cells hold only pushable units (single-cell, not `Unmovable`, a free cell behind, and the walk's own path-cost budget allows it); `Activate` shoves them with `AEffectPusher.TryMoveTo` (new no-effect push asset `MasherGoblin_Ability_Counter_Effect_Push`, built by the Masher preset builder, referenced on the handler of `Unit_MasherGoblin.prefab`) and then walks; the hover preview shows where each pushed unit lands. New partial `MasherGoblinFactionRoleHandler.Plow.cs` and `MasherPlowGrid.cs`. Reports: `reports/masher-plow-c1.md`, `-c1-review.md`, `-c2.md`, `-c2-review.md`.
+
+**Verified.** Compile clean. EditMode suite in THJ's open editor: 2000 of 2001, the only failure the known red `AIRegressionTest.Baseline_MatchesCurrentAI`. Reviewer: C1 approved after one fix; C2 one must-fix (the walk's path-cost budget) and two should-fix, all fixed and re-run by the implementer; the fixes were not re-reviewed.
+
+**Not verified.** No play check yet (hazard cell in the way, wall and grid edge, two units on the leading edge, an Immovable unit, Linda in lane with the toggle on and off, the preview). No handler-level test of `TryPlanAnswer`.
+
+**Findings.** (1) With `counterCanProvokeFamilyRoles` on, a shoved enemy landing in Linda's lane can still draw her lane shot, because she reacts to `unitEndMoving`; THJ declined the additive fix (small `SuppressMover` set plus one check in Linda's handler). With the toggle off there is also a small gap when pushes happen but neither walk nor slam follows. (2) A later push failing after an earlier started leaves units shoved and the Masher not stepping (rare). (3) If the Masher is torn down mid-push, the pushed unit may be left between cells. (4) `AEffectPusher` plugs a unit that dies mid-lerp onto the destination (existing behavior). (5) The builder re-saved `Move/MasherGoblin_Ability_Walk.asset` with new default fields; not committed, left modified in the tree for THJ to discard. (6) `thj/cyclone` changes the counter's walk and will conflict in `MasherGoblinFactionRoleHandler.Counter.cs` (`TryPlanAnswer`, `Activate`).
+
+**Status.** Built and committed on `main`, not pushed. Waiting on THJ's play check.
