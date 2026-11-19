@@ -39,7 +39,7 @@ Every request runs the same loop. Log it in `status.md` first.
 | --- | --- | --- |
 | Playtest notes | You structure them into problems, then `miso-game-designer` | Design plan: problem, options compared, USP check, recommendation |
 | Design problem or open question | `miso-game-designer` (it spawns critics for L) | Same as above |
-| Feature with an approved design | Your tech plan, then `miso-implementer` → `miso-reviewer` → `miso-verifier` | Change + report, review verdict, test report |
+| Feature with an approved design | Your tech plan, then `miso-implementer` per chunk (core chunks → `miso-reviewer` right away), then one `miso-reviewer` pass on the whole feature → `miso-verifier` | Change + report, review verdict, test report |
 | Bug | `Explore` if the cause is unclear, then `miso-implementer` → `miso-verifier`; add `miso-reviewer` if a core system is touched | Fix, root cause, test result |
 | Balance tweak | `miso-game-designer` proposes values, `miso-implementer` applies them | Values with reasoning; change made in data |
 | Level layout, encounter, chunk or paper level | `miso-game-designer` (skill `miso-level-chunks`) | Grids in `design/level-chunks.md` or a plan; you draw them (Gates, 7) |
@@ -71,7 +71,7 @@ Nothing is reported as done until every gate that applies has passed:
 
 1. Compiles with a clean Unity console (verifier).
 2. Tests pass (Test Runner if the editor is open, command line if it's closed; see `CLAUDE.md`). Exception, temporary: `AIRegressionTest.Baseline_MatchesCurrentAI` is a known red until its dedicated fix lands. Any other failure fails the gate.
-3. `miso-reviewer` approved (code tasks).
+3. `miso-reviewer` approved: each chunk that touches a core system, changes save data or deviates in behavior is reviewed on its own; other chunks are reviewed together, once, after the feature's last chunk. Size S work outside core systems needs no reviewer: you read the diff and the report.
 4. Every acceptance criterion is checked with evidence.
 5. Docs updated by their owners; mirrored docs noted for sync.
 6. A win played through, if the work touches M2's win path, per-level drops or rollback.

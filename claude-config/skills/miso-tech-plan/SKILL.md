@@ -19,7 +19,7 @@ A tech plan is what the implementer builds from, the reviewer checks against, an
 - Each chunk is buildable and checkable on its own (compiles, has a visible or testable result).
 - Order chunks so the riskiest one comes first.
 - One chunk = one implementer run. Don't plan chunks for parallel writers.
-- For each chunk: goal, files likely touched, acceptance criteria, model (`opus` if it touches a core system or is subtle, otherwise `sonnet`).
+- For each chunk: goal, files likely touched, acceptance criteria, model (`opus` if it touches a core system or is subtle, otherwise `sonnet`), review (its own review if it touches a core system, changes save data or is risky; otherwise "with the feature").
 - Shape chunks so they become clean commits: independent units apart, core-system and risky changes in their own chunk, so each can be reverted alone.
 
 ## 3. Name the risks this project always has

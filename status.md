@@ -34,7 +34,7 @@ Owner: coordinator. Every item has a scope: `all` or a branch. Started 2026-10-1
 
 ## Waiting on THJ
 
-**Faster loop (2026-11-19)** — scope all; Tier 3 (process: `CLAUDE.md`, the rubric, agent roles). `faster-loop-process`: draft of five changes in `plans/2026-11-19-faster-loop-process.md`, nothing applied. THJ approves or drops each: (1) review once per feature, per chunk only for core; (2) one report per feature; (3) covering tests per chunk, full suite before the commit; (4) presentation values on an approved design move to Tier 2; (5) the AI regression test marked Explicit until its fix session (a shared-repo test change, own commit).
+**Faster loop (2026-11-19)** — scope all; Tier 3 (process: `CLAUDE.md`, the rubric, agent roles). `faster-loop-process`: draft of five changes in `plans/2026-11-19-faster-loop-process.md`, nothing applied. **(1) approved and applied 2026-11-19 (D-575); THJ still has to run the `.claude/` sync.** Still open, THJ approves or drops each: ~~(1) review once per feature, per chunk only for core;~~ (2) one report per feature; (3) covering tests per chunk, full suite before the commit; (4) presentation values on an approved design move to Tier 2; (5) the AI regression test marked Explicit until its fix session (a shared-repo test change, own commit).
 
 **Onboarding (2026-10-26)** — scope all; all Tier 3. Answered: D-177 to D-180, D-200 to D-203, D-225 to D-235 (structure, levels, Bond Lite approved, narrative).
 

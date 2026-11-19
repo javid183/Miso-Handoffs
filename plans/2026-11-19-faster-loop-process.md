@@ -16,6 +16,8 @@ What the numbers say (measured 2026-11-19):
 
 ## Change 1: review once per feature, per chunk only for core
 
+**APPROVED by THJ 2026-11-19 (D-575), applied to the masters.** `.claude/` sync still owed.
+
 **Rule.**
 
 - A chunk that touches a core system (`tech/core-systems.md`), changes save data, or where the implementer reports a behavior deviation: reviewed on its own, before the next chunk builds on it (as today).
