@@ -34,7 +34,7 @@ Owner: coordinator. Every item has a scope: `all` or a branch. Started 2026-10-1
 
 ## Waiting on THJ
 
-**Faster loop (2026-11-19)** — scope all; Tier 3 (process: `CLAUDE.md`, the rubric, agent roles). `faster-loop-process`: plan `plans/2026-11-19-faster-loop-process.md`. **All five approved by THJ and applied 2026-11-19** (D-575 reviews, D-576 reports, D-577 tests, D-578 tiers, D-579 AI regression test Explicit). **Done 2026-11-19:** THJ ran the `.claude/` sync; the `[Explicit]` change is verified (2174 total, 0 failed, 1 skipped, 403 s) and committed as `ecba8ecef` on `thj/cyclone`, not pushed; `main` gets it with the merge. Nothing owed. The README's sync command still has the other machine's paths. Check the effect at the Sunday review on or after 2026-12-06.
+**Faster loop (2026-11-19)** — scope all; Tier 3 (process: `CLAUDE.md`, the rubric, agent roles). `faster-loop-process`: plan `plans/2026-11-19-faster-loop-process.md`. **All five approved by THJ and applied 2026-11-19** (D-575 reviews, D-576 reports, D-577 tests, D-578 tiers, D-579 AI regression test Explicit). **Done 2026-11-19:** THJ ran the `.claude/` sync; the `[Explicit]` change is verified (2174 total, 0 failed, 1 skipped, 403 s) and committed as `ecba8ecef` on `thj/cyclone`, not pushed; `main` gets it with the merge. Nothing owed. The README's sync section now has the command for both machines. Check the effect at the Sunday review on or after 2026-12-06.
 
 **Onboarding (2026-10-26)** — scope all; all Tier 3. Answered: D-177 to D-180, D-200 to D-203, D-225 to D-235 (structure, levels, Bond Lite approved, narrative).
 
