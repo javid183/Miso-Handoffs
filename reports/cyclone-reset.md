@@ -69,6 +69,8 @@ Files to stage for C1 (the `.meta` files appear when Unity refreshes; add each n
 - C1: 77/77 covering fixtures (coordinator, Unity MCP); committed `d9cb1f2ce`.
 - C2: 323/323 covering fixtures (implementer, Unity MCP); coordinator checked the 36 paths, no CRLF, no private IDs; committed `15a107cbd`. Feature review after C5.
 - C3: 319/319 Cyclone fixtures (implementer, Unity MCP); coordinator checked 4 files, no CRLF, no private IDs; committed `774dabef7`.
+- C4: Cyclone fixtures 314/314 (5 wobble tests deleted); committed `d8db54ddf`. C5: committed `359882aed` (descriptions, LF kept).
+- Full EditMode suite after C5 (coordinator, Unity MCP): 2345 total, 2344 passed, 0 failed, 1 skipped (the Explicit AI regression test), 147 s.
 
 ## Save reset
 
@@ -196,3 +198,41 @@ Files to stage for C3 (no new files, so no metas):
 - `miso/Assets/_Project/Features/Player/Lucy/Scripts/Cyclone/CycloneSteerPreview.cs`
 - `miso/Assets/_Project/Features/Player/Lucy/Scripts/Editor/CycloneSteerTests.Preview.cs`
 Suggested message: "feat(lucy): the Steer preview shows one damage segment per enemy it hits on the way or by the Whirl, and what it shows is what happens"
+
+### Chunk 4: Remove the heavy-warning wobble
+
+Built (under `miso/Assets/_Project/Features/Player/Lucy/Scripts/`, LF, no BOM):
+
+- Deleted `Cyclone/CycloneWobble.cs` + `.meta` (held `CycloneWobble` and `CycloneWobbleRules`).
+- `Cyclone/CycloneEntity.cs`: removed the `_wobble` field, its `AddComponent`/`Bind` in `Initialize`, the `Unbind` in `Dispose`, and the header comment mention.
+- `Cyclone/CyclonePipsView.cs`: removed `SetFlicker`, `IsFlickering`, the flicker fields and constants, `Update`, and the `leftAlpha` path (nothing else used it; `Refresh` now colours the pips directly).
+- `Editor/CyclonePreviewTests.cs`: deleted the five `Wobble_*` tests and the helpers only they used (`TagSetWith`, `Corridor`, `Masher`, `ImmovableTag`). Unused `using`s left alone.
+- Grep of `miso/Assets/_Project` (cs, meta, asset, prefab, unity) for `CycloneWobble`, `SetFlicker`, `IsFlickering`, `Wobble`: no references left.
+
+Verified: forced compile, console 0 errors. `CyclonePreviewTests` 13/13 (was 18), `CycloneLifeTests` 8/8. Regex group run once after C5 (see below).
+Not verified: Play mode.
+
+Files to stage for C4:
+- `miso/Assets/_Project/Features/Player/Lucy/Scripts/Cyclone/CycloneWobble.cs` (deleted, stage the deletion)
+- `miso/Assets/_Project/Features/Player/Lucy/Scripts/Cyclone/CycloneWobble.cs.meta` (deleted)
+- `miso/Assets/_Project/Features/Player/Lucy/Scripts/Cyclone/CycloneEntity.cs`
+- `miso/Assets/_Project/Features/Player/Lucy/Scripts/Cyclone/CyclonePipsView.cs`
+- `miso/Assets/_Project/Features/Player/Lucy/Scripts/Editor/CyclonePreviewTests.cs`
+Suggested message: "refactor(lucy): remove the Cyclone's heavy-warning wobble and pip flicker"
+
+### Chunk 5: Texts and setup tool
+
+Built (all LF, one-line edits):
+- `Resources/UnitSpecific/Player/Lucy/Abilities/Cyclone/Lucy_Ability_Steer.asset` line 16 (inline text, not a string table key): `Glide the Cyclone up to 3 cells in a line, through enemies, hitting each. An enemy where it stops is knocked onward. Then it Whirls. Once a turn.`
+- `Features/Player/Lucy/Scripts/Editor/CycloneSteerSetup.cs` line 31: same text.
+- `Lucy_Cyclone_Ability.asset` line 16 (inline, single-quoted): appended ` Cast it on an enemy to knock it away.`; the old text said nothing about casting on an enemy, so nothing replaced.
+- No test pinned the old Steer description (grepped).
+
+Verified: regex group `MISO.Core.Features.Bergsons.EditorTests.Cyclone.*`: 314/314 passed, 0 failed (C3 had 319; minus the 5 deleted Wobble tests). Console 0 errors. Not run: full suite, AI regression.
+Note: the Steer asset text is `[PLACEHOLDER]`-untagged working text from the design; final wording by narrative.
+
+Files to stage for C5:
+- `miso/Assets/_Project/Resources/UnitSpecific/Player/Lucy/Abilities/Cyclone/Lucy_Ability_Steer.asset`
+- `miso/Assets/_Project/Resources/UnitSpecific/Player/Lucy/Abilities/Cyclone/Lucy_Cyclone_Ability.asset`
+- `miso/Assets/_Project/Features/Player/Lucy/Scripts/Editor/CycloneSteerSetup.cs`
+Suggested message: "feat(lucy): working descriptions for the straight Steer and the cast on an enemy"
