@@ -241,3 +241,81 @@ Proposed message: `feat(lucy): the Steer has no cooldown and the first Steer eac
 Not to stage: `GlobalSettings.asset`, `miso.slnx`, `.mcp.json`, `powershell.exe`.
 
 **Coordinator:** K4 committed `08074905e` (896/896 in the Bergsons group + `AbilityCostOverrideTests`; no full suite, no core). Open for play: the bar's AP display, a real 0 AP charge; whether the Steer can be picked with 0 AP left (unit selection still needs AP > 0, as planned); a re-cast Cyclone after a free Steer gets a new free Steer that turn (rare: the cast has cooldown 4).
+
+### Chunk K5: core, a planted entity as a Command target (D-593)
+
+**Built**
+- `miso/Assets/_Project/Core/Entities/Runtime/IAbilityTargetablePlanted.cs` (new, `MISO.Core.Entities`, 27 lines): `bool IsTargetableBy(RuntimeAbility ability)` and `bool TryCollectNextTargetCells(RuntimeAbility ability, int targetIndex, List<GridCell> cells)`. `targetIndex` is the index of the pick being made (1 = the second target), the same indexing as `AbilityPreset.GetTargetTypeAt` / `GetRelativeTargetSpecs`. The list arrives empty; true = exactly these cells (an empty list leaves nothing to pick), false = the ability's own range. Main thread only.
+- `miso/Assets/_Project/Core/Interactions/Runtime/PlantedAbilityTargetRules.cs` (new, pure static, 48 lines):
+  - `AcceptsPlantedTarget(targetType, targetIndex, cellHasOccupant, planted, ability)`: true only for the first pick (index 0), a pick that takes a cell occupant and not a cell, a cell without an occupant, an implementing entity, and `IsTargetableBy(ability)` true. The entity is not asked otherwise.
+  - `TryCollectNextTargetCells(targetIndex, pickedAroundPreviousTarget, previousTarget, ability, cells)`: clears the buffer; true only for index > 0, a pick made around the previous target, a previous target that implements the interface and answers true. A declining entity's cells are dropped.
+- `miso/Assets/_Project/Core/Interactions/Runtime/FactionControllerBase.PlantedTarget.cs` (new partial, 66 lines): `ResolvePlantedAbilityTarget(cell, targetIndex)` (reads `cell.PlantedEntity`, casts, calls the rule with the pick's target type and `cell.OccupantEntity`); public `GetHoverablePlantedAbilityTarget(cell)` (only for a Player-handled controller in TargetSelection); `CollectPlantedNextTargetCells(ability)` (previous picked entity, `GetRelativeTargetSpecs(count) != null`, a fresh list or null).
+- `miso/Assets/_Project/Core/Systems/GridSystem/Runtime/GridManager.PlantedTarget.cs` (new partial, BOM + LF like the other GridManager files, 22 lines): `GetHoverablePlantedAbilityTarget(cell)`: null unless the cell's planted entity implements the interface; then asks `CombatLevelRunHandler.Instance.CurrentFactionControllerOrNull`.
+- `FactionControllerBase.cs` (core, BOM + LF kept, +5/-1):
+  - `public class` -> `public partial class` (no behaviour; lets the new logic live in the partial).
+  - `IsLegalAbilityTarget`: one `else if` before the final `else return false`: the planted entity becomes `targetEntity`, then every existing check runs on it unchanged (relation skipped as for any non-unit, `CheckTargetSelectionCondition`, `OccupantIntersects(range)`, the preset's tag query, select-by-call).
+  - `TargetSelectionState.SetObject`: the same `else if` before `TargetEntities.Add(null)`, so the planted entity is the picked target and `ApplyCondition` checks it like `IsLegalAbilityTarget`.
+  - `RefreshTargetSelectionRangeCells`: for a relative next pick, `CollectPlantedNextTargetCells(ability) ?? ComputeRelativeTargetRangeCells(...)`. The cells become `ActiveAbilityRangeCells`, so the highlight, `IsLegalAbilityTarget`, the click's `ApplyCondition`, the cursor and the AP preview all follow them.
+- `GridManager.cs` (core, +1/-1): `GetHoverableCellEntity` ends with `return GetHoverablePlantedAbilityTarget(cell);` instead of `return null;` (reached only when the cell has no occupant, no stashed entity and no IsTargetable planted entity). The Command's first pick has the CellEntity subject, so without this the Cyclone cell would show no hover and send no entity-hover event.
+- `AEffectCommand.cs` (core, +2, comment only): no logic change needed. Effects signal "running" with `IsInProgress`; `AbilityEffectSetLevel.ApplyMapped` applies every effect, then waits while any is in progress. A first target that isn't a `GUnit` hits the existing early `return` before `IsInProgress = true`, so nothing starts, the other effects already ran, and the wait ends at once. The comment says so at the guard.
+- Tests: `miso/Assets/_Project/Core/Interactions/Editor/PlantedAbilityTargetTests.cs` (new, 11 tests), `miso/Assets/_Project/Core/Systems/AbilitySystem/Effects/Editor/AEffectCommandNonUnitTargetTests.cs` (new, 1 test).
+- New Interactions and Entities files: LF, no BOM (as K1's new files there). No new statics. No private IDs in code.
+
+**Command preview path, checked by reading (non-unit first target)**
+- `ResolveGhostUnit`: `TargetEntities[0] is not GUnit` -> null, no ghost. `ResolveGhostCell` returns the cell for FirstSelectedUnit.
+- `OnMoveTargetGridCellHover` (second pick): mover = `pathOrigin.OccupantEntity as GUnit` = null -> `RebuildAltPaths` returns at `!mover`; no path, `GetMoveBudget` not reached. On the first pick this handler doesn't fire (CellEntity subject sends no cell hover).
+- `CommitPreviewedMovePath`: second pick -> unit = previous cell's occupant = null -> returns. First pick: `_previewPath` can't end on the Cyclone cell -> returns.
+- `AEffectCommand.TryBuildPreviewPath` is only called by the effect itself (after the unit guard) and by `MoveUnitSequence`/transporters.
+- `AbilityDamagePreview.ComputeFor`, `AbilityPushPreview.ComputeFor`, `TryTakeAction` (SpawnSource aimed at the target), `AbilityPreset.Activate` (`ForceFaceTowards`/`NotifyIncomingDirection` take any `GridPluggableEntity` in the bundle) don't assume a unit. Nothing throws or draws a Command path/ghost.
+
+**Verified**
+- Compiles: `refresh_unity` (forced, compile requested) + `read_console`: 0 errors (usual warnings only).
+- Fixtures `PlantedAbilityTargetTests` + `AEffectCommandNonUnitTargetTests`: 12/12 passed. Covered:
+  - rules: a first unit pick on an empty cell takes an answering planted entity (asked once, with the active ability); a declining one or none is refused; a unit on the cell, a later pick, a Cell pick, a Cell|CellOccupant pick, a CellPlantedEntity pick or no ability never ask the entity; next-pick cells come exactly from the planted previous target (buffer cleared first, index 1 passed, an empty answer still replaces the range); a declining entity, a non-implementing previous target, a pick not around the previous target, index 0 or no ability keep the usual range and leave the buffer empty.
+  - real `FactionControllerBase` (states from `PreparePhaseStates`, hand-made cells, a fake `OnGridEntity` implementing the interface), with a two-pick test ability (unit first, then a cell around it): the planted entity is legal, `SetObject` makes it the target and `ApplyCondition` accepts it; a declining implementing entity and a plain non-targetable `OnGridEntity` are refused (`TargetEntities` gets null as before); a unit on the same cell stays the target and the entity isn't asked; the next pick's cells are the entity's cells, null when the next pick isn't relative or the first target is a unit; the hover returns the entity only for a Player controller in TargetSelection on the first pick, not when it declines.
+  - `AEffectCommand` in an effect level with a recording second effect, bundle [planted entity, cell]: `IsInProgress` stays false, the other effect ran on the bundle, the effect wait doesn't keep waiting and the run ends.
+- Full EditMode suite: 2411 total, 2410 passed, 0 failed, 1 skipped (`AIRegressionTest.Baseline_MatchesCurrentAI`, Explicit). AI regression not run: no AI graph, AI ability or unit prefab touched.
+- `git status` of `miso/` identical before and after the suite (the K5 files plus THJ's `GlobalSettings.asset` and `miso.slnx`); nothing saved by the run.
+
+**Not verified (needs K6 and the play check)**: nothing implements the interface yet, so nothing changes in play. `RefreshTargetSelectionRangeCells` (it calls `SetHighlight`, which needs cell visuals) is not driven in EditMode; the helper it calls is tested and the one changed line is checked by reading.
+
+**Decisions I made**
+- The new branch is last in the target-kind chain in both `IsLegalAbilityTarget` and `SetObject`, so it runs only when no existing kind (cell, occupant, stashed, IsTargetable planted) matched. With no implementing entity every path returns what it did before. The planted entity still goes through the ability's usual checks (range, tag query, effect conditions, select-by-call): K6's Cyclone must pass Mark's Command tag query (Unmovable excluded) and its effects' `CheckTargetSelectionCondition` (the Weak compound included).
+- First pick only, as the plan says ("a first target of type CellOccupant"), and not for a pick that also takes cells.
+- The planted next-pick cells replace the range only for a next pick made around the previous target (the Command's is). For abilities whose later picks are around the owner the range stays: `RefreshTargetSelectionRangeCells` returns early for them and wouldn't restore an owner range on undo, so a planted range could stay highlighted. Same behaviour for the feature; narrower than "any next target".
+- Parameter named `targetIndex` (index of the pick being made) instead of `nextTargetIndex`, to match the preset's indexing and not read as an index into `nextTargets`.
+- The hover lives in `GridManager` (where the hovered entity is chosen) and asks the current faction controller (Player-handled, in TargetSelection). Legality is not part of the hover, as for units.
+- `FactionControllerBase` made `partial` (one keyword) to keep its edits to three call lines.
+
+**Findings / loose ends for K6**
+- `GridManager` (Grid row of `tech/core-systems.md`) is a core file the plan's K5 text didn't name; the brief asked for the hover (`GetHoverableCellEntity`). One line plus a partial.
+- The Command's first-pick range is the existing owner range (`Stat_RANGE`); the Cyclone counts when its cell is in it.
+- `OccupantIntersects` counts a cell whose occupant's footprint touches the range, so a heavy standing on a Steer stop makes its other cells legal second picks too (today's Command semantics). K6's effect should plan from the clicked cell, or check it.
+- `JohnPassiveAbility_CommandShieldDash` remembers the last hovered `GUnit` during Mark's Command (`_previewCommandedUnit`). Hover a unit, then pick the Cyclone: John's shield-dash preview can draw for that unit on a Steer stop. Not touched (not in K5); K6 should clear it for a non-unit first target or check it in play.
+- `AbilityPreset.Activate` turns targets to face Mark (`forceTargetsFaceUnit: 1` on the Command): the Cyclone gets `FaceTowards(Mark)`. Check in play.
+- The entity-hover event is recomputed on hover-out: if the pick changes while the cursor rests on the Cyclone (it was just picked), the entity's "unhovered" event is not sent (the cell's is). The player's previews are cleared by the state change and the cell event; worth a look in play.
+- AI: never uses `IsLegalAbilityTarget` or the hover; an AI Command's first pick is a unit cell, where the new branch isn't reached. K6's `IsTargetableBy` can also refuse AI casters.
+
+**Files to stage (K5 commit, core, on its own)**
+- `miso/Assets/_Project/Core/Entities/Runtime/IAbilityTargetablePlanted.cs` + `.meta`
+- `miso/Assets/_Project/Core/Interactions/Runtime/PlantedAbilityTargetRules.cs` + `.meta`
+- `miso/Assets/_Project/Core/Interactions/Runtime/FactionControllerBase.PlantedTarget.cs` + `.meta`
+- `miso/Assets/_Project/Core/Interactions/Runtime/FactionControllerBase.cs`
+- `miso/Assets/_Project/Core/Systems/GridSystem/Runtime/GridManager.PlantedTarget.cs` + `.meta`
+- `miso/Assets/_Project/Core/Systems/GridSystem/Runtime/GridManager.cs`
+- `miso/Assets/_Project/Core/Systems/AbilitySystem/Effects/Runtime/AEffectCommand.cs`
+- `miso/Assets/_Project/Core/Interactions/Editor/PlantedAbilityTargetTests.cs` + `.meta`
+- `miso/Assets/_Project/Core/Systems/AbilitySystem/Effects/Editor/AEffectCommandNonUnitTargetTests.cs` + `.meta`
+
+Core files changed: `FactionControllerBase.cs` (+5/-1), `GridManager.cs` (+1/-1), `AEffectCommand.cs` (+2, comment). New core files: `IAbilityTargetablePlanted.cs`, `PlantedAbilityTargetRules.cs`, `FactionControllerBase.PlantedTarget.cs`, `GridManager.PlantedTarget.cs`.
+
+Proposed message: `feat(core): a planted entity can be an ability's first target where a unit is taken, give the next pick's cells, and show as hovered`
+Not to stage: `GlobalSettings.asset`, `miso.slnx`, `.mcp.json`, `powershell.exe`.
+
+Docs to update (after the play check, with the other hooks): `tech/core-systems.md`: Faction controllers row (`IAbilityTargetablePlanted`, `PlantedAbilityTargetRules`, `FactionControllerBase.PlantedTarget.cs`, the three call lines, class now partial); Grid row (`GridManager.PlantedTarget.cs`, the hover fallback); Effects row (`AEffectCommand` with a non-unit first target finishes at once, code unchanged).
+
+## K5 review (miso-reviewer, 2026-11-20): APPROVE
+
+No must-fix. Should fix: (1) `GridManager.ClearLastHoveredCell` recomputes the entity to un-hover; the planted fallback depends on the pick state, so after the Cyclone is picked first the `gridCellEntityHovered(cyclone, false)` is lost — remember the fallback's entity in an instance field and use it on clear. (2) Tests don't show an answering planted entity refused by range or tag query. Notes: K6 must refuse AI casters (AI shares `SetObject`), keep `IsTargetableBy` cheap (per frame), check `forceTargetsFaceUnit` and heavy footprint second picks. Coordinator accepted the `GridManager` hover touch.
+
+**Coordinator:** K5 committed `31788c273` (core, alone). Both should-fixes go in a K5 follow-up core commit after K6 (one writer at a time); notes sent to the K6 implementer.
