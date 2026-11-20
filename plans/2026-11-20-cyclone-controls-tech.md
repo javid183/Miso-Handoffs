@@ -93,3 +93,7 @@ Order: the two small pairs first so THJ can feel them, the big Command pair last
 - Play check: yes, THJ (click, pulse, free first Steer, Mark's steer).
 - Docs after the play check: GDD Lucy LU-6, Mark's Command, `tech/core-systems.md`, glossary/narrative texts.
 - Commits: K1, K3 (after K1), K2, K4, K5, K6, each its own; the Steer asset and description go with K4, Mark's preset with K6.
+
+## Added 2026-11-20 (THJ): combat log check at the end
+
+Before the feature review, check the combat log covers the Cyclone changes since the reset: the Steer line counts the knock and its hit (not only "knocked K"), a Steer made by Mark's Command is logged as Mark's (and says it steered Lucy's Cyclone), a free Steer is marked as free if the log shows AP, the cast on an enemy logs its knock hit, and Whirl lines still read right. Fix gaps in K6 or a small log chunk; working text, narrative later.
