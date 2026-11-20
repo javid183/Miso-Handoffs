@@ -2837,3 +2837,11 @@ Plan `plans/2026-11-19-faster-loop-process.md`, decisions D-575 to D-579.
 **Verified.** Compile clean; 77/77 in the covering fixtures (incl. `CycloneCastOnEnemyTests`). +y is screen-up, so moving screen-right, right is screen-down.
 **Not verified.** Nothing wired yet; no play.
 **Status.** Committed `d9cb1f2ce`, not pushed. Next: C2 (runtime, carry removed).
+
+## 2026-11-19: Cyclone reset C2, runtime (thj/cyclone)
+
+**Built.** The Steer uses the straight plan: glide, a hit on each passed enemy as the Cyclone reaches its cell, the knock at the stop (shared fling `CycloneKnockMotion`), then the Whirl skipping everyone the pass hit. Safety net at landing (`TryStopOn` live re-check, else back to the start). Cast on an enemy uses `CastKnock`. Carry planner, turning search, rider beats and fields removed. Log lines "pulled N, hit M" and "hit N on the way, knocked K". Report `reports/cyclone-reset.md` C2 block.
+**Verified.** Compile clean; covering fixtures 323/323 (all Cyclone classes, Masher Cyclone/Whirl, enemy-alert forced move).
+**Not verified.** Preview (C3) still shows no pass damage; nothing played. Full suite and review after C5.
+**Findings.** A passed enemy can still be pulled by the closing Whirl (only its hit is skipped): play-check item. The Cyclone relocates before the knocked enemy's end-of-move event, so Watch reads the final board.
+**Status.** Committed `15a107cbd`, not pushed. Next: C3 preview.

@@ -1,7 +1,7 @@
 # Report: Cyclone reset (straight Steer, knock, carry and wobble removed)
 
 Plan: plans/2026-11-19-cyclone-reset-tech.md    Agent: miso-implementer    Branch: thj/cyclone
-Outcome: partial (C1 of C1 to C5 built; compiled offline, tests not run)
+Outcome: partial (C1 and C2 of C1 to C5 built; C2 compiled in the editor, covering fixtures 323/323)
 
 ## What changed
 
@@ -66,7 +66,8 @@ Files to stage for C1 (the `.meta` files appear when Unity refreshes; add each n
 
 ## Reviews and checks
 
-- (coordinator fills in)
+- C1: 77/77 covering fixtures (coordinator, Unity MCP); committed `d9cb1f2ce`.
+- C2: 323/323 covering fixtures (implementer, Unity MCP); coordinator checked the 36 paths, no CRLF, no private IDs; committed `15a107cbd`. Feature review after C5.
 
 ## Save reset
 
@@ -76,6 +77,7 @@ no
 
 - C1: no `CellAt` delegate on the planner rules; adjacency map used instead (same behaviour).
 - C1: `Lines` ordering is by direction then distance.
+- C2: pass hit on arrival at the cell; Cyclone relocates before the knocked enemy's end-of-move event; no more pass hits after a burst; Steer log always written (unless the level ended), untagged; cast keeps "same landing or no knock"; shared fling in new `CycloneKnockMotion`; `CastShoveFor` → `CastKnockFor`. Details in Chunk 2.
 
 ## Needs THJ
 
@@ -87,11 +89,14 @@ none
 
 ## Risks and loose ends
 
-- C1 tests are unrun (see Not verified). Run `CycloneKnockRulesTests`, `CycloneSteerPlannerTests`, `CycloneCastOnEnemyTests` before relying on them.
+- C1 tests are unrun (see Not verified). Run `CycloneKnockRulesTests`, `CycloneSteerPlannerTests`, `CycloneCastOnEnemyTests` before relying on them. (Since run: 77/77, and again inside C2's 323/323.)
+- C2: a passed enemy can still be pulled in by the closing Whirl (left out of the hit only); play-check item.
+- C2: until C3, the Steer preview shows no pass damage and may mark a passed enemy as Whirl-hit.
 
 ## Proposed commits
 
-1. test and rules, C1: "feat(lucy): pure rules for the straight Steer and the knock, with tests": the six files above plus their metas (plain).
+1. test and rules, C1: "feat(lucy): pure rules for the straight Steer and the knock, with tests": the six files above plus their metas (plain). Committed `d9cb1f2ce`.
+2. runtime, C2: the 36 paths listed under Chunk 2 "Files to stage" (including 4 deletions), one commit: "feat(lucy): the Steer glides in a straight line through enemies, hitting each once, and knocks the one where it stops; the cast on an enemy uses the same knock; the carry is gone".
 
 ## Other branches
 
@@ -102,3 +107,69 @@ none
 Not visible in game yet (C1 wires nothing). Run the fixtures in Window > General > Test Runner > EditMode, filter "CycloneSteerPlannerTests" and "CycloneKnockRulesTests".
 
 **C1 verified and committed (coordinator, 2026-11-19).** Unity MCP: forced refresh, compile clean, console 0 errors, metas generated. Covering fixtures `CycloneSteerPlannerTests`, `CycloneKnockRulesTests`, `CycloneCastOnEnemyTests`: 77/77 passed. Coordinator read `CycloneSteerPlanner.cs` (no findings). Committed `d9cb1f2ce` (12 files). Review comes with the feature.
+
+### Chunk 2: Runtime, Steer and cast use the new plan; carry removed
+
+Built (all under `miso/Assets/_Project/Features/Player/Lucy/Scripts/`, LF, no BOM, no new statics):
+
+- `Cyclone/CycloneEntity.Steer.cs` rewritten. `TrySteer(CycloneSteerPlan)` (refuses a plan that doesn't start on the Cyclone's cell). `SteerRoutine(CycloneSteerPlan, holdOwnerSource)`: straight glide over `plan.Path` at `steerSecondsPerCell`; on reaching each path cell, every `Passed` entry on that cell gets `WhirlSteps.Hit` + `Report` (skipped when the unit is dead, the Cyclone has burst or the level ended); at `End`: safety net, then the knock (`ShoveSteps.ShoveStarted`, `CycloneKnockMotion.Fling` with `flingSeconds`/`hopCells`, `Unplug`, `Plug`), then `Relocate`, then `Landed` (end of move + wake) and `NoteMovedThisAction`; then the Steer log line; then `WhirlRoutine(hold, afterKnock: KnockLanded, skipHits: hitOnTheWay)`. New `ShoveSteps` seam on the entity (`ICycloneShoveSteps`, real `CycloneShoveSteps`). `CarryLanded` renamed `KnockLanded`. `finally`: re-plug a knocked unit left off its cell, restore knock drawings, put a mid-fling unit's drawing back, put the Cyclone's own drawing back on its cell if it never relocated, clear flags, deferred dispose. `CarryLanding`, grab/drag/fling-of-riders code gone.
+- Safety net (fixed at the click): a planned knock must still hold (unit still on the stop, still knockable, nothing planted/stashed there, landing still free); an empty stop must still be empty. If not, `CycloneSteerPlanner.TryStopOn` re-reads the stop live (may knock a newcomer, or send the knock to the right/left); if that fails, the Cyclone goes back to its start (no relocation, no knock) and still Whirls there. After the fling, the landing happens only if the unit is still there and the landing still free; the Cyclone takes the cell only if it is empty by then.
+- `Cyclone/CycloneEntity.Whirl.cs`: `WhirlRoutine(hold, bool afterKnock = false, IReadOnlyCollection<GUnit> skipHits = null)`; step-0 reaction wait now keyed on `afterKnock`; both `HitTargets` calls (before the breath and the recompute after it) drop `skipHits`; log is `Log(pulled, hit, targets)`. Cast and enemy-turn Whirls pass nothing, so they are unchanged.
+- `Cyclone/CycloneEntity.Wind.cs`: fields `grabSeconds`, `grabDepthCells`, `dragLag`, `dragTiltDegrees`, `kickPortion` removed (none was in any prefab/asset YAML, checked by grep); `OnDisable` restores the knock steps' drawings instead of the Steer steps'.
+- `Cyclone/CycloneKnockMotion.cs` (new): the fling coroutine shared by the cast's knock and the Steer's knock (the cast's former inline loop, same timing and hop).
+- `Cyclone/ICycloneSteerSteps.cs` / `CycloneSteerSteps.cs`: down to `PositionOn`, `DeltaTime`, `Relocate`, plus new `Log(hitOnTheWay, knocked, targets)` → `GlobalEventBus.RaiseSynergy(caster, "Steer", "hit N on the way, knocked K", targets)` (targets = passed units hit + the knocked unit). `CycloneSteerSteps.LogId = "Steer"`.
+- `Cyclone/ICycloneWhirlSteps.cs` / `CycloneWhirlSteps.cs`: `Log(pulled, hit, targets)`; `CycloneRules.WhirlLogDetail(pulled, hit)` = "pulled N, hit M"; new `CycloneRules.SteerLogDetail(hitOnTheWay, knocked)`.
+- `Cyclone/CycloneSteerRules.cs`: now only `DefaultReach`, `RulesFor(cyclone)` → `CycloneSteerPlanRules` (IsEnemy = `unit is { Faction: not null } && whirl.IsEnemy(unit)`, IsKnockable = `whirl.IsPullable`), `CanEndOn`, `SteerActionOpen(..., knockLanded)`. `IsFriendly`, `Explore`, `Destinations`, `PlanTo`, `PathTo`, `CanSteerTo`, `Search` removed.
+- `Cyclone/CycloneSteerPlanner.cs` (C1 file): private `TryStop` made public as `TryStopOn` (plus a null guard) for the safety net. Same rule.
+- `Cyclone/AEffectCycloneSteer.cs`: range = `CycloneSteerPlanner.Lines(...).End`; target check and execution through `PlanFor` → `CycloneSteerPlan` (re-planned at the click, passed to `TrySteer`); `PathFor` gone; `WaitForSteer` reads `KnockLanded`. AI gate unchanged.
+- Cast on an enemy: `CycloneRules.CastOnEnemy.cs` keeps `IsEnemyOf`, `IsPullableBy`, `CastShoveDirections`; `CastRulesFor` now returns `CycloneSteerPlanRules` (faction-null guard on IsEnemy; knockable = pullable and not heavy); `PlanCastShove`, `CastShoveCell` and the 3-argument `IsValidCastCell` removed (unused). `AEffectCycloneSpawner`: `CastShoveFor` → `CastKnockFor` returning `CycloneKnock?` via `CycloneRules.CastKnock`; `ShoveThenCast(owner, cell, CycloneKnock? knock, spawn)` uses `CycloneKnockMotion`; the landing still requires the re-planned knock to give the same unit and landing (unchanged behaviour: otherwise the enemy stays and nothing is cast).
+- Removed: `Cyclone/CycloneCarryPlanner.cs` + `.meta` (all its types), `CycloneWindMotion.Trail`/`Kick`.
+- Preview, minimal to compile (C3 owns the rest): `CycloneOutcomePlanner.ForSteer(CycloneSteerPlan, ...)` (moves = the knock only, Whirl at `End` with `Start` vacated on the board after the knock) and `ForCast(..., CycloneKnock? knock)`; `CycloneSteerPreview.Plan` is a `CycloneSteerPlan`, path arrows = `Start` + `Path`, landing = `End`; `CycloneCastPreview` calls `CastKnockFor`. Passed units are NOT yet removed from the preview's Whirl `Hit` and there is no `PassHit` (C3).
+- Comments updated where they named the carry (`CycloneEntity.Burst.cs`, `CycloneShoveSteps.cs`, `ICycloneShoveSteps.cs`, `CycloneWindMotion.cs`, `CycloneOutcome.cs`).
+
+Tests:
+
+- Deleted `Editor/CycloneSteerTests.Carry.cs` + `.meta`. New `Editor/CycloneSteerTests.Knock.cs` (15 tests): hits on the way in path order at the cell (position checked), each once, not re-hit by the Whirl, no move events for passed units; heavy passed and hit once; family/ally/neutral crossed without a trace; an enemy dying mid-glide changes nothing; knock lands once, only the landing hazard fires, order start → unplug → plug → relocate → landed, before the Whirl, Whirl hits the knocked enemy; knock to the right when onward is taken; Crippled guard (no effect field on `CycloneShoveSteps`/`CycloneSteerSteps`); action closes after the knock and the pull waits for reactions; no knock → pull without waiting; plan is what happens (every enemy hit once); safety net ×3 (newcomer on the stop is knocked; landing taken → knocked right; stop untakeable → back to start, no knock, Whirls there); stop mid-glide; knock cut short (plug throws) → re-plugged.
+- `Editor/CycloneSteerTests.cs` rewritten for straight lines (reach, no corner/diagonal, stops vs crossing, walk blocker, wall), Plan helper, recorders implement the new interfaces, Whirl/Steer log tuples, "nothing carried" test, `SteerActionOpen` cases renamed for the knock, log-line test for both lines.
+- `Editor/CycloneSteerTests.Preview.cs`: ghost test rewritten for the knock (board: Brute knocked onto spikes, Shaman pulled; preview = execution); `SteerPreview_ACellPastABlockedFront…` deleted now (it tested the way-round path, which no longer exists and failed in C2; the plan had it in C3).
+- `Editor/CycloneWindBeatsTests.cs`: rider tests deleted (grab, join part-way, riders' time, stop during grab), `Trail`/`Kick` asserts removed; new knock-fling test (exact landing, hop, no overshoot, recoils instead of leaning), Steer time with a knock (0.42 s) and without (0.3 s, a passed enemy doesn't move), stop mid-knock (drawing back, enemy and Cyclone on their cells).
+- `Editor/CycloneCastOnEnemyTests.cs`: `CastKnockFor`; diagonal and blocked-onward tests rewritten for right-then-left; new "refused when onward, right and left are all blocked"; the empty-cell test now asserts a knockable enemy cell is a Steer stop.
+- `Editor/CycloneBurstTests.cs`: burst during a Steer rewritten (no more hits on the way after the burst, the knocked enemy still lands, nobody hit twice, the Cyclone goes). `CycloneWhirlTests.cs`, `CycloneHeavyEndsOnItTests.cs`: `Log` signature.
+
+Verified:
+
+- Unity MCP forced refresh + compile: `Assembly-CSharp.dll` and `Assembly-CSharp-Editor.dll` rebuilt (17:33), console 0 errors, 0 Cyclone warnings; metas generated for the two new files.
+- Covering fixtures (regex groups `MISO.Core.Features.Bergsons.EditorTests.Cyclone*`, `MasherCounterCycloneTests`, `MasherCounterWhirlTests`, `MISO.Core.Systems.EnemyAlertSystem.EditorTests.EnemyAlertForcedMoveTests`): **323/323 passed**, 0 failed, 0 skipped. Separately the three non-Cyclone fixtures: 8/8 (3 + 2 + 3, matches their test counts).
+- Grep: no reference left to `CycloneCarry*`, `CarryLanded`, `CarryStarted`, `PathFor`, `CycloneSteerRules.PathTo/PlanTo/Destinations/Explore/CanSteerTo/IsFriendly`, `IsValidSteerPath`, `PlanCastShove`, `CastShoveCell`, `CastShoveFor`, `Trail`, `Kick`, old `Log(carried, ...)`. No private IDs in code. LF, no BOM, no CR in the changed files.
+
+Not verified:
+
+- Full EditMode suite (not asked for this chunk; due after C5). AI regression test not run (no AI content touched).
+- Nothing seen in Play mode: pass-hit timing, the knock fling in a level, Watch answering the knock, the combat log lines on screen.
+
+Decisions (same behaviour as the plan, or choices the plan left open):
+
+- Pass hit fires when the glide reaches the passed cell (arrival), not half-way into it. One frame of difference per cell; tunable after the play check.
+- Knock event order: unplug, plug (landing hazard fires), then the Cyclone relocates, then `Landed` (end of move, wake). The plan lists "knocked enemy lands (… end-of-move …) → the Cyclone takes the cell"; I kept the old carry's order (Cyclone placed before the end-of-move event) so Watch reads the final board. All in one frame.
+- After a burst mid-Steer, the remaining hits on the way are skipped (a burst Cyclone hits no more), but the knock still lands and the Cyclone still relocates before it goes (as the plan's burst test asks).
+- Steer log line: always logged after the knock unless the level ended (also "hit 0 on the way, knocked 0"); targets = units hit on the way + the knocked unit. Not tagged `[PLACEHOLDER]` (log details aren't tagged anywhere, the Whirl's included); wording is working text.
+- Cast knock keeps the old cast's "landing must be the planned one" check (no live re-route for the cast; the plan's safety net is the Steer's).
+- `ShoveThenCast` keeps its name and takes `CycloneKnock?`; `CastShoveFor` renamed `CastKnockFor`. Existing cast test names that say "Shove" were left as they are.
+- The shared fling went into a new `CycloneKnockMotion` (one new file + meta) rather than duplicating the loop.
+- `CycloneSteerRules.RulesFor` guards a null faction with a pattern check (`unit is { Faction: not null }`), safe off the main thread.
+
+Findings / loose ends:
+
+- A passed enemy can still be pulled by the closing Whirl (it is only left out of the hit). Example: Cyclone passes an enemy and stops two cells beyond it → the Whirl pulls it in beside the Cyclone, unhit. This follows the plan ("skips every unit already hit") but may read oddly; THJ to judge at the play check. Covered by `ThePlanIsWhatHappens_EveryEnemyHitOnce`.
+- Preview between C2 and C3: the Steer preview's Whirl hit still includes passed units that end beside the Cyclone, and shows no pass damage; C3 fixes both.
+- `CycloneWindMotion.Fling` still takes a starting offset/tilt that the knock always passes as zero (the old riders used them); harmless, left for the review.
+- Plan said C3 deletes `SteerPreview_ACellPastABlockedFront…`; it had to go in C2 (it fails without the turning search).
+
+Files to stage for C2:
+
+- Modified (Cyclone): `AEffectCycloneSpawner.Shove.cs`, `AEffectCycloneSpawner.cs`, `AEffectCycloneSteer.cs`, `CycloneCastPreview.cs`, `CycloneEntity.Burst.cs`, `CycloneEntity.Steer.cs`, `CycloneEntity.Whirl.cs`, `CycloneEntity.Wind.cs`, `CycloneOutcome.cs`, `CycloneRules.CastOnEnemy.cs`, `CycloneRules.cs`, `CycloneShoveSteps.cs`, `CycloneSteerPlanner.cs`, `CycloneSteerPreview.cs`, `CycloneSteerRules.cs`, `CycloneSteerSteps.cs`, `CycloneWhirlSteps.cs`, `CycloneWindMotion.cs`, `ICycloneShoveSteps.cs`, `ICycloneSteerSteps.cs`, `ICycloneWhirlSteps.cs`
+- Modified (Editor): `CycloneBurstTests.cs`, `CycloneCastOnEnemyTests.cs`, `CycloneHeavyEndsOnItTests.cs`, `CycloneSteerTests.Preview.cs`, `CycloneSteerTests.cs`, `CycloneWhirlTests.cs`, `CycloneWindBeatsTests.cs`
+- New: `Cyclone/CycloneKnockMotion.cs` + `.meta`, `Editor/CycloneSteerTests.Knock.cs` + `.meta`
+- Deleted (stage the deletions): `Cyclone/CycloneCarryPlanner.cs` + `.meta`, `Editor/CycloneSteerTests.Carry.cs` + `.meta`
+- 36 paths in all (32 tracked changes incl. 4 deletions, plus 4 new). Leave out THJ's `GlobalSettings.asset`, `miso.slnx`, `.mcp.json`, `powershell.exe`.
+- Suggested message: "feat(lucy): the Steer glides in a straight line through enemies, hitting each once, and knocks the one where it stops; the cast on an enemy uses the same knock; the carry is gone"
