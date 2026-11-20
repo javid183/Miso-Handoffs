@@ -254,3 +254,128 @@ Files to stage (all `miso/Assets/_Project/Features/Player/Lucy/Scripts/`, no new
 - `Cyclone/`: `AEffectCycloneSteer.cs`, `CycloneCrossView.cs`, `CycloneEntity.Whirl.cs`, `CycloneKnockMotion.cs`, `CycloneOutcome.cs`, `CycloneOutcomeView.cs`, `CycloneRules.CastKnock.cs`, `CycloneRules.CastOnEnemy.cs`, `CycloneShoveSteps.cs`, `CycloneSteerPreview.cs`, `CycloneUnitDrawings.cs`, `CycloneWhirlPlanner.cs`, `CycloneWindMotion.cs`, `ICycloneShoveSteps.cs`
 - `Editor/`: `CycloneBurstTests.cs`, `CycloneCastOnEnemyTests.cs`, `CyclonePreviewTests.cs`, `CycloneSteerPlannerTests.cs`, `CycloneSteerTests.Preview.cs`, `CycloneSteerTests.cs`, `CycloneWindBeatsTests.cs`
 Suggested commits: (a) `fix(lucy): the Steer preview leaves an enemy its pass hit kills off the closing Whirl` (CycloneOutcome.cs, CycloneSteerPreview.cs, CycloneSteerTests.Preview.cs); (b) `refactor(lucy): drop the carry's leftover fling and draw arguments and the cast knock's unused second direction` (the rest of the code and test files); comment rewraps and wording fixes can ride in (b).
+
+## Addendum: free route, knock damage, no avoidance (D-586 to D-588)
+
+Plan: the "Addendum, 2026-11-19 later" section of `plans/2026-11-19-cyclone-reset-tech.md`. Built on `b62e2a7fd`. All paths below are under `miso/Assets/_Project/Features/Player/Lucy/Scripts/`. LF, no BOM (checked with `file`, no CR), no new statics, no core file touched, no new files (one deletion). Grep of the diff: no private IDs, no playtest or screenshot wording. Covering fixtures after every chunk: regex group `MISO.Core.Features.Bergsons.EditorTests.Cyclone.*` plus `MasherCounterCycloneTests`, `MasherCounterWhirlTests`, `MISO.Core.Systems.EnemyAlertSystem.EditorTests.EnemyAlertForcedMoveTests` (Unity MCP, editor open). No AI editor test under `Core/Systems/AISystem/Editor` references the Cyclone (grepped), so none was added to the group. Full EditMode suite not run (the coordinator runs it).
+
+### Chunk R1: Free route
+
+Built:
+- `Cyclone/CycloneSteerPlanner.cs`: `Lines` is now a depth-first search over every simple four-way path from the Cyclone's cell, up to `reach` steps (never back onto the start, never a cell twice; a step can't go onto a missing cell or a walk-blocking planted entity other than the Cyclone's own; everything else is crossed). Each reached cell keeps its fewest steps; only routes of that length count (a longer route never wins). Among them, only routes that make the cell a stop are kept: `TryStopOn` (unchanged) with onward = that route's last step. The cell is offered if any shortest route makes it a stop; its route is then the one with the most distinct enemies on the route cells before it, then the latest first turn (index of the first step that differs from step one; a straight route counts as never turning), then `CycloneRules.StraightDirections` order at the first differing step. The plan's `Passed` is read off the kept route, its knock from that route's stop check. `Lines` returns one plan per stop, fewest steps first, then search order. `PlanTo` returns early past the reach in Manhattan distance, else picks the stop out of `Lines`. Plain grid slots, `ReferenceEquals` and the rules' delegates only; small lists, no dictionary keyed by a Unity object. At reach 3 the search visits at most 4 + 12 + 36 = 52 path prefixes.
+- `Cyclone/CycloneSteerPlan.cs`: comments only (`Direction` = last step, the knock's onward; `Path` = four-way steps, no cell twice).
+- Comments/tooltip only: `AEffectCycloneSteer.cs` (header; `reach` tooltip "in four-way steps", tooltip text only, no serialized rename), `CycloneSteerRules.cs` header, `CycloneEntity.Steer.cs` header, `CycloneSteerPreview.cs` header.
+- No other runtime change was needed: the glide already walked `plan.Path` cell by cell, the safety net already read `plan.Direction`, the preview's path arrows already drew `Start + Path` with the grid's own arrows (which drew the old turning paths).
+
+Tests:
+- `Editor/CycloneSteerPlannerTests.cs`: straight-line cases rewritten for routes (every cell within 3 steps offered, by its fewest steps; reach in steps; map edge; round a hole and a pillar, never through; the Cyclone's own slot crossed; hazard and stash crossed, never a stop; the `Direction` filters replaced by cell filters). New: `Routes_GoRoundAWallWithinReach_CountingEveryStep` (null at 3, the 4-step way round at reach 4, up before down), `Routes_NeverVisitACellTwice_NorTheStart_AndMoveOneFourWayStepAtATime`, `Route_OfTwoEqualRoutes_TakesTheOneThatPassesMoreEnemies`, `Route_OfTwoEqualRoutesPassingAsManyEnemies_TakesTheDirectionOrderAtTheFirstStep`, `Route_GoesStraightAsLongAsItCan_BeforeTurning`, `Route_PassingMoreEnemies_ComesBeforeGoingStraight`, `TheKnock_AfterATurn_GoesOnwardFromTheLastStep`, `OfTwoShortestRoutesArrivingDifferently_OnlyTheOneWhoseKnockLands_IsTaken` (two 2-step routes to a Claw arriving by different last steps; the one the direction order prefers has no landing, so the other is taken and knocks to the left of up), `ALongerRouteNeverWins_EvenWhenOnlyItsKnockWouldLand` (the 1-step route has no landing; a 3-step way round would, and the cell is still refused); `PlanTo_AgreesWithLines_ForEveryCell` also compares `Direction`.
+- `Editor/CycloneSteerTests.cs`: `Steer_ReachesUpToThreeFourWaySteps_RoundACornerToo` (was "never round a corner"), `Steer_GoesRoundAWall_OnlyWithinItsReach` (was "never goes round a wall"), the range test asserts a cell round a corner is offered (was "four lines only"), header.
+- `Editor/CycloneSteerTests.Knock.cs`: new `TheGlide_FollowsTheRouteRoundTheCorner_AndHitsTheEnemyOnTheWayAtItsCell` (every glide frame on the two route segments, never across the corner; the pass hit at the passed cell).
+- `Editor/CycloneSteerTests.Preview.cs`: new `SteerPreview_EqualsTheExecution_OnARouteThatTurns` (path arrows follow the route, knock onward from the last step, Whirl pull ghost, then `PreviewThenExecute`).
+
+Verified: compile clean (console: no `error CS`, no Cyclone warning); covering group **333/333 passed**, 0 failed (the fix round had 315 in the Cyclone classes + 8 in the other three; +10 new). One first-run failure was a test bug (indexing the hole cell), fixed. After the switch to "shortest routes that make a stop" (done after R3, on top of all three chunks): covering group **330/330 passed**, 0 failed (R3's 329 + the one extra planner test).
+
+Not verified: Play mode (how the turning path arrows read, a glide round a corner on screen).
+
+Decisions:
+- **Shortest routes that make a stop, then the tie-break** (coordinator's call, after I first built "route first, then the stop"). Among the fewest-step routes to a cell, only those whose stop holds (empty, or a knock with a landing onward from that route's last step) compete; the cell is offered if any does. A longer route never wins. A landing still can't be a route cell or the start: on a shortest route only the previous cell touches the stop, and the knock never goes back.
+- `Lines` order is now fewest steps first (nothing depends on it; the range and the target check read it as a set).
+- Distinct enemies for the tie-break count a large unit once and never the stop's own unit.
+
+### Chunk R2: Knock damage
+
+Built:
+- `Cyclone/CycloneEntity.Steer.cs`: the knocked enemy takes one Cyclone hit through the Whirl's own `Hit` + `Report` right after it is plugged on its landing cell and the Cyclone has relocated, before its end of move (`Landed`: Watch, wake); a hit that kills it skips `Landed`. `HitOnTheWay` now wraps a shared `HitOnce` (same guards: nothing once burst, level ended, or dead). The Whirl's skip set still holds the passed enemies only, so the Whirl hits the knocked enemy again beside it. Header comment rewrapped and updated. Steer log line unchanged ("hit N on the way, knocked K"; the knock's hit is not counted in N).
+- `Cyclone/AEffectCycloneSpawner.Shove.cs`: `ShoveThenCast(..., Action<GUnit> hitOnLanding = null)`, called on the knocked enemy right after its landing, before `Landed`; a hit that kills it skips `Landed` and it isn't noted as moved. The live cast passes `HitOnLanding(owner, unit, statCtx)`: the Cyclone prefab's hit effect with the cast's stats and one report credited to the cast (nothing once the level is over).
+- `Cyclone/CycloneWhirlSteps.cs`: the hit, report and health read moved into three `internal static` helpers (`ApplyHit`, `ReportHit`, `HealthOfUnit`) that the instance methods call, so the cast's knock hit uses the same path before the Cyclone exists. Same behaviour for the Whirl.
+- `Cyclone/CycloneOutcome.cs`: `KnockHit` (the knocked unit), `HitCount(unit)` (on the way + knock + Whirl), `AllHit()` = passed, then knocked, then the Whirl's, each once. `ForSteer` and `ForCast` take `diesOfOneHit` (was `diesOnPass` on `ForSteer`; `ForCast` gains it): a passed or knocked enemy one hit kills is taken off the board the Whirl is planned on (no pull, no cell it holds, no Whirl hit) and keeps its one segment.
+- `Cyclone/CycloneOutcomeView.cs`: a unit's segment is one hit's damage times `HitCount` (knock + Whirl summed); still one segment per unit.
+- `Cyclone/CycloneSteerPreview.cs`, `Cyclone/CycloneCastPreview.cs`: comments; the cast preview passes a new `IsLethal` (one hit's damage against the unit's health, as in the Steer preview).
+
+Tests:
+- `Editor/CycloneSteerTests.Knock.cs`: `TheKnock_LandsOnce_...` expects the knock's hit before the Whirl begins, two hits on the Claw, two reports, Whirl log (0, 1); `ThePlanIsWhatHappens_...` expects Passed, Knocked (knock), then the Whirl's Knocked and OnArm. New `TheKnockedEnemy_IsHitOnItsLandingCell_AfterTheCycloneMoves_BeforeItsEndOfMove`, `AKnockThatKills_HasNoEndOfMove_NoWhirlHit_AndFreesItsCellForThePull` (the enemy behind it on the arm is pulled into the freed cell).
+- `Editor/CycloneSteerTests.Preview.cs`: `PreviewThenExecute` and the ghost test compare the executed hits with the preview's hits counted (`HitCount`); the ghost test checks the knocked Brute's segment is 6 (3 + 3) and the Shaman's 3. New `SteerPreview_AKnockThatKills_ShowsOneHit_NoWhirlHit_FreesItsCell_AndEqualsTheExecution`.
+- `Editor/CycloneCastOnEnemyTests.cs`: new `TheKnockedEnemy_TakesOneHitAsItLands_BeforeItsEndOfMove_ThenTheCycloneIsCast` (order: start, unplug, plug, hit on the landing cell, landed, spawn), `AKnockThatKills_HasNoEndOfMove_AndTheCycloneIsStillCast`, `ThePreview_SumsTheKnocksHitAndTheWhirls_AndALethalKnockLeavesTheWhirlsBoard` (`HitCount` 2, one segment; lethal: 1, no Whirl hit, the enemy behind pulled into the freed cell); header.
+
+Verified: compile clean; covering group **339/339 passed**, 0 failed (+6 new).
+
+Not verified: Play mode; the live `HitOnLanding` wiring of the cast (the effect needs real units with attributes; the tests inject the hit). Kill XP/gold, Howling Gale and waking follow from using the same effect and report as the Whirl; not seen in a level.
+
+Decisions:
+- **Order:** the knock's hit lands on the landing cell before the knocked enemy's end of move (Watch) and wake, so a knock that kills raises no end of move. Steer: after the Cyclone relocates. Cast: before the Cyclone is planted.
+- **Cast hit before the spawn, not through the new Cyclone.** The cast Whirl starts inside the spawn and, with nothing to swell for, plans its pull in that same frame; a hit after the spawn would leave a dead knocked enemy's cell blocking that plan while the preview showed it free. So the cast's knock hit goes through the shared static hit and report with the prefab's effect and the cast's stats. Consequence: the hit lands even if the Cyclone is then refused (already out, or cell taken), cases the target check normally rules out.
+- `diesOnPass` renamed `diesOfOneHit` (parameter only; same meaning, widened to the knock).
+- Steer log line kept as is (plan: "keep the line as is").
+
+### Chunk R3: No avoidance
+
+Built:
+- Deleted `Cyclone/CycloneEntity.AIDanger.cs` + `.meta` (`IAIEndOfTurnDanger`, `IAIEndOfTurnDangerSparesMover`). The core danger snapshot and hooks are untouched; the Cyclone is no longer a source.
+- Stale comments: `Cyclone/CycloneHeavy.cs` ("the walk check, the burst and the AI share" now "the walk check and the burst share"), `Cyclone/CycloneEntity.LineOfFire.cs` ("the same relation the Whirl uses").
+
+Tests:
+- `Editor/CycloneAIDangerTests.cs` rewritten: `Snapshot_TheCrossIsNoDangerForAnyone` (empty for enemy, family, ally, neutral; the Cyclone isn't an `IAIEndOfTurnDanger`), `AnEnemyEndsOnAnArm_WhenThatIsItsBestCell`; kept the two core-rule tests on a hand-made set (`Touches_...`, `RefusesEndingOn_...`, the only coverage of those core functions). Deleted: cross is danger for enemies, faded is no danger, another route, walking in to attack, sealed off.
+- `Editor/CycloneAIHeavyTests.cs`: kept `CellsFor_APlainSet_IsTheSameSetForEveryone` and the walk test, now `AHeavyWalksThroughTheCyclone_AndEndsOnTheArm_ALightEnemyNeverEndsOnTheCyclone` (snapshot empty; the light enemy no longer has to go round). Deleted the six cases that pinned heavy sparing, the other danger source and the worker-thread read of the Cyclone's set.
+- `Editor/CycloneSteerTests.cs`: deleted `AfterASteer_TheAIsDangerIsTheNewCross`; header.
+- `Editor/CycloneBurstTests.cs`: dropped the two danger asserts from the burst test (the line-of-fire asserts stay).
+
+Verified: compile clean; covering group **329/329 passed**, 0 failed (339, minus 12 deleted, plus 2 new); 330/330 after the R1 rule switch. `MISO.Core.Systems.AI.EditorTests.AIRegressionTest.Baseline_MatchesCurrentAI` run by name: **FAIL, CHECKS 714, FAILURES 43**, the same count as the last recorded 43; not re-baselined.
+
+Not verified: enemies walking onto the arms in a level (play check).
+
+Decision: kept the generic core-rule tests (`Touches`, `RefusesEndingOn`, `CellsFor` on a plain set) in the Cyclone fixtures rather than deleting them; nothing else covers those core functions.
+
+### Files to stage, per chunk
+
+A file touched by two chunks is listed under the later chunk, except `Editor/CycloneSteerTests.cs`, which the coordinator moved into R1 so every commit's tests are green: it carries R3's deletion of `AfterASteer_TheAIsDangerIsTheNewCross` and one header line, harmless before R3 (the danger source still exists then, the test just isn't there). At the R1 commit the old `CycloneSteerTests.Knock.cs` and `.Preview.cs` only steer along straight lines (one shortest route), so they stay green with the new planner; at R1 and R2 the old AI danger tests still test the still-present danger source. Every commit compiles.
+
+R1 (6 files):
+- `Cyclone/CycloneSteerPlanner.cs`
+- `Cyclone/CycloneSteerPlan.cs`
+- `Cyclone/AEffectCycloneSteer.cs`
+- `Cyclone/CycloneSteerRules.cs`
+- `Editor/CycloneSteerPlannerTests.cs`
+- `Editor/CycloneSteerTests.cs` (also R3: one test deletion and a header line)
+Message: "feat(lucy): the Steer takes a free four-way route of up to 3 steps, round corners and through enemies: fewest steps, then most enemies passed, then straight first"
+
+R2 (10 files):
+- `Cyclone/CycloneEntity.Steer.cs` (also R1: header comment)
+- `Cyclone/CycloneSteerPreview.cs` (also R1: header comment)
+- `Cyclone/AEffectCycloneSpawner.Shove.cs`
+- `Cyclone/CycloneCastPreview.cs`
+- `Cyclone/CycloneOutcome.cs`
+- `Cyclone/CycloneOutcomeView.cs`
+- `Cyclone/CycloneWhirlSteps.cs`
+- `Editor/CycloneSteerTests.Knock.cs` (also R1: the glide round the corner test)
+- `Editor/CycloneSteerTests.Preview.cs` (also R1: the turning-route preview test)
+- `Editor/CycloneCastOnEnemyTests.cs`
+Message: "feat(lucy): a knocked enemy takes one Cyclone hit as it lands, on the Steer and the cast; the preview sums it with the Whirl's"
+
+R3 (7 paths, 2 of them deletions):
+- `Cyclone/CycloneEntity.AIDanger.cs` (deleted)
+- `Cyclone/CycloneEntity.AIDanger.cs.meta` (deleted)
+- `Cyclone/CycloneEntity.LineOfFire.cs`
+- `Cyclone/CycloneHeavy.cs`
+- `Editor/CycloneAIDangerTests.cs`
+- `Editor/CycloneAIHeavyTests.cs`
+- `Editor/CycloneBurstTests.cs`
+Message: "feat(lucy): the Cyclone is no longer end-of-turn danger for the AI; enemies don't avoid its arms"
+
+Leave out THJ's `GlobalSettings.asset`, `miso.slnx`, `.mcp.json`, `powershell.exe`.
+
+### Risks and loose ends (addendum)
+
+- An enemy cell is refused when no shortest route gives its knock a landing, even if a longer way round would (`ALongerRouteNeverWins_...`).
+- The ability text still says "in a line" (`Lucy_Ability_Steer.asset`, `CycloneSteerSetup.cs` line 31); outside the addendum's scope, narrative pass.
+- A lethal knock: the dead enemy's ghost and the ghost of the enemy pulled into its cell share a cell in the preview (correct, may read oddly). Play check.
+- The freed-cell assumption (a unit a hit kills leaves its cell before the Whirl plans) now covers the knock too; same play-check item as the lethal pass.
+- Play-check items on straight lines (1, 3, 5, 6) need rewriting for routes; enemies now end turns on the arms freely, so the Whirl pulls and hits more often.
+- `tech/core-systems.md`: the Cyclone is no longer an `IAIEndOfTurnDanger` source; the core danger hooks now have no source in the game (coordinator's note).
+
+### How to see it (addendum)
+
+1. In a level with Lucy and enemies, cast the Cyclone, then pick Steer: the range lights every cell up to 3 steps away, round corners (not through walls or rocks); hovering a cell round a corner draws the turning path arrows.
+2. Hover a diagonal cell with a Claw on one of the two equal routes: the route goes through the Claw (most enemies passed) and its bar shows one hit.
+3. Steer onto a Claw after a turn: it is knocked onward along the last step; its ghost bar shows two hits (knock + Whirl). Click: the hit pops as it lands, then the Whirl hits it again.
+4. Cast the Cyclone on an enemy: its bar shows two hits; on cast it takes one as it lands, then the Whirl's.
+5. End the turn with the Cyclone out: enemies walk onto its arms when that is their best cell, then get pulled and hit at the end of their turn.
