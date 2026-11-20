@@ -100,3 +100,5 @@ none
 ## How to see it
 
 Not visible in game yet (C1 wires nothing). Run the fixtures in Window > General > Test Runner > EditMode, filter "CycloneSteerPlannerTests" and "CycloneKnockRulesTests".
+
+**C1 verified and committed (coordinator, 2026-11-19).** Unity MCP: forced refresh, compile clean, console 0 errors, metas generated. Covering fixtures `CycloneSteerPlannerTests`, `CycloneKnockRulesTests`, `CycloneCastOnEnemyTests`: 77/77 passed. Coordinator read `CycloneSteerPlanner.cs` (no findings). Committed `d9cb1f2ce` (12 files). Review comes with the feature.

@@ -2830,3 +2830,10 @@ Plan `plans/2026-11-19-faster-loop-process.md`, decisions D-575 to D-579.
 **Verified.** Forced refresh and recompile in THJ's open editor (Unity MCP): no console errors. EditMode suite: 2293 run, 2292 passed, 1 failed, the known red `AIRegressionTest.Baseline_MatchesCurrentAI` (714 checks, 43 failures, the same count as before the merge). So the merge compiles and the Masher plow, Catch & Return, Cyclone and Masher-on-Cyclone tests all pass together (about 138 s).
 
 **Not verified.** Nothing played: the Masher + Cyclone + plow check (including the 2x2 step that covers a Cyclone cell and a pushable unit) is still THJ's.
+
+## 2026-11-19: Cyclone reset C1, pure rules (thj/cyclone)
+
+**Built.** New pure files: `CycloneKnockRules` (onward, else right, else left of travel), `CycloneSteerPlan` (+ shared `CycloneKnock`), `CycloneSteerPlanner` (four straight lines, pass list, stops, knock), `CycloneRules.CastKnock` (not wired). Tests `CycloneSteerPlannerTests`, `CycloneKnockRulesTests`. Plan `plans/2026-11-19-cyclone-reset-tech.md`, report `reports/cyclone-reset.md`.
+**Verified.** Compile clean; 77/77 in the covering fixtures (incl. `CycloneCastOnEnemyTests`). +y is screen-up, so moving screen-right, right is screen-down.
+**Not verified.** Nothing wired yet; no play.
+**Status.** Committed `d9cb1f2ce`, not pushed. Next: C2 (runtime, carry removed).
