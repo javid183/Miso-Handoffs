@@ -136,3 +136,22 @@ Code facts (Explore, 2026-11-19): `CycloneSteerRules.Search` is the breadth-firs
 - Play check: **yes, needs THJ's time** (list written with the build: screenshots 1 to 3 layouts, a knock onto a hazard, a knock into Linda's lane for Watch, a pass through a heavy, cast on an enemy with each fallback, a Steer through a Masher's counter-range).
 - Docs after THJ's play check: GDD Lucy LU-3 to LU-7 and value table, `enemies.md` EN-3, EN-18, `design/cyclone-redesign.md` reset note (designer); glossary "carries" retired, "knock" (narrative); `tech/core-systems.md` Cyclone note (coordinator); Claude Docs mirror for `lucy.md`.
 - Commits: C1, C2, C3, C4 and C5 each their own, in that order (C4 can land any time).
+
+---
+
+## Addendum, 2026-11-19 later: free route, knock damage, no avoidance (D-586 to D-588)
+
+THJ played nothing yet but judged the straight line too limiting and the Cyclone useless; three changes, all Tier 3 decided by THJ. Size M, no core system. Builds on `b62e2a7fd`.
+
+**Rules that change**
+- **Route (D-586).** Destinations: every cell reachable in 1 to `reach` (3) four-way steps without revisiting a cell, crossing what the straight line crossed (family, allies, enemies, heavies, non-blocking hazards; walls, edge and walk-blocking planted entities stop it). Stops are the same as now (empty cell, or a knockable enemy with a landing). For each destination, the route is: fewest steps; on a tie, the most distinct enemies passed; on a tie, the latest first turn (straight before turning); on a tie, the fixed order of `CycloneRules.StraightDirections` for the first differing step. Passed enemies are those on the route's cells before the stop. The knock's onward is the last step's direction (right/left relative to it). The preview draws the route with the path arrows. Backlog, not now: cycling routes with Space like the move preview.
+- **Knock damage (D-587).** The knocked enemy takes one Cyclone hit (same `Hit` + `Report` path, cast credit, Howling Gale, waking) when it lands, on the Steer and on the cast on an enemy; then the Whirl hits it too if it's beside. The Whirl's skip set still holds only passed enemies. The preview's damage for a knocked enemy is the knock hit plus the Whirl hit (two hits summed in its one segment, skull if lethal); a knock that kills means no Whirl hit and no pull for it.
+- **No avoidance (D-588).** The Cyclone no longer reports AI end-of-turn danger: remove `CycloneEntity.AIDanger.cs` (both interfaces). The core danger snapshot and its hooks stay untouched (no source left; removing them is a core change, not asked).
+
+**Chunks** (each its own commit)
+- **R1. Free route** (opus): `CycloneSteerPlanner` becomes a search over simple paths up to `reach` with the tie-break above; `CycloneSteerPlan.Direction` = last step; `Lines` returns one plan per destination; range, target check, execution and preview already read the plan. The glide follows the path cells. Tests: tie-break cases (around a wall, two equal routes with different enemy counts, straight-before-turn), knock onward after a turn, no revisits, reach counted in steps, preview equals execution on a turning route. Covering fixtures: `Cyclone.*` regex group.
+- **R2. Knock damage** (sonnet): hit on landing for the Steer knock and the cast knock; preview sums knock + Whirl for the knocked unit; lethal knock removes it from the Whirl board (like a lethal pass). Tests: Steer knock deals a hit then the Whirl's; cast knock deals a hit; lethal knock: no Whirl hit, no pull, preview equals execution. Log: the Steer line becomes "hit N on the way, knocked K" with the knock hit counted in its own clause only if narrative wants; keep the line as is. Covering fixtures: `Cyclone.*`, Masher Cyclone/Whirl, enemy-alert forced move.
+- **R3. No avoidance** (sonnet): delete `CycloneEntity.AIDanger.cs` (+ meta); update or delete `CycloneAIDangerTests`, `CycloneAIHeavyTests` cases and `CycloneSteerTests.AfterASteer_TheAIsDangerIsTheNewCross`. AI content changes, so run `AIRegressionTest.Baseline_MatchesCurrentAI` by name and report its count against 43 (no re-baseline). Covering fixtures: `Cyclone.*`, the AI danger tests in `Core/Systems/AISystem/Editor` if any reference the Cyclone.
+- Then: full EditMode once, one review, play-check list updated.
+
+**Risks:** the route search must stay cheap (at most 4·3·3 paths at reach 3) and touch only plain grid data (the target check). The play-check items on straight lines (1, 3, 5, 6) change. EN-18 text in the GDD goes with the docs pass after the play check.
