@@ -2867,3 +2867,11 @@ Plan `plans/2026-11-19-faster-loop-process.md`, decisions D-575 to D-579.
 **Verified.** Covering fixtures 330/330; full EditMode 2353 total, 2352 passed, 1 skipped (Explicit AI test), 147 s; AI regression run by name: 43 failures, unchanged. Review APPROVE (two comment rewraps left as should-fix).
 **Not verified.** Nothing played.
 **Status.** Committed, not pushed. Waiting on THJ's play check (`playtests/2026-11-19-cyclone-reset-play-check.md`, updated).
+
+## 2026-11-20: Cyclone play fixes, Steer in level kits, tether arrow (thj/cyclone)
+
+**Why.** THJ's play notes: no Steer after casting in `LevelE1-C1`; cast preview shows no Whirl damage next to enemies; pull tether needs a direction and a colour that isn't bluish.
+**Built.** `69a336369` editor tool `Tools > Levels > Lucy > Add Steer To Custom Kits` + test (eight levels cut Lucy's kit in October, before the Steer existed: cast without Steer); THJ ran it; `06deaaef2` the eight level prefabs. `ecf24f875` Cyclone move tethers pale amber with an arrowhead at the destination; `CycloneTetherLook` on both previews (tunable in Play only: the previews are added at runtime).
+**Verified.** Kit test passes after the tool; Cyclone fixtures 322/323, the one failure `LiveSteer_CostsOneAP…` because THJ's editor holds an unsaved in-memory change on `Lucy_Ability_Steer.asset` (cooldown 0; disk says 1). Not a code fault; THJ to discard it.
+**Not verified.** Cast preview missing Whirl damage: not reproduced from code; waiting on THJ's check (does the dimmed aim cross show?). Tether look in Play.
+**Status.** Committed, not pushed.
