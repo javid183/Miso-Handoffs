@@ -2,7 +2,7 @@
 
 Size: L    Tier: 3 (decided by THJ: D-589 to D-593)    Assigned to: miso-implementer, one chunk at a time
 Branch: thj/cyclone
-Status: waiting on THJ (core hooks: plan shown first, CLAUDE.md)
+Status: approved 2026-11-20 (THJ: "Approve, start"); K1 in progress
 
 ## Why
 
