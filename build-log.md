@@ -2852,3 +2852,10 @@ Plan `plans/2026-11-19-faster-loop-process.md`, decisions D-575 to D-579.
 **Verified.** Compile clean; Cyclone fixtures 319/319.
 **Not verified.** The look in Play.
 **Status.** Committed `774dabef7`, not pushed. Next: C4 wobble removal, C5 texts.
+
+## 2026-11-19: Cyclone reset C4, C5, review and fixes (thj/cyclone)
+
+**Built.** C4 `d8db54ddf` wobble and pip flicker removed; C5 `359882aed` working descriptions for the Steer and the cast on an enemy. Review fixes: `e426c36c8` the preview leaves an enemy its pass hit kills out of the Whirl's pulls; `b62e2a7fd` carry leftovers, stale wording, `CastKnockOnward`.
+**Verified.** Full EditMode after C5: 2345 total, 2344 passed, 0 failed, 1 skipped (Explicit AI test), 147 s. Feature review APPROVE (`reports/cyclone-reset-review.md`), five should-fixes applied; Cyclone + Masher + enemy-alert fixtures 323/323 after.
+**Not verified.** Nothing played. Assumption from the lethal-pass fix: a dead unit's cell is empty before the Whirl (play-check item 23).
+**Status.** Built and committed, not pushed. Waiting on THJ's play check (`playtests/2026-11-19-cyclone-reset-play-check.md`).

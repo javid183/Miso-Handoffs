@@ -50,3 +50,7 @@ Branch `thj/cyclone`, commits `d9cb1f2ce` to `359882aed` (plan `plans/2026-11-19
 - Does the knock direction ever surprise you? (Lever: "onward, else refuse".)
 - Does the Steer out-damage Embers? (Lever: a lighter graze on the pass.)
 - Do you miss the drag? (Lever: the enemy right behind follows.)
+
+## Added after the review
+
+23. Pass-kill a Claw that sits behind the stop on the same line, with another enemy behind it: the preview shows no pull ghost for the dying Claw, only its damage with a skull; the enemy behind is pulled as shown.

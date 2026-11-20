@@ -1,11 +1,11 @@
 # Report: Cyclone reset (straight Steer, knock, carry and wobble removed)
 
 Plan: plans/2026-11-19-cyclone-reset-tech.md    Agent: miso-implementer    Branch: thj/cyclone
-Outcome: partial (C1 and C2 of C1 to C5 built; C2 compiled in the editor, covering fixtures 323/323)
+Outcome: complete (C1 to C5 built, reviewed and approved with five should-fixes; the fix round below applied all five)
 
 ## What changed
 
-- C1 only so far; see the Chunks section.
+The Steer glides in a straight line (up to 3 cells) through enemies, hits each once on the way, and knocks the enemy at its stop onward (else right, else left); the carry is gone. A cast on an enemy uses the same knock. The aim previews draw the same plan (one ghost per enemy that moves, one damage segment per enemy hit, none for a passed enemy a lethal pass hit kills) and the heavy-warning wobble and pip flicker are removed. Working texts for the Steer and the cast on an enemy. The fix round after review: lethal pass hits left off the preview's Whirl board, stale carry/wobble wording gone, carry leftovers removed (`Fling`, `DrawUnit`, the cast's knock direction), comment lines rewrapped. Last Cyclone group run: 315/315.
 
 ## Acceptance criteria
 
@@ -236,3 +236,21 @@ Files to stage for C5:
 - `miso/Assets/_Project/Resources/UnitSpecific/Player/Lucy/Abilities/Cyclone/Lucy_Cyclone_Ability.asset`
 - `miso/Assets/_Project/Features/Player/Lucy/Scripts/Editor/CycloneSteerSetup.cs`
 Suggested message: "feat(lucy): working descriptions for the straight Steer and the cast on an enemy"
+
+## Fix round (after the feature review)
+
+All five should-fixes applied. Base: `Features/Player/Lucy/Scripts/` (LF, no BOM). Verified: regex group `MISO.Core.Features.Bergsons.EditorTests.Cyclone.*`: 315/315 passed, 0 failed (314 + the new test); console clean after compile. Not run: full suite, AI regression.
+
+1. Lethal pass hit in the preview. `CycloneOutcomePlanner.ForSteer` takes an optional `diesOnPass` predicate. A passed unit it flags is removed from the board the closing Whirl is planned on (no pull, no cell it holds, no second hit) and keeps its single damage segment (skull) where it stands. `CycloneSteerPreview` passes `LethalOf ?? IsLethal`; `IsLethal` is the hit's damage (same `HitDamage` / `DamageOf` the view uses) against the unit's own health, false for a unit without an attribute set (edit-mode test units). New public test hook `LethalOf` beside `DamageOf`. Test: `SteerPreview_APassedEnemyTheHitKills_IsNotPulled_HasOneSegmentWhereItStands_AndEqualsTheExecution` (a lethal pass enemy two cells behind the stop, which would otherwise get a pull ghost; preview then execute, plus a bystander still pulled).
+   Decision: the dead unit's cell is treated as empty on the planned board. In the live game the dead unit's cell is freed once it dies; if it ever stays occupied until after the Whirl, a pull into that cell could differ. Play-check item (kill a Claw by passing it, with another enemy behind it on the same arm).
+2. `CycloneSteerPlannerTests.cs`: section comment now "A row of Claws ahead; a Claw above with the family around". No other "screenshot" wording left in Lucy code.
+3. Stale carry/wobble wording fixed: `CyclonePreviewTests.cs` (header, section comment, "Rider" renamed "Knocked", assert messages, one test renamed `OutcomeView_MovesTheHealthBar...`), `CycloneWhirlPlanner.cs`, `CycloneCrossView.cs`, `CycloneUnitDrawings.cs`, `CycloneOutcomeView.cs` ("carried over" now "moved over"), `CycloneWindBeatsTests.cs` ("Carried" unit now "Knocked"), `CycloneSteerTests.cs` (test renamed `..._NothingMovesWithIt`). Grep of "carry/carried/rider/wobble/drag/screenshot" over `Features/Player/Lucy` now only hits the unrelated fireball summary and the real `dragStraightOnly` field.
+4. Carry leftovers: `CycloneWindMotion.Fling(fromRoot, toRoot, hop, t, out root, out offset)` (no `fromOffset`/`fromTilt`/`tilt`); `ICycloneShoveSteps.DrawUnit(unit, position, offset)` and `CycloneShoveSteps`, `CycloneUnitDrawings.Draw` lost the tilt (the offset stays: it is the fling's hop). Four test recorders and the Fling and Drawings tests updated (the tilt asserts are gone). `CycloneRules.CastShoveDirections` is now `CastKnockOnward(lucy, target)` returning `Vector2Int?` (null for Lucy's own cell); `CastKnock` uses it; test is `KnockOnward_LargerAxisOnly_AndTheRowAtATie`.
+5. Rewrapped to 120 columns: `AEffectCycloneSteer.cs` (the cost sentence), `CycloneEntity.Whirl.cs` header, `CycloneOutcome.cs` header, `CycloneOutcomeView.cs` header, `CycloneSteerPreview.cs` header, `CycloneWhirlPlanner.cs` header line.
+
+Docs: `tech/core-systems.md` line 112 still lists `CycloneWobble` and `CycloneCarryPlanner` (coordinator's file, not touched).
+
+Files to stage (all `miso/Assets/_Project/Features/Player/Lucy/Scripts/`, no new files, no `.meta`):
+- `Cyclone/`: `AEffectCycloneSteer.cs`, `CycloneCrossView.cs`, `CycloneEntity.Whirl.cs`, `CycloneKnockMotion.cs`, `CycloneOutcome.cs`, `CycloneOutcomeView.cs`, `CycloneRules.CastKnock.cs`, `CycloneRules.CastOnEnemy.cs`, `CycloneShoveSteps.cs`, `CycloneSteerPreview.cs`, `CycloneUnitDrawings.cs`, `CycloneWhirlPlanner.cs`, `CycloneWindMotion.cs`, `ICycloneShoveSteps.cs`
+- `Editor/`: `CycloneBurstTests.cs`, `CycloneCastOnEnemyTests.cs`, `CyclonePreviewTests.cs`, `CycloneSteerPlannerTests.cs`, `CycloneSteerTests.Preview.cs`, `CycloneSteerTests.cs`, `CycloneWindBeatsTests.cs`
+Suggested commits: (a) `fix(lucy): the Steer preview leaves an enemy its pass hit kills off the closing Whirl` (CycloneOutcome.cs, CycloneSteerPreview.cs, CycloneSteerTests.Preview.cs); (b) `refactor(lucy): drop the carry's leftover fling and draw arguments and the cast knock's unused second direction` (the rest of the code and test files); comment rewraps and wording fixes can ride in (b).
