@@ -1,7 +1,7 @@
 # Report: Cyclone controls (click to Steer, Steer pulse, free first Steer, Mark's Command steers)
 
 Plan: plans/2026-11-20-cyclone-controls-tech.md    Agent: miso-implementer    Branch: thj/cyclone
-Outcome: partial (K1 done; K2 to K6 to come)
+Outcome: partial (K1 and K3 committed; K2 built, waiting for review; K4 to K6 to come)
 
 ## What changed
 
@@ -148,3 +148,65 @@ Proposed message: `feat(lucy): click the Cyclone to select Lucy and open the Ste
 Proposed message (unchanged): `feat(core): planted entities can take a player's click before the selection states, legal ability targets keep priority`
 
 **Coordinator (2026-11-20):** K1 fix round checked by reading the diff (call moved to `OnMouseClick`, one line in `PlayerController.cs`, guards and the three should-fixes in); full suite 2377/2379 (1 known K4 failure, 1 Explicit skip). Committed K1 `14f9c43e7` (core, alone) and K3 `3c2a366cd`. Not re-reviewed by the reviewer after the fix round; K3 is reviewed with the feature at the end.
+
+### Chunk K2: core, per-use AP cost override (D-593)
+
+**Built**
+- `miso/Assets/_Project/Core/Systems/AbilitySystem/Effects/Runtime/IAbilityCostOverride.cs` (new, namespace `MISO.Core.Systems.AbilitySystem.Effects`, same shape as `ITargetSelectionRangeProvider`): interface `IAbilityCostOverride.TryGetActionCost(RuntimeAbility ability, out int count)` and the pure static `AbilityCostOverride`:
+  - `TryGetActionCost(ability, out count)` and an overload over a list of effects: the first top-level effect that answers wins; the count is clamped to 0 or more. Nested compound effects are not searched (as `TargetSelectionRange`).
+  - `Charge(ability, usualCount, Action<int> consume, Action recordFree)` (and an effects overload): no answer = `consume(usualCount)`, exactly as before; an answer = `consume(count)`, and when the count is 0 also `recordFree()`.
+  - `PreviewAP(ability)`, `PreviewAP(ability, usualAP)` and an effects overload: the override's count in AP (count times the consumption type's AP, Ineffective = 0) when an effect answers, else the usual value.
+  - Main thread only (Unity null check on the preset); the AI never calls it.
+- `miso/Assets/_Project/Core/Systems/AbilitySystem/Points/Runtime/FreeActionRecord.cs` (new, pure): `RecordFree`, `RecordCharged`, `Clear`, `TakeFreeRevert` (true once after a free action).
+- `miso/Assets/_Project/Core/Interactions/Runtime/FactionControllerBase.cs` (core): in the `TakeActionState` completion, `ConsumeActionCost(apCount);` is replaced by `AbilityCostOverride.Charge(PhaseData.ActiveAbility, apCount, ConsumeActionCost, () => PhaseData.ActiveUnit.APConsumer.RecordFreeConsumption())` plus a comment (`git diff --stat`: 3 insertions, 1 deletion). The virtual `ConsumeActionCost` still does the charging, so `PlayerController.ConsumeActionCost` (reactive interrupt pays FTP and ignores the count) is untouched and still runs. No signature changed. The class stays non-partial (one call, no new logic in the file).
+- `miso/Assets/_Project/Core/Systems/AbilitySystem/Points/Runtime/APConsumer.cs` (core): a `FreeActionRecord` field; `RecordFreeConsumption()` (new public); `Consume` marks the action charged (after its `count <= 0` early return, so a 0 count still records nothing there); `RevertConsumption` returns at once when the last action was free; `ResetToInitial` clears the record. 8 insertions. With no override nobody calls `RecordFreeConsumption`, the record stays false and every path behaves as before.
+- `miso/Assets/_Project/Core/Interactions/Runtime/PlayerController.cs` (core): `OnTargetCellAPPreview` passes `AbilityCostOverride.PreviewAP(ability, apCost)` instead of `apCost` (1 line changed). Without it, hovering a target cell in range would show the usual 1 AP for a free use.
+- `miso/Assets/_Project/Features/UI/Panels/Scripts/AbilitiesBarHUDUI.cs` (not core): the four places that showed `(int)ability.Parameters.apConsumptionType` now show `AbilityCostOverride.PreviewAP(ability)`: `ShowAbilityAPPreview` (what `CombatLevelUIManager.ShowAbilityAPPreview` forwards to), the ability button hover (hovered, and back to the selected one), and the `ShowAPUsagePreview` fallback for a non-positive cost (so a 0 from the cell hover falls back to 0, not 1). Plus `using ...Effects`. 5 insertions, 4 deletions.
+- `miso/Assets/_Project/Core/Systems/AbilitySystem/Effects/Editor/AbilityCostOverrideTests.cs` (new, 13 tests).
+- All files LF; new files without BOM (as their folders); `FactionControllerBase.cs` keeps its BOM.
+
+**Undo: how consumptions are recorded**
+- PerUnit (the game's mode, D-037): `ActionPoints.Consume` stores `_lastPoints` (the points before) and `RevertConsumption` sets the attribute back to it. `APConsumer.Consume(type, 0)` returns early, so after a free use `_lastPoints` would still be the previous action's, and an undo of the free use would refund that earlier action's AP. Shared (dormant): the same with `_lastSharedCost` and `_actionsTaken`.
+- Chosen: skip the revert consistently. A free use records "last action free" on the unit's `APConsumer`; the next `RevertConsumption` gives nothing back and clears it; any real consumption or a turn reset clears it first. No change to `ActionPoints` or `FactionPhaseState.cs`.
+
+**Verified**
+- Compiles: `refresh_unity` (forced, compile requested) + `read_console`: no errors besides the usual three "Objects are trying to be loaded during a domain backup" editor messages.
+- Fixture `MISO.Core.Systems.AbilitySystem.Effects.EditorTests.AbilityCostOverrideTests`: 13/13 passed. Covers: no answering effect charges the usual count and records no free use (also with no effects or no ability); an override of 0 charges 0 and records one free use; 2 charges 2; the first answering effect wins and later ones aren't asked; a negative answer counts as 0; the ability is passed to the effect and its preset's effects are read; the preview shows 1 without an override, the caller's usual AP without an override, 0 and 2 with overrides (also over a hovered cell's cost), 0 for an Ineffective type. On a real per-unit `APConsumer` (3 AP): a free use after a charged one spends nothing and its undo refunds nothing (stays 2, not 3); an override of 2 spends 2; without an override, charge and undo are unchanged; a charged use after a free one is refunded by the undo; a turn reset forgets a free use; the record's own sequence.
+- Full EditMode suite: 2392 total, 2390 passed, 1 failed, 1 skipped. Failure = the known `CycloneSteerTests.LiveSteer_CostsOneAP_OnceATurn_AndIsSeparateFromTheCast` (cooldown 0 on disk, K4). Skip = `AIRegressionTest.Baseline_MatchesCurrentAI` (Explicit). AI regression not run: no AI graph, AI ability or unit prefab touched.
+- `git status` of `miso/` identical before and after the suite (the K2 files plus THJ's `GlobalSettings.asset`, `Lucy_Ability_Steer.asset`, `miso.slnx`); nothing new saved.
+
+**Not verified (needs play)**: nothing implements the interface yet, so nothing changes in play until K4 (the Steer's free first use). The wiring in `FactionControllerBase` and the preview call sites is checked by reading; the helper they call and the `APConsumer` bookkeeping are tested.
+
+**Decisions I made**
+- The preview change sits in `AbilitiesBarHUDUI` (what `CombatLevelUIManager.ShowAbilityAPPreview` forwards to) rather than in `CombatLevelUIManager.cs`, which is unchanged. Same behaviour as the plan's "the UI manager shows the overridden cost". The bar also needed it for the button hover and the 0-cost fallback, and `PlayerController.OnTargetCellAPPreview` for the in-range cell hover; without them the criterion "the AP preview on hover shows the real cost" would fail in K4.
+- The override's count replaces the charge's count; the consumption type still applies (Singular: count = AP). The preview uses the same rule.
+- The charge override also applies to multi-activation abilities (it replaces the distance-based count); the preview does the same.
+- A free use is also recorded during a reactive interrupt (the player's override then pays FTP as before). An undo there then gives back no AP instead of resetting AP to a stale value. It only matters once an override answers during a reactive interrupt, which K4's Steer doesn't plan to.
+- Shared AP mode (dormant): a free use doesn't count towards the per-unit escalation (`_actionsTaken`) and its undo doesn't lower it. If Shared AP ever comes back and a free use should count, that is a two-line change in `APConsumer`.
+
+**Risks and loose ends**
+- Pre-existing, not touched: `ActionPoints.RevertConsumption` sets the main attribute to `_lastPoints`, which includes external AP sources (it could over-refund while an external source holds AP), and a count above 1 records only the last step (an undo of a 2-AP charge refunds 1). Worth a backlog line if multi-AP overrides are ever combined with undo.
+- Pre-existing, not touched: a multi-activation ability at distance 0 gets a count of 0 that records nothing (an undo then refunds the action before). Left as is so K2 changes nothing without an override.
+
+**Files to stage (K2 commit, core, on its own)**
+- `miso/Assets/_Project/Core/Systems/AbilitySystem/Effects/Runtime/IAbilityCostOverride.cs` + `.meta`
+- `miso/Assets/_Project/Core/Systems/AbilitySystem/Points/Runtime/FreeActionRecord.cs` + `.meta`
+- `miso/Assets/_Project/Core/Systems/AbilitySystem/Points/Runtime/APConsumer.cs`
+- `miso/Assets/_Project/Core/Interactions/Runtime/FactionControllerBase.cs`
+- `miso/Assets/_Project/Core/Interactions/Runtime/PlayerController.cs`
+- `miso/Assets/_Project/Features/UI/Panels/Scripts/AbilitiesBarHUDUI.cs`
+- `miso/Assets/_Project/Core/Systems/AbilitySystem/Effects/Editor/AbilityCostOverrideTests.cs` + `.meta`
+
+Core files changed: `FactionControllerBase.cs` (+3/-1), `APConsumer.cs` (+8), `PlayerController.cs` (+1/-1). `CombatLevelUIManager.cs` and `FactionPhaseState.cs` unchanged. New core files: `IAbilityCostOverride.cs`, `FreeActionRecord.cs`. Non-core: `AbilitiesBarHUDUI.cs` (+5/-4), the test file.
+
+Proposed message: `feat(core): an effect can set what one use of its ability costs in AP, a free use is not refunded by an undo, and the AP preview shows that cost`
+
+Not to stage with K2: `GlobalSettings.asset`, `miso.slnx`, `.mcp.json`, `powershell.exe`, `Lucy_Ability_Steer.asset` (goes with K4).
+
+Docs to update (after the play check, with the other hooks): `tech/core-systems.md`. Effects row: `IAbilityCostOverride` + `AbilityCostOverride` (charge in the `FactionControllerBase` TakeAction completion, previews in `PlayerController.OnTargetCellAPPreview` and `AbilitiesBarHUDUI`). AP row: `APConsumer.RecordFreeConsumption` + `FreeActionRecord` (the undo of a free use refunds nothing).
+
+## K2 review (miso-reviewer, 2026-11-20): APPROVE
+
+No must-fix or should-fix. Checked: additive, charge paths (multi-activation, reactive FTP untouched), undo (free, paid-then-free, free-then-paid, turn reset, Closure), per-unit record, Shared mode, previews unchanged without override, AI on the main thread only, LF/BOM kept. Notes: K4 must re-arm the free Steer on undo of a free Steer (not of a paid one) — sent to the K4 implementer; the override also answers for an AI Lucy (harmless, AI never Steers); the walk+attack auto-move preview ignores overrides (no override uses it); `tech/core-systems.md` entry pending (preview change is in `AbilitiesBarHUDUI`, not `CombatLevelUIManager`).
+
+**Coordinator:** committed K2 `9c1cc7705` (core, alone; `AbilitiesBarHUDUI.cs` with it since it needs the helper).
