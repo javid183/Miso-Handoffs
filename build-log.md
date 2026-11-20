@@ -2845,3 +2845,10 @@ Plan `plans/2026-11-19-faster-loop-process.md`, decisions D-575 to D-579.
 **Not verified.** Preview (C3) still shows no pass damage; nothing played. Full suite and review after C5.
 **Findings.** A passed enemy can still be pulled by the closing Whirl (only its hit is skipped): play-check item. The Cyclone relocates before the knocked enemy's end-of-move event, so Watch reads the final board.
 **Status.** Committed `15a107cbd`, not pushed. Next: C3 preview.
+
+## 2026-11-19: Cyclone reset C3, preview (thj/cyclone)
+
+**Built.** `CycloneOutcome.PassHit` and `AllHit()`; the Whirl's `Hit` leaves out passed units; the outcome view gives one damage segment per hit unit (on the ghost when the Whirl pulls a passed unit). Four tests: preview equals execution on the screenshot 1 and 2 layouts, passed-not-pulled and passed-and-pulled segments.
+**Verified.** Compile clean; Cyclone fixtures 319/319.
+**Not verified.** The look in Play.
+**Status.** Committed `774dabef7`, not pushed. Next: C4 wobble removal, C5 texts.

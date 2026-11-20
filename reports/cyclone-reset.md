@@ -68,6 +68,7 @@ Files to stage for C1 (the `.meta` files appear when Unity refreshes; add each n
 
 - C1: 77/77 covering fixtures (coordinator, Unity MCP); committed `d9cb1f2ce`.
 - C2: 323/323 covering fixtures (implementer, Unity MCP); coordinator checked the 36 paths, no CRLF, no private IDs; committed `15a107cbd`. Feature review after C5.
+- C3: 319/319 Cyclone fixtures (implementer, Unity MCP); coordinator checked 4 files, no CRLF, no private IDs; committed `774dabef7`.
 
 ## Save reset
 
@@ -173,3 +174,25 @@ Files to stage for C2:
 - Deleted (stage the deletions): `Cyclone/CycloneCarryPlanner.cs` + `.meta`, `Editor/CycloneSteerTests.Carry.cs` + `.meta`
 - 36 paths in all (32 tracked changes incl. 4 deletions, plus 4 new). Leave out THJ's `GlobalSettings.asset`, `miso.slnx`, `.mcp.json`, `powershell.exe`.
 - Suggested message: "feat(lucy): the Steer glides in a straight line through enemies, hitting each once, and knocks the one where it stops; the cast on an enemy uses the same knock; the carry is gone"
+
+### Chunk 3: Preview (pass hits, one damage segment per enemy)
+
+Built (under `miso/Assets/_Project/Features/Player/Lucy/Scripts/`, LF, no BOM):
+
+- `Cyclone/CycloneOutcome.cs`: new `PassHit` (units the Steer passes and hits, path order, each once; empty for a cast), `Hit` stays the Whirl's, new `AllHit()` (passed first, then Whirl hits not already passed). `ForSteer` fills `PassHit` from `plan.Passed`; the Whirl's `Hit` drops passed units (a passed unit can still be pulled: its ghost moves, no second segment). Moves = the knock only, Whirl at `End` with `Start` vacated: already so from C2.
+- `Cyclone/CycloneOutcomeView.cs`: the damage map is fed from `outcome.AllHit()` (a dictionary, so one segment per unit); a passed unit has no ghost unless the Whirl pulls it, and then its bar rides its ghost (existing panel move). Comments updated.
+- `Cyclone/CycloneSteerPreview.cs`: comments only. Path arrows from `plan.Path` were already done in C2.
+- `Editor/CycloneSteerTests.Preview.cs`: the knock ghost test was already rewritten in C2 and kept. New tests (4): row of Claws (screenshot 1) and Claw above with the family around (screenshot 2), each previewing then executing and comparing pass set, knock landing, every ghost's cell and the enemies hit (helper `PreviewThenExecute`); a passed enemy that isn't pulled has no ghost, no tether and one segment where it stands; a passed-and-pulled enemy has one segment on its ghost.
+
+Verified: Unity MCP forced compile, console 0 errors; regex group `MISO.Core.Features.Bergsons.EditorTests.Cyclone.*` (covers CycloneSteerTests all partials, CyclonePreviewTests, CycloneCastOnEnemyTests, CycloneSteerPlannerTests and the other Cyclone fixtures): 319/319 passed, 0 failed (C2 had 315 in the same classes, plus the 4 new). Not run: full suite, AI regression test (not asked).
+
+Not verified: Play mode (how the bars and ghosts look for a passed and pulled enemy; the bar offset uses the existing ghost panel move).
+
+Decisions: `AllHit()` is a method (an enumerable), not a stored list; `SteerPreview_ACellPastABlockedFront...` was already deleted in C2.
+
+Files to stage for C3 (no new files, so no metas):
+- `miso/Assets/_Project/Features/Player/Lucy/Scripts/Cyclone/CycloneOutcome.cs`
+- `miso/Assets/_Project/Features/Player/Lucy/Scripts/Cyclone/CycloneOutcomeView.cs`
+- `miso/Assets/_Project/Features/Player/Lucy/Scripts/Cyclone/CycloneSteerPreview.cs`
+- `miso/Assets/_Project/Features/Player/Lucy/Scripts/Editor/CycloneSteerTests.Preview.cs`
+Suggested message: "feat(lucy): the Steer preview shows one damage segment per enemy it hits on the way or by the Whirl, and what it shows is what happens"
