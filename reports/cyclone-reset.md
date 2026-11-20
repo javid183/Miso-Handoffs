@@ -379,3 +379,69 @@ Leave out THJ's `GlobalSettings.asset`, `miso.slnx`, `.mcp.json`, `powershell.ex
 3. Steer onto a Claw after a turn: it is knocked onward along the last step; its ghost bar shows two hits (knock + Whirl). Click: the hit pops as it lands, then the Whirl hits it again.
 4. Cast the Cyclone on an enemy: its bar shows two hits; on cast it takes one as it lands, then the Whirl's.
 5. End the turn with the Cyclone out: enemies walk onto its arms when that is their best cell, then get pulled and hit at the end of their turn.
+
+## Play bugs 2026-11-20
+
+THJ played `LevelE1-C1` (the Console of that session: "Sequence Started: @LevelE1-C1_Start..."). Screenshot `playtests/img/2026-11-20-cyclone-4-no-steer-no-cast-preview.webp`. The Unity MCP was reachable for this round: compile, Console and EditMode runs went through it; no Play session was started.
+
+### 1. No Steer after the cast
+
+**Cause: level data, not code, and not a reset commit.** The Cyclone button only swaps to a Steer that is in Lucy's own kit (`CycloneButtonSwap.FindSteer` over `AbilityOrchestrator.Abilities`). The Steer is slot 9 of `Unit_Lucy.prefab`'s kit (added 2026-11-16, `22ecc78d8`). Eight level prefabs give their Lucy a kit of their own by overriding the kit's size (2 to 7 slots, set in October), so the kit ends before slot 9: the cast is in it, the Steer is not, and the button keeps showing the cast, greyed, with the cast's own cooldown (4, so the "3" in the screenshot is the round after the cast). Evidence: the registry entry left over from THJ's session (domain reload is off; it is cleared at the next Play), read in the editor: Lucy's runtime kit was `PrimaryAttack, Walk, Cyclone_Ability, Teleport` only; the Cyclone was alive, not whirling or steering, no pending pulls, 2 pips, so `CanBeSteered` and `HasLiveFor` were both true. `LevelE1-C1.prefab` overrides only `abilityOrchestrator.abilities.Array.size: 4` on Lucy. It failed the same way before the reset (`4b84d47f1` has the same level data and slot). Greybox levels (full kit) were never affected, which is why earlier rounds saw the Steer.
+
+Levels whose Lucy has the cast and no Steer (from the repro test): `Generic Levels/Easy/E1/LevelE1-C1`, `LevelE1-C2`, `Generic Levels/FamilyLevels/M2/LevelLucyJohn-C2`, `LevelLucyJohn-C3`, `Generic Levels/FamilyLevels/MarkIntro/LevelMarkIntro-C1`, `LevelMarkIntro-C3`, `Level1/Level1-C2`, `Level1-C4`.
+
+**Fix: the same pattern as Linda's Encore (`EncoreKitTool`, `55cde5ce5`).** New editor tool `Tools > Levels > Lucy > Add Steer To Custom Kits` (`CycloneSteerKitTool`). For every level prefab whose Lucy kit has the Cyclone cast and no Steer, it appends the Steer slot copied from `Unit_Lucy`'s default kit: animation `Cyclone`, activation frame 10, the `PlaySFX A_SFX_Lucy_Cyclone` event and the stat sources. The event's target is an FX runner inside `Unit_Lucy`, so the tool points it at the same object of that level's Lucy. Kits without the cast and kits that already have the Steer are left alone, so a second run changes nothing.
+
+**The tool has NOT been run.** The permission classifier refused running it from `execute_code`, because it rewrites 8 level prefabs, so the level prefabs are unchanged. Next step: THJ (or the coordinator, with THJ's OK) runs `Tools > Levels > Lucy > Add Steer To Custom Kits` once in the open editor. The dialog should say "Steer added to 8 kit(s). 0 level(s) still lack it". Then re-run `CycloneSteerKitTests`. Expected diff, per level prefab: Lucy's kit size +1 and the new slot's overrides (as in the Encore commit, roughly 10 to 60 YAML lines each).
+
+No game code changed. Read and found fine: the swap, `CheckActivationFeasibility`, `CanBeSteered`, `NotifyReadyChanged`/`ReadyChanged`, the `IsSteering`/`IsWhirling` flags after the cast Whirl and the cast knock, and the `ShoveThenCast` path.
+
+**Tests.** New `CycloneSteerKitTests.EveryLevelThatGivesLucyTheCycloneCast_GivesHerTheSteer_SetUpAsInHerDefaultKit` scans every level prefab with a Lucy. Each kit with the cast must have the Steer, with the default slot's animation, activation frame, events and stat sources, and a sound-event target inside that level. It fails now on the 8 levels above (the repro). Its slot checks already pass on the levels that inherit the full kit. Run: `MISO.Core.Features.Bergsons.EditorTests.Cyclone.*` + `MasherCounterCycloneTests` + `MasherCounterWhirlTests` + `EnemyAlertForcedMoveTests` = 330/331. The one failure is this repro, which passes once the tool has run. Whole EditMode suite not run (no game code or core system touched). `AIRegressionTest` not run (no AI graph, AI ability or unit prefab changed; the tool touches level prefabs, not unit prefabs).
+
+**Files to stage, commit A (tool and test):**
+- `miso/Assets/_Project/Features/Player/Lucy/Scripts/Editor/CycloneSteerKitTool.cs`
+- `miso/Assets/_Project/Features/Player/Lucy/Scripts/Editor/CycloneSteerKitTool.cs.meta`
+- `miso/Assets/_Project/Features/Player/Lucy/Scripts/Editor/CycloneSteerKitTests.cs`
+- `miso/Assets/_Project/Features/Player/Lucy/Scripts/Editor/CycloneSteerKitTests.cs.meta`
+
+Message: "feat(levels): a tool that puts the Steer into every level kit of Lucy's that has the Cyclone, and a test that checks those levels"
+
+**Commit B, after the tool has run.** It gets its own commit so it can be reverted alone. It holds the 8 level prefabs listed above; `git status` will show exactly which, and nothing else should change.
+
+Message: "feat(levels): Lucy's Steer in the 8 levels that give her a kit of her own with the Cyclone"
+
+### 2. Cast preview shows no Whirl damage
+
+**Not reproduced. Cause not found from code. No change made.**
+
+For a cast on an empty cell, the preview takes the same path before and after the reset:
+- `ForCast` with a null knock never calls `diesOfOneHit` (`KnockedUnit` returns first).
+- It plans the Whirl on `cell.OccupantEntity`, exactly as the pre-reset `ForCast(..., shove: null)` did.
+- `KnockHit` is null and `PassHit` is empty, so `AllHit()` is the Whirl's `Hit` and `HitCount` is 1 for each of them.
+- `CycloneOutcomeView.Show` multiplies one hit's damage by 1.
+
+`CycloneHitPreview.DamageOn` is the same call the Steer preview makes: the prefab's hit, Lucy as owner, the cast's `RuntimeAbility` as stats, which is also the live Cyclone's stat context.
+
+The existing EditMode tests (`CastPreview_GhostsForPulledEnemies_...`) show the planner and the view draw a segment for an enemy beside an empty cell. The real `CycloneCastPreview.Preview` path can't be driven with real damage in EditMode: test units have no health attribute, and `_cast` must be a live `RuntimeAbility`. So no failing repro test could be written.
+
+Also checked and ruled out:
+- The generic hover preview (`PlayerController.ShowDamagePreview`): it runs when the hover event fires, and ours is drawn again every `LateUpdate`.
+- The Linda-Lucy Duo and the Bloom/Catch presenters: they only run for other aims.
+- The info panel's mode queue and the grid's hover event order.
+- E1-C1's enemies: their info panels are wired.
+- E1-C1's Lucy cast slot: inherited unchanged; only the kit size is overridden.
+
+The Console of THJ's session has no exception.
+
+What would settle it (needs THJ's OK for a Play session, or THJ's own look): in E1-C1, aim the cast at an empty cell beside a Claw and note whether the dimmed aim cross is drawn at the cursor.
+- Cross drawn but no segment: the damage comes out as 0, or something hides it after our `LateUpdate`. Next step: log `HitDamage` and `outcome.Hit.Count` in `CycloneCastPreview.Preview`.
+- No cross either: the preview never runs. Either it isn't attached to that level's bus, `IsAiming()` is false, or the cell isn't in `_range`.
+
+Also worth one check in a Greybox level, to see whether it happens in E1-C1 only.
+
+### Risks and loose ends (play bugs)
+
+- The repro test for bug 1 stays red until the tool has run. Commit A and commit B together, or accept the red test in between.
+- The dev scenes `Scenes/DevScenes/TestLevel.unity`, `SampleScene 1.unity` and `Scenes/RosScene.unity` also hold a Lucy. The tool and the test only look at level prefabs under `Content/Levels`.
+- Any new level that overrides Lucy's kit size will drop the Steer again; the test catches it.
+- `AbilitiesBarHUDUI.Populate` asks the level ability lock about the cast, not about the Steer shown in its place (`HiddenFromBar(ability)` gets the original ability). Harmless today; noted only.
