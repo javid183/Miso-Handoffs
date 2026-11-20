@@ -2859,3 +2859,11 @@ Plan `plans/2026-11-19-faster-loop-process.md`, decisions D-575 to D-579.
 **Verified.** Full EditMode after C5: 2345 total, 2344 passed, 0 failed, 1 skipped (Explicit AI test), 147 s. Feature review APPROVE (`reports/cyclone-reset-review.md`), five should-fixes applied; Cyclone + Masher + enemy-alert fixtures 323/323 after.
 **Not verified.** Nothing played. Assumption from the lethal-pass fix: a dead unit's cell is empty before the Whirl (play-check item 23).
 **Status.** Built and committed, not pushed. Waiting on THJ's play check (`playtests/2026-11-19-cyclone-reset-play-check.md`).
+
+## 2026-11-20: Cyclone reset addendum, free route, knock damage, no avoidance (thj/cyclone)
+
+**Why.** THJ (before playing): straight lines limit the Steer drastically, the knock should hurt, enemies shouldn't avoid the cross; "the Cyclone is feeling useless". D-586 to D-588.
+**Built.** R1 `e998a941e` free route (shortest route that can stop there, most enemies passed, straight before turning; knock onward along the last step); R2 `f573ab774` the knock deals a full Cyclone hit on the Steer and the cast, preview sums knock + Whirl; R3 `3b566e5bf` the Cyclone is no longer AI end-of-turn danger; texts `b93f38126`.
+**Verified.** Covering fixtures 330/330; full EditMode 2353 total, 2352 passed, 1 skipped (Explicit AI test), 147 s; AI regression run by name: 43 failures, unchanged. Review APPROVE (two comment rewraps left as should-fix).
+**Not verified.** Nothing played.
+**Status.** Committed, not pushed. Waiting on THJ's play check (`playtests/2026-11-19-cyclone-reset-play-check.md`, updated).

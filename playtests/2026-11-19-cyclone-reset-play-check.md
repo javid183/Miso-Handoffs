@@ -55,4 +55,4 @@ Branch `thj/cyclone`, commits `d9cb1f2ce` to `3b566e5bf` (plan `plans/2026-11-19
 
 ## Added after the review
 
-23. Pass-kill a Claw that sits behind the stop on the same line, with another enemy behind it: the preview shows no pull ghost for the dying Claw, only its damage with a skull; the enemy behind is pulled as shown.
+23. Pass-kill a Claw that sits behind the stop on the same line, with another enemy behind it: the preview shows no pull ghost for the dying Claw, only its damage with a skull; the enemy behind is pulled as shown. Same for a knock that kills, and a knock onto a hazard where hazard plus hit kills (the preview ignores the hazard's damage: rare mismatch).

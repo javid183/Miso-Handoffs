@@ -23,3 +23,15 @@ No must-fix. Planner, preview and execution share one rule; cleanup on abort cov
 - Pre-existing, not regressions: Cyclone disabled mid-Steer without destroy leaves `IsSteering` true (same as `IsWhirling` before); a failed landing after the fling raises no end-of-move after the start-of-move.
 - No AI content changed; golden master unaffected.
 - Bookkeeping: report header out of date; `tech/core-systems.md` line 112 still lists `CycloneWobble` and `CycloneCarryPlanner`.
+
+---
+
+# Review 2: addendum (b62e2a7fd..3b566e5bf: free route, knock damage, no avoidance)
+
+Reviewer: miso-reviewer, 2026-11-20. **Verdict: APPROVE.** No must-fix.
+
+Should fix (cosmetic, ride a later commit): `CycloneEntity.Steer.cs:218` `HitOnce` comment is one 163-character line; `AEffectCycloneSteer.cs:15` header line 128 characters. Rewrap both.
+
+Checked OK: route search (no revisits, steps counted, shorter path resets, only routes whose stop holds compete, tie-break as specified, `Direction` = last step, safety net uses it, knock landing never a route cell, ~52 prefixes, plain data only); planner/preview/execution share `PlanFor`, the glide walks `plan.Path`; knock hit through the same `Hit`/`Report` after relocate and before `Landed` (a kill skips `Landed`), cast uses the same static helpers before the spawn; preview `HitCount` 2 for the knocked enemy, lethal knock removed from the Whirl board; R3 touches no core file, remaining AI tests meaningful, regression 43 unchanged; LF, no BOM, no statics, no private IDs.
+
+Notes: the cast's knock hit lands even if the cast is then refused (only possible if the hit's reactions fill the cast cell; accepted). Preview lethal check for the knocked enemy ignores a landing hazard's damage (rare; play-check item 23). R1's turning-route preview test and two header rewrites sit in the R2 commit; per-commit test state reasoned, not run (planner identical at R1 and HEAD).
