@@ -56,3 +56,10 @@ Branch `thj/cyclone`, commits `d9cb1f2ce` to `3b566e5bf` (plan `plans/2026-11-19
 ## Added after the review
 
 23. Pass-kill a Claw that sits behind the stop on the same line, with another enemy behind it: the preview shows no pull ghost for the dying Claw, only its damage with a skull; the enemy behind is pulled as shown. Same for a knock that kills, and a knock onto a hazard where hazard plus hit kills (the preview ignores the hazard's damage: rare mismatch).
+
+## THJ's play notes, 2026-11-20
+
+Screenshot `playtests/img/2026-11-20-cyclone-4-no-steer-no-cast-preview.webp`.
+
+- **Bug:** after summoning the Cyclone, it can't be Steered (Lucy's slot 3 shows the Cyclone greyed with a 3, no Steer).
+- **Bug:** casting on an empty cell next to enemies, the cast preview doesn't show the cast Whirl's damage.
