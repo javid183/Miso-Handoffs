@@ -210,3 +210,34 @@ Docs to update (after the play check, with the other hooks): `tech/core-systems.
 No must-fix or should-fix. Checked: additive, charge paths (multi-activation, reactive FTP untouched), undo (free, paid-then-free, free-then-paid, turn reset, Closure), per-unit record, Shared mode, previews unchanged without override, AI on the main thread only, LF/BOM kept. Notes: K4 must re-arm the free Steer on undo of a free Steer (not of a paid one) — sent to the K4 implementer; the override also answers for an AI Lucy (harmless, AI never Steers); the walk+attack auto-move preview ignores overrides (no override uses it); `tech/core-systems.md` entry pending (preview change is in `AbilitiesBarHUDUI`, not `CombatLevelUIManager`).
 
 **Coordinator:** committed K2 `9c1cc7705` (core, alone; `AbilitiesBarHUDUI.cs` with it since it needs the helper).
+
+### Chunk K4: cooldown 0 and the free first Steer (D-591)
+
+**Built** (Lucy files LF, no BOM)
+- `Features/Player/Lucy/Scripts/Cyclone/AEffectCycloneSteer.cs`: implements `IAbilityCostOverride`; serialized `firstSteerFreeEachTurn` (default true). `TryGetActionCost` answers 0 when on and Lucy's Cyclone (found through `ability.Owner`) has not used the free Steer this turn, else no answer (1 AP). `TrackFreeSteer(ability, cyclone, reversionContext)` hooks `ability.OnCompletionPerRun` (runs after the action charge) to mark the free Steer used, so the preview and the charge both read "free" until the Steer completes. The effect now overrides both `ApplyUnguarded` forms (4-arg and with `ReversionContext`) through one `Steer` method (same behaviour); the ability comes from `statCtx` (the RuntimeAbility).
+- `Cyclone/CycloneEntity.FreeSteer.cs` (new partial): `FreeSteerUsed`, `MarkFreeSteerUsed`, `RearmFreeSteer`, `ResetFreeSteer`. `CycloneEntity.PhaseTick` calls `ResetFreeSteer()` (one line, Lucy's phase start). State is on the Cyclone: no statics.
+- Undo (coordinator's note): a free Steer's reversion action re-arms the free Steer; a paid (second) Steer's undo leaves it used. Today the Steer effect asset is `revertible: 0`, so the game never undoes a Steer; the logic is in place and tested anyway.
+- Only Lucy's own Steer ability sets the flag (the hook is in the effect's Apply); `CycloneEntity.TrySteer`/`SteerRoutine` do not, so Mark's Command steering later neither uses nor resets it. AI: the override is main-thread only and nothing depends on it (the AI never Steers).
+- Assets: `Lucy_Ability_Steer.asset` description set to the new text (cooldown 0 already there); `Lucy_Ability_Steer_Effect_Steer.asset` got `firstSteerFreeEachTurn: 1`. `CycloneSteerSetup.cs`: cooldown 0, same description, comments.
+- Tests: `CycloneSteerTests.cs` live test renamed `LiveSteer_CostsOneAP_HasNoCooldown_FirstIsFree_AndIsSeparateFromTheCast` (cooldown 0, setup constant agrees, description, effect flag). New `CycloneSteerTests.FreeSteer.cs` (+ meta), 7 tests: free then 1 AP then free next turn (real APConsumer + preview), readable before the charge and flips only after, setting off = always 1 AP, refused Steer keeps the free one, started Steer hooks completion, a Steer not made by Lucy's ability (Cyclone routine, other caster) never uses it, undo of free re-arms / undo of paid keeps used.
+
+**Verified**: compiles clean. `MISO.Core.Features.Bergsons.EditorTests` (all) + `AbilityCostOverrideTests`: 896 run, 896 passed (CycloneSteerTests alone 70/70). No full suite, no AIRegressionTest (no AI content changed).
+
+**Not verified (play check)**: the real flow (free AP display on the bar, charge of 0 AP, cancel keeps free); `ApplyUnguarded` success path is tested in edit mode only up to starting the Steer.
+
+**Loose ends**: a Cyclone re-cast after a free Steer is a new entity, so the free Steer is available again that turn. Whether the Steer can be picked with 0 AP left (a free Steer with no AP) was not checked; the ability bar's availability rule may still need 1 AP.
+
+**Files to stage (K4 commit)**
+- `miso/Assets/_Project/Features/Player/Lucy/Scripts/Cyclone/AEffectCycloneSteer.cs`
+- `miso/Assets/_Project/Features/Player/Lucy/Scripts/Cyclone/CycloneEntity.cs`
+- `miso/Assets/_Project/Features/Player/Lucy/Scripts/Cyclone/CycloneEntity.FreeSteer.cs` + `.meta`
+- `miso/Assets/_Project/Features/Player/Lucy/Scripts/Editor/CycloneSteerSetup.cs`
+- `miso/Assets/_Project/Features/Player/Lucy/Scripts/Editor/CycloneSteerTests.cs`
+- `miso/Assets/_Project/Features/Player/Lucy/Scripts/Editor/CycloneSteerTests.FreeSteer.cs` + `.meta`
+- `miso/Assets/_Project/Resources/UnitSpecific/Player/Lucy/Abilities/Cyclone/Lucy_Ability_Steer.asset`
+- `miso/Assets/_Project/Resources/UnitSpecific/Player/Lucy/Abilities/Cyclone/Lucy_Ability_Steer_Effect_Steer.asset`
+
+Proposed message: `feat(lucy): the Steer has no cooldown and the first Steer each turn is free, with a setting on the effect`
+Not to stage: `GlobalSettings.asset`, `miso.slnx`, `.mcp.json`, `powershell.exe`.
+
+**Coordinator:** K4 committed `08074905e` (896/896 in the Bergsons group + `AbilityCostOverrideTests`; no full suite, no core). Open for play: the bar's AP display, a real 0 AP charge; whether the Steer can be picked with 0 AP left (unit selection still needs AP > 0, as planned); a re-cast Cyclone after a free Steer gets a new free Steer that turn (rare: the cast has cooldown 4).
