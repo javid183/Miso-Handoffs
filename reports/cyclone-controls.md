@@ -473,3 +473,13 @@ Checked: line endings and BOMs as at HEAD on every file (CRLF + BOM where they w
 - `9ff51d7dd` feat(lucy): Mark's Command steers the Cyclone (13 files, +630/-12).
 - `5ee450844` fix(core): K5 follow-up, grid un-hover and 3 tests (3 files, +92/-1).
 Left unstaged (THJ's): `GlobalSettings.asset`, `miso.slnx`. Feature review dispatched (K3 `3c2a366cd`, K4 `08074905e`, the three above).
+
+## Feature review (K3, K4, log, K6, K5 follow-up), 2026-11-20
+
+Reviewer: miso-reviewer, saved by the coordinator. **Verdict: APPROVE.** No must-fix.
+
+Should fix (small, ride the next chunk):
+1. `CycloneCrossView.cs:169` and `:195-202`: the Done beat clears `_beatActive` while its `ScaleTo(..., 1f, BurstTime)` still runs in `_scaleRoutine`; a pulse started in that window (Steer picked right after a Whirl) runs alongside it, both writing `_swellTarget.localScale`. Visual only. Fix: `PlayPulse` treats `_scaleRoutine != null` as a beat on (or stops it first).
+2. `CycloneSteerTests.Command.cs`: no test puts the real `Mark_Ability_Attack_Command.asset` through the controller's legality checks (`IsLegalAbilityTarget` / `ApplyCondition`: Unmovable tag query, the three effects' `CheckTargetSelectionCondition`, Mark's range) with the Cyclone as first pick, nor a second pick onto an enemy-occupied stop (Cell). Both pass by reading; one test with the K5 controller harness would cover it.
+
+Notes: same planner for range, preview and run; Lucy's free Steer, cooldown and AP untouched by Mark's steer; Mark pays through the normal charge; free Steer marked only after the AP charge, cleared each run and phase tick; preview order on enter/undo correct; preview listens only to `gridCellHovered`; `IsTargetableBy` allocation-free, main thread only (Unity null checks; all callers on the main thread, AI never reaches it). Weak analysis confirmed: the Weak compound (CellOccupant, Enemy) lands on the stop's enemy, before the Steer starts (list order), even if the steer is then refused; it is Stat_DMG x0.6 for 2 turns (the enemy deals less, the Steer doesn't hit harder). Test-only branch in `CycloneSteerPreview.cs:179` (`!player || ...`), harmless. K5 follow-up needs nothing more (its test calls the helpers by reflection). John's guard also forgets a unit hovered before when hovering John or a non-unit: a fix. Conventions OK: no new statics, line endings and BOMs as before, no private IDs, partials, metas with assets, commit order right.
