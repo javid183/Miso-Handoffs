@@ -84,7 +84,7 @@ Commits `14f9c43e7` to `5ee450844` (plan `plans/2026-11-20-cyclone-controls-tech
 32. Execute: the same Steer and Whirl as Lucy's. Mark spends his 1 AP and the Command goes on its cooldown. Lucy's AP, her free Steer and the Steer's state are untouched (she can still Steer free after).
 33. The enemy on the stop cell turns to face Mark before it's knocked. Harmless, but does it look odd?
 34. John's shield dash: hover a unit with Mark's Command, then pick the Cyclone instead. No leftover dash preview.
-35. **Your call (Weak):** with Mark's Weak upgrade owned, steering onto an enemy that gets knocked also makes that enemy Weak (the Cyclone itself never gets it). Keep it as a bonus, or remove it?
+35. Weak (kept, D-594): with Mark's Weak upgrade owned, steering onto an enemy that gets knocked also makes that enemy Weak; the Cyclone itself never gets it.
 
 **Combat log**
 36. Lucy's Steer: "Steer · Lucy: hit N on the way, knocked 1 and hit it". Mark's: "Steer · Mark: steered Lucy's Cyclone, hit N on the way, knocked ...". Cast on an enemy: "Knock · Lucy: knocked 1 and hit it", then the Whirl line. A free Steer isn't marked, because the log shows no AP.
