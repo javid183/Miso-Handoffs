@@ -483,3 +483,31 @@ Should fix (small, ride the next chunk):
 2. `CycloneSteerTests.Command.cs`: no test puts the real `Mark_Ability_Attack_Command.asset` through the controller's legality checks (`IsLegalAbilityTarget` / `ApplyCondition`: Unmovable tag query, the three effects' `CheckTargetSelectionCondition`, Mark's range) with the Cyclone as first pick, nor a second pick onto an enemy-occupied stop (Cell). Both pass by reading; one test with the K5 controller harness would cover it.
 
 Notes: same planner for range, preview and run; Lucy's free Steer, cooldown and AP untouched by Mark's steer; Mark pays through the normal charge; free Steer marked only after the AP charge, cleared each run and phase tick; preview order on enter/undo correct; preview listens only to `gridCellHovered`; `IsTargetableBy` allocation-free, main thread only (Unity null checks; all callers on the main thread, AI never reaches it). Weak analysis confirmed: the Weak compound (CellOccupant, Enemy) lands on the stop's enemy, before the Steer starts (list order), even if the steer is then refused; it is Stat_DMG x0.6 for 2 turns (the enemy deals less, the Steer doesn't hit harder). Test-only branch in `CycloneSteerPreview.cs:179` (`!player || ...`), harmless. K5 follow-up needs nothing more (its test calls the helpers by reflection). John's guard also forgets a unit hovered before when hovering John or a non-unit: a fix. Conventions OK: no new statics, line endings and BOMs as before, no private IDs, partials, metas with assets, commit order right.
+
+### Chunk S1: review should-fixes (2026-11-21)
+
+**Changed**
+- `miso/Assets/_Project/Features/Player/Lucy/Scripts/Cyclone/CycloneCrossView.cs`: `PlayPulse` now counts a running `_scaleRoutine` as a beat still on (`beatOn = _beatActive || _scaleRoutine != null || owner whirling`), so a Steer picked during the Done beat's scale-back plays no pulse. Chosen over stop-and-finish: the scale-back is the only routine writing the scale, it ends at `_swellBaseScale` by itself, and the pulse is a 0.3 s cue that is not worth fighting the beat for. Scale at rest is the base scale. Doc comment updated. No other behaviour change.
+- `.../Scripts/Editor/CycloneClickTests.cs`: +1 test `CrossView_SkipsThePulse_WhileTheBeatsScaleBackStillRuns` (puts a live coroutine in `_scaleRoutine` by reflection; no pulse; plays again once cleared).
+- `.../Scripts/Editor/CycloneSteerTests.CommandLegality.cs` (new partial + `.meta`, LF, no BOM): 2 tests with the real `Mark_Ability_Attack_Command.asset` (loaded by `CommandPath`), a real `FactionControllerBase` built as in the planted-target tests:
+  - `MarksCommandAsset_TakesTheCycloneAsItsFirstPick_ThroughTheControllersChecks`: `IsLegalAbilityTarget(cyclone cell)` true (the asset's tag query, the three effects' `CheckTargetSelectionCondition`, range); false once the Cyclone carries the Unmovable tag; false for a Mark out of range; then `SetObject` makes the Cyclone the picked entity and `ApplyCondition` accepts.
+  - `MarksCommandAsset_TakesAStopCellWithAnEnemyOnIt_AsTheSecondPick`: after the Cyclone pick, the range is the Cyclone's own next-pick cells; an enemy-occupied stop is a legal second pick and `ApplyCondition` accepts it.
+
+**Criteria**
+- (a) Met by the guard; covered by the new view test (the real Done/scale-back timing needs Play to see, EditMode does not advance coroutines).
+- (b) Met. The Unmovable and out-of-range refusals inside the first test prove the asset's tag query and the range check bite; a stop refused by the asset's effects or the range would fail the second test.
+
+**Tests**: `CycloneSteerTests` + `CycloneClickTests` fixtures: 98 run, 98 passed, 0 failed (via Unity MCP, editor open). Console: 0 errors. Full suite not run (not asked).
+
+**Decisions / loose ends**
+- Mark's range comes from `Stat_RANGE` and Mark's AP; edit mode has neither (`ComputeAbilityRangeCells` throws on the missing AP consumer). The first pick's range is therefore stood in by the cells within 4 steps of Mark (`StandInRange`); the controller's own range check runs on them. The asset's radius formula itself is not tested.
+- Edit-mode entities have no tag set; the tests give the Cyclone and cells an empty one (the real Cyclone is assumed not to carry the Unmovable tag; no prefab file names `CycloneEntity`).
+- First attempt hit a compile error from a missing `using`; fixed before the passing run.
+
+**Files**: the three above (+ `CycloneSteerTests.CommandLegality.cs.meta`). THJ's uncommitted files untouched.
+
+**Proposed commit** (one): `fix(lucy): a Steer picked while the Whirl's scale-back runs no longer pulses over it, and Mark's real Command asset is tested through the controller's checks for the Cyclone and an enemy-occupied stop`
+
+### Coordinator diff read (S1, 2026-11-21)
+
+Read the diff (size S, not core, no reviewer per D-575). `PlayPulse` gating on `_scaleRoutine` is correct: `ScaleRoutine` nulls it at the end, and the pulse doesn't use `_scaleRoutine` itself. Checked `Cyclone.prefab`: `tagSet.tagEntries: []`, so the real Cyclone doesn't carry Unmovable and the test's empty tag set matches it. Line endings and BOM: all four files BOM + LF, the same as the other Cyclone files at HEAD. Loose end (already there before S1, the line 185 guard has it too): if the view were disabled during a scale-back, `_scaleRoutine` would stay set and the pulse would stay off; the view lives and dies with its Cyclone, so it's left as is. Re-run after the CRLF→LF conversion sent to the verifier.
