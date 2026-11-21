@@ -1,15 +1,28 @@
 # Report: Cyclone controls (click to Steer, Steer pulse, free first Steer, Mark's Command steers)
 
 Plan: plans/2026-11-20-cyclone-controls-tech.md    Agent: miso-implementer    Branch: thj/cyclone
-Outcome: partial (K1 and K3 committed; K2 built, waiting for review; K4 to K6 to come)
+Outcome: done in code, all committed (K1 to K5; then the combat log `f6a38250f`, K6 `9ff51d7dd`, the K5 follow-up `5ee450844`). Waiting for the feature review (K3, K4, K6, the log, the follow-up) and THJ's play check. One open question on the Command's Weak (see Needs THJ).
 
 ## What changed
 
-- See the chunk blocks below. Filled for the whole feature on the last chunk.
+- K1 (core): planted entities can take a player's click (`IClickablePlantedEntity`, `PlantedClickRules`, one line in `PlayerController.OnMouseClick`).
+- K2 (core): an effect can set what one use costs in AP (`IAbilityCostOverride`, `AbilityCostOverride`, free-use record in `APConsumer`), previews show it.
+- K3: clicking the Cyclone selects Lucy and opens the Steer; the Cyclone pulses when the Steer is picked.
+- K4: Steer cooldown 0, first Steer each turn free (checkbox on the effect).
+- K5 (core): a planted entity can be an ability's first target where a unit is taken, give the next pick's cells, and show as hovered.
+- K6: Mark's Command can steer the Cyclone (`AEffectCommandSteersCyclone`, `CycloneEntity.Command.cs`, the preview, Mark's Command asset and description, John's dash preview guard).
+- Combat log: the Steer line counts the knock's hit and names who steered (Mark: "steered Lucy's Cyclone, ..."); the cast on an enemy logs "Knock · Lucy: knocked 1 and hit it".
+- K5 follow-up (core): the grid un-hovers the planted entity it reported even after its pick moved on; two more controller tests (range, tag query).
 
 ## Acceptance criteria
 
-Filled on the last chunk. K1 only adds the core hook; no acceptance criterion is visible in play until K3.
+- [x] Click on the Cyclone selects Lucy and opens the Steer when usable: K3, rule tested (`CycloneClickTests`); the real click needs the play check.
+- [x] An illegal click in another ability's target selection goes to the Cyclone hook, a legal one keeps priority: K1 rule tested (`PlantedClickRulesTests`); play check.
+- [x] Entering the Steer's target selection pulses once, no stacking: K3 tests; visible pulse needs the play check.
+- [x] Steer cooldown 0, first Steer each family turn free, checkbox, AP preview: K4 tests (`CycloneSteerTests.FreeSteer.cs`) and K2 tests; bar display needs the play check.
+- [x] Mark's Command picks the Cyclone, second step = the Steer's stops, preview, same Steer credited to Lucy's cast, Lucy's Steer cooldown/free Steer/AP untouched: K6 tests (`CycloneSteerTests.Command.cs`, 9 tests). Mark pays his own Command: the Command's preset keeps 1 AP / cooldown 1 and the effect overrides no cost (asset test); the real charge is the normal ability flow (play check). "Command's Weak doesn't apply to the Cyclone": met for the Cyclone itself (test), but see Needs THJ for the enemy on the stop cell.
+- [x] AI-controlled Lucy or Mark never uses any of this: the Steer refuses AI Lucy (K4 test), the Cyclone refuses an AI-controlled commander (K6 test); AI regression 43 failures, unchanged.
+- [x] All EditMode tests pass: full suite 2426 total, 2425 passed, 0 failed, 1 skipped (`AIRegressionTest.Baseline_MatchesCurrentAI`, Explicit), after K6, the log check and the K5 follow-up.
 
 ## Chunks
 
@@ -64,23 +77,33 @@ No.
 
 ## Decisions I made
 
-- See the chunk blocks.
+- See the chunk blocks (K6, Combat log and K5 follow-up blocks list theirs).
 
 ## Needs THJ
 
 - `Lucy_Ability_Steer.asset` is now saved with cooldown 0 (see K1 Findings); nothing to decide unless that was not wanted yet.
+- **Mark's Command Weak on a Cyclone steer.** What: when the Weak upgrade (`_MarkCommandWeak`) is unlocked and Mark's Command steers the Cyclone onto an enemy (the knock stop), the Command's Weak compound applies to that enemy. Why: the Weak compound targets the occupant of each picked cell; for a unit Command the second pick is always an empty cell, for a Cyclone steer it can hold the enemy that gets knocked. The Cyclone itself never gets Weak (tested). Options: (a) leave it (a Cyclone steer onto an enemy also makes it Weak: a small bonus); (b) no Weak in a Cyclone steer: needs a "Cyclone" tag on the Cyclone and a "must not have it" entry in the Weak compound's apply-target query (a new tag definition plus two small asset edits), or a small core hook; (c) Weak on the knocked enemy on purpose (then it stays as is and goes in the GDD). Recommendation: (b) with the tag, if the plan's "Command's Weak doesn't apply" meant the whole Cyclone steer. Not built: it changes behaviour beyond the plan's literal text.
 
 ## Docs to update
 
-- `tech/core-systems.md`: `IClickablePlantedEntity` + `PlantedClickRules` + `PlayerController.PlantedClick.cs` (the one call in `HandleGridCellSelection`). After the play check, with the other two hooks.
+- `tech/core-systems.md`: `IClickablePlantedEntity` + `PlantedClickRules` + `PlayerController.PlantedClick.cs` (the one call in `OnMouseClick`); `IAbilityCostOverride` + `AbilityCostOverride`, `APConsumer.RecordFreeConsumption`/`FreeActionRecord`; `IAbilityTargetablePlanted`, `PlantedAbilityTargetRules`, `FactionControllerBase.PlantedTarget.cs`, `GridManager.PlantedTarget.cs` (hover fallback and, after the follow-up, the remembered planted hover used on un-hover). After the play check.
+- GDD `lucy.md` LU-6 (cooldown 0, free first Steer, click, pulse); `mark.md` (Command steers the Cyclone, its stops, preview, cost Mark's); `family-systems.md` if combos are listed (Mark + Lucy).
+- Narrative: Mark's Command description clause "It can also steer Lucy's Cyclone." and the combat log texts (Steer line, "Knock" line) are working text.
 
 ## Risks and loose ends
 
-- A test or editor tool in the EditMode suite saves all dirty assets (see K1 Findings).
+- A test or editor tool in the EditMode suite saves all dirty assets (see K1 Findings). Not seen this time (`git status` of `miso/` identical before and after the K6 suite run).
+- See the K6 block for the play-check items (face turn, ghosts, hover).
 
 ## Proposed commits
 
-1. `feat(core): planted entities can take a player's click before the selection states, legal ability targets keep priority`: the K1 files above (core)
+Already committed: K1 `14f9c43e7`, K3 `3c2a366cd`, K2 `9c1cc7705`, K4 `08074905e`, K5 `31788c273`. Still to commit, in this order:
+
+1. `feat(lucy): the Steer's log line counts the knock's hit and can name who steered, and the cast on an enemy logs its knock` (plain): the "Combat log" files list below. First, because K6 calls `TrySteer(plan, steeredBy)`, which this commit adds.
+2. `feat(lucy): Mark's Command can steer Lucy's Cyclone along the Steer's stops, with the Steer's preview, on Mark's own cost` (plain, AI content: Mark's preset): the "K6" files list below.
+3. `fix(core): the grid un-hovers a planted target after it is picked, with tests for range and tag-query refusals` (core, alone): the "K5 follow-up" files list below.
+
+Never stage: `GlobalSettings.asset`, `miso.slnx`, `.mcp.json`, `powershell.exe`.
 
 ## Other branches
 
@@ -88,7 +111,12 @@ none
 
 ## How to see it
 
-Nothing visible until K3 (the Cyclone takes the click). K1 alone: play as usual; clicks behave exactly as before.
+1. Open a combat level with Lucy and Mark (any level where both are in the party), Play.
+2. Cast Lucy's Cyclone. Next family turn (or same turn with AP left): click the Cyclone. Lucy is selected, the Steer opens with its range and preview, the Cyclone pulses once.
+3. Steer once: the bar showed 0 AP for it and Lucy keeps her AP. Steer again: 1 AP.
+4. Select Mark, pick Command, hover the Cyclone (it highlights as a target), click it. The second step shows only the Steer's stops; hovering one shows the Steer preview (route arrows, knock ghost, pulls, damage) and no Command path or ghost. Click a stop: the Cyclone glides, hits, knocks, Whirls; Mark spends 1 AP and Command goes on cooldown; Lucy's Steer is still free and off cooldown.
+5. Open the combat log (Tools > Combat Log > Open Window): the Steer line reads "Steer · Mark: steered Lucy's Cyclone, hit N on the way, knocked 1 and hit it"; Lucy's own Steer reads "Steer · Lucy: ..."; a cast on an enemy adds "Knock · Lucy: knocked 1 and hit it".
+6. With John in the party: hover a unit with Mark's Command, then click the Cyclone: John's shield-dash preview must not draw on the stops.
 
 ## K1 review (miso-reviewer, 2026-11-20): FIX
 
@@ -319,3 +347,129 @@ Docs to update (after the play check, with the other hooks): `tech/core-systems.
 No must-fix. Should fix: (1) `GridManager.ClearLastHoveredCell` recomputes the entity to un-hover; the planted fallback depends on the pick state, so after the Cyclone is picked first the `gridCellEntityHovered(cyclone, false)` is lost — remember the fallback's entity in an instance field and use it on clear. (2) Tests don't show an answering planted entity refused by range or tag query. Notes: K6 must refuse AI casters (AI shares `SetObject`), keep `IsTargetableBy` cheap (per frame), check `forceTargetsFaceUnit` and heavy footprint second picks. Coordinator accepted the `GridManager` hover touch.
 
 **Coordinator:** K5 committed `31788c273` (core, alone). Both should-fixes go in a K5 follow-up core commit after K6 (one writer at a time); notes sent to the K6 implementer.
+
+### Chunk K6: Mark's Command steers the Cyclone (D-592)
+
+**Built** (Lucy and John files LF, no BOM; Mark's asset LF)
+- `miso/Assets/_Project/Features/Player/Lucy/Scripts/Cyclone/AEffectCommandSteersCyclone.cs` (new): the feature effect. In the Cyclone folder, not Mark's: it only makes sense with the Cyclone, it uses the Cyclone's planner, steps and `TrySteer`, and Mark's `Scripts/` folder holds no ability effects and no Lucy dependencies; Mark's side is only data (his preset references the asset). `IsOn(ability)` (the ability carries the effect), `CanSteer(ability, cyclone)` (carries it, owner alive and not AI-controlled through `AEffectCycloneSteer.IsAIControlled`, same faction as the Cyclone's caster, `CanBeSteered`). `ApplyUnguarded` on `[CycloneEntity, GridCell]`: `cyclone.PlanSteerTo(cell)`, `cyclone.TrySteer(plan, owner as GUnit)`, then `IsInProgress` until `CycloneSteerRules.SteerActionOpen` closes (the same wait as Lucy's `WaitForSteer`). Anything else (a unit first target) returns at once; an unplannable cell logs a warning and does nothing. Overrides no activation, target or cost check, so the AI's view of the Command is unchanged and Mark pays his own Command (1 AP, cooldown 1). Never touches Lucy's Steer ability, so her cooldown, free Steer (only her Steer effect's `TrackFreeSteer` sets it) and AP are untouched.
+- `.../Cyclone/CycloneEntity.Command.cs` (new partial): `CycloneEntity : IAbilityTargetablePlanted`. `IsTargetableBy` = `AEffectCommandSteersCyclone.CanSteer` (explicit AI refusal; plain checks over the preset's effect array, no allocation, cheap enough per frame). `TryCollectNextTargetCells(ability, 1, cells)`: only for an ability with the effect and index 1; records `CommandAim = ability` (for the preview) and fills the Steer's stops (empty when the Cyclone can't be steered now); true. `ForgetCommandAim()`. `SteerEffect` (Lucy's `AEffectCycloneSteer` from her whole ability list), `CollectSteerStops(cells)` (`CycloneSteerPlanner.Lines` with her Steer's reach, default reach without one), `PlanSteerTo(cell)` (her Steer effect's `PlanFor`, or the planner at the default reach). The range, the execution and the preview all read these, so they agree with Lucy's Steer.
+- `.../Cyclone/CycloneSteerPreview.cs`: also previews a Command steering this Cyclone. On every entered-target-selection event it forgets the Cyclone's `CommandAim` and remembers a candidate Command (`_command`); the controller then asks the picked Cyclone for the second-step cells, which sets `CommandAim`. `IsCommandAimedHere()` = candidate == `CommandAim`, and the player's active ability is it with one pick made. `IsAiming()` accepts Lucy's Steer or such a Command (selected unit = the ability's owner). Hover draws `PreviewCommand(cell)` = the same drawing path as Lucy's (`Preview(effect, cell)` now goes through a private `PreviewPlan(plan)`, same behaviour). LateUpdate dims the cross once the Command aims it and draws from the cell under the cursor. `Stop()` forgets both. Only `gridCellHovered` is listened to (never the entity hover).
+- `miso/Assets/_Project/Features/Player/John/Scripts/JohnPassiveAbility_CommandShieldDash.cs`: `OnCommandEntityHovered`: on any hover in the Command's first pick, the remembered unit becomes the hovered unit, or null when the hovered entity is not a unit other than John (the Cyclone, John himself). Before, hovering a unit and then picking the Cyclone kept the unit and the dash preview drew for it on the stops.
+- `miso/Assets/_Project/Features/Player/Lucy/Scripts/Editor/CycloneCommandSteerSetup.cs` (new editor tool, `Tools/Lucy/Apply Command Steers Cyclone Setup`, safe to re-run): creates the effect asset and appends it to the Command's effects, extends the description; saves only those two assets (`SaveAssetIfDirty`, no `SaveAssets`). Run once through the MCP menu call.
+- `miso/Assets/_Project/Resources/UnitSpecific/Player/Mark/Command/Mark_Ability_Attack_Command_Effect_SteersCyclone.asset` (+ `.meta`, new, made by the tool).
+- `Mark_Ability_Attack_Command.asset`: third effect appended (after the move and the Weak compound); description "Command another unit to move. It can also steer Lucy's Cyclone." (working text). Unity also wrote the preset's empty `allyTargetTagQuery` block (a field the code already had, never serialized in this asset; empty = no ally exception, same behaviour). Diff: 5 insertions, 1 change.
+- Tests: `.../Editor/CycloneSteerTests.Command.cs` (new partial, 9 tests).
+
+**Verified**
+- Compiles clean (`refresh_unity` + editor log: no `error CS` after the last compile; console shows only the usual domain-backup messages).
+- `MISO.Core.Features.Bergsons.EditorTests.Cyclone.*` with the K6 and log fixtures: 352/352 first run; then together with Mark's fixtures (`Catch*`, `ReturnFlightClampTests`), `EnemyAlertForcedMoveTests`, `MasherCounterCycloneTests`, `MasherCounterWhirlTests`, `PlantedAbilityTargetTests`, `AEffectCommandNonUnitTargetTests`: 454 run, 453 passed, the one failure was my first version of a K5 follow-up test (fixed, below).
+- Criteria covered by tests (`CycloneSteerTests.Command.cs`):
+  - the Command picks the Cyclone only with the effect, not for another faction, not while it steers, again after; an AI-controlled Mark never (player controller yes, AI controller no);
+  - the second step's cells equal the Steer's stops (knockable enemy in, unknockable enemy and rock out), no third step, nothing for another ability, empty while it can't be steered; `CommandAim` is set and forgotten; Lucy's Steer reach is used (reach 2 test, the Command's plan agrees);
+  - executing: a unit target steers nothing; an unplannable cell is refused with a warning; a stop starts the Steer, the Command's action stays open, nothing hooks the Command's completion;
+  - the Command's Steer runs the same route and knock as Lucy's, hits on the way / knock hit / Whirl hit and pull, each reported once, one Steer and one Whirl line, the Steer line under Mark with the knock's hit; Lucy's free Steer still free (preview 0 AP), her Steer cooldown 0, her AP 3 of 3, nothing hooked on her Steer;
+  - the preview: not aimed on the first pick, aimed once the Cyclone gives the second step; draws Lucy's route, the knock ghost, the pull ghost, the summed knock + Whirl damage, the landing cross; a cancel clears everything; a new pick forgets the earlier one;
+  - Mark's Command asset: 3 effects (move first, steering effect last, once), 1 AP, cooldown 1, description starts with the old sentence and ends with the clause (same constant as the tool);
+  - the Weak compound finds no target in `[Cyclone, empty cell]`.
+- AI regression (`AIRegressionTest.Baseline_MatchesCurrentAI`, by name, because Mark's preset changed): **43 failures, the same count as last recorded**; none is about Mark's Command or the new effect (the Mark/Lucy lines are the known catalogue drift: Mark_Linda duo assets, `Lucy_Ability_Steer` not in the baseline, `Mark_Lucy_MARK_Duo_Ability` evaluator, units count, `Lucy_Ability_FactionRole`).
+- Full EditMode suite (end of all three pieces): 2426 total, 2425 passed, 0 failed, 1 skipped (`AIRegressionTest.Baseline_MatchesCurrentAI`, Explicit). `git status` of `miso/` identical before and after the suite (nothing saved by the run).
+
+**Not verified (play check)**
+- The real Command flow in a level: hovering the Cyclone as a first target, the second-step highlight, the hover preview drawing over the player's own hover clears (re-applied every frame, as for Lucy's Steer), Mark's AP and cooldown spend, the camera focus.
+- That the Command's own path preview and ghost draw nothing for the Cyclone: checked by reading only (`ResolveGhostUnit` returns null for a non-unit first target; `OnMoveTargetGridCellHover` finds no mover on the Cyclone's cell; `CommitPreviewedMovePath` finds no unit), as K5 found.
+- John's dash-preview guard: the handler returns early without a player controller, so it isn't driven in EditMode; checked by reading.
+
+**Coordinator notes (a) to (d)**
+- (a) `IsTargetableBy` refuses an AI-controlled commander explicitly (test). (b) It reads the preset's effect array and a few flags; no allocation. (c) The preview listens to `gridCellHovered` only. (d) `forceTargetsFaceUnit`: `AbilityPreset.Activate` calls `ForceFaceTowards` and `NotifyIncomingDirection` on the bundle: the Cyclone gets `SetFaceDirection` (a field nothing in the Cyclone reads; no visual change) and its `IncomingDirection` (read only by `GUnit`'s hit FX); the enemy standing on the stop cell (the one to be knocked) is turned to face Mark (`SetDirection`, visual) and its incoming direction set (hit FX orientation). Harmless, but visible: worth a look in the play check. `OccupantIntersects`: a stop is either empty or holds a one-cell knockable enemy (the planner refuses heavies and large units as stops), so no heavy's footprint can touch a stop and make its other cells legal; and the effect plans from the clicked cell and refuses a cell that isn't a stop.
+
+**Decisions I made**
+- Effect lives in Lucy's Cyclone folder (reason above).
+- The Command's pick is recorded on the Cyclone when target selection asks it for the second-step cells (the only call that tells it it was picked; the controller's `PhaseData` is protected), and forgotten by the preview on every target-selection entry and exit. Same behaviour as reading the picked targets.
+- Stops use Lucy's Steer effect when she has one (her reach), the planner's default reach otherwise; her whole ability list is read (`AllAbilities`), so the reach doesn't depend on what the bar shows.
+- When the Cyclone can't be steered at the moment the second step opens, the second step offers no cell (instead of falling back to the Command's own range around the Cyclone).
+- The effect is appended last in the Command's effect list; with a unit target it returns before anything, so the order doesn't matter there.
+- No pulse when Mark's Command picks the Cyclone (not asked; the cross dims as in Lucy's aim).
+
+**Loose ends**
+- Needs THJ: the Weak on the enemy at the stop (top of the report).
+- A Command steer refused at execution (the board changed between the click and the effect, very unlikely on the player's turn) still charges Mark's Command; the effect logs a warning.
+- The Command's damage preview on the hovered stop (core `AbilityDamagePreview`) doesn't know the steering effect; the Steer preview draws the damage instead (re-applied each frame).
+
+**Files to stage (K6 commit, after the combat log commit)**
+- `miso/Assets/_Project/Features/Player/Lucy/Scripts/Cyclone/AEffectCommandSteersCyclone.cs` + `.meta`
+- `miso/Assets/_Project/Features/Player/Lucy/Scripts/Cyclone/CycloneEntity.Command.cs` + `.meta`
+- `miso/Assets/_Project/Features/Player/Lucy/Scripts/Cyclone/CycloneSteerPreview.cs`
+- `miso/Assets/_Project/Features/Player/Lucy/Scripts/Editor/CycloneCommandSteerSetup.cs` + `.meta`
+- `miso/Assets/_Project/Features/Player/Lucy/Scripts/Editor/CycloneSteerTests.Command.cs` + `.meta`
+- `miso/Assets/_Project/Features/Player/John/Scripts/JohnPassiveAbility_CommandShieldDash.cs`
+- `miso/Assets/_Project/Resources/UnitSpecific/Player/Mark/Command/Mark_Ability_Attack_Command.asset`
+- `miso/Assets/_Project/Resources/UnitSpecific/Player/Mark/Command/Mark_Ability_Attack_Command_Effect_SteersCyclone.asset` + `.meta`
+
+Proposed message: `feat(lucy): Mark's Command can steer Lucy's Cyclone along the Steer's stops, with the Steer's preview, on Mark's own cost`
+
+### Combat log check (after K6)
+
+**How the Cyclone logged before** (combat log synergy notes, `✦ <Id> · <actor>: <detail> → <targets>`; the log shows no AP anywhere, so a free Steer is not marked, as asked)
+- Whirl (`CycloneWhirlSteps.Log`): "Whirl · Lucy: pulled N, hit M": still reads right after a Steer (the passed enemies are left out of its hits, the knocked enemy's Whirl hit is counted there) and after Mark's steer (it is Lucy's Cyclone). Unchanged.
+- Steer (`ICycloneSteerSteps.Log`): "Steer · Lucy: hit N on the way, knocked K": no knock hit, always under Lucy.
+- Burst (`CycloneBurstSteps.Log`): "Burst · Lucy: hit M". Unchanged.
+- Cast: the ability's own action line ("Lucy › Cyclone → ..."); the knocked enemy's HP change landed in a result row with no word about the knock.
+
+**Built**
+- `.../Cyclone/CycloneEntity.Steer.cs`: `TrySteer(plan, GUnit steeredBy = null)` and `SteerRoutine(plan, holdOwnerSource = null, GUnit steeredBy = null)` (optional, every existing call unchanged); the knock's `HitOnce` result is kept (`knockHit`) and passed to the log with `steeredBy`.
+- `.../Cyclone/ICycloneSteerSteps.cs`: `Log(int hitOnTheWay, int knocked, bool knockHit, GUnit steeredBy, GUnit[] targets)`.
+- `.../Cyclone/CycloneSteerSteps.cs`: actor = the steering unit when it isn't Lucy, else Lucy; detail from `CycloneRules.SteerLogDetail`.
+- `.../Cyclone/CycloneRules.cs`: `SteerLogDetail(hitOnTheWay, knocked, knockHit, steeredOwnerName = null)` → "hit 2 on the way, knocked 1 and hit it" / with another steerer "steered Lucy's Cyclone, hit 2 on the way, knocked 1 and hit it" / a knock whose hit didn't land (the Cyclone had burst) "…knocked 1"; `CastKnockLogId = "Knock"`, `CastKnockLogDetail()` → "knocked 1 and hit it"; `OwnerName(caster)` (nickname, else object name, else "Lucy").
+- `.../Cyclone/CycloneShoveSteps.cs`: static `LogCastKnock(caster, knocked)` raises "Knock · Lucy: knocked 1 and hit it → <enemy>".
+- `.../Cyclone/AEffectCycloneSpawner.Shove.cs`: `HitOnLanding` calls it after the knock's hit and its report (only when the hit was applied).
+- Test fakes updated to the new signature: `CycloneSteerTests.cs` (`SteerRecorder` also records `SteerLogKnockHit`, `SteerLogSteeredBy`), `CycloneBurstTests.cs`, `CycloneWindBeatsTests.cs`. `CycloneSteerTests.cs` log-text test renamed `LogLines_TheWhirlNamesPulledAndHit_TheSteerNamesHitOnTheWayKnockedAndTheKnocksHit` with the new texts; `CycloneSteerTests.Knock.cs` asserts the knock's hit and that Lucy's own Steer has no other steerer.
+- New `.../Editor/CycloneSteerTests.Log.cs` (3 tests on the real steps over the test bus): Lucy's Steer under Lucy with the knock's hit (and Lucy named as steerer still reads as her own); Mark's steer under Mark, "steered Lucy's Cyclone, …"; the cast knock line under Lucy with the enemy as target, nothing without a caster or an enemy.
+- All texts are working text (narrative later). No AP marker: the log doesn't show AP.
+
+**Verified**: in the runs above (Cyclone group, full suite). **Not verified**: the lines in a real log window (play check, How to see it step 5).
+
+**Decision**: the cast's knock gets its own note ("Knock") rather than a flag on the cast's action line, so it reads like the Steer's and the Whirl's notes.
+
+**Files to stage (combat log commit, before K6)**
+- `miso/Assets/_Project/Features/Player/Lucy/Scripts/Cyclone/CycloneEntity.Steer.cs`
+- `miso/Assets/_Project/Features/Player/Lucy/Scripts/Cyclone/ICycloneSteerSteps.cs`
+- `miso/Assets/_Project/Features/Player/Lucy/Scripts/Cyclone/CycloneSteerSteps.cs`
+- `miso/Assets/_Project/Features/Player/Lucy/Scripts/Cyclone/CycloneRules.cs`
+- `miso/Assets/_Project/Features/Player/Lucy/Scripts/Cyclone/CycloneShoveSteps.cs`
+- `miso/Assets/_Project/Features/Player/Lucy/Scripts/Cyclone/AEffectCycloneSpawner.Shove.cs`
+- `miso/Assets/_Project/Features/Player/Lucy/Scripts/Editor/CycloneSteerTests.cs`
+- `miso/Assets/_Project/Features/Player/Lucy/Scripts/Editor/CycloneSteerTests.Knock.cs`
+- `miso/Assets/_Project/Features/Player/Lucy/Scripts/Editor/CycloneBurstTests.cs`
+- `miso/Assets/_Project/Features/Player/Lucy/Scripts/Editor/CycloneWindBeatsTests.cs`
+- `miso/Assets/_Project/Features/Player/Lucy/Scripts/Editor/CycloneSteerTests.Log.cs` + `.meta`
+
+Proposed message: `feat(lucy): the Steer's log line counts the knock's hit and can name who steered, and the cast on an enemy logs its knock`
+Order: this commit first; it compiles alone (the new `steeredBy` parameters are optional). K6 depends on it (`TrySteer(plan, steeredBy)`, the recorder's new fields). If the coordinator prefers one commit, the two lists merge cleanly.
+
+### K5 follow-up (core, after the K5 review)
+
+**Built**
+- `miso/Assets/_Project/Core/Systems/GridSystem/Runtime/GridManager.PlantedTarget.cs` (BOM + LF kept): instance field `_plantedHoverEntity` (not static: a new grid starts without one, nothing to reset); `RememberPlantedHover(cell, hovered)` keeps the hovered entity only when it came from the planted fallback (it is the cell's planted entity, implements `IAbilityTargetablePlanted`, and is not an `IsTargetable` planted entity; a unit or stash on the cell would have been hovered instead); `TakeUnhoveredEntity(recomputed)` returns the recomputed entity if any, else the remembered one, and forgets it.
+- `GridManager.cs` (core, BOM + LF kept, +2/-1): `HandleHovering` calls `RememberPlantedHover` right after it raises the entity hover; `ClearLastHoveredCell` un-hovers `TakeUnhoveredEntity(GetHoverableCellEntity(...))`. Without an implementing planted entity nothing is remembered and both paths behave as before.
+- `miso/Assets/_Project/Core/Interactions/Editor/PlantedAbilityTargetTests.cs` (+3 tests): an answering planted entity outside `ActiveAbilityRangeCells` is not legal, and after `SetObject` it is the target entity but `ApplyCondition` refuses; an answering planted entity the pick's tag query rejects (a real tag, `EntityState.Unmovable`, required present) is not legal and `ApplyCondition` refuses; the grid's remembered planted hover is returned once when the recomputed entity is null, the recomputed one wins when present, and a plain planted entity or a unit is never remembered.
+
+**Verified**: `PlantedAbilityTargetTests` 14/14 (my first tag test used an unknown tag id, which the registry throws on; switched to a real tag). Full suite as above (2425/2426, 1 Explicit skip).
+
+**Not verified**: the hover in play (pick the Cyclone with Mark's Command while the cursor rests on it, move away: the Cyclone's hover state clears).
+
+**Files to stage (K5 follow-up commit, core, on its own)**
+- `miso/Assets/_Project/Core/Systems/GridSystem/Runtime/GridManager.PlantedTarget.cs`
+- `miso/Assets/_Project/Core/Systems/GridSystem/Runtime/GridManager.cs`
+- `miso/Assets/_Project/Core/Interactions/Editor/PlantedAbilityTargetTests.cs`
+
+Proposed message: `fix(core): the grid un-hovers a planted target after it is picked, with tests for range and tag-query refusals`
+
+Docs to update (after the play check): `tech/core-systems.md` Grid row: `GridManager.PlantedTarget.cs` also remembers the planted entity it reported hovered and `ClearLastHoveredCell` un-hovers it.
+
+### Coordinator: commits after K6 (2026-11-20)
+
+Checked: line endings and BOMs as at HEAD on every file (CRLF + BOM where they were; new files CRLF + BOM like their folder), no private IDs in added lines or new files. Committed in three units, each with THJ's popup:
+- `f6a38250f` feat(lucy): combat log (12 files, +160/-23).
+- `9ff51d7dd` feat(lucy): Mark's Command steers the Cyclone (13 files, +630/-12).
+- `5ee450844` fix(core): K5 follow-up, grid un-hover and 3 tests (3 files, +92/-1).
+Left unstaged (THJ's): `GlobalSettings.asset`, `miso.slnx`. Feature review dispatched (K3 `3c2a366cd`, K4 `08074905e`, the three above).
