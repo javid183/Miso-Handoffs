@@ -21,7 +21,7 @@ Branch `thj/cyclone`, commits `d9cb1f2ce` to `3b566e5bf` (plan `plans/2026-11-19
 10. Knock into Linda's lane: Watch answers the knock, before the Whirl's pull and hit. Passing an enemy through her lane does nothing.
 11. Knock onto a hazard: the hazard fires.
 12. Steer through a Masher: it takes a hit, the Cyclone doesn't burst, the Masher doesn't counter.
-13. Combat log: one line "Steer · Lucy: hit N on the way, knocked K", then "Whirl · Lucy: pulled N, hit M".
+13. Combat log: one line "Steer · Lucy: hit N on the way, knocked 1 and hit it" (or "knocked 0"), then "Whirl · Lucy: pulled N, hit M".
 
 ## Preview
 
@@ -63,3 +63,28 @@ Screenshot `playtests/img/2026-11-20-cyclone-4-no-steer-no-cast-preview.webp`.
 
 - **Bug:** after summoning the Cyclone, it can't be Steered (Lucy's slot 3 shows the Cyclone greyed with a 3, no Steer).
 - **Bug:** casting on an empty cell next to enemies, the cast preview doesn't show the cast Whirl's damage.
+
+## Controls (added 2026-11-20)
+
+Commits `14f9c43e7` to `5ee450844` (plan `plans/2026-11-20-cyclone-controls-tech.md`, D-589 to D-593).
+
+**Click to Steer and the pulse**
+24. Click the Cyclone with nothing selected, or another family member selected: Lucy becomes selected, the Steer is picked, its range and preview show.
+25. Click it when the Steer can't be used (Lucy at 0 AP, during an enemy turn, while something is still moving): nothing new happens.
+26. In another ability's targeting: if the Cyclone's cell is a legal target of that ability, the click does what it did before. If not, it switches to Lucy's Steer.
+27. Picking the Steer (button, hotkey or click on the Cyclone) makes the Cyclone pulse once. Undoing a target pick and re-entering doesn't stack pulses.
+
+**Free first Steer**
+28. First Steer of Lucy's turn: her AP doesn't drop, and the hover AP preview shows no cost. The second Steer that turn costs 1 AP. Next turn the first is free again.
+29. Undo a free Steer: no AP comes back and the next Steer is free again. Undo a paid one: 1 AP comes back.
+30. Untick "First Steer Free Each Turn" on the Steer effect asset: every Steer costs 1 AP.
+
+**Mark's Command steers**
+31. With Mark's Command picked, the Cyclone's cell lights as a first target. Picking it lights exactly the Steer's stops; hovering a stop shows the same preview as Lucy's Steer. The Command's own path arrows and ghost don't draw for the Cyclone.
+32. Execute: the same Steer and Whirl as Lucy's. Mark spends his 1 AP and the Command goes on its cooldown. Lucy's AP, her free Steer and the Steer's state are untouched (she can still Steer free after).
+33. The enemy on the stop cell turns to face Mark before it's knocked. Harmless, but does it look odd?
+34. John's shield dash: hover a unit with Mark's Command, then pick the Cyclone instead. No leftover dash preview.
+35. **Your call (Weak):** with Mark's Weak upgrade owned, steering onto an enemy that gets knocked also makes that enemy Weak (the Cyclone itself never gets it). Keep it as a bonus, or remove it?
+
+**Combat log**
+36. Lucy's Steer: "Steer · Lucy: hit N on the way, knocked 1 and hit it". Mark's: "Steer · Mark: steered Lucy's Cyclone, hit N on the way, knocked ...". Cast on an enemy: "Knock · Lucy: knocked 1 and hit it", then the Whirl line. A free Steer isn't marked, because the log shows no AP.
