@@ -511,3 +511,7 @@ Notes: same planner for range, preview and run; Lucy's free Steer, cooldown and 
 ### Coordinator diff read (S1, 2026-11-21)
 
 Read the diff (size S, not core, no reviewer per D-575). `PlayPulse` gating on `_scaleRoutine` is correct: `ScaleRoutine` nulls it at the end, and the pulse doesn't use `_scaleRoutine` itself. Checked `Cyclone.prefab`: `tagSet.tagEntries: []`, so the real Cyclone doesn't carry Unmovable and the test's empty tag set matches it. Line endings and BOM: all four files BOM + LF, the same as the other Cyclone files at HEAD. Loose end (already there before S1, the line 185 guard has it too): if the view were disabled during a scale-back, `_scaleRoutine` would stay set and the pulse would stay off; the view lives and dies with its Cyclone, so it's left as is. Re-run after the CRLF→LF conversion sent to the verifier.
+
+### Commit (S1)
+
+`29ab5c8d6` fix(lucy): pulse skipped during the scale-back + Command asset legality tests (4 files). Verifier quiet check: compile clean, Cyclone fixtures 98/98.
