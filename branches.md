@@ -10,6 +10,14 @@ Owner: coordinator; THJ approves. `claude-handoff/` doesn't change when the shar
 - Agents never switch branches. THJ does.
 - On merge, a branch's differences fold into `all`. If that changes a core rule on `main`, it's Tier 3.
 
+## `thj/duo-insert`
+
+- Created 2026-11-22 by the coordinator at THJ's request ("Go to a new branch then commit it") from `main` @ `6474ed314` (61 ahead of `origin/main`, not pushed). THJ's working branch.
+- **Purpose:** the duo insert shot test, Mark–Lucy (`plans/2026-11-22-duo-insert-shot-tech.md`, `design/duo-insert-shot.md`).
+- `9e992707f` C1: insert player, QTE card, Mark–Lucy test entry (THJ has not previewed it yet). No upstream, not pushed.
+- Test clips in `Content/FamilySuperTime/DUO/Inserts/_Test/` stay untracked (clip B has burned-in logos).
+- Combat resource and AP: same as `main`. Uncommitted in the tree (came along, THJ's, agents leave them alone): `PreloadScreen.unity`, `ProjectSettings/EditorSettings.asset` and `ProjectSettings.asset`, the TMP fallback font.
+
 ## `thj/cyclone`
 
 **Merged into `main` on 2026-11-22 (`049897aae`, merge commit, D-600); kept for history.** Items scoped to it now count as `all`. Last branch commits: the controls' should-fixes `29ab5c8d6`, the Command crash fix `e993069bf`, Command reach across gaps `96ecee6d0`, free Steer off + Steer cooldown 1 `13e8bab62` (D-597, D-601), tether arrowhead `155021c02`. THJ's test settings `b88c004f1` (intro/outro off) went to `main` as they are (D-600).
