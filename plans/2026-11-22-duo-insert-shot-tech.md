@@ -2,7 +2,7 @@
 
 Size: M    Tier: 3 (chunk C2 changes a core system's behavior)    Assigned to: miso-implementer
 Branch: thj/duo-insert (created 2026-11-22 at THJ's request)
-Status: approved 2026-11-22 (THJ: "Approve, start C1"; C2 core change and untracked test clips approved). C1 committed `9e992707f` on `thj/duo-insert` (THJ asked to commit before previewing); C2 in progress.
+Status: approved 2026-11-22 (THJ: "Approve, start C1"; C2 core change and untracked test clips approved). C1 committed `9e992707f`, C2 committed `5fc81e789` (review APPROVE, both should-fixes applied), C3 docs done. Waiting on THJ's preview and play check.
 
 ## Why
 

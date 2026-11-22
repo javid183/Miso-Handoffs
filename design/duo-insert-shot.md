@@ -1,6 +1,6 @@
 # Duo / Family Role insert shot: comic sequence (proposal)
 
-Owner: coordinator. Status: **proposed 2026-11-22, waiting on THJ** (layout, QTE order, length, first test scope).
+Owner: coordinator. Status: **approved 2026-11-22 with the defaults (QTE first, diagonal split, 1–1.5 s, skippable); built on `thj/duo-insert` (`9e992707f` insert player, `5fc81e789` duo flow), waiting on THJ's preview and play check.**
 
 ## Ask (THJ, 2026-11-22)
 
