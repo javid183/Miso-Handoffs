@@ -515,3 +515,39 @@ Read the diff (size S, not core, no reviewer per D-575). `PlayPulse` gating on `
 ### Commit (S1)
 
 `29ab5c8d6` fix(lucy): pulse skipped during the scale-back + Command asset legality tests (4 files). Verifier quiet check: compile clean, Cyclone fixtures 98/98.
+
+### Chunk S2: Command crash, Command reach, free Steer off (2026-11-22)
+
+**Root cause (confirmed by reading, and by the new test's setup)**: `SteerEffect` scans all of Lucy's abilities; `IsSteer` read `ability.EffectSetLevel`, which is `preset.GetEffectSetLevel(_upgradeLevel)`. An ability that isn't unlocked has `UpgradeLevel` -1, and `GetEffectSetLevel(-1)` reads `higherLevels[-2]`. I did not run the new test against the unfixed code (no git writes to revert with).
+
+**Changed**
+- `Features/Player/Lucy/Scripts/Cyclone/CycloneButtonSwap.cs`: `IsSteer` returns false for a null ability, no preset, or `UpgradeLevel < 0`, before reading the effect set. Callers: `FindSteer` (button swap, `ShownFor`, `ShowsSteer`, `CycloneEntity.Click`, `SteerEffect`) and `CycloneSteerPreview`. For unlocked abilities nothing changes; a locked ability previously threw there and is now never the Steer. Core `AbilityPreset` untouched.
+- `Resources/UnitSpecific/Player/Mark/Command/Mark_Ability_Attack_Command.asset`: top-level `allowRangedReach: 0` to `1` (YAML, one line, LF kept). The effect-level `allowRangedReach` at line 300 and `nextTargets` untouched.
+- `Resources/UnitSpecific/Player/Lucy/Abilities/Cyclone/Lucy_Ability_Steer_Effect_Steer.asset`: `firstSteerFreeEachTurn: 1` to `0` (YAML, one line, LF kept). Code kept.
+- Tests (`Features/Player/Lucy/Scripts/Editor/`):
+  - `CycloneSteerTests.Command.cs`: new `CommandSteer_AbilityNotUnlocked_IsSkippedWhenLookingForLucysSteer` (Lucy's list is a level -1 ability then her Steer; `IsSteer(locked)` false, `FindSteer` finds the Steer, `TryCollectNextTargetCells` does not throw, `SteerEffect` is her effect, the stops use her reach 2).
+  - `CycloneSteerTests.CommandLegality.cs`: new `MarksCommandAsset_FirstPickReachesAcrossAMissingCell`: loads the real Command asset, asserts `AllowRangedReach`, then `GridCell.GetRangeCells` with the asset's traverse/walkability/straight settings, radius 3, Mark [1,1], hole at [1,2], target [1,3]: in reach with the asset's flag, out of reach without it. It tests the grid call with the asset's settings; the real radius (`Stat_RANGE`) is still not available in edit mode, so radius 3 stands in.
+  - `CycloneSteerTests.cs`: the shipped-Steer test now asserts `FirstSteerFreeEachTurn` is false (renamed `..._FirstIsNotFree_...`). Tests that set the flag on their own effect are unchanged.
+
+**Criteria**: crash fix met (regression test); Command reach met (asset flag + gap test); free Steer off met (asset test). Play check still wanted: Mark's Command on the Cyclone, second pick no longer throws; Command first pick across a gap; Lucy's first Steer costs 1 AP.
+
+**Tests (Unity MCP, editor open)**: `MISO.Core.Features.Bergsons.EditorTests` 900 run, 900 passed (includes the Cyclone fixtures and the 3 new/changed tests). Full EditMode: 2431 run, 2427 passed, 1 skipped (the Explicit AI regression test, not run), 3 failed, all `GridToLevel` builder tests: "Assertion failed on expression 'm_LockCount == 0'" raised inside `PrefabUtility.UnloadPrefabContents` (`GridToLevelBuilder.cs:151`). Re-running that namespace alone gave a different pair failing (`GridToLevelXpTests.Build_WithoutTheLineKeepsEnemyXp`, `Build_XpNoneWarnsAboutASpawnSourceTheTemplateKeeps`, 93 of 95 passed). So the failing set moves between runs: an editor-internal lock assertion in prefab unload, not touched by this chunk. The editor's MCP session also disconnected several times during the runs. Suite is therefore not clean; needs a re-run in a quiet editor (or batch mode with the editor closed). Compile clean; console had only a "domain backup" editor message.
+
+**Decisions / loose ends**
+- Skip-vs-read-safely: chose skip (a locked Steer should not swap the cast button or be used for reach).
+- `Lucy_Ability_Steer.asset` description still says "The first Steer each turn is free." and `CycloneSteerTests.LiveSteer...` asserts that text; the player-facing text is now wrong. Not changed (outside the three asked changes); needs new wording from THJ / narrative. `CycloneSteerSetup.cs` comment also mentions it; the tool does not set the field, but re-running it on a fresh effect would give the class default (true).
+- THJ's uncommitted files untouched.
+
+**Files**: the six above; no new files. Tests files keep LF, no BOM, as before.
+
+**Proposed commits**
+1. `fix(lucy): Mark's Command on the Cyclone no longer throws when one of Lucy's abilities isn't unlocked, with a regression test` (CycloneButtonSwap.cs, CycloneSteerTests.Command.cs)
+2. `balance(lucy): Mark's Command reaches across missing cells, with a test` (Mark_Ability_Attack_Command.asset, CycloneSteerTests.CommandLegality.cs)
+3. `balance(lucy): Lucy's Steer has no free first use each turn` (Lucy_Ability_Steer_Effect_Steer.asset, CycloneSteerTests.cs)
+
+**S2 follow-up (coordinator request, 2026-11-22)**: free Steer wording made consistent.
+- `Lucy_Ability_Steer.asset`: description's last sentence removed (rest word for word, LF). `CycloneSteerSetup.cs`: its `Description` constant matches, and its header comment now says the effect's `firstSteerFreeEachTurn` option is off. `CycloneSteerTests.cs` `LiveSteer_...`: the text assert is now `StringAssert.DoesNotContain("is free", steer.Description)`.
+- Comments in `AEffectCycloneSteer.cs` (the first Steer is free only with the optional `firstSteerFreeEachTurn` setting ticked) and `AEffectCommandSteersCyclone.cs` ("free first Steer (when that setting is on)") reworded. Field code default and tooltip untouched.
+- Commit 3 now also holds: `Lucy_Ability_Steer.asset`, `CycloneSteerSetup.cs`, `AEffectCycloneSteer.cs`, `AEffectCommandSteersCyclone.cs`.
+- Full EditMode (editor open, no Play mode): 2431 run, 2429 passed, 1 Explicit skipped, 1 failed: `GridToLevelCameraStartTests.Build_ABigLevelStartsWithThePlayerUnitsInView`, the same `m_LockCount == 0` assertion in `PrefabUtility.UnloadPrefabContents` (`GridToLevelBuilder.cs:151`). Compile clean.
+- GridToLevel namespace alone: 95 run, 93 passed, 2 failed (`GridToLevelCameraStartTests.Build_CameraLinePutsTheViewOnThatTile`, `GridToLevelFacingTests.Build_HiddenEnemiesGetTheFacingToo`), same assertion. Earlier runs: 3 of 2431 (first full run), 2 of 95 (alone). A different test fails each run (6 distinct so far), none Cyclone; not fixed, as asked. Every Cyclone/Command test passes in all runs.
