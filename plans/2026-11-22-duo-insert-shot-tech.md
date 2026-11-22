@@ -2,7 +2,7 @@
 
 Size: M    Tier: 3 (chunk C2 changes a core system's behavior)    Assigned to: miso-implementer
 Branch: main (THJ may want a working branch first; his call, agents don't switch)
-Status: waiting on THJ (approve C2's core change and the test-clip handling below)
+Status: approved 2026-11-22 (THJ: "Approve, start C1"; C2 core change and untracked test clips approved). C1 in progress.
 
 ## Why
 
