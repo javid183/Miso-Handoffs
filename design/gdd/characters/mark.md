@@ -1,6 +1,6 @@
 # Mark
 
-Owner: game designer (THJ approves) · Scope: `all` · Checked against assets: `main` @ `92853a5a9`, 2026-10-16 (ability presets read from the live project); MA-3 from `main` @ `8c2e8617c`, 2026-10-29 (`ProjectileCatchAndReturn.cs`, `Unit_Mark.prefab` read); MA-3 offer rule and preview from `main` @ `2cf617358`, 2026-11-17 (from the build reports, code not re-read) · Mirror: Claude Doc "Miso — Game Design", tab Characters › Mark · Up: [Overview](../overview.md)
+Owner: game designer (THJ approves) · Scope: `all` · Checked against assets: `main` @ `92853a5a9`, 2026-10-16 (ability presets read from the live project); MA-3 from `main` @ `8c2e8617c`, 2026-10-29 (`ProjectileCatchAndReturn.cs`, `Unit_Mark.prefab` read); MA-3 offer rule and preview from `main` @ `2cf617358`, 2026-11-17 (from the build reports, code not re-read); Command row and MA-4 from `thj/cyclone` @ `155021c02` (merging into `main`), 2026-11-22 (report `cyclone-controls.md`, `Mark_Ability_Attack_Command.asset` read) · Mirror: Claude Doc "Miso — Game Design", tab Characters › Mark · Up: [Overview](../overview.md)
 
 Mark is the monk and Zen master: a fast melee fighter who chains kills, builds Focus into a barrier, commands allies across the board, and strikes back at anyone who hurts the family. He joins after "No More Waiting" (M3) and has a Duo with every sibling and John.
 
@@ -12,7 +12,7 @@ Mark is the monk and Zen master: a fast melee fighter who chains kills, builds F
 | Joins | After M3 "No More Waiting" (`unlockedAfterMission`) | Built |
 | Family Role | Counter: strikes back at an enemy that hit family ([Family systems](../family-systems.md#family-roles)); no limit yet | Built, differs |
 | Duos | Mark–Lucy, Mark–Linda, Mark–John | Built |
-| Synergies | Catch & Return (with Linda), Command Shield Dash (with John) | Built |
+| Synergies | Catch & Return (with Linda), Command Shield Dash (with John); his Command can steer Lucy's Cyclone (MA-4) | Built |
 
 Source: `Features/Player/Mark/Prefabs/Unit_Mark.prefab`.
 
@@ -22,14 +22,20 @@ Source: `Features/Player/Mark/Prefabs/Unit_Mark.prefab`.
 | --- | --- | --- | --- | --- | --- |
 | Fist Blitz | Basic attack (also his role attack) | Dashes to an enemy within 2 cells and strikes: 8 × damage (×1.2 or ×1.4 with Heavy Hands). If it dies, he steps into its cell | 1 | 0 | Built |
 | Vault | Attack | Leaps to a cell within 3 (4 with Long Vault). Every enemy next to where he lands takes 2 × damage and is pushed 1 cell (and Stunned for 1 turn with Stunning Vault) | 1 | 1 | Built |
-| Command | Signature (1 SP to unlock) | Any unit within 4 that isn't Immovable, ally or enemy, walks to a cell within 3 of it that he picks. An enemy moved this way is Weak for 2 turns with Sapping Order. A finished Command move offers John a free Shield Dash | 1 | 1 | Built |
+| Command | Signature (1 SP to unlock) | Any unit within 4 that isn't Immovable, ally or enemy, walks to a cell within 3 of it that he picks. The first pick reaches any target within his range by distance, across missing tiles (D-596). He can also pick Lucy's Cyclone and steer it (MA-4). An enemy moved this way is Weak for 2 turns with Sapping Order. A finished Command move offers John a free Shield Dash | 1 | 1 | Built |
 | Cleanse | Shared family ability | 50 × damage to Corruption planted within 1 cell; doesn't hurt units ([Characters](README.md)) | 1 | 1 | Built |
 
 Damage is a base factor × `Stat_DMG`, healing a base factor × `Stat_WIS` ([Combat rules](../combat-rules.md) CR-19). Cooldown 1 means once per turn, 2 every other turn. No ability ends the turn by itself.
 
 Duo triggers on his bar: Mark–Lucy, Mark–Linda, Mark–John ([Family systems](../family-systems.md#duos)).
 
-Source: `abilityOrchestrator` on `Unit_Mark.prefab`; presets in `Resources/UnitSpecific/Player/Mark/` (`Primary/Mark_Ability_Attack_Primary.asset`, `Vault/Mark_Ability_Attack_Vault.asset`, `Command/Mark_Ability_Attack_Command.asset`).
+Source: `abilityOrchestrator` on `Unit_Mark.prefab`; presets in `Resources/UnitSpecific/Player/Mark/` (`Primary/Mark_Ability_Attack_Primary.asset`, `Vault/Mark_Ability_Attack_Vault.asset`, `Command/Mark_Ability_Attack_Command.asset`: `apConsumptionType` 1, `coolDownV` 1, `allowRangedReach` 1 on the first pick (the second pick's own `allowRangedReach` stays 0), `forceTargetsFaceUnit` 1, effects: the move, the Sapping Order Weak compound, `Mark_Ability_Attack_Command_Effect_SteersCyclone`).
+
+## Command and the Cyclone
+
+- **MA-4. Command steers Lucy's Cyclone** (D-592, D-594, D-596). While Lucy's Cyclone is out and can be steered, Mark's Command can pick it as its first target (within his range, across missing tiles like any Command target). The second pick then offers exactly the stops of Lucy's Steer, at her Steer's reach, and hovering one shows the Steer's preview (route, hits, knock ghost, pulls, damage); the Command's own path and ghost don't draw. The Cyclone is steered by every rule of Lucy's Steer: route, one hit per enemy passed, the knock and its hit, then the Whirl ([Lucy](lucy.md) LU-6). Mark pays his Command (1 AP, cooldown 1); Lucy's AP and her Steer are untouched. The hits are Cyclone hits, credited to Lucy's cast (LU-5). With Sapping Order, the Command's Weak lands on the enemy standing on the chosen stop (the one to be knocked), before the Steer starts, even if the Steer is then refused; enemies passed or pulled don't get it, and the Cyclone never does. That enemy also turns to face Mark before it is knocked (cosmetic). No pulse plays. Never used by an AI-controlled Mark, and never against a Cyclone of another faction. Log: "✦ Steer · Mark: steered Lucy's Cyclone, hit N on the way, knocked 1 and hit it", then the Whirl line under Lucy. Text (working, narrative pass pending): "Command another unit to move. It can also steer Lucy's Cyclone." *Built*
+
+Source: `Features/Player/Lucy/Scripts/Cyclone/AEffectCommandSteersCyclone.cs`, `CycloneEntity.Command.cs`, `CycloneSteerPreview.cs`; core `IAbilityTargetablePlanted`, `FactionControllerBase.PlantedTarget.cs`, `GridManager.PlantedTarget.cs` (D-593); `Features/Player/John/Scripts/JohnPassiveAbility_CommandShieldDash.cs` (no dash preview when the Cyclone is picked). Report `reports/cyclone-controls.md` (K5, K6, S2).
 
 ## Passives
 
@@ -97,6 +103,7 @@ Source: `Resources/RunUpgrades/Mark*/RU_*.asset`.
 3. **Q3.** The Wrist Wrap of Power uses a weapon slot Mark doesn't have, so it can't be equipped on `main`. The Demo Spec lists it as his Workshop weapon.
 4. **Q4.** Data copied from Lucy: his role and Continuous Attack QTEs use Lucy's input binding (`LucyQTE`), his hit sound is Lucy's, and his revenge line ("Noooo!") is hers. Fix?
 5. **Q5.** The Mark–Lucy Duo and its node are Chained Assault for now (THJ); the skill-tree notes say "Sidewinder Blitz" and the glossary says "Fist Blitz". Not final: Duo names wait for a narrative pass ([Family systems](../family-systems.md#open-questions) Q2). **Answered:** Chained Assault for now (D-223).
+6. **Q6.** During a Command steer of the Cyclone (MA-4) the Command is in flight, so the knocked enemy's landing (and possibly the closing Whirl's pulls) may offer John's Command Shield Dash (read in code, not play-checked; [Lucy](lucy.md) Q6). Intended?
 
 ## Related
 
