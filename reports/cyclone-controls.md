@@ -551,3 +551,7 @@ Read the diff (size S, not core, no reviewer per D-575). `PlayPulse` gating on `
 - Commit 3 now also holds: `Lucy_Ability_Steer.asset`, `CycloneSteerSetup.cs`, `AEffectCycloneSteer.cs`, `AEffectCommandSteersCyclone.cs`.
 - Full EditMode (editor open, no Play mode): 2431 run, 2429 passed, 1 Explicit skipped, 1 failed: `GridToLevelCameraStartTests.Build_ABigLevelStartsWithThePlayerUnitsInView`, the same `m_LockCount == 0` assertion in `PrefabUtility.UnloadPrefabContents` (`GridToLevelBuilder.cs:151`). Compile clean.
 - GridToLevel namespace alone: 95 run, 93 passed, 2 failed (`GridToLevelCameraStartTests.Build_CameraLinePutsTheViewOnThatTile`, `GridToLevelFacingTests.Build_HiddenEnemiesGetTheFacingToo`), same assertion. Earlier runs: 3 of 2431 (first full run), 2 of 95 (alone). A different test fails each run (6 distinct so far), none Cyclone; not fixed, as asked. Every Cyclone/Command test passes in all runs.
+
+### Batch suite (S2, 2026-11-22)
+
+Verifier, editor closed, 6000.3.4f1: 2431 total, 2430 passed, 0 failed, 1 skipped (AI regression, Explicit), 163 s, no `error CS`. The GridToLevel failures were the open editor's state. Waiting on THJ's play check, then three commits (crash fix; Command reach; free Steer off + text).
