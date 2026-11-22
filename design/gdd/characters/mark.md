@@ -1,6 +1,6 @@
 # Mark
 
-Owner: game designer (THJ approves) · Scope: `all` · Checked against assets: `main` @ `92853a5a9`, 2026-10-16 (ability presets read from the live project); MA-3 from `main` @ `8c2e8617c`, 2026-10-29 (`ProjectileCatchAndReturn.cs`, `Unit_Mark.prefab` read); MA-3 offer rule and preview from `main` @ `2cf617358`, 2026-11-17 (from the build reports, code not re-read); Command row and MA-4 from `thj/cyclone` @ `155021c02` (merging into `main`), 2026-11-22 (report `cyclone-controls.md`, `Mark_Ability_Attack_Command.asset` read) · Mirror: Claude Doc "Miso — Game Design", tab Characters › Mark · Up: [Overview](../overview.md)
+Owner: game designer (THJ approves) · Scope: `all` · Checked against assets: `main` @ `92853a5a9`, 2026-10-16 (ability presets read from the live project); MA-3 from `main` @ `8c2e8617c`, 2026-10-29 (`ProjectileCatchAndReturn.cs`, `Unit_Mark.prefab` read); MA-3 offer rule and preview from `main` @ `2cf617358`, 2026-11-17 (from the build reports, code not re-read); Command row and MA-4 from `main` @ `049897aae` (the `thj/cyclone` merge, D-600), 2026-11-22 (report `cyclone-controls.md`, `Mark_Ability_Attack_Command.asset` read) · Mirror: Claude Doc "Miso — Game Design", tab Characters › Mark · Up: [Overview](../overview.md)
 
 Mark is the monk and Zen master: a fast melee fighter who chains kills, builds Focus into a barrier, commands allies across the board, and strikes back at anyone who hurts the family. He joins after "No More Waiting" (M3) and has a Duo with every sibling and John.
 

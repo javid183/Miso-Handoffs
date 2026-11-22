@@ -199,7 +199,7 @@ Source: `Core/Managers/CombatLevelRunHandler.cs`, `Core/Managers/GameHandler.cs`
 - **On `thj/home-test`:** FTP. Home adds per-sortie effects at level start: the send-off meal, Omens, Wounded members at 50% HP in the dungeon, and a "From Home" banner ([Home](home.md)).
 - the feedback pass (CR-47 to CR-52: kill beat, shake priority, mini HP bar, low HP), committed `07f4e44fe` to `403de3bf8`, merged into `main` on 2026-10-23 (`f4e9d9158`). `thj/home-test` takes it with `main`.
 - `thj/linda-quiver` (Linda's Quiver, Encore's 2 AP, the catch QTE, CR-55) fast-forwarded into `main` on 2026-10-29 (`8c2e8617c`, D-326). `thj/home-test` doesn't have it yet.
-- `thj/cyclone` (Lucy's Cyclone redesign, D-529 to D-597) merged into `main` (2026-11-22): the end-of-turn Whirl (CR-3), CR-57 (line of fire), CR-58 (pass-through cells, heavies walking through and ending on it), Cyclone kills paying XP (CR-22). `thj/home-test` doesn't have them yet.
+- `thj/cyclone` (Lucy's Cyclone redesign, D-529 to D-597) merged into `main` @ `049897aae` (2026-11-22, D-600): the end-of-turn Whirl (CR-3), CR-57 (line of fire), CR-58 (pass-through cells, heavies walking through and ending on it), Cyclone kills paying XP (CR-22). `thj/home-test` doesn't have them yet.
 
 ## Open questions
 

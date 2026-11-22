@@ -144,7 +144,7 @@ Source: `Resources/BondSettings.asset` (thresholds, start, source values, no-Bon
 
 - **On `main`:** no Bond locks, so Sisters' Rivalry, Command Shield Dash and the Linda–Toba Duo are open from the start. Roles pay 1 FTP; before `92853a5a9` they paid 1 ATB step.
 - **On `thj/bond-lite`:** Bond Lite (BO-1 to BO-4): Sister's Rivalry, Tempest Bloom and Marks-Sisters are Family-tree nodes shut until Linda & Lucy's Bond Lv 2; Rivalry is +1 AP once per turn per sister. Command Shield Dash and the Linda–Toba Duo stay open.
-- Lucy's Cyclone redesign ([Lucy](characters/lucy.md#cyclone-pulling-gale) LU-3 to LU-7) is on `main` since the merge of `thj/cyclone` (2026-11-22): Watch answers its pulls and knocks, Lucy's follow-up ignores every Cyclone hit, Mark's Command can steer it (MA-4), and dashes and the Footrace loser never stop on it. `thj/home-test` doesn't have it yet.
+- Lucy's Cyclone redesign ([Lucy](characters/lucy.md#cyclone-pulling-gale) LU-3 to LU-7) is on `main` since the merge of `thj/cyclone` (`049897aae`, 2026-11-22, D-600): Watch answers its pulls and knocks, Lucy's follow-up ignores every Cyclone hit, Mark's Command can steer it (MA-4), and dashes and the Footrace loser never stop on it. `thj/home-test` doesn't have it yet.
 - **On `thj/home-test`:** roles pay 1 FTP until the role limits are built on `main` and merged (D-042). Bond locks are active (`HomeLockRules`). It doesn't have the `thj/linda-quiver` merge yet (D-326): no quiver, the pre-quiver Catch & Return (no stop at Mark), Lucy's follow-up without the real-damage rule, and no Watch on Toba's swap.
 ## Open questions
 
