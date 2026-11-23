@@ -6,6 +6,9 @@ Rows D-001 to D-011 were carried over on 2026-10-15 from the Home handoff and pr
 
 | Date | ID | Tier | Scope | Decided by | Decision | Why | Affects |
 | --- | --- | --- | --- | --- | --- | --- | --- |
+| 2026-11-23 | D-629 | 2 | thj/onboarding-demo | coordinator | 1.2: the remaining ~0.25 s where the HUD starts sliding in before the enemy cards (core `StartLevelIE` calls `ShowHUD()` with `StartTurn()`) is judged in THJ's Phase 1 play check, not fixed now | Removing it needs core code; much shorter than before | chunk 1.2 |
+| 2026-11-23 | D-628 | 3 | thj/onboarding-demo | THJ | X-10: only the Home scene's hearth label becomes "World Map"; the intro screen (`Home - Memory.unity`) keeps "Start Game" | Recommended | chunk 1.5 |
+| 2026-11-23 | D-627 | 3 | thj/onboarding-demo | THJ | Core change approved for H-08: `CombatLevelRunHandler` raises a new, clearly named bus event when a level is won, at the start of `EndLevel` before the outro sequence. Additive: `levelEnded` stays as it is. Own commit, own review, full suite, `core-systems.md` updated | THJ: "new levelwon give it a good name, do not remove the previous one"; the only win/loss event fires after the outro | chunk 1.3; `CombatLevelRunHandler`, `GlobalEventBus` (core) |
 | 2026-11-23 | D-626 | 3 | thj/onboarding-demo | THJ | Mithra's Rest (M4 level 2) heals 50% of max HP (as the Healing Room is built) and refills FTP to full | Q-N7 | D3 M4-2; chunk 3.4 |
 | 2026-11-23 | D-625 | 3 | thj/onboarding-demo | THJ | X-20: the Heavenly Sword is introduced as a walk-on pickup in M3 on 8,6; Mithra's Rest gives it again in M4 | Q-N6, recommended | D3 M3, M4-2; chunks 3.3, 3.4 |
 | 2026-11-23 | D-624 | 3 | thj/onboarding-demo | THJ | "Still counting?" plays in M3's end sequence after the last kill, then Toba appears | Q-N5, recommended | D3 M3; chunk 3.3 |
