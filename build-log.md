@@ -2970,3 +2970,8 @@ Plan `plans/2026-11-19-faster-loop-process.md`, decisions D-575 to D-579.
 **Built.** `1a724fdcd` on `main`: `DuoInsertBuilder` writes THJ's retime (Lucy 0 s x1.07, Mark clip C 0.15 s x2.5; clip A/B entries unchanged); `MakeEntry` takes Lucy's start/speed.
 **Verified.** Builder menu rerun leaves `DuoInsertLibrary.asset` and `DuoInsertCanvas.prefab` byte-identical; `DuoInsertRulesTests` 44/44; whole EditMode suite 2488/2489 (1 Explicit skipped).
 **Status.** `main` 12 ahead of `origin/main`, not pushed. Open: Lucy clean export; pause during the card; skip clicks pass through.
+
+## 2026-11-22: Lucy clip committed
+
+**Built.** `551685704` on `main`: Lucy's Kling clip + .meta committed via LFS at THJ's request (watermark accepted for now; cropped out in game). THJ presents the insert at the office 2026-11-23; then the art team takes it over or the watermark is removed.
+**Status.** `main` 13 ahead of `origin/main`, not pushed.
