@@ -1,12 +1,12 @@
 # Report: Chunk 1.3, Linda's arrows come home when a level is won
 
 Plan: plans/2026-11-22-onboarding-demo.md (chunk 1.3, item H-08)    Agent: miso-implementer    Branch: thj/onboarding-demo
-Outcome: **built** (second session, after THJ's D-627 on the hook). Core event plus feature, all covering tests pass and the full EditMode suite passes, apart from the known GridToLevel flake, which passes when rerun alone. The play check is still to do (timing against the outro, how the flight looks).
+Outcome: **built**, review fix applied (second session, after THJ's D-627 on the hook; review FIX → late landings fixed, see "Chunk 1.3, review fix"). Core event plus feature, all covering tests pass and the full EditMode suite passes, apart from the known GridToLevel flake, which passes when rerun alone. The play check is still to do (timing against the outro, how the flight looks).
 
 ## What changed
 
 - **Core (Tier 3, D-627):** a new bus event, `GlobalEventBus.levelWonBeforeOutro` (a plain `UnityEvent`). `CombatLevelRunHandler.EndLevel` raises it as its first step on a win, before any wait, the HUD hide, the resurrection or the outro. `levelEnded` and everything else keep their behaviour and timing.
-- **Feature:** on that event, every grounded arrow of Linda's goes back into her quiver at once, then flies home with Encore's flight and chunk 1.5's gold glow and trail. No AP, no Encore cast, no bark. Nothing happens on a loss, with no field, with the quiver switched off, with Linda dead or with a full quiver.
+- **Feature:** on that event, every grounded arrow of Linda's goes back into her quiver at once (and any arrow that lands later, until the field closes), then flies home with Encore's flight and chunk 1.5's gold glow and trail. No AP, no Encore cast, no bark. Nothing happens on a loss, with no field, with the quiver switched off, with Linda dead or with a full quiver.
 
 ## The name
 
@@ -48,9 +48,9 @@ The quiver is refilled **synchronously** inside the event: `RecallRules.Resolve`
 - [x] **No AP, not an Encore cast.** No `RuntimeAbility` runs. `TheWinReturn_IsNoAbility_SoNoCastAndNoAp`: no `abilityStarted` and no `abilityPerformed` raised. The return kind is `Other`, not `Recall`.
 - [x] **Nothing on a loss, without Linda or a field.** `LevelEndedAlone_SendsNothingHome`, `LindaDead_NothingReturns`, `QuiverOff_NothingReturns`, `NoField_NothingHappens`, `ClosedField_NothingReturns`, `FullQuiver_NothingReturns`, plus the rule table `ShouldReturn_...` (6 cases).
 - [x] **Guarded for the AI thread, unsubscribes on disable.** The listener runs only on the main thread (the bus calls it from the `EndLevel` coroutine). The only value it changes that the worker thread reads is `GroundedArrowField.GroundedCount`, a plain int, already worker-safe; the rule is pure. `Disabled_StopsListening` checks that `OnDisable` removes the listener.
-- [x] **Back before the ending sequence's first step.** Refill is immediate (above); the visual timing goes to the play check.
+- [x] **Back before the ending sequence's first step.** Refill is immediate (above). An arrow that lands after the signal (her winning shot, a late catch) goes home on landing: `AnArrowLandingAfterTheSignal_GoesHomeToo`. The visual timing goes to the play check.
 - [x] **Listener in new files.** `QuiverWinReturn.cs`, `GroundedArrowField.WinReturn.cs`, `WinReturnRules.cs`. One hunk in `LindaQuiver.cs` (below).
-- [x] **EditMode tests.** 21 new tests, all pass.
+- [x] **EditMode tests.** 25 new tests, all pass.
 
 Needs the verifier's play check: the flights and glow on screen, and that they land before the outro.
 
@@ -65,9 +65,26 @@ Needs the verifier's play check: the flights and glow on screen, and that they l
 - Criteria met: all, with evidence above; the look and timing need the play check.
 - Decisions and loose ends: below.
 
+### Chunk 1.3, review fix: late landings
+
+- Must fix from the review: an arrow that lands after the signal stayed on the board through the outro. The win is evaluated a frame after the kill, and Linda's winning shot lands only at the end of its flight; a held catch released late does the same.
+- Fix, in `QuiverWinReturn.cs` only:
+  - After `OnLevelWon` has returned the arrows, the component subscribes to the won level's field `OnChanged`.
+  - Each change sends whatever is on the board home through the same `ReturnAll` path: refill at once, Encore flight, glow.
+  - It can't loop: once resolved, the stacks are empty and `ShouldReturn` is false, so the `OnChanged` that the return itself raises does nothing.
+  - It unsubscribes when the field closes (`Close` raises `OnChanged` with `IsOpen` false), in `OnDisable` and in `OnDestroy`.
+  - `GroundedArrowField.cs` is not touched.
+- New tests in `WinReturnTests`:
+  - `AnArrowLandingAfterTheSignal_GoesHomeToo`: signal first, then `field.Land(...)` on a bare cell; the quiver is full, the board empty and no ability ran.
+  - `BeforeTheSignal_ALandingStaysOnTheBoard`: no watching before the win.
+  - `AfterTheFieldCloses_ItStopsWatching`: the closed field is let go.
+  - `Disabled_AfterTheSignal_StopsWatchingLandings`.
+- Changed: `Features/Player/Linda/Scripts/Quiver/QuiverWinReturn.cs`, `Features/Player/Linda/Scripts/Quiver/Editor/WinReturnTests.cs`. No core file touched.
+- Tests: `WinReturnTests` + `LevelWonBeforeOutroTests`, 25 of 25 passed; no compile errors. Full suite not rerun (no core change since the last full run).
+
 ## Reviews and checks
 
-- Covering fixtures (`LevelWonBeforeOutroTests`, `WinReturnTests`): 21 of 21 passed.
+- Covering fixtures (`LevelWonBeforeOutroTests`, `WinReturnTests`): 21 of 21 passed; after the review fix, 25 of 25.
 - Full EditMode suite: 2550 total, 2548 passed, 1 skipped (`AIRegressionTest.Baseline_MatchesCurrentAI`, Explicit), 1 failed: `GridToLevelTests.Builder_RebuildNeedsOverwriteAndKeepsTheGuid`, "m_LockCount == 0", the known flake.
 - Rerun of the GridToLevel fixtures alone (95 tests): 94 passed, 1 failed, this time a different test (`GridToLevelSettingsTests.Settings_NoTierLineGivesStandardEvenWhenTheTemplateIsNot`), same "m_LockCount == 0".
 - Rerun of those two tests by name: 2 of 2 passed. So the failures are the flake, not this change.
@@ -85,6 +102,7 @@ No.
 - **Raised right after `ClearTurnSwitchHolds()`**, before the state persistence. That is "the start of `EndLevel`". The arrows don't touch the persisted unit or item state (the quiver starts each level full), so order against persistence doesn't matter.
 - **Return kind `QuiverReturnKind.Other`** instead of a new `LevelWon` value. Adding the value would mean a second hunk in `LindaQuiver.cs` (where the enum lives). `QuiverLogListener` and `QuiverReturnCue` treat any kind the same, so the behaviour is equal: the "+N" cue shows on Linda and the combat log annotates the last action line with "+N arrows, quiver N/N". Neither reads as Encore. No bark.
 - **A win sibling of `RecallTo` (`ReturnAllOnWin`)** in a new partial, instead of a flag on `RecallTo`. `GroundedArrowField.Recall.cs` stays untouched for chunk 1.5's commit. It repeats about 20 lines of `RecallTo` (start positions, resolve, redraw, flights), minus the bark, with its own kind. Unlike `RecallTo`, it refills even without a grid and skips only the flights then, so it's testable in EditMode and never leaves the count wrong.
+- **Late landings are caught by watching the field's `OnChanged` after the win** (review fix), not by changing the landing path in `GroundedArrowField.cs` / `QuiverArrow.cs`. That keeps 1.3 in its own files.
 - **A separate component, `QuiverWinReturn`,** added in `LindaQuiver.Start` beside `QuiverPipsView`, `QuiverReturnCue` and `QuiverLogListener`, with its own `OnEnable`/`Start` subscribe and `OnDisable` unsubscribe. Linda's death deactivates her, which unsubscribes it; resurrection re-subscribes it.
 - The core test drives the real `EndLevel` by reflection and stops at the first `NullReferenceException` (no player controller in a bare handler). That was the only way to check the raise inside `EndLevel` itself, not just the helper. If `EndLevel` later gets more setup at its top, the test still holds as long as the raise stays first.
 
@@ -110,7 +128,7 @@ No.
 
 ## Proposed commits
 
-Order: chunks 1.4 and 1.5 first (their own commits), then these two.
+Order: 1.4, then 1.5, then the core commit, then the feature commit. **Warning: 1.4's commit must stage only its own `LindaQuiver.cs` hunk (about lines 197-203, `HasGroundedArrows`), not this chunk's `Start` hunk (lines 126-127).**
 
 1. **`feat(core): raise levelWonBeforeOutro on a win, before the ending sequence`** (core, own commit):
    - `miso/Assets/_Project/Core/Managers/GlobalEventBus.cs`
@@ -145,7 +163,7 @@ none
 1. Open a level with Linda (for example the `GB_m1-linda` greybox, or any level she's in).
 2. Shoot two or three arrows, so they lie on the board and her quiver pips drop.
 3. Win the level: clear the objectives, or use the win cheat (`BypassCurrentLevelWithWinResult`).
-4. Right as the level ends, before the HUD hides: every grounded arrow flies to Linda with the gold glow and trail, the "+N" cue shows on her, and there's no bark. All arrows land before the outro's first step.
+4. Right as the level ends, before the HUD hides: every grounded arrow flies to Linda, and so does the winning shot itself once it lands, with the gold glow and trail, the "+N" cue shows on her, and there's no bark. All arrows land before the outro's first step.
 5. Lose a level with arrows on the ground: nothing flies.
 6. Optional: in the combat log, the winning action's line ends with "+N arrows, quiver N/N"; no Encore cast and no AP change are logged.
 
