@@ -2949,3 +2949,10 @@ Plan `plans/2026-11-19-faster-loop-process.md`, decisions D-575 to D-579.
 **Not verified.** Motion by eye; the real duo in combat.
 **Findings.** The Lucy clip stays out of git until a clean (watermark-free) export. Its .meta was created by the refresh (untracked).
 **Status.** `thj/duo-insert` 9 ahead of `main`, not pushed. Waiting on THJ's play check.
+
+## 2026-11-22: duo insert Lucy clip starts earlier
+
+**Built.** `663c62b2a` on `thj/duo-insert` (library asset + builder): Lucy's half in all three Mark-Lucy entries starts at 0.5 s at 1.2x (was 1.2 s at 1.3x), covering 0.5-3.32 s of her clip: head tilt during the slide-in, orb burst about mid-insert, glow into the hold (THJ: she only showed her finished act).
+**Verified.** `DuoInsertRulesTests` 44/44; whole EditMode suite 2487 passed, 1 Explicit skipped, 1 failed by timeout (`HomeVisitsTests.ApplyOpeningSetup_RepairsAStationLockInACopyOfTheScene`, stalled on an editor dialog THJ dismissed with "Try again"); passes alone.
+**Not verified.** Motion by eye; the real duo in combat.
+**Status.** `thj/duo-insert` 10 ahead of `main`, not pushed. Waiting on THJ's play check.

@@ -102,3 +102,9 @@ Verified (editor open, Play stopped before editing): compiled clean; whole EditM
 - Clip .meta: it did not exist before (the editor had not imported the clip); the import created it (guid 7747fa5298c872646b2251ff04d46cbf). Do not stage the clip; its .meta is untracked too.
 - Verified: compiled clean; whole EditMode suite 2489 total, 2488 passed, 0 failed, 1 skipped (explicit AI baseline). Play preview "Preview Mark-Lucy" on a temp prefab instance: no duo insert errors. Frames: `reports/2026-11-22-duo-insert-lucy-middle.png` (halves just arriving over the card, Lucy sliver with green orb) and `-end.png` (settled split: Lucy in profile facing right, face and raised hand in the left half, green glow, Mark clip right, no watermark visible). Play stopped. The console shows two "Failed to store screen shot" lines from the capture calls (files were still written); not a game issue.
 - Motion and how the Lucy clip reads against the Mark clips are THJ's check.
+
+## Lucy starts earlier (follow-up)
+
+- Lucy's left half in all three Mark-Lucy entries (`DuoInsertLibrary.asset`) and in `Editor/DuoInsertBuilder.cs`: clipStart 1.2 -> 0.5, playbackSpeed 1.3 -> 1.2. The builder's explanatory comment was updated to match.
+- Coverage: 0.5 + 2.35 x 1.2 = 3.32 s of the 5.04 s clip. Orb burst (about 2.0 s) lands at (2.0 - 0.5) / 1.2 = 1.25 s into the 2.35 s play, i.e. around the middle; head tilt (1.0-1.6 s) at 0.4-0.9 s, during the slide-in; cloak swirl about 1.0 s. Numbers kept as given. The short play scales the needed clip time down, so the burst only gets earlier relative to its end.
+- Verified: refresh + compile clean (no console errors); `DuoInsertRulesTests` 44/44. Play preview not run; motion is THJ's check.
