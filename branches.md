@@ -14,8 +14,9 @@ Owner: coordinator; THJ approves. `claude-handoff/` doesn't change when the shar
 
 - Created 2026-11-22 by the coordinator at THJ's request ("Before you commit anything create a branch. I said main, but now that i think it is safer to create a branch") from `main` @ `551685704`. THJ's working branch. Reverses D-602's "build on `main`" (D-604).
 - **Purpose:** the onboarding demo, the Hearth to the end of M4 (`plans/2026-11-22-onboarding-demo.md`).
-- Combat resource and AP: same as `main`. No commits yet.
-- Uncommitted in the tree (came along, THJ's, agents leave them alone): `LevelM2-C1.prefab`, `GlobalSettings.asset` (likely P0, sequences on), `PreloadScreen.unity`, `ProjectSettings/EditorSettings.asset` and `ProjectSettings.asset`, untracked `Content/FamilySuperTime/DUO/Inserts/`.
+- Combat resource and AP: same as `main`.
+- 2026-11-23: Phase 1, Mark's kit, M1 and two play-check fixes committed (`c9bdad3c6`..`500bfd1e0`); `32c7e3cf2` intro/outro sequences on; **`origin/main` merged in** (`55f51381b`, D-642: Khash's save-file restructure, enemy awareness and future-target displays off by default, custom cursor off, Archer Goblin WebThrow assets added, ability removed from the prefab). 11 ahead of `origin/thj/onboarding-demo`, not pushed. Local `main` is still behind `origin/main` (not moved).
+- Uncommitted in the tree (came along, THJ's, agents leave them alone): `LevelM2-C1.prefab`, `PreloadScreen.unity`, the TMP fallback font, `ProjectSettings/EditorSettings.asset` and `ProjectSettings.asset`, untracked `Content/FamilySuperTime/DUO/Inserts/`.
 
 ## `thj/duo-insert` (merged into `main` 2026-11-22)
 
