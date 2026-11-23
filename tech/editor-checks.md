@@ -17,7 +17,7 @@ Owner: coordinator. How a session checks a change in THJ's Unity editor: compile
 
 | Log | Where | What to look for |
 | --- | --- | --- |
-| Editor log | `C:\Users\javid\AppData\Local\Unity\Editor\Editor.log` (the previous editor session: `Editor-prev.log`) | Compile errors are `error CS####` lines; a finished compile and reload writes `CompileScripts: <ms>` and `Domain Reload Profiling: <ms>`. Runtime exceptions and the Home sim's `[Home …]` lines land here too, with full stack traces |
+| Editor log | `%LOCALAPPDATA%\Unity\Editor\Editor.log`: `C:\Users\javid\...` on one device, `C:\Users\Dead Mage\...` on the other (seen 2026-11-23) (the previous editor session: `Editor-prev.log`) | Compile errors are `error CS####` lines; a finished compile and reload writes `CompileScripts: <ms>` and `Domain Reload Profiling: <ms>`. Runtime exceptions and the Home sim's `[Home …]` lines land here too, with full stack traces |
 | Command-line run | the `-logFile` you pass (put it in the scratchpad) | Same content as the Editor log, for that run only |
 | Combat logs | `C:\Users\javid\AppData\LocalLow\Dead Mage\miso\CombatLogs\` (`Application.persistentDataPath`); one `.log` and `.jsonl` per fight, named `<yyyyMMdd-HHmmss>_<Level>` | What happened in a fight; levels that used a cheat are tagged `CHEATED`. Format: `tech/combat-log.md` |
 
