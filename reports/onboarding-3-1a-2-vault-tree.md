@@ -1,128 +1,150 @@
-# Report: Vault buyable in Mark's skill tree
+# Report: Vault buyable in Mark's skill tree (plus the save fixes it needed)
 
-Plan: plans/2026-11-23-onboarding-m1-m2-build-tech.md (chunk 3.1a-2)    Agent: miso-implementer    Branch: thj/onboarding-demo
-Outcome: blocked (stopped before any change: as specified, a bought Vault would not stick, and every fix touches core code or Mark's Super Time)
+Plan: plans/2026-11-23-onboarding-m1-m2-build-tech.md (chunk 3.1a-2), extended by the coordinator with D-645, D-646, D-647    Agent: miso-implementer    Branch: thj/onboarding-demo
+Outcome: done. Four units, each its own proposed commit. Full EditMode suite green: 2605 tests, 2604 passed, 1 skipped (the Explicit AI baseline). AI baseline run by name: 44 failures, the same as the last recorded count.
 
 ## What changed
 
-Nothing. No file under `miso/` was edited. I read the code and the assets and stopped at the save step.
+- `Core/Systems/EnemyAlertSystem/Editor/EnemyAlertDataTests.cs`: the Unaware tag test now expects the tag hidden in game, and is renamed to match.
+- `Core/Managers/SaveFileSerializer.cs` (core, Save): when saving a live state, `Normalize` knows the state's type and also converts a dictionary wrapper whose `values` JsonUtility left out.
+- `Core/Systems/AbilitySystem/Abilities/Runtime/RuntimeAbility.cs` (core), new partial `RuntimeAbility.SaveRegistration.cs` (+ `.meta`), `FactionRoleHandlerBase.cs` (core): the Super Time copy of an ability no longer registers with `SaveLoadManager`.
+- `Core/Systems/AbilitySystem/Abilities/Editor/SuperTimeSaveEntryTests.cs` (+ `.meta`): new test, a shared upgradable preset saves and reloads the bar copy's level.
+- `Resources/UnitSpecific/Player/Mark/Vault/Mark_Ability_Attack_Vault.asset`: `upgradable: 1`, unlock cost 1 SP.
+- `Resources/UnitSpecific/Player/Mark/Command/Mark_Ability_Attack_Command.asset`: unlock cost removed.
+- `Features/Player/Mark/Prefabs/Unit_Mark.prefab`: tree node 0 now unlocks Vault (preset, title, icon, description, upgrade description), and `edges[0]` now leads to Stunning Vault instead of Sapping Order.
+- `Features/Player/Mark/Scripts/Editor/MarkStartingKitTests.cs`: updated for the new kit and tree, including a bought-Vault save and reload test.
 
-## The blocker: Vault's save key is registered twice
-
-D-637 makes Vault `upgradable: 1`, so its runtime ability registers the save key `Mark-Mark_Ability_Attack_Vault-sd`. The post-merge save check is right that the key appears by itself. But Mark has **two** runtime copies of the Vault preset, and both register that same key:
-
-1. The one on his bar, in `AbilityOrchestrator.abilities`.
-2. The Super Time copy, `MarkFactionRoleHandler.superTimeAbility` (`Unit_Mark.prefab:2824-2825`, preset Vault).
-
-How the code handles that:
-
-- `AbilityOrchestrator.InitializePartially` / `Initialize` (`Core/Systems/AbilitySystem/Abilities/Runtime/AbilityOrchestrator.cs:47-50, 56-64`) first initializes the bar abilities, then the role handler. `FactionRoleHandlerBase.InitializePartially` / `Initialize` (`FactionRoleHandlerBase.cs:100, 109`) then initializes `superTimeAbility`.
-- `RuntimeAbility.InitializePartially` / `Initialize` (`RuntimeAbility.cs:213-215, 228-230`) reset the level to the preset default and call `SaveLoadManager.Register(key, this)` when the preset is `upgradable`.
-- `SaveLoadManager.Register` (`Core/Managers/SaveLoadManager.cs:64-79`) keeps one entry per key. A second registration **replaces** the entry's `Save` closure. So the Super Time copy, registered last, is the one that gets saved.
-- The tree buys the bar copy: `SkillTree.TryGetRuntimeAbility` uses `GetAbilityFromAllTypesByPreset` (`AbilityOrchestrator.cs:137-139`), which never looks at `superTimeAbility`.
-
-What happens in Home: Mark buys Vault, and the bar copy goes from -1 to 0. The Super Time copy stays at -1. The next save writes `{upgradeLevel: -1}` (`RuntimeAbility.CaptureState`, `:569`). The next `InitializePartially` reloads -1 into the bar copy. `AbilityUpgradePanelUI.cs:126, 186` and `FactionTracker.cs:58` call it on every refresh and before each buy. Result: the SP is spent and Vault drops back to locked. At the latest, it's locked again in the next fight.
-
-Nobody has hit this before because no Super Time preset is upgradable today: John's Taunt, Linda's Explosive Arrow, Lucy's Cyclone and Mark's Vault are all `upgradable: 0`. Vault would be the first.
-
-I didn't confirm it with a run: Unity is closed and a throwaway test would have added files. The chain above is all plain code, so a short EditMode repro is cheap if THJ wants one before choosing.
-
-## Options (Tier 3: core code or Mark's Super Time)
-
-1. **Core fix (recommended): the Super Time copy doesn't register for saving.** It never owns progress: the tree, the run upgrades and the bar all work on the orchestrator's copy. This needs a small additive change to `RuntimeAbility` (for example an optional "don't register for saving" argument on `Initialize` / `InitializePartially`) and to `FactionRoleHandlerBase` (pass it for `superTimeAbility`). Both are core systems. It touches John, Linda and Lucy too, though their presets aren't upgradable, so nothing changes for them today. It also prevents the same trap if any other Super Time preset becomes upgradable later. Its own commit and review, plus the full suite.
-2. **Data: give Super Time its own non-upgradable Vault preset.** Copy `Mark_Ability_Attack_Vault.asset` with its effect sub-assets to a Super Time preset, set it to `upgradable: 0`, and point `superTimeAbility` at it. There's no code change, but it changes which preset Mark's Super Time uses (a 3.1a stop condition). Copying a preset with sub-assets needs an editor script (`AssetDatabase.CopyAsset`), so it can't be done while Unity is closed. It also leaves a second Vault to keep in sync, and `MarkStartingKitTests.SuperTimeStillPointsAtVault` changes.
-3. **Data: clear Mark's Super Time preset.** Mark's Super Time does nothing today: the base `ActivateSuperTime` is a no-op, and target selection mode is None (3.1a report). But `PlayerController.cs:1761` calls `SuperTimeAbility.HandleTargetSelectionAnim` with no preset check, and `FactionRoleHandlerPartialInitTests` expects Mark's handler to carry an event-based animated ability. That's a risk of a null reference or a failing test. Not recommended.
-4. **Core alternative: initialize the role handler before the bar abilities** in `AbilityOrchestrator`, so the bar copy registers last. It's smaller, but it only works by ordering, changes init order for every unit, and is still core. Not recommended.
-
-**Recommendation:** option 1, then this chunk as planned on top. **Default if no answer:** the chunk stays parked. Vault stays fully locked (the 3.1a state), which is playable.
-
-## Ready to apply once the save point is decided
-
-I checked the rest of the chunk, and it holds as planned with field edits only:
-
-- **Vault preset** (`Resources/UnitSpecific/Player/Mark/Vault/Mark_Ability_Attack_Vault.asset`, LF, no BOM): `upgradable: 0` → `1`. `unlockResourceRequirements: []` → the 1 SP entry (`resourceRef.entityID: MainResource_SP`, `amount: 1`). `higherLevels` is empty, so `MaxUpgradeLevel` is 0, and the tree node goes from Upgradable (level -1) to Maxed (level 0) after one buy. `SkillTree.GetNextRequirements` shows the preset's `UnlockResourceRequirements` while the level is below 0.
-- **Command preset:** `unlockResourceRequirements` → `[]`.
-- **`Unit_Mark.prefab`, node 0 overrides:**
-  - `abilityPreset` → Vault (`guid: 9d3564d11bff7c24c8dce9f7b157f998`, `fileID: 11400000`).
-  - `title` → `Vault`.
-  - `icon` → Vault's icon (`fileID: -4875225888458068294, guid: 1f0832a1e278af04f8d9a3fae4227efb`), following the Command node, which uses its preset's icon.
-  - `upgradeDescription` → `Unlocks Vault.`
-  - `description` → a line based on the preset's own: "Mark leaps to a nearby tile, fracturing the ground, slightly damaging and pushing enemies back." A Vault line exists, so no `[PLACEHOLDER]` tag. Conventions (D-348) also say tree panels show tags, so the line is listed here for the narrative pass instead.
-  - Node mode stays Ability, with `unlockLevel` 0, `upgradeLevels` 0 and the same guid.
-- **Graph:** today `edges[0]` runs from node 0 (Command) to node 2 (Sapping Order), and `edges[1]` from node 1 to node 5. Re-point `edges[0].inputNodeGuid` from `8e73a18d-…` (Sapping Order) to `6e2a6359-3131-4be7-af7a-2a4d8d8119c9` (Stunning Vault):
-  - Sapping Order is then gated only by unit level 2, not by Vault.
-  - Stunning Vault waits for Vault to be bought (`IsUnlockedByGraph`: the previous node's level must be at least its max, 0) and for unit level 3. This also closes the 3.1a loose end where Stunning Vault could be bought without Vault.
-  - The Home tree UI lays nodes out by row and column, not edges (`AbilityTreePanelUI.cs:71, 111`), so the layout doesn't move.
-- **Run upgrades:** `RU_MarkVaultRange` and `RU_MarkVaultStun` require Vault, and `RunUpgradeTracker.HasRequiredAbility` checks `Available` (upgrade level 0 or higher). So they're offered once the purchase sticks. That's why the save point blocks this check too.
-- **Tests to update in `MarkStartingKitTests`:**
-  - `VaultIsNotSaved` becomes "Vault is saved".
-  - `TheFirstTreeNodeStillPointsAtCommand` becomes "the first node unlocks Vault for 1 SP".
-  - New tests: Command has no unlock cost; the Stunning Vault node sits behind the Vault node; Sapping Order has no graph parent.
-  - With option 1: a test that the Super Time copy doesn't register the key.
-- **`SkillTreeSmokeTest`** (menu tool, not in the suite): its Mark checks would flip from Command to Vault, cheap to update in the same pass.
+All paths are under `miso/Assets/_Project/`. Line endings and BOM are kept: assets, prefab and the Mark test are LF with no BOM; `RuntimeAbility*.cs`, `FactionRoleHandlerBase.cs` and the new core test have a BOM like their neighbours. Nothing touched M1, `GB_m2-lucy` or THJ's uncommitted files.
 
 ## Acceptance criteria
 
-- [ ] Mark's first tree node unlocks Vault for 1 SP, and Command stays open: not built. The data is ready (above), but blocked on the save point.
-- [ ] Children re-pointed (Sapping Order free of Vault, Stunning Vault behind Vault): not built. It's a single edge field change.
-- [ ] Vault run upgrades appear once Vault is bought: not built. Depends on the purchase sticking.
-- [ ] Tests extended: not built.
+- [x] **Mark's first tree node unlocks Vault for 1 SP, and Command stays open from the start.** Evidence: `MarkStartingKitTests.TheFirstTreeNodeUnlocksVault`, `VaultCostsOneSkillPoint`, `CommandHasNoUnlockCost`, `CommandIsOpenFromTheStart` and `VaultIsLockedFromTheStart` pass.
+- [x] **Command's child isn't gated behind Vault, and Stunning Vault sits behind the Vault node.** Evidence: `SappingOrderIsNotGatedByAnotherNode` and `StunningVaultSitsBehindTheVaultNode` pass. `ABoughtVault_SurvivesASaveAndReload` also checks that Stunning Vault's graph lock opens once Vault is bought.
+- [x] **A bought Vault survives a save and reload.** Evidence: `ABoughtVault_SurvivesASaveAndReload`. It buys node 0 on an isolated prefab copy, then reads the save entry (upgrade level 0), then registers again and finds Vault still at 0. With the Super Time fix turned off, this test and `SuperTimeSaveEntryTests` both fail (-1 instead of 0). I checked that once and then restored the fix.
+- [~] **The Vault run upgrades appear once Vault is bought.** Covered by mechanism, not by a test: `RunUpgradeTracker.HasRequiredAbility` checks `Available`, and the bought level now sticks. The play check confirms it.
+- [x] **The two tests that were failing after the merge now pass.** `SaveFileSerializerTests.DictionaryKeysNamedKeysAndValues_RetainTheirLists` and `EnemyAlertDataTests.UnawareTag_IsInTheRegistry_AndHiddenInGame` both pass in the full run.
+- [x] **Full EditMode suite.** Command line, Unity 6000.3.4f1: 2605 total, 2604 passed, 0 failed, 1 skipped (`AIRegressionTest.Baseline_MatchesCurrentAI`, Explicit). The GridToLevel flake didn't appear.
+- [x] **AI baseline, run by name:** 731 checks, **44 failures**, the same as recorded. None of them name Mark, Vault or Command. Mark's Vault graph checks all pass. Not re-baselined.
 
 ## Chunks
 
-### Chunk 3.1a-2: Vault buyable in the tree
+### Unit 1: Unaware tag test follows main (D-645)
 
-- Changed: none.
-- Criteria met: none. I stopped at the save step (see "The blocker").
-- Decisions and loose ends: see "Options" and "Ready to apply".
+- Changed: `Core/Systems/EnemyAlertSystem/Editor/EnemyAlertDataTests.cs`. The test is renamed to `UnawareTag_IsInTheRegistry_AndHiddenInGame` and asserts `ShowInGame` is false, with a plain message. `GTagSet.asset` is untouched.
+- Criteria met: the test passes in the targeted and full runs.
+- Decisions and loose ends: none.
+
+### Unit 2: Save file serializer keeps a wrapper's keys when JsonUtility drops its values (D-646, core)
+
+- **Root cause**, confirmed with a temporary probe test (deleted afterwards, no files left behind):
+  - JsonUtility can't serialize nested collections, so for `SerializationWrapper<string, List<int>>` it writes only the keys: `{"lists":{"keys":["keys","values"]}}`.
+  - `Normalize` converted a wrapper only when it saw both `keys` and `values`, so it left this object as it was.
+  - `Expand` is driven by the type, so it read the untouched object as an already-converted dictionary with one entry named `"keys"`. Restored: `{"lists":{"keys":["keys"]}}`.
+  - The real cause was the mismatch between a shape-based `Normalize` and a type-based `Expand`. The suspected handling of keys literally named `keys`/`values` was not the cause.
+- **Fix:**
+  - `SerializeState<T>` passes `typeof(T)` to `Normalize`.
+  - `Normalize` walks fields the way `Expand` does (new private helpers `IsWrapper`, `ElementType`, `FieldType`).
+  - A field typed as a wrapper that has only `keys` is converted too, with null values. Those values could never be saved anyway, and the keys survive.
+  - The legacy-file path still calls `Normalize` without a type, so its behaviour is unchanged.
+  - Existing shape rules are kept as they are: no other output changes, no format change, and old files load the same.
+  - No real save type has nested-collection values today, so real saves are byte-identical.
+- Changed: `Core/Managers/SaveFileSerializer.cs` (LF, no BOM).
+- Criteria met: all 21 `SaveFileSerializerTests` cases pass, Khash's test unchanged. The other save-related tests in the suite also pass: `RuntimeAbilityInitializeTests`, Home save tests, the faction and stat suites.
+- Decisions and loose ends: the opposite case remains. An ordinary class with exactly `keys` and `values` array fields would still be converted by shape and not rebuilt. None exists, as noted in the save read. Making the typed path skip non-wrappers would fix it, but changes behaviour beyond this test, so I left it alone.
+
+### Unit 3: The Super Time copy doesn't register for saving (D-647, core)
+
+- **Where:** new partial `RuntimeAbility.SaveRegistration.cs`:
+  - an `internal bool SkipsSaveRegistration { get; set; }` property;
+  - a private `RegisterForSave()`, called from both `Initialize` and `InitializePartially` in place of the inline `SaveLoadManager.Register`.
+  - `FactionRoleHandlerBase.Initialize` and `InitializePartially` set the flag on `superTimeAbility` before initializing it.
+  - **No public signature changes.** The flag is `internal` and isn't serialized.
+- **Effect:** a bar ability keeps its save entry when the same preset is also the unit's Super Time. Today only Mark's Vault is in that position. John, Linda and Lucy have no upgradable Super Time preset, so nothing changes for them. A Super Time copy keeps its default level, as before. Nothing reads its level: 3.1a found Mark's Super Time does nothing.
+- Changed: `RuntimeAbility.cs`, `RuntimeAbility.SaveRegistration.cs` (+ `.meta`, new GUID), `FactionRoleHandlerBase.cs`, `Editor/SuperTimeSaveEntryTests.cs` (+ `.meta`).
+- **Test:** `SuperTimeSaveEntryTests.SharedUpgradablePreset_SavesAndReloadsTheBarCopysLevel`.
+  - It loads an isolated copy of `Unit_Mark.prefab` and marks the Super Time preset upgradable in memory, so it doesn't depend on unit 4's data. The flag is restored in TearDown and the asset is never saved.
+  - It raises the bar copy's level, invokes the save entry's own save callback, registers again and checks the level.
+  - It works on a private copy of `SaveLoadManager`'s registry (via reflection, restored afterwards), so nothing is written to disk.
+  - It fails without the fix.
+- Decisions and loose ends: `Core/Editor/StatBackedEvaluationProbe.cs:678` (an editor tool) still calls `InitializePartially` on the Super Time copy directly, without the flag. It's editor-only and harmless today. Listed, not changed.
+
+### Unit 4: Vault bought in Mark's tree (D-637)
+
+- Changed:
+  - Vault preset: `upgradable: 1`, `unlockResourceRequirements` = 1 × `MainResource_SP`.
+  - Command preset: `unlockResourceRequirements: []`.
+  - `Unit_Mark.prefab` overrides on node 0:
+    - `abilityPreset` → Vault;
+    - `title` → `Vault`;
+    - `icon` → Vault's preset icon;
+    - `description` → "Mark leaps to a nearby tile, fracturing the ground, slightly damaging and pushing enemies back.";
+    - `upgradeDescription` → `Unlocks Vault.`;
+    - `edges[0].inputNodeGuid` → Stunning Vault's node (`6e2a6359-…`).
+  - `MarkStartingKitTests.cs`:
+    - `VaultIsNotSaved` replaced by `VaultIsSaved`;
+    - `TheFirstTreeNodeStillPointsAtCommand` replaced by `TheFirstTreeNodeUnlocksVault`;
+    - new `CommandHasNoUnlockCost`, `VaultCostsOneSkillPoint`, `StunningVaultSitsBehindTheVaultNode`, `SappingOrderIsNotGatedByAnotherNode`, `ABoughtVault_SurvivesASaveAndReload`.
+- Unchanged on node 0: guid, Ability mode, `unlockLevel` 0, `upgradeLevels` 0, position. No other prefab overrides Mark's tree.
+- Criteria met: 11/11 `MarkStartingKitTests` pass.
+- Decisions and loose ends:
+  - The node text comes from Vault's own preset line, so it has no `[PLACEHOLDER]` tag. Listed under "Docs to update" for the narrative pass.
+  - I left `SkillTreeSmokeTest` (menu tool) alone. Its generic checks assume tier 0/1/2/3 nodes, and Mark's tree uses levels 0/2/3/5, so `N(1, 0)` already finds no node for Mark before this change. Updating it is more than a cheap fix.
 
 ## Reviews and checks
 
-- (coordinator)
+- (coordinator: core units 2 and 3 to be reviewed one by one)
 
 ## Save reset
 
-No.
+No. The tests never write the save file. They use a private copy of the in-memory registry and restore it.
 
 ## Decisions I made
 
-- I stopped instead of building the data part without `upgradable`. Without it, a purchase is never saved at all, so a partial build would have looked done but wasn't.
-- No tests run: nothing changed.
+- **Unit 2:** the fix is type-guided only on the live save path, and the legacy-file path is unchanged. That's the smallest change that removes the mismatch for this case.
+- **Unit 3:** an `internal` flag set by the role handler, instead of a new public overload or a different init order. The public API is unchanged, and the rule is explicit about the Super Time copy, as decided.
+- **Unit 3 test:** it marks the preset upgradable in memory so the core commit stands alone before the Mark data commit.
+- **Probe:** I used a temporary EditMode probe to confirm the serializer's root cause, then deleted it and its `.meta`.
 
 ## Needs THJ
 
-1. **How to keep a bought Vault saved.**
-   - *What:* Mark's Super Time copy of Vault registers the same save key as the Vault on his bar and overwrites it, so a bought Vault reverts to locked.
-   - *Why it matters:* D-637 can't work as data alone. The SP is spent and Vault doesn't stay.
-   - *Options:* (1) a small core fix so the Super Time copy doesn't register for saving; (2) a separate non-upgradable Super Time Vault preset (editor script, changes Mark's Super Time reference); (3) clear Mark's Super Time preset; (4) reorder init in `AbilityOrchestrator`.
-   - *Recommendation:* (1), as its own core commit, then the chunk on top.
-   - *Default if no answer:* parked, and Vault stays locked as in 3.1a.
+None.
 
 ## Docs to update
 
-- `reports/merge-origin-main-2026-11-23-save-read.md` / plan 3.1a-2 "Data": `upgradable: 1` also needs the duplicate-key fix (above).
-- `tech/core-systems.md` (if option 1): note on Family Roles / Ability runtime that the Super Time copy doesn't save.
+- `tech/core-systems.md`:
+  - Ability data and runtime / Family Roles: the Super Time copy of an ability doesn't register a save entry (`SkipsSaveRegistration`, set by `FactionRoleHandlerBase`). The bar copy owns the key.
+  - Infrastructure / Save: `SaveFileSerializer.SerializeState` normalizes with the state's type. A wrapper whose `values` JsonUtility dropped keeps its keys.
+- `design/gdd/characters/mark.md` and `progression-economy.md`: Vault is bought in Mark's first tree node for 1 SP, and Command is free from the start. Stunning Vault needs Vault. Sapping Order needs only level 2.
+- Narrative pass: node 0 text "Mark leaps to a nearby tile, fracturing the ground, slightly damaging and pushing enemies back." and "Unlocks Vault." (D-348: no tag in the asset).
+- `reports/merge-origin-main-2026-11-23-save-read.md`: the Super Time duplicate key is now fixed.
 
 ## Risks and loose ends
 
-- The same trap applies to any future change that makes a Super Time preset upgradable (John's Taunt, Linda's Explosive Arrow, Lucy's Cyclone). Option 1 covers it.
-- The plan's "`[PLACEHOLDER]` if no Vault line" conflicts with conventions D-348 (no tags in tree text). It's moot here because a Vault line exists.
+- **Old dev saves** (as in 3.1a, D-636): a save made before this change has no Vault entry, so Vault starts locked and can be bought. A save that bought Command keeps a Command entry, which is harmless. Use a cleared save for checks.
+- The 1 SP that 3.1a freed up for Mark is now spent on Vault again.
+- `StatBackedEvaluationProbe` registers the Super Time copy without the flag (editor tool only).
+- `SkillTreeSmokeTest`'s Mark section doesn't match Mark's tree layout. This predates the change.
+- The batch-mode runs opened the project headless. `ProjectSettings/*` were already modified by THJ before I started. I didn't compare whether the runs rewrote them, so check them before staging.
 
 ## Proposed commits
 
-None (nothing changed). Once option 1 is chosen, the likely split is:
-
-1. `fix(abilities): Super Time copies don't overwrite the ability's save entry` (core)
-2. `feat(mark): Vault is bought in Mark's skill tree in place of Command` (plain data + tests)
+1. `test(enemy-alert): the Unaware tag is hidden in game`: `miso/Assets/_Project/Core/Systems/EnemyAlertSystem/Editor/EnemyAlertDataTests.cs` (plain)
+2. `fix(save): keep a dictionary's keys when JsonUtility drops its values`: `miso/Assets/_Project/Core/Managers/SaveFileSerializer.cs` (core)
+3. `fix(abilities): a Super Time copy no longer overwrites the ability's save entry`: `miso/Assets/_Project/Core/Systems/AbilitySystem/Abilities/Runtime/RuntimeAbility.cs`, `miso/Assets/_Project/Core/Systems/AbilitySystem/Abilities/Runtime/RuntimeAbility.SaveRegistration.cs`, `miso/Assets/_Project/Core/Systems/AbilitySystem/Abilities/Runtime/RuntimeAbility.SaveRegistration.cs.meta`, `miso/Assets/_Project/Core/Systems/AbilitySystem/Abilities/Runtime/FactionRoleHandlerBase.cs`, `miso/Assets/_Project/Core/Systems/AbilitySystem/Abilities/Editor/SuperTimeSaveEntryTests.cs`, `miso/Assets/_Project/Core/Systems/AbilitySystem/Abilities/Editor/SuperTimeSaveEntryTests.cs.meta` (core)
+4. `feat(mark): Vault is bought in Mark's skill tree in place of Command`: `miso/Assets/_Project/Resources/UnitSpecific/Player/Mark/Vault/Mark_Ability_Attack_Vault.asset`, `miso/Assets/_Project/Resources/UnitSpecific/Player/Mark/Command/Mark_Ability_Attack_Command.asset`, `miso/Assets/_Project/Features/Player/Mark/Prefabs/Unit_Mark.prefab`, `miso/Assets/_Project/Features/Player/Mark/Scripts/Editor/MarkStartingKitTests.cs` (plain data + tests; depends on 3, or a bought Vault doesn't stick)
 
 ## Other branches
 
-None.
+None. The save fixes (2, 3) are general and would also suit `main`, but carry them over only if THJ wants them there.
 
 ## How to see it
 
-Nothing to see yet. To see the blocker once Vault is set to `upgradable: 1` without a fix:
-
-1. Clear the save.
-2. In Home, give Mark 1 SP and buy the Vault node.
-3. Leave and reopen the skill tree, or start a fight: Vault is locked again and the SP is gone.
+1. Open Unity and let it recompile. Clear the save outside Play mode (`Tools > Save Data > Clear Save Data`), or use the in-game reset.
+2. Play from `Scenes/PreloadScreen.unity` to Home, and give Mark at least 1 SP (play to a level-up, or use `Tools` > faction resource window).
+3. Open Mark's skill tree:
+   - the first node reads **Vault** with Vault's icon, costs 1 SP, and is upgradable;
+   - **Sapping Order** waits only on level 2;
+   - **Stunning Vault** shows locked until Vault is bought (and level 3).
+4. Buy Vault. Close and reopen the tree, or leave Home and come back: Vault stays owned and the SP stays spent.
+5. Start a fight with Mark: his bar shows Fist Blitz, Walk, Command **and Vault**. Over a run, the Vault run upgrades (Long Vault, Vault Stun) can now be offered.
+6. Optional: quit Play mode, re-enter and load the save. Vault is still owned.
