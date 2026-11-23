@@ -148,3 +148,27 @@ none
 4. Right as the level ends, before the HUD hides: every grounded arrow flies to Linda with the gold glow and trail, the "+N" cue shows on her, and there's no bark. All arrows land before the outro's first step.
 5. Lose a level with arrows on the ground: nothing flies.
 6. Optional: in the combat log, the winning action's line ends with "+N arrows, quiver N/N"; no Encore cast and no AP change are logged.
+
+## Review (miso-reviewer, 2026-11-23): FIX
+
+Pasted by the coordinator; the reviewer is read-only.
+
+- **Core: approved as is.**
+  - It only adds: one field, one call line and a new partial.
+  - It raises on a win only, as the third line of `EndLevel`, before persistence, the waits, `HideHUD`, the resurrection and `PlayOutro`.
+  - `levelEnded` is untouched, and no statics were added.
+  - The try/catch is the same guard as `RaiseTurnEnding`, and the error is still logged.
+- **Must fix 1:** arrows that land after the signal stay on the board through the outro (`QuiverWinReturn.cs:39-43`).
+  - The win is evaluated one frame after the kill (`EvaluateObjectivesAfterDeaths`).
+  - Linda's arrows only land at the end of their flight (`QuiverArrow.cs:110-124`).
+  - So her own winning shot often lands after the return has run; a held catch released after the signal does the same.
+  - **The fix,** inside the 1.3 files: after the signal, also listen to `field.OnChanged` and send any later landing home. It can't loop. Unsubscribe in `OnDisable` and when the field closes. Add a test: signal, then a landing, then the quiver is full and the board empty.
+- **Should fix:** none.
+- **Notes:**
+  - The component is added in code in `LindaQuiver.Start`, so no prefab is involved.
+  - Nothing new runs on the worker thread.
+  - No AP, no cast, nothing on a defeat.
+  - **Commit order:** 1.4, then 1.5, then core, then feature. 1.4 must stage only its own `LindaQuiver.cs` hunk (about lines 197-203).
+  - No test covers `Start` adding the component; the play check does.
+  - Line endings and BOMs kept.
+
