@@ -65,3 +65,10 @@ Play mode, any scene with the prefab `Features/UI/DuoInsert/Prefabs/DuoInsertCan
 ## Loose ends
 - The solo lead's opening zoom (about 2x on clip B) is a look decision for THJ.
 - `IsBoundToAny` depends on the action's bindings being resolved; if the player rebinds the QTE key mid-combat the list is built per duo so it follows.
+
+## Review fixes (applied after APPROVE)
+1. `IsBoundToAny` now has a real edit-mode test: a Keyboard device is added in SetUp and removed in TearDown; a simple `<Keyboard>/space` action and a 1D-axis composite (q, e) are enabled, then disabled and disposed. Space, q and e count as bound; `a` and "space with only the composite action" do not.
+2. `Entry.WithTransition` now uses `MemberwiseClone` and sets the style. The halves are shared with the original (fine: the insert only reads them).
+
+Results: `DuoInsertRulesTests` 41 of 41 pass. Whole EditMode suite: 2486 total, 2485 passed, 0 failed, 1 skipped (`AIRegressionTest.Baseline_MatchesCurrentAI`, Explicit). Compiled clean.
+F1a set diff stat after the fixes: see the final reply (9 files). F1b unchanged.
