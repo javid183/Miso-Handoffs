@@ -72,3 +72,10 @@ Play mode, any scene with the prefab `Features/UI/DuoInsert/Prefabs/DuoInsertCan
 
 Results: `DuoInsertRulesTests` 41 of 41 pass. Whole EditMode suite: 2486 total, 2485 passed, 0 failed, 1 skipped (`AIRegressionTest.Baseline_MatchesCurrentAI`, Explicit). Compiled clean.
 F1a set diff stat after the fixes: see the final reply (9 files). F1b unchanged.
+
+## Follow-up: speed lines behind, full screen, Mark-Lucy uses slide
+- Draw order: `SpeedLines` is now the sibling right after `Backdrop` (prefab `m_Children` reorder, one line; builder creates it before the halves), so lines sit behind both halves, caption and flash.
+- `DuoInsertSequence.AnimateSpeedLines`: sized each frame from `speedLineRoot.rect`. Per line: distance to the screen edge along its angle (handles corners), outer end at edge x 1.12 + 40 (always off-screen), tip moves inward to a per-line radius of 8-38 percent of that edge distance, thickness 2-5 percent of the half-height. Alpha, `speedLineSpeed` and the 0.6 max alpha kept. Fixed pixel radii and lengths removed. Count 22 -> 32 to fill a wide screen.
+- `Mark_Lucy_Duo` now `SlideFromSides` (library asset and builder default); `Mark_Lucy_Duo_ClipA` now `SoloThenSplit`.
+- Prefab and asset files are LF in the repo (not CRLF), kept as they were.
+- Results: compiled clean, whole EditMode suite 2486 total, 2485 passed, 0 failed, 1 skipped (Explicit AI baseline). Play preview (slide) screenshot `reports/2026-11-22-duo-insert-speedlines.png`: lines behind both halves, reaching all edges and corners. One frame only; motion is THJ's check.

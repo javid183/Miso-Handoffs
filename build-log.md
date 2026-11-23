@@ -2917,3 +2917,11 @@ Plan `plans/2026-11-19-faster-loop-process.md`, decisions D-575 to D-579.
 **Not verified.** The motion in and out by eye, mashing through card and insert without skipping, another key still skipping, the real Mark–Lucy duo in combat (plus the earlier C2 play-check list).
 **Findings.** `SoloThenSplit` opens with the lead clip zoomed ~2x and pulls back as it settles (keeps the picture unsquashed; THJ's look call). Clips now play from the start of the in-transition: a full play needs ~2.85 s of clip after `clipStart` (test clips are 8 s).
 **Status.** `thj/duo-insert` 4 ahead of `main`, not pushed. Waiting on THJ's preview and play check.
+
+## 2026-11-22: duo insert speed lines and default style
+
+**Built.** `2383b461c` on `thj/duo-insert` (4 files under `Features/UI/DuoInsert/`): speed lines draw behind the halves, caption and flash (sibling order in the prefab and the builder); streaks are sized from the canvas each frame, outer end off-screen at every angle (corners included), tip at 8-38% of the edge distance, 32 streaks (was 22). `Mark_Lucy_Duo` uses `SlideFromSides` (THJ liked it), the clip-A entry `SoloThenSplit`.
+**Verified.** Whole EditMode suite 2485/2486 (1 Explicit skipped). One Play-mode preview frame (`reports/2026-11-22-duo-insert-speedlines.png`): lines behind both halves, reaching every edge.
+**Not verified.** The rushing motion by eye; the real duo in combat.
+**Findings.** The screenshot tool left an untracked `miso/Assets/Screenshots/` (+ `.meta`); the agent's delete was denied, so THJ removes it. Play mode was on when the agent started; it stopped it.
+**Status.** `thj/duo-insert` 5 ahead of `main`, not pushed. Waiting on THJ's play check.
