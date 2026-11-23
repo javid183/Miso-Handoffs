@@ -1,6 +1,6 @@
 # Demo tweaks: Hearth to the end of M4
 
-> Snapshot of the Claude Doc "Demo tweaks: Hearth to the end of M4" (https://claude.ai/artifact/Eg7iNf37y7FnydDpnNWXYH), taken 2026-11-23 (X-32, X-33 added the same day). The Claude Doc is the live version; this copy does not update. Plan: `plans/2026-11-22-onboarding-demo.md`.
+> Snapshot of the Claude Doc "Demo tweaks: Hearth to the end of M4" (https://claude.ai/artifact/Eg7iNf37y7FnydDpnNWXYH), taken 2026-11-23 (X-32, X-33 and H-22 added the same day). The Claude Doc is the live version; this copy does not update. Plan: `plans/2026-11-22-onboarding-demo.md`.
 
 2026-11-19 · THJ
 
@@ -62,6 +62,7 @@ The demo runs from a new game to the end of M4's last sequence. This is the flow
 |------|-----------------------------------------------------------------------------------------------------------------------|-----------------|-------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | H-12 | Remove Margaret from the storytelling cutscene: take her out of the Home idle and cut her lines; Mary takes her lines | Tech, Narrative | Claude, Narrative | ✓ Possible: she is narrator-text lines plus a Home idle, with no dialogue character. Her lines hand the telling to each teller and close it ("Eldest first. Linda.", "Then you tell it, Lucy.", "Every one of you saved her…", "Let her sit. She remembers too."), so Mary takes the hand-offs (THJ, Nov 20). Needs Mary's dialogue character and portrait (X-12) and Mary in the storytelling idle (to check her art) |
 | H-13 | The next teller stands up or acts before their memory starts                                                          | Tech, Art       | Claude, Art       | ~ A Home idle or animation step per teller; needs a stand-up animation for each character (to check what exists)                                                                                                                                                                                                                                                                                                       |
+| H-22 | Ryker lies by the fire in the storytelling idle; before the last memory she slips out, so she's gone when the telling ends | Tech, Art | Claude | ✓ Likely data: Ryker's Home idles exist (WolfSitDoor, WolfSadSit) and the narrative draft already has her by the fire at the Hearth's start. Open: does the player see her walk out between memories 3 and 4, or is she just gone? Sets up section 4 |
 
 ### Memory 1 · Linda
 

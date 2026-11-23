@@ -57,7 +57,7 @@ One writer in the Unity project at a time. Design work (paper levels, X-15, X-27
 | 2.1 | for H-19, H-21 | New trigger: "ability X used → play a sequence" | 3 (new reusable piece); asked once with the chunk | S, not core. Also usable for future tutorials |
 | 2.2 | H-02, H-14, H-15, H-16, H-17, H-21 | Memories 1 to 3: Ryker as a prop in each; memory 1 opens on her (camera); memory 2 opens with her mother's body in view; memory 3: only John has a Role; Mark interrupts at its end; the Cyclone steer page after Lucy's first cast (needs 2.1) | 2 | Placeholders by `miso-narrative` |
 | 2.3 | H-18, H-19, H-20 | Memory 4: Linda only shoots until the Cyclone part; after Mark's entrance, his kit locked to the primary attack for one action (needs 2.1), with the pulse; John's line at the den mouth | 2 | |
-| 2.4 | H-12, H-13, E-01 to E-04, part of X-12 | The storytelling cutscene and ending: Margaret leaves the idle, Mary takes her lines (Mary's dialogue character with a placeholder portrait); the next teller stands before each memory; back at Home: they notice Ryker isn't there, everyone stands, Lucy walks out, fade, "The day after", the morning worry | 3 for the beat order (game feel, story beat) | Uses existing animations where they exist; missing ones listed for Art |
+| 2.4 | H-12, H-13, H-22, E-01 to E-04, part of X-12 | The storytelling cutscene and ending: Ryker lies by the fire and slips out before the last memory; Margaret leaves the idle, Mary takes her lines (Mary's dialogue character with a placeholder portrait); the next teller stands before each memory; back at Home: they notice Ryker isn't there, everyone stands, Lucy walks out, fade, "The day after", the morning worry | 3 for the beat order (game feel, story beat) | Uses existing animations where they exist; missing ones listed for Art |
 | 2.5 | H-11 | First art pass on the memory levels: a background and a couple of props copied from a matching level, skipped wherever it would mean rework | 2 | THJ looks before Art takes over |
 
 ### Phase 3: the missions (design first; L)
@@ -143,4 +143,5 @@ Per chunk: compile with a clean console; full EditMode suite green; `miso-review
 | M1-02 | The Masher beat replaces the Ridge's corridor beat? | D3 M1 |
 | M3-07 | The Linda–Lucy scene = today's Yard scene? | 3.3 |
 | X-26 | Mark's setup for the catch without Vault | D3 M1 |
+| H-22 | Does the player see Ryker walk out between memories 3 and 4, or is she just gone? | 2.4 |
 | X-32 | What makes a save "too old": a save version stamped by the build (recommended), or its date? And is the player told before it's cleared? | 6.1 |
