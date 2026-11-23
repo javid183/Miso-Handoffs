@@ -92,3 +92,28 @@ core-systems Duos row, GDD Duos note (test, Mark–Lucy only), design note statu
 ## Gates
 
 Compile / EditMode: `DuoInsertRulesTests` (C1), cooperation fixtures + stored-factor tests + full suite (C2) / review: C1 with the feature, C2 its own (core) / play check: yes, THJ's time (C1 preview look, then C2 in a combat with Mark–Lucy plus two other duos) / docs: C3 list. Commits: C1 and C2 separate (C2 revertable alone), each with its `.meta` files, shown to THJ per CLAUDE.md.
+
+## Follow-up F1 (THJ, 2026-11-22, after reading the results; not played yet)
+
+THJ: "yes skip the player's own qte key. make the duration a bit longer. tell me where they are if I can tune them." Plus start and end transitions instead of the halves just appearing and disappearing, two ideas: (a) one character fills the screen, then the screen halves on the diagonal while the other fills its half; (b) both start from their sides and meet in the centre, then go back out. THJ didn't pick one, so both get built as a per-entry style for an A/B look (like clip A/B).
+
+### F1a. Insert player: transitions, longer timing, tunables, skip filter (feature code, no core) — opus, review with F1b
+
+Files: `Features/UI/DuoInsert/` (`DuoInsertSequence.cs`, `DuoInsertLibrary.cs`, `DuoInsertRules.cs`, `DuoInsertHalfGraphic.cs` if needed, the library asset, the prefab if new serialized fields need values, `Editor/DuoInsertRulesTests.cs`).
+- New per-entry `InsertTransition transition` enum: `SoloThenSplit` (default for `Mark_Lucy_Duo`) and `SlideFromSides` (default for `Mark_Lucy_Duo_ClipA`, so both are visible from the two existing preview menus; also add preview menus that force each style on the main entry).
+  - SoloThenSplit, in: the lead half (new per-entry `leadSide`, default Right = Mark's clip) starts full screen with the flash; then its inner edge sweeps to the diagonal while the other half wipes in from its screen edge to the diagonal (ease-out, ink border along the moving edge). Out: hand-over, the other half sweeps across to full screen and the lead is pushed off, then a quick fade.
+  - SlideFromSides, in: both halves start off-screen on their own sides and slide in, meeting on the diagonal with the impact flash at contact. Out: both slide back out to their sides, with a fade.
+  - The picture must not squeeze or re-crop while a half's polygon moves: the half's picture window is computed against its final (settled) polygon or a fixed frame, not the animated polygon's bounds.
+- Timing (new defaults, all in the library entry unless said): `fullLength` 1.4 → 2.0 s (the settled split), `shortLength` 0.6 → 0.9 s, new `transitionIn` 0.35 s and `transitionOut` 0.3 s; short plays scale both transitions by 0.6. The hold on the last frame 0.2 → 0.3 s.
+- Move the timing constants in `DuoInsertSequence` that a designer would tune (card pop, flash fade, hold, sprite push-in, speed-line speed) to serialized fields with tooltips on the component (values on the prefab); keep the technical ones (prepare/seek timeouts) as constants. Skip delay (0.3 s) stays in `DuoInsertRules` but becomes a serialized field on the component passed in, or stays a const: implementer's call, say which.
+- Skip: `PlayInsertIE(entry, IReadOnlyList<InputAction> ignoreActions = null)`. A press on any control bound to one of the ignored actions never skips; any other key/click/pad button still skips after the delay. A skip plays a fast out (about 0.12 s) instead of a hard cut.
+- Pure, testable pieces in `DuoInsertRules`: phase timing (which beat at time t for a length, transitions and short scale) and the polygon edges per style and phase. Tests for both, plus the ignored-control filter if it can be tested without devices (otherwise say so).
+- No statics. Keep LF line endings and no BOM in the new files (match the existing ones).
+Acceptance: compiles; both preview menus show their style in and out; picture doesn't stretch during the moves; existing rules tests updated for the new defaults; leaving Play mode mid-transition leaves nothing behind.
+
+### F1b. Duo flow passes the QTE's own action (core, one call) — with F1a's review
+
+`UnitsCooperationHandler.Insert.cs`: resolve each card QTE's `bindingActionID` through `PlayerInputController.Instance.GetInputAction` (as `QuickTimeEventHandler` does) and pass the collected actions to `PlayInsertIE`. Nothing else in the core changes. THJ approved this ("yes skip the player's own qte key").
+
+Commits: F1a and F1b separate (F1b revertable alone); F1a works on its own (null = no filter).
+Gates: DuoInsertRulesTests + CooperationInsertTests + whole EditMode suite; review; THJ's play check (the existing list plus: both transition styles, mash through the card and into the insert without skipping, another key still skips).
