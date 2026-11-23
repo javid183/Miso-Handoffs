@@ -6,6 +6,9 @@ Rows D-001 to D-011 were carried over on 2026-10-15 from the Home handoff and pr
 
 | Date | ID | Tier | Scope | Decided by | Decision | Why | Affects |
 | --- | --- | --- | --- | --- | --- | --- | --- |
+| 2026-11-23 | D-633 | 3 | thj/onboarding-demo | THJ | X-26: "Move" means Mark's Command. His skill tree unlocks Command instead of Vault; in M1 his kit is his attack(s) + Command, no Vault (settles T-2) | Answered in session | D3 M1; chunk 3.1; skill tree data (X-13) |
+| 2026-11-23 | D-632 | 3 | thj/onboarding-demo | THJ | M1: Mark and Linda need not start side by side; a short or even long distance apart is fine if the level sets it up | THJ: "it is okay if they start with a short distance or even far if it is set up" | D3 M1 start tiles; chunk 3.1 |
+| 2026-11-23 | D-631 | 3 | thj/onboarding-demo | THJ | Paper levels M1 (`m1-ridge`) and M2 (`m2-river`) approved for building (chunks 3.1, 3.2); M3 and M4 not yet | THJ: "M1 and M2 approved, build them" | chunks 3.1, 3.2 |
 | 2026-11-23 | D-630 | 3 | all | THJ | The Dark Worm's intended rule: it splits on the first damage it takes (a killing blow still splits it); HP matters only for the last children. T-16 becomes a code check in chunk 3.2: if the built worm differs, that's a bug to fix, and GDD EN-4's built text follows the rule | THJ: "i am almost sure worm split on first damage" | D3 M2; chunk 3.2; GDD `enemies.md` EN-4 |
 | 2026-11-23 | D-629 | 2 | thj/onboarding-demo | coordinator | 1.2: the remaining ~0.25 s where the HUD starts sliding in before the enemy cards (core `StartLevelIE` calls `ShowHUD()` with `StartTurn()`) is judged in THJ's Phase 1 play check, not fixed now | Removing it needs core code; much shorter than before | chunk 1.2 |
 | 2026-11-23 | D-628 | 3 | thj/onboarding-demo | THJ | X-10: only the Home scene's hearth label becomes "World Map"; the intro screen (`Home - Memory.unity`) keeps "Start Game" | Recommended | chunk 1.5 |
