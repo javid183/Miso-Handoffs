@@ -6,7 +6,7 @@ Status: approved for structure (THJ 2026-11-22). Each chunk starts once its ques
 
 ## Why
 
-THJ's demo tweak list (2026-11-19, added to on 2026-11-20 and 2026-11-22), tidied into the Claude Doc **"Demo tweaks: Hearth to the end of M4"** (https://claude.ai/artifact/Eg7iNf37y7FnydDpnNWXYH; snapshot copy in THJ's Google Drive). THJ answered 18 of its 20 questions in the doc's comment threads on 2026-11-20. That doc is the source for every item ID used here (H-, E-, W-, M1- to M4-, X-); this plan only orders the work.
+THJ's demo tweak list (2026-11-19, added to on 2026-11-20 and 2026-11-22), tidied into the Claude Doc **"Demo tweaks: Hearth to the end of M4"** (https://claude.ai/artifact/Eg7iNf37y7FnydDpnNWXYH; snapshot copy in THJ's Google Drive; a markdown snapshot for agents at `design/demo-tweaks-snapshot.md`). THJ answered 18 of its 20 questions in the doc's comment threads on 2026-11-20. That doc is the source for every item ID used here (H-, E-, W-, M1- to M4-, X-); this plan only orders the work.
 
 ## Goal
 
