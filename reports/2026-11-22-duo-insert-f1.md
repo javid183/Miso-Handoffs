@@ -79,3 +79,9 @@ F1a set diff stat after the fixes: see the final reply (9 files). F1b unchanged.
 - `Mark_Lucy_Duo` now `SlideFromSides` (library asset and builder default); `Mark_Lucy_Duo_ClipA` now `SoloThenSplit`.
 - Prefab and asset files are LF in the repo (not CRLF), kept as they were.
 - Results: compiled clean, whole EditMode suite 2486 total, 2485 passed, 0 failed, 1 skipped (Explicit AI baseline). Play preview (slide) screenshot `reports/2026-11-22-duo-insert-speedlines.png`: lines behind both halves, reaching all edges and corners. One frame only; motion is THJ's check.
+
+## Follow-up: speed lines removed
+
+THJ asked for the speed lines to go. Removed from `DuoInsertSequence.cs` (fields, arrays, count constant, ensure/animate methods, the unused fraction helper, and the show/hide calls in the update, skip fast-out and reset paths; header comment updated), from `DuoInsertCanvas.prefab` (the `SpeedLines` object, its child entry and the five serialized fields) and from `DuoInsertBuilder.cs` (object creation, field assignments, texture/material constants). Picture framing, transitions and timing are unchanged. `speedlines.png` and `speedline.mat` are left on disk, now unreferenced by the insert.
+
+Verified (editor open, Play stopped before editing): compiled clean; whole EditMode suite 2485 passed, 0 failed, 1 skipped (the explicit AI baseline); the "Preview Mark-Lucy" context menu run in Play on an instance of the prefab gave no errors or missing-reference warnings, only the existing H.264 timestamp notice for the test clip. Play was stopped afterwards. Grep for "speed" in the DuoInsert folder returns nothing.

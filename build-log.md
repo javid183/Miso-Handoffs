@@ -2925,3 +2925,11 @@ Plan `plans/2026-11-19-faster-loop-process.md`, decisions D-575 to D-579.
 **Not verified.** The rushing motion by eye; the real duo in combat.
 **Findings.** The screenshot tool left an untracked `miso/Assets/Screenshots/` (+ `.meta`); the agent's delete was denied, so THJ removes it. Play mode was on when the agent started; it stopped it.
 **Status.** `thj/duo-insert` 5 ahead of `main`, not pushed. Waiting on THJ's play check.
+
+## 2026-11-22: duo insert speed lines removed
+
+**Built.** `6fbb67456` on `thj/duo-insert` (3 files under `Features/UI/DuoInsert/`): THJ asked to get rid of the speed lines; fields, animation code, the prefab's `SpeedLines` object and the builder step removed. Framing, transitions and timing unchanged.
+**Verified.** Whole EditMode suite 2485/2486 (1 Explicit skipped); Mark-Lucy preview in Play mode, no console errors or missing references.
+**Not verified.** The real duo in combat.
+**Findings.** `speedlines.png` / `speedline.mat` in `Content/FamilySuperTime/DUO/` are no longer used by the insert (left on disk). Unity added an empty `canvasGroup` line to `LevelM2-C1.prefab` during the run (serializer noise, left unstaged).
+**Status.** `thj/duo-insert` 6 ahead of `main`, not pushed. Waiting on THJ's play check.
