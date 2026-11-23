@@ -20,7 +20,8 @@ Replace the sliding avatar panels of duos and Family Roles with a short, comic-l
 Two clips, 640×360, 8.04 s each.
 - A (`…52d3cda8`): Mark bust, shaved head, near static (breathing, embers).
 - B (`…1f312a26`): Mark waist-up, topknot, red smoke; **Children of Morta and Prince of Persia logos burned into the top corners**: test only, crop them out, never ship.
-- The two Marks don't match (hair). Both barely move: on their own they read as an idle, not a hit. 8 s is far too long; a cut of 1 to 1.5 s is the usable part.
+- The two Marks don't match (hair). **Correction 2026-11-22 (evening):** the first read said both barely move; that was a sampling bug (the local server could not seek, so every thumbnail was the first frame). Re-sampled: both are full action clips (punch with impact lines around 1.1 s, energy strikes, a final fist/impact flash by 6.8–8 s). The insert plays about 2.35 s from `clipStart`, so it only shows the opening; picking the beat needs `clipStart` and/or a playback speed.
+- Clip C (`Mark_performs_martial_arts_pose_eeafe223.mp4`, THJ put it in `Content/FamilySuperTime/Sprites/`): 1280×720, 8.04 s, no logos, comic-ink style close to Lucy's art. Eyes closed to ~1 s, eyes open and glow at ~1.6 s, fire rings and a stance 2.6–4.8 s (camera pulls back to full body), firestorm from ~5.3 s to the end.
 - 16:9 frames need a crop to fill a diagonal half. No Lucy clip yet.
 
 ## Proposal
