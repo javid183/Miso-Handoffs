@@ -2975,3 +2975,11 @@ Plan `plans/2026-11-19-faster-loop-process.md`, decisions D-575 to D-579.
 
 **Built.** `551685704` on `main`: Lucy's Kling clip + .meta committed via LFS at THJ's request (watermark accepted for now; cropped out in game). THJ presents the insert at the office 2026-11-23; then the art team takes it over or the watermark is removed.
 **Status.** `main` 13 ahead of `origin/main`, not pushed.
+
+## 2026-11-23: onboarding demo Phase 1, Mark's kit, M1 (branch `thj/onboarding-demo`)
+
+**Built:** Phase 1 chunks 1.1 to 1.6 except X-25 (memory rules, intro order, arrows home on a win with the core `levelWonBeforeOutro`, Encore AP, World Map label, gold recall, stations after the Trail); Mark starts with Command, Vault locked; M1 rebuilt as `GB_m1-ridge` (old level kept as `GB_s2-ridge_v1`).
+**Verified:** EditMode full suite 2558/2560 (1 Explicit AI baseline skipped, 1 known GridToLevel lock flake, passes alone); M1 covering fixtures 236/236; reviews: 1.1 APPROVE, 1.3 FIX then fixed, 3.1a APPROVE.
+**Not verified:** THJ's play checks (Phase 1, M1 with a win); 3.1b review (with 3.2).
+**Findings:** Mark's Counter ignores hits on himself (M1 start moved, D-638); Command can trigger John's Shield Dash QTE from the first fight.
+**Status:** 13 commits `c9bdad3c6`..`3bf3e14ba`, not pushed. Next: play checks, 3.1a-2 Vault in the tree, 3.2 M2.
