@@ -12,6 +12,7 @@ Outcome: done (play check still to do, batched with the other Phase 1 chunks)
 - `HearthMemoryWiring.Linda.cs`, `.Lucy.cs`, `.John.cs`: each calls `HearthMemoryRules.Apply` after writing its ability lock (full health only for John). All three menus were run.
 - `GB_m1-linda.prefab`, `GB_m2-lucy.prefab`, `GB_m3-john.prefab`: changed by those menu runs. The diffs add only the instance overrides, the Cleanse lock and the new component. No sequence or dialogue asset changed.
 - `GB_m4-mark.prefab`: edited by hand in YAML. Each of the four heroes gets four overrides, and the new component is added to the level object as an added component. Cleanse was already locked for all four heroes, so the lock is unchanged. I backed the file up first. An editor script over this prefab was refused by the permission check, so I did the hand edit the brief asked for.
+- `Core/Systems/BarkSystem/Runtime/BarkManager.cs` (not core) + new partial `BarkManager.PassBy.cs` (follow-up for D-616): `OnUnitsPassedBy` returns early when `PassByBarkAllowed(mover, passed)` is false, i.e. when either unit carries `Status.NoPassBy` (constant `LevelPassByOff.NoPassByTagId`, not duplicated). `BarkManager` became `partial`. The rule uses plain reference checks only.
 - Tests: new `LevelPassByOffTests.cs` and `HearthMemoryRulesTests.cs`. The ability-lock tests in `HearthMemoryLindaTests`, `HearthMemoryLucyTests` and `HearthMemoryJohnTests` now expect Cleanse too, and the three test methods were renamed to say so.
 
 ## Acceptance criteria
@@ -21,12 +22,14 @@ Outcome: done (play check still to do, batched with the other Phase 1 chunks)
   - `LevelPassByOffTests.ATaggedUnitIsSkippedAndAnUntaggedOneStillCounts` drives the real `PlayerController.prefab` handler's excluded-tag check.
   - `ThePlayerControllersPassByHandlerExcludesTheNoPassByTag`, `TheNoPassByTagIsDefined`, `OnlyTheConfiguredFactionIsTaggedAndOnlyOnce`.
   - `HearthMemoryRulesTests.EveryMemorySwitchesPassByOffForTheFamily`, and `NoLevelOutsideTheHearthSwitchesPassByOff`, which scans every prefab under `Content/Levels`.
-  - The handler excludes a pair when **either** unit has the tag (`CanPassBy`, line 101). That one gate covers the FTP fill, the synergy event, the VFX and the move previews (`PlayerController` and `UnitsCooperationHandler` both call `CanPassBy`). No core code was needed. One gap remains, the bark: see Risks.
+  - The handler excludes a pair when **either** unit has the tag (`CanPassBy`, line 101). That one gate covers the FTP fill, the synergy event, the VFX and the move previews (`PlayerController` and `UnitsCooperationHandler` both call `CanPassBy`). No core code was needed.
+  - Pass-by barks (follow-up, D-616): `BarkManager` skips its pass-by bark under the same rule (either unit tagged). Test: `LevelPassByOffTests.APassByBarkIsSkippedWhenEitherUnitIsTaggedAndKeptForAnUntaggedPair` covers a tagged mover, a tagged passed unit and an untagged pair. The full bark path (baked graphs, popups through `DamageNumberManager`) needs a running level, and there are no `BarkManager` tests to build on. So the test checks the manager's own rule, and the one-line early return in `OnUnitsPassedBy` is checked by review. On screen it needs the play check.
+  - Why it isn't read from the handler's list: `excludedTags` and `HasExcludedTag` are private on core `UnitsPassByHandler`, and exposing them would be a core code change. The bark check uses the shared tag constant instead, so it covers only `Status.NoPassBy`, not `Status.Inactive`. Barks for `Status.Inactive` units behave as before.
 - [x] Cleanse is off every hero's bar in memories 1 to 4. Evidence: `HearthMemoryRulesTests.CleanseIsLockedForEveryHeroInEveryMemory`, plus the three updated lock tests. M4's existing `EveryDuoAndCleanseIsLockedOnEveryHero` still passes. No unlock step in M1 or M2 unlocks Cleanse: each unlocks only its listed presets, and `unlockAll` is off. Memory 4's corruption pools are untouched.
 - [x] The item pouch doesn't show in any memory. `hideIfUsed = 1` is set on both items of every placed hero. With the Hearth's empty `initialItemsAvailability`, each item has 0 uses, so `IsHidden` is true and the pouch button stays off (`AbilitiesBarHUDUI.cs:79-81`). Evidence: `EveryHeroItemInAnyMemoryIsHiddenOnceItHasNoUseLeft`. The on-screen result needs the play check.
 - [x] Heroes start memories 3 and 4 at full HP. Evidence: `HeroesComeIntoTheThirdAndFourthMemoriesAtFullHealth`, plus a code read of the restore order. `CombatLevelRunHandler.StartLevelIE` initializes the units first (`GUnit.Initialize` ends in `FillCurrentSpecsToMax`). It calls `FactionTracker.PrepareLevel` → `RestoreUnitPersistedStates` only after that, so the restore computes `Max(saved, max × 1)` = max. The plan's assumption holds. The rule is inline in core `GUnit`, so I couldn't test it on its own without a core change. **Needs the play check.**
 - [x] Memories 1 to 3 get these through their wiring tools, so a re-run keeps them. Memory 4 was edited by hand. Evidence: the three menus ran and logged "Memory N wired"; diffs as above.
-- [x] Tests: the covering fixtures passed 94 of 94 (LevelPassByOff, HearthMemoryRules, Linda, Lucy, John, Mark, Levels, ResultLine). Full EditMode suite: 2500 total, 2499 passed, 0 failed, 1 skipped (`AIRegressionTest.Baseline_MatchesCurrentAI`, Explicit, not run). Clean compile, no errors in the console.
+- [x] Tests (after the bark follow-up): bark fixture `RoleBarkRulesTests` plus `LevelPassByOffTests` and `HearthMemoryRulesTests`: 26 of 26 passed. Full EditMode suite: 2501 total, 2500 passed, 0 failed, 1 skipped (the Explicit AI regression test). Before the follow-up: the covering fixtures passed 94 of 94 (LevelPassByOff, HearthMemoryRules, Linda, Lucy, John, Mark, Levels, ResultLine). Full EditMode suite: 2500 total, 2499 passed, 0 failed, 1 skipped (`AIRegressionTest.Baseline_MatchesCurrentAI`, Explicit, not run). Clean compile, no errors in the console.
 
 ## Chunks
 
@@ -35,6 +38,12 @@ Outcome: done (play check still to do, batched with the other Phase 1 chunks)
 - Changed: every file listed under "What changed".
 - Criteria met: all seven; evidence above.
 - Decisions and loose ends: see the sections below.
+
+### Chunk 1.1 follow-up: Pass-by barks off in the memories (D-616)
+
+- Changed: `Core/Systems/BarkSystem/Runtime/BarkManager.cs` (made `partial`; early return in `OnUnitsPassedBy`), new `BarkManager.PassBy.cs` + `.meta`, `Features/Onboarding/Editor/LevelPassByOffTests.cs` (one new test).
+- Criteria met: Pass-by criterion now includes barks. Evidence: the new test; 26 of 26 in the bark and Pass-by fixtures; full suite 2501 / 2500 passed / 0 failed / 1 skipped.
+- Decisions and loose ends: the rule reads the shared tag constant, because the handler's list is private core data. It covers `Status.NoPassBy` only.
 
 ## Reviews and checks
 
@@ -65,18 +74,20 @@ None.
 
 ## Risks and loose ends
 
-- **Pass-by barks still fire in the memories.** `BarkManager` listens to the raw `GlobalEventBus.unitsPassedBy` event (`BarkManager.cs:129`, `:244`), not to the handler. When a hero walks through an ally, a PassBy bark (`Resources/BarkSystemData/PassBy/Bark_PassBy.barkpassby`, family chatter such as "Your left side is open.") can still show. No FTP, no Pass-by VFX and no synergy fire. Both ways to stop it go past this plan's data-only Pass-by switch: a bark-graph condition, or a tag check in `BarkManager` (not on the core list, but code). Coordinator's call whether it counts as "Pass-by feedback".
+- Pass-by barks: fixed in the follow-up (D-616, see above). The bark system (`Core/Systems/BarkSystem`) now references `MISO.Core.Features.Onboarding` for the tag constant. Core already references feature code (the duo insert does), but the reviewer may prefer the constant to live elsewhere.
 - `HearthMemoryWiringMark.Run()` (no menu) doesn't call `HearthMemoryRules.Apply`. If someone ever re-runs it on M4, the rules there would rely only on the hand edits it keeps. I left the tool alone, as the plan asks.
 - Unity touched `Assets/TextMesh Pro/Resources/Fonts & Materials/LiberationSans SDF - Fallback.asset` during the session (dynamic font atlas). It isn't part of this work: leave it out of the commits.
 - THJ's uncommitted files weren't touched (they show in `git status` as before).
 
 ## Proposed commits
 
-1. `feat(passby): a no-pass-by tag and a level switch that gives it to the family` (core data, its own commit):
+1. `feat(passby): a level switch that turns Pass-by and its barks off for the family` (core data, its own commit):
    - `miso/Assets/_Project/Resources/Tags/GTagSet.asset`
    - `miso/Assets/_Project/Resources/Tags/GTagRegistry.asset`
    - `miso/Assets/_Project/Content/Controllers/PlayerController.prefab`
    - `miso/Assets/_Project/Features/Onboarding/LevelPassByOff.cs` + `.meta`
+   - `miso/Assets/_Project/Core/Systems/BarkSystem/Runtime/BarkManager.cs`
+   - `miso/Assets/_Project/Core/Systems/BarkSystem/Runtime/BarkManager.PassBy.cs` + `.meta`
    - `miso/Assets/_Project/Features/Onboarding/Editor/LevelPassByOffTests.cs` + `.meta`
 2. `feat(hearth): memories have no Revenge, Pass-by or Cleanse, hide the empty item pouch, and start the last two at full health` (plain, depends on 1):
    - `miso/Assets/_Project/Features/Onboarding/Editor/HearthMemoryWiring.Rules.cs` + `.meta`
@@ -85,7 +96,7 @@ None.
    - `miso/Assets/_Project/Features/Onboarding/Editor/HearthMemoryRulesTests.cs` + `.meta`
    - `miso/Assets/_Project/Features/Onboarding/Editor/HearthMemoryLindaTests.cs`, `HearthMemoryLucyTests.cs`, `HearthMemoryJohnTests.cs`
 
-The Pass-by switch is only data plus the new component, so it could also go in one commit with the rest. I split it out because it touches a core prefab.
+Commit 1 holds the core prefab data, the new component and the small bark check. It stays separate so it can be reverted on its own. Leave out `Assets/TextMesh Pro/Resources/Fonts & Materials/LiberationSans SDF - Fallback.asset` (Unity noise).
 
 ## Other branches
 
@@ -95,7 +106,7 @@ None (the memories exist only on `thj/onboarding-demo`).
 
 1. Open `Scenes/PreloadScreen.unity` and start the Hearth (memory 1) from the toolbar level picker, or play through to it.
 2. In each memory: the ability bar has no Cleanse button and no item pouch button.
-3. In memory 3 or 4, walk a hero through or next to an ally. No FTP gain, no Pass-by flash on the ally, and no Pass-by highlight in the move preview. (A pass-by bark can still pop: see Risks.)
+3. In memory 3 or 4, walk a hero through or next to an ally. No FTP gain, no Pass-by flash on the ally, no Pass-by highlight in the move preview, and no pass-by bark.
 4. In memory 2, let Lucy take damage, then win. Memory 3 starts with John, Linda and Lucy at full HP. Do the same into memory 4.
 5. Let a hero fall in memory 3 or 4: no Revenge on the allies. The memory is lost as before.
 6. In any other level (for example `LevelM1-C3`), Pass-by works as before.
