@@ -105,7 +105,12 @@ Narrative runs alongside: `miso-narrative` writes each placeholder as its contai
 
 ### Phase 6: balance and the full play-through
 
-X-14 after a full play-through on `main`; then a cold playtest with a new player; docs and the Claude Docs mirror synced.
+| Chunk | IDs | What | Tier |
+| --- | --- | --- | --- |
+| 6.1 | X-32 | On game start, check the save data on the player's machine and delete it if it's too old for the demo, so an old save can't break the onboarding | 3 (deletes player data; can't be undone) |
+| 6.2 | X-33 | Final check of the combat log: every ability, Synergy, Duo, Family Role and new piece in the demo (Cyclone, barriers, the new Duo resource) writes its lines | 1 |
+| 6.3 | X-14 | Final balance after a full play-through on `main` | 2 (values) |
+| 6.4 | — | A cold playtest with a new player; docs and the Claude Docs mirror synced | — |
 
 ### Order
 
@@ -138,3 +143,4 @@ Per chunk: compile with a clean console; full EditMode suite green; `miso-review
 | M1-02 | The Masher beat replaces the Ridge's corridor beat? | D3 M1 |
 | M3-07 | The Linda–Lucy scene = today's Yard scene? | 3.3 |
 | X-26 | Mark's setup for the catch without Vault | D3 M1 |
+| X-32 | What makes a save "too old": a save version stamped by the build (recommended), or its date? And is the player told before it's cleared? | 6.1 |

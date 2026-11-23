@@ -1,6 +1,6 @@
 # Demo tweaks: Hearth to the end of M4
 
-> Snapshot of the Claude Doc "Demo tweaks: Hearth to the end of M4" (https://claude.ai/artifact/Eg7iNf37y7FnydDpnNWXYH), taken 2026-11-23. The Claude Doc is the live version; this copy does not update. Plan: `plans/2026-11-22-onboarding-demo.md`.
+> Snapshot of the Claude Doc "Demo tweaks: Hearth to the end of M4" (https://claude.ai/artifact/Eg7iNf37y7FnydDpnNWXYH), taken 2026-11-23 (X-32, X-33 added the same day). The Claude Doc is the live version; this copy does not update. Plan: `plans/2026-11-22-onboarding-demo.md`.
 
 2026-11-19 · THJ
 
@@ -205,6 +205,8 @@ Today's M4 is 7 levels: Toba's duel, two Whitemother levels, the escort, the rel
 | X-29 | A tutorial for the new resource, probably with the first Duo                                                                                       | Narrative tech, Tech | Claude, Narrative          | ✓ The first Duo is Mark–Lucy at the end of memory 4 (the Hold)                                                                                                             |
 | X-30 | If the new Duo resource replaces FTP, the Home upgrades that raise FTP change to raise the new resource                                            | Design, Tech         | Game designer, Claude      | After X-27. Only if FTP goes; the FTP upgrades are the Home's FP stat (Stat_FP). Lands with X-31                                                                           |
 | X-31 | Tweak and adjust the Home stat upgrades                                                                                                            | Design, Tech         | Game designer, Claude      | ✓ Together with X-24 (the stations that don't open or give no feedback) and X-14 (balance)                                                                                 |
+| X-32 | On game start, check the save data on the player's machine and delete it if it's from long ago | Tech | Claude | ~ Deletes player data, so Tier 3. To decide: "too old" by a save version the build stamps (recommended) or by date, and whether the player is told first |
+| X-33 | Final check of the combat log: it includes everything in the demo | Tech | Claude | ✓ Every ability, Synergy, Duo and Family Role, plus the new pieces (barriers, the new Duo resource) |
 
 ## 8. For the narrative designer
 
