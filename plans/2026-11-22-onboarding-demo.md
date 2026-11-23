@@ -3,6 +3,7 @@
 Size: L    Tier: mixed (each chunk carries its own; Tier 3 ones are marked)    Assigned to: coordinator → `miso-implementer`, `miso-game-designer`, `miso-narrative`; Khash, Art and the narrative designer for their items
 Branch: `thj/onboarding-demo` (D-604, reverses D-602's `main`; created 2026-11-22 from `main` @ `551685704`). A chunk with vital or risky new tech gets its own branch, asked first
 Status: approved for structure (THJ 2026-11-22). Each chunk starts once its questions (below) are answered
+Progress: `status.md` (row `onboarding-demo`) is the live record; decisions D-602 to D-639. As of 2026-11-23: Phase 1 built and committed except X-25 (waiting on THJ's play check); 3.1a (Mark's kit) and 3.1b (M1) committed; next 3.1a-2, 3.2 (M2); M3 and M4 paper levels waiting on THJ's approval
 
 ## Why
 
@@ -136,12 +137,8 @@ Per chunk: compile with a clean console; full EditMode suite green; `miso-review
 | Q | Question | Chunk |
 | --- | --- | --- |
 | Q7 | Build the "ability used" trigger so Mark's lock lasts one action (recommended), or lock until the Hold? | 2.1, 2.3 |
-| Q10 | The Pile in M2 is Ryker's clue only; "Still counting?" stays in M3? | D3 M2 |
-| Q12 | The stone push: his actions each turn, or by itself once he's there? | D3 M3 |
-| Q14 | "Mithra's Rest" = the campfire Rest Room? | D3 M4 |
-| Q15 | The boss is the Goblin Queen? 4 seats? | D3 M4 |
-| M1-02 | The Masher beat replaces the Ridge's corridor beat? | D3 M1 |
 | M3-07 | The Linda–Lucy scene = today's Yard scene? | 3.3 |
-| X-26 | Mark's setup for the catch without Vault | D3 M1 |
-| H-22 | Does the player see Ryker walk out between memories 3 and 4, or is she just gone? | 2.4 |
-| X-32 | What makes a save "too old": a save version stamped by the build (recommended), or its date? And is the player told before it's cleared? | 6.1 |
+| H-22 | Does the player see Ryker walk out between memories 3 and 4, or is she just gone? Note: `MargaretStoryNight` has Margaret as the teller, so H-22 and H-12 change the same idle | 2.4 |
+| X-32 | What makes a save "too old": a save version stamped by the build (recommended), or its date? And is the player told before it's cleared? Related: old dev saves aren't migrated after Mark's kit change (D-636), and Vault gets a new save key (D-637); X-32 is the player-facing version of that rule | 6.1 |
+
+Answered (see `decisions.md`): Q10 (D-607), Q12 (D-608, D-622), Q14 (D-612, D-626), Q15 (D-613), M1-02 (D-605), X-26 (D-606, then D-633: Move = Command; D-637: Vault buyable), X-20 (D-625), X-24 stations after M3 (D-618), Cleanse only in M4's first fight (D-614).
