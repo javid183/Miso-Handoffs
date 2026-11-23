@@ -1,7 +1,7 @@
 # Onboarding demo: the Hearth to the end of M4
 
 Size: L    Tier: mixed (each chunk carries its own; Tier 3 ones are marked)    Assigned to: coordinator → `miso-implementer`, `miso-game-designer`, `miso-narrative`; Khash, Art and the narrative designer for their items
-Branch: `main` (D-602). A chunk with vital or risky new tech gets its own branch, asked first
+Branch: `thj/onboarding-demo` (D-604, reverses D-602's `main`; created 2026-11-22 from `main` @ `551685704`). A chunk with vital or risky new tech gets its own branch, asked first
 Status: approved for structure (THJ 2026-11-22). Each chunk starts once its questions (below) are answered
 
 ## Why

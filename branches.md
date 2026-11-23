@@ -10,6 +10,13 @@ Owner: coordinator; THJ approves. `claude-handoff/` doesn't change when the shar
 - Agents never switch branches. THJ does.
 - On merge, a branch's differences fold into `all`. If that changes a core rule on `main`, it's Tier 3.
 
+## `thj/onboarding-demo`
+
+- Created 2026-11-22 by the coordinator at THJ's request ("Before you commit anything create a branch. I said main, but now that i think it is safer to create a branch") from `main` @ `551685704`. THJ's working branch. Reverses D-602's "build on `main`" (D-604).
+- **Purpose:** the onboarding demo, the Hearth to the end of M4 (`plans/2026-11-22-onboarding-demo.md`).
+- Combat resource and AP: same as `main`. No commits yet.
+- Uncommitted in the tree (came along, THJ's, agents leave them alone): `LevelM2-C1.prefab`, `GlobalSettings.asset` (likely P0, sequences on), `PreloadScreen.unity`, `ProjectSettings/EditorSettings.asset` and `ProjectSettings.asset`, untracked `Content/FamilySuperTime/DUO/Inserts/`.
+
 ## `thj/duo-insert` (merged into `main` 2026-11-22)
 
 - Created 2026-11-22 by the coordinator at THJ's request ("Go to a new branch then commit it") from `main` @ `6474ed314` (61 ahead of `origin/main`, not pushed). THJ's working branch.
