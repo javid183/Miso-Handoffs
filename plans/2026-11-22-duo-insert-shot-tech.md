@@ -2,7 +2,7 @@
 
 Size: M    Tier: 3 (chunk C2 changes a core system's behavior)    Assigned to: miso-implementer
 Branch: thj/duo-insert (created 2026-11-22 at THJ's request)
-Status: approved 2026-11-22 (THJ: "Approve, start C1"; C2 core change and untracked test clips approved). C1 committed `9e992707f`, C2 committed `5fc81e789` (review APPROVE, both should-fixes applied), C3 docs done. Follow-up F1 committed `02b727e2b` (F1a) and `58ecd7ec8` (F1b), review APPROVE. Waiting on THJ's preview and play check.
+Status: approved 2026-11-22 (THJ: "Approve, start C1"; C2 core change and untracked test clips approved). C1 committed `9e992707f`, C2 committed `5fc81e789` (review APPROVE, both should-fixes applied), C3 docs done. Follow-up F1 committed `02b727e2b` (F1a) and `58ecd7ec8` (F1b), review APPROVE. Then clip/speed/Lucy follow-ups; THJ retimed the clips (`29d2c03ca`) and asked for the merge: `main` fast-forwarded to `29d2c03ca` on 2026-11-22. Done.
 
 ## Why
 

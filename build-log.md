@@ -2956,3 +2956,11 @@ Plan `plans/2026-11-19-faster-loop-process.md`, decisions D-575 to D-579.
 **Verified.** `DuoInsertRulesTests` 44/44; whole EditMode suite 2487 passed, 1 Explicit skipped, 1 failed by timeout (`HomeVisitsTests.ApplyOpeningSetup_RepairsAStationLockInACopyOfTheScene`, stalled on an editor dialog THJ dismissed with "Try again"); passes alone.
 **Not verified.** Motion by eye; the real duo in combat.
 **Status.** `thj/duo-insert` 10 ahead of `main`, not pushed. Waiting on THJ's play check.
+
+## 2026-11-22: duo insert merged into main
+
+**Built.** `29d2c03ca` THJ's clip retime (Lucy start 0, x1.07; Mark start 0.15, x2.5). `main` fast-forwarded from `6474ed314` to `29d2c03ca` (`git fetch . thj/duo-insert:main`, then checkout `main`: same commit, no file changes). THJ is on `main`, 11 ahead of `origin/main`, not pushed.
+**Verified.** Suite green on the commit before THJ's data-only retime (2487 + 1 rerun alone, 1 Explicit skipped).
+**Not verified.** The real duo in combat; THJ's retime only seen in THJ's preview.
+**Findings.** On another machine Lucy's half falls back to her sprite (her clip is untracked, watermark). `DuoInsertBuilder` still writes the pre-retime values: rerunning its menu would undo THJ's timings. Off switch: `Mode` = Off on the `DuoInsertSequence` component of `Features/UI/DuoInsert/Prefabs/DuoInsertCanvas.prefab`.
+**Status.** Merged. Open: Lucy clean export, builder values, the earlier risks (pause during the card, skip clicks pass through).
