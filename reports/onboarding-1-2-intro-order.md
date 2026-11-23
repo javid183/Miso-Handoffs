@@ -135,3 +135,7 @@ none
 3. Watch the quarter second between the page closing and the dim. Report whether the HUD's slide-in reads as a flash (see "Needs THJ").
 4. Replay memory 1 without clearing the save (no new names, so no card). Input and the HUD come back right after the page.
 5. In memory 4, after the Bloom cut-in (John's call to Linda), any new enemy's card plays before input returns.
+
+## Coordinator check (2026-11-23)
+
+Size S, outside core: no reviewer (gate 3). Read the diff: 1.2's four sequence assets each lose exactly the two step references (input, HUD); 1.5 is one scene string and a small look change with serialized colour and width. Accepted. Look and timing go into THJ's batched Phase 1 play check.

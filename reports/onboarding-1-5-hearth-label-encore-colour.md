@@ -100,3 +100,7 @@ none
 1. Open Home (from a save past the opening, or start Play from PreloadScreen into Home). The label over the fireplace reads "World Map".
 2. Play a memory or level with Linda. Shoot a few arrows so some lie on the ground, then cast Encore. Each arrow flies back with a gold glow and a short fading trail.
 3. To tune: select `Unit_Linda` (Features/Player/Linda/Prefabs). On LindaQuiver, under "Recall look", change Recall Flight Color and Recall Trail Width.
+
+## Coordinator check (2026-11-23)
+
+Size S, outside core: no reviewer (gate 3). Read the diff: 1.2's four sequence assets each lose exactly the two step references (input, HUD); 1.5 is one scene string and a small look change with serialized colour and width. Accepted. Look and timing go into THJ's batched Phase 1 play check.
