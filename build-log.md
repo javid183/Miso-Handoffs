@@ -2933,3 +2933,11 @@ Plan `plans/2026-11-19-faster-loop-process.md`, decisions D-575 to D-579.
 **Not verified.** The real duo in combat.
 **Findings.** `speedlines.png` / `speedline.mat` in `Content/FamilySuperTime/DUO/` are no longer used by the insert (left on disk). Unity added an empty `canvasGroup` line to `LevelM2-C1.prefab` during the run (serializer noise, left unstaged).
 **Status.** `thj/duo-insert` 6 ahead of `main`, not pushed. Waiting on THJ's play check.
+
+## 2026-11-22: duo insert playback speed and Mark clip C
+
+**Built.** `9dc33ad79` on `thj/duo-insert` (6 files under `Features/UI/DuoInsert/`): per-half `playbackSpeed` (clamped 0.25-4) and a clip-start clamp that accounts for it. `Mark_Lucy_Duo` right half = THJ's clip C (`Content/FamilySuperTime/Sprites/Mark_performs_martial_arts_pose_eeafe223.mp4`, untracked), uvRect (0.24, 0, 0.52, 1), start 0.8 s, speed 2.0: covers clip 0.8-5.5 s (eyes open, glow, fire rings, stance, firestorm on the held frame). Clip A (SoloThenSplit) and new clip B entry (SlideFromSides, logo crop): start 0.8, speed 1.5; preview menu for clip B added. Builder writes the same.
+**Verified.** `DuoInsertRulesTests` 44/44; whole EditMode suite 2488/2489 (1 Explicit skipped) on the coordinator's rerun (the implementer's run had 4 `GridToLevelTests` failures from a stale `__Test` folder; passed alone and on rerun). Mark-Lucy preview in Play mode, no console errors; captures `reports/2026-11-22-duo-insert-clipC-*.png`.
+**Not verified.** Motion by eye; clip A/B previews; the real duo in combat.
+**Findings.** The first read of clips A/B ("barely move") was wrong (sampling bug); design note corrected. Clip C is clean (no logos): THJ decides whether it goes into git.
+**Status.** `thj/duo-insert` 7 ahead of `main`, not pushed. Waiting on THJ's play check.
