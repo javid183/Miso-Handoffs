@@ -2,7 +2,7 @@
 
 Size: L    Tier: 3 (level content, story beats, roster; THJ approves each paper level before it's built)    Assigned to: miso-game-designer
 Branch: `thj/onboarding-demo` (D-604, reverses D-602's "build on `main`"), scope this branch
-Status: **waiting on THJ: approve each paper level** (2026-11-23). Every question is answered: groundwork D-605 to D-608, D-612, D-613; Cleanse D-614; stations D-618; paper-level questions D-619, D-620, D-622 to D-626; build rule D-621 ([Answers](#answers)).
+Status: **M1 and M2 approved for building (D-631; M1 updated for D-632, D-633); M3 and M4 waiting on THJ's approval** (2026-11-23). Every question is answered: groundwork D-605 to D-608, D-612, D-613; Cleanse D-614; stations D-618; paper-level questions D-619, D-620, D-622 to D-626; build rule D-621 ([Answers](#answers)).
 
 Parent plan: [`2026-11-22-onboarding-demo.md`](2026-11-22-onboarding-demo.md), Phase 3 (D3). Item source: [`design/demo-tweaks-snapshot.md`](../design/demo-tweaks-snapshot.md) (THJ's snapshot of the tweak doc, 2026-11-23), sections 1, 6 and 7. Worked example and history: [onboarding levels](onboarding/2026-10-26-onboarding-levels.md), [after-Hearth design](onboarding/2026-11-09-onboarding-after-hearth-design.md), [post-Hearth challenge](onboarding/2026-11-11-post-hearth-challenge-design.md), [Trail balance](2026-11-11-trail-balance-design.md).
 
@@ -276,7 +276,7 @@ Read 2026-11-23 from the assets by a read-only Explore agent (paths in its repor
 | Sisters' tally: on automatically when both sisters are deployed and the mission isn't excluded; the "Still counting?" fade is `SistersTally_FadeOut` (played inside the Pile's end sequence today), saved by asset name | V | M3 |
 | `TurnReached` counts from the moment its stage starts; no built "every turn while X holds" sequence | V | M3's push |
 | `MoveUnitSequence` moves GUnits only; a neutral GUnit (the Deer is a model) could be a stone; Toba's Wall has no HP and can't be moved | V | M3 |
-| Mark's kit on the prefab: Fist Blitz, Move (walk), **Vault (open by default)**, Command (locked; node "Command", whose text starts "Mark commands an ally to move"), Cleanse, his Duos | V | M1, X-26 (T-2) |
+| Mark's kit on the prefab: Fist Blitz, Move (walk), **Vault (open by default)**, Command (locked; node "Command", whose text starts "Mark commands an ally to move"), Cleanse, his Duos. For the demo (X-26 = Command, D-633): Vault locked, Command open, as data | V | M1 |
 
 ### Rules every mission inherits
 
@@ -306,14 +306,14 @@ Coordinates in each block start at 0,0 (bottom left). `#` = no GridCell. Big uni
 
 ```grid id=m1-ridge title="M1 · The Ridge: the wall that waits"
 c c c c # # # # # # # # #
-. c . . . . . . . # # # #
+. c . . M . . . . # # # #
 . . . . # # # # . # # # #
 . . . . # O O # . # # # #
-. L M . . O O . . . . . .
+. L . . . O O . . . . . .
 --
 cells 1,4 3,4 enemy hidden: back (turn 2 of the Masher stage)
 zone 4,3 8,3 mark the ledge
-arrow 3,3 8,3 8,0 mark dx=-8 the side path
+arrow 4,3 8,3 8,0 mark dx=-8 the side path
 arrow 3,0 7,0 linda dy=-8 bow
 arrow 7,0 3,0 mark dy=8 caught, back
 step 7,0 1
@@ -335,24 +335,26 @@ The block has 5 rows, so y runs 0..4 (bottom row y = 0).
 | Source | **Big change: a new prefab `GB_m1-ridge`** from this block; the old `GB_s2-ridge` is renamed (D-621) and `MS2 - The Ridge` points at the new one. `SearchWiring.Ridge` targets the new prefab (stages, sequences, clue props, HP). Today's corridor queue and Vault beat go |
 | Teaches | **Catch & Return as the answer to the Masher** (M1-02), after **Watch and Mark's Counter** in the opening fight (M1-03) |
 | Twist | A wall that never moves but punishes anyone beside it; plain arrows get stuck under it |
-| Squad | Linda 1,0, Mark 2,0. Kit: no Vault (X-26), no Cleanse (D-614) |
+| Squad | **Linda 1,0 in the room; Mark 4,3, on the ledge's first cell** (D-632: they start apart, so Mark's walk to the catch is short). Kit: Mark's attacks and **Command**, no Vault (X-26 = Command, D-633; data: Vault locked, Command open for the demo); no Cleanse (D-614) |
+| Opening sequence (new, D-632) | Before control, after the intro: camera on Linda in the room → pan along the ledge to Mark at its mouth → back. Placeholder lines (`miso-narrative`): Mark "I'll take the high path. Keep them off me." · Linda "Keep up, little brother." Then the Role lines (Cues). H-01: any enemy intro plays last |
+| Command in M1 (D-633) | **Beat 1, ★:** Mark Commands a pack Claw into Linda's lane: Command moves count for Watch (D-039, FR table). From 4,3 the Claw on 2,4 is 3 away (in his 4); walked to 1,2 (3 from 2,4), it stands in Linda's column 2 from her: Watch fires. **Beat 2:** little use. From the ledge (8,1 to 8,3) Linda on 3,0 is 5 or more away, outside Command's 4; only while Mark is still within 4 of her (on 3,2, say: 3 from 1,0) can he walk her the 2 steps to 3,0 and save her the Move. **No shortcut:** Command can't move the Masher (Immovable, EN-3); a Commanded unit walks, so it can't pass the Masher or cross missing cells; nothing it does gets Mark past the Masher (T-18: whether Command can target Mark himself; even so, he'd walk). Cost: 1 AP (cooldown 1), so a Command turn delays his walk by one Move |
 | Cells | Room x 0..3, y 0..4 (20). Corridor y 0: 4,0, the Masher's alcove 5..6 × 0..1, then 7,0 to 12,0. Ledge 4,3 to 8,3, down 8,2 and 8,1 to 8,0. **Missing on purpose:** 4,1, 7,1 (no sideways step), 5,2 and 6,2 (no step up); there is no row below y 0 (no step down). So the Masher's only neighbours are 4,0 and 7,0 |
 | Enemies | **Pack** (alert): Dark Claws 0,4, 2,4, 1,3, factor 0.8 (≈ 13). **Masher** anchor 5,0, alert, factor 0.45 (≈ 36 at Early). **Hidden `back`:** Dark Claws 1,4, 3,4, factor 0.8, revealed at the start of the Masher stage's second family turn |
-| Beat 1: the pack (Roles) | Family first. 1,3 is 3 from Linda (1,0), 2,4 is 4 from Mark (2,0), 0,4 is 5 from Linda: all three reach a hero on enemy turn 1. At 13 HP nothing dies to one hit (bow 6, Explosive 8, Blitz 8), so enemy turn 1 comes: a Claw that ends its move in Linda's row 0 or column 1 within 4 **draws Watch** (her first real use: it was off in Memory 1), and a Claw that hits Linda within 2 of Mark **draws his Counter**. ★ Explosive Arrow on 1,4 from 1,0 (4 away) hits 0,4, 2,4, 1,3 and 1,4's empty cell: 8 on all three; Mark finishes one; Watch and the Counter take the rest on the enemy turn. ● Bow and Blitz one at a time: a round longer |
+| Beat 1: the pack (Roles) | Family first. Distances (rechecked for the new starts): 1,3 is 3 from Linda (1,0) and 3 from Mark (4,3); 2,4 is 3 from Mark (2,3, 3,3 beside him) and 4 from Linda; 0,4 is 5 from Linda (down column 0 to 0,0 beside her) and 5 from Mark. All three reach a hero on enemy turn 1. At 13 HP nothing dies to one hit (bow 6, Explosive 8, Blitz 8), so enemy turn 1 comes. **Watch:** every tile beside Linda (0,0, 2,0, 1,1) is in her row 0 or column 1, so any Claw that reaches her ends in her lane and draws Watch (her first real use: it was off in Memory 1). **Counter:** Mark's only open neighbour on the start row of the ledge is 3,3 (4,2 and 4,4 don't exist; 5,3 is behind him), so a Claw that goes for Mark hits him from 3,3, 1 away, and draws his Counter (T-17: a hit on Mark himself counts, as the FR table reads "hits a family member"). A Claw that hits Linda is 5 or more from Mark: no Counter there. Lever if T-17 fails: Mark starts on 3,2 (2 from 2,0 and 1,1; the walk to the ledge is 2 steps longer). ★ Explosive Arrow on 1,4 from 1,0 (4 away) hits 0,4, 2,4, 1,3 and 1,4's empty cell: 8 on all three; Mark finishes one; Watch and the Counter take the rest on the enemy turn. ● Bow and Blitz one at a time: a round longer |
 | Stage 1 → 2 | Pack dead → sequence: camera along the corridor to the Masher (its first-appearance close-up, EN-10, plays here: last, before control returns, H-01) → the setup lines (below) → objective **"Get past the Masher."** |
 | The setup (M1-02: "a short setup shows how the Masher works") | Mark: "I'll knock it over." · Linda: "Don't stand next to it. Look." The player sees the rule on the board: the Masher is alert, so hovering it shows its counter preview (EN-2: path, cells, damage), and its only two neighbour tiles are the danger. Camera, two lines and the preview, no scripted hit (D-620) |
-| Beat 2: the catch (distances on the grid) | Linda on **3,0**: the Masher's nearest cell 5,0 is 2 away, so she's never next to it, and it can't step to her. Her bow along row 0 reaches 4,0, 5,0 (Masher), 6,0 (same unit), **7,0**: 4 tiles, inside her 4. **Mark** goes up the ledge: from the room's 3,3 to 8,3 is 5 steps, then 8,2, 8,1, 8,0 (3 more): from the ledge's end, **one Move** drops him on the rest tile **8,0** (2 from the Masher's 6,0: safe). Each turn: Mark 8,0 → 7,0 (1 AP), Linda fires twice from 3,0 (the arrow passes the Masher, reaches Mark 4 away with an enemy between: the catch is offered, MA-3), Mark 7,0 → 8,0 (1 AP). Each catch hits the Masher out and back: 6 + 6 = 12, and the arrow returns to her quiver |
+| Beat 2: the catch (distances on the grid) | Linda on **3,0**: the Masher's nearest cell 5,0 is 2 away, so she's never next to it, and it can't step to her. Her bow along row 0 reaches 4,0, 5,0 (Masher), 6,0 (same unit), **7,0**: 4 tiles, inside her 4. **Mark** goes along the ledge: from his start 4,3 to 8,3 is 4 steps, then 8,2, 8,1, 8,0 (3 more): from the ledge's end, **one Move** drops him on the rest tile **8,0** (2 from the Masher's 6,0: safe). If he ends beat 1 near 4,3 (he fights there), one turn of two Moves takes him to 8,1, and the next turn he steps 8,1 → 7,0 (2 steps) to catch. Linda's walk is 1,0 → 3,0 (2 steps). Each turn: Mark 8,0 → 7,0 (1 AP), Linda fires twice from 3,0 (the arrow passes the Masher, reaches Mark 4 away with an enemy between: the catch is offered, MA-3), Mark 7,0 → 8,0 (1 AP). Each catch hits the Masher out and back: 6 + 6 = 12, and the arrow returns to her quiver |
 | Answers | ★ **Catch & Return** as above: 24 a turn, quiver full, the Masher dies in 2 of Linda's turns (36 HP). ● **Linda alone from 3,0:** 6 a shot, and each arrow lands under the Masher, locked until it dies: three arrows = 18, then she's empty (Encore: T-4). ● **Explosive Arrow** on the Masher from 3,0: 8, then a grounded arrow too (LI-4, to confirm). ✗ **Mark hits it** (Fist Blitz ends next to it): it slams Mark (6) and the plus around him; his Counter answers, which provokes another slam: a loop paid in FTP and HP (chain cap 10). ✗ **Ending the turn on 7,0 or 4,0:** it slams on its turn |
 | Pressure | The hidden `back` pair arrives in the room on the stage's second family turn (camera and bark), acts the next enemy turn: from 3,4, three steps (3,3, 3,2, 3,1) put a Claw beside Linda on 3,0. So plinking alone gets her hit from behind; the catch kills the Masher first. Mark's Counter can't reach them from 8,0: Linda deals with them (Watch on column 3 or row 0) |
 | Win / loss | Stage 1 the pack dead (hidden objective). Stage 2 "Get past the Masher." = the Masher dead; a hidden "turn 1 reached" stage reveals `back` (the Trail pattern). Stage 3 "Clear the ridge." (defeat all). Loss: default (family down) |
 | Cues | Level start: one line each for the Roles (M1-03; placeholders, `miso-narrative`): Linda "Anything that steps into my line gets an arrow." · Mark "Anything that touches her answers to me." Stage 2: the setup lines; when Mark first stands on 7,0: Mark "Linda. Shoot at me." · Linda "Gladly." (G9-6/7). Arrival bark for `back` |
-| First trigger | Watch and Counter on enemy turn 1 (pack within 4 of both); Catch & Return on the first Linda shot with Mark on 7,0 (the aim preview shows the return, CR-56) |
+| First trigger | Watch and Counter on enemy turn 1 (every pack Claw within 5 of a hero; Watch on any Claw beside Linda, the Counter on a Claw that hits Mark from 3,3); Catch & Return on the first Linda shot with Mark on 7,0 (the aim preview shows the return, CR-56) |
 | Alert | `level alert all` (so the Masher's counter preview shows from the start; EN-2 hides it while Unaware) |
 | FTP, clue | FTP full at start (Linda 2 + Mark 3 = 5; roles 1 each, Continuous Attack 1, 2, 3). Clue on 12,0: the end close-up (G9-3/4, as built, moved). Rewards as built |
 | Fallback | If Mark never takes the ledge: Linda's plain arrows and Encore still kill it, slower, and the `back` pair hits her. Hint: a `GuidedAbilityHint` on Linda's bow while Mark stands on 7,0 (T-5); Mark's "Shoot at me." line already points at it |
-| Time | ~5 min (beat 1 ~2 rounds, beat 2 ~3: Mark's walk is 2 turns from the room) |
+| Time | ~4.5 min (beat 1 ~2 rounds, beat 2 ~2 to 3: Mark's walk is now 1 turn plus a step) |
 
-**Note on "one Move" (D-606).** Strictly, no path around a 2 × 2 is one Move: the shortest loop from the tile beside it to the tile beyond it is 5 steps. The ledge keeps Mark 2 cells from the Masher all the way and ends one Move above the rest tile; the whole walk from the room is about 2 turns. THJ: the ledge as drawn (D-619).
+**Note on "one Move" (D-606).** Strictly, no path around a 2 × 2 is one Move: the shortest loop from the tile beside it to the tile beyond it is 5 steps. The ledge keeps Mark 2 cells from the Masher all the way and ends one Move above the rest tile. THJ: the ledge as drawn (D-619); Mark now starts on it (D-632).
 
 ### M2 · Lucy & John: "At me!" (new `GB_m2-river`)
 
@@ -553,7 +555,9 @@ The snapshot's candidates: an M1, M2 or M3 reward, or a Home visit. A relic last
 | # | Question | Decides | Owner |
 |---|---|---|---|
 | T-1 | Linda's arrow falloff in play: code ×0.9 per earlier hit; C4b said none without the run upgrade; the Trail logs show 6 then 4 | Every pierce number (M1 uses only first hits) | implementer, read + play |
-| T-2 | X-26 "Mark's skill tree unlocks Move instead of Vault": is "Move" his walk or Command ("commands an ally to move")? Either way Vault leaves his starting kit. If Command is in his kit at M1, it can't move the Masher (Immovable) but could move Linda | M1's kit | THJ / coordinator |
+| T-2 | **Settled (D-633):** "Move" is Command. Mark's M1 kit: his attacks plus Command, no Vault | — | — |
+| T-17 | Does Mark's Counter fire when the enemy hits Mark himself (the FR table: "an enemy's action hits a family member")? | M1 beat 1's Counter from 3,3; lever: Mark starts on 3,2 | implementer, read |
+| T-18 | Can Command target Mark himself? (No shortcut either way: a Commanded unit walks) | M1 note only | implementer, read |
 | T-3 | The grid builder places one Masher from four `O` cells (anchor bottom left) | M1 build | implementer |
 | T-4 | What Encore does with arrows locked under a living Masher | M1's ● | play |
 | T-5 | A `GuidedAbilityHint` condition "Mark on 7,0" | M1 fallback | implementer |
