@@ -457,7 +457,7 @@ Without punchline endings (option A) the Hearth runs ~20+ min.
 
 ![s1-river](onboarding-levels/s1-river.svg)
 
-> **Block superseded (2026-11-23)** by `s1-river` in [`plans/2026-11-22-onboarding-d3-paper-levels.md`](../2026-11-22-onboarding-d3-paper-levels.md), which rebuilds `GB_s1-river`. Kept for history.
+> **Block superseded (2026-11-23)** by `m2-river` in [`plans/2026-11-22-onboarding-d3-paper-levels.md`](../2026-11-22-onboarding-d3-paper-levels.md), a new prefab `GB_m2-river` (`GB_s1-river` is renamed, not overwritten, D-621). Kept for history.
 
 ```grid id=s1-river title="The River (John + Lucy)"
 # # . . . . # # . . _ . _ . . # #
@@ -504,7 +504,7 @@ level tier tutorial
 
 ![s2-ridge](onboarding-levels/s2-ridge.svg)
 
-> **Block superseded (2026-11-23)** by `s2-ridge` in [`plans/2026-11-22-onboarding-d3-paper-levels.md`](../2026-11-22-onboarding-d3-paper-levels.md), which rebuilds `GB_s2-ridge`. Kept for history.
+> **Block superseded (2026-11-23)** by `m1-ridge` in [`plans/2026-11-22-onboarding-d3-paper-levels.md`](../2026-11-22-onboarding-d3-paper-levels.md), a new prefab `GB_m1-ridge` (`GB_s2-ridge` is renamed, not overwritten, D-621). Kept for history.
 
 ```grid id=s2-ridge title="The Ridge (Linda + Mark)"
 # . . . # # # # # # # # # #

@@ -2,7 +2,7 @@
 
 Size: L    Tier: 3 (level content, story beats, roster; THJ approves each paper level before it's built)    Assigned to: miso-game-designer
 Branch: `thj/onboarding-demo` (D-604, reverses D-602's "build on `main`"), scope this branch
-Status: **paper levels written, waiting on THJ** (2026-11-23). The six groundwork questions are answered (D-605 to D-608, D-612, D-613; Cleanse D-614; stations D-618). New questions in [Questions for THJ](#questions-for-thj).
+Status: **waiting on THJ: approve each paper level** (2026-11-23). Every question is answered: groundwork D-605 to D-608, D-612, D-613; Cleanse D-614; stations D-618; paper-level questions D-619, D-620, D-622 to D-626; build rule D-621 ([Answers](#answers)).
 
 Parent plan: [`2026-11-22-onboarding-demo.md`](2026-11-22-onboarding-demo.md), Phase 3 (D3). Item source: [`design/demo-tweaks-snapshot.md`](../design/demo-tweaks-snapshot.md) (THJ's snapshot of the tweak doc, 2026-11-23), sections 1, 6 and 7. Worked example and history: [onboarding levels](onboarding/2026-10-26-onboarding-levels.md), [after-Hearth design](onboarding/2026-11-09-onboarding-after-hearth-design.md), [post-Hearth challenge](onboarding/2026-11-11-post-hearth-challenge-design.md), [Trail balance](2026-11-11-trail-balance-design.md).
 
@@ -37,7 +37,7 @@ Out: Home beats (M3-07, chunk 3.3), final text (`miso-narrative`), X-15 and X-27
 
 ## Touches
 
-Systems: `GB_s2-ridge`, `GB_s1-river` (rebuilt from the blocks below, GUIDs kept, as D-502 did for the Trail), a new `GB_m3-defence`, a new `GB_m4-cleanse`, `DungeonSafeRooms/LevelDivineRelicRoom 1.prefab`, `Level3/Level3-C1.prefab`; mission assets `MS2 - The Ridge`, `MS1 - The River`, `M2 - The Trail` (becomes M3), `M4 - The White Mothers`; wiring tools `SearchWiring.Ridge/River/Trail`, `M4SquadSlots`, tests `SearchTrailTests`, `M4SquadPickTests`; `Unit_Toba.prefab` (`unlockedAfterMission`); **(core: AI)** barriers, chunk 3.0.
+Systems: new prefabs `GB_m1-ridge`, `GB_m2-river`, `GB_m3-defence`, `GB_m4-cleanse`, with the old levels they replace renamed, not overwritten (D-621; [build rule per level](#build-rule-per-level-d-621)); `DungeonSafeRooms/LevelDivineRelicRoom 1.prefab`, `Level3/Level3-C1.prefab`; mission assets `MS2 - The Ridge`, `MS1 - The River`, `M2 - The Trail` (becomes M3), `M4 - The White Mothers`; wiring tools `SearchWiring.Ridge/River/Trail`, `M4SquadSlots`, tests `SearchTrailTests`, `M4SquadPickTests`; `Unit_Toba.prefab` (`unlockedAfterMission`); **(core: AI)** barriers, chunk 3.0.
 USPs: all four (see [USP check](#usp-check)).
 Docs: see [Docs to update](#docs-to-update).
 
@@ -266,7 +266,7 @@ Read 2026-11-23 from the assets by a read-only Explore agent (paths in its repor
 | **A 2 × 2 can only step where two cells side by side are free** (its footprint) | V (footprint rule, skill) | M1's alcove |
 | **Linda's arrow pierces a 2 × 2 and flies on**; each unit is hit once per arrow; falloff ×0.9 per earlier hit on that arrow (`onHitExtraModifier` 0.9) | V | M1 (C4b's "no falloff" and the Trail logs' "6 then 4" disagree with the code: T-1) |
 | **Catch & Return copy is Linda's** (owner, stats); a fresh hit ledger, so a unit between them is hit out and back; the Masher answers both hits **once, against Linda**, after the action | V (code; not played) | M1 |
-| Dark Worm: placed worm splits on death (a kill still splits) into 2 worms of the next size, on its cell and the nearest free cell: 12 HP / 6 dmg, then 6 / 4, then 4 / 2, which die normally. Move 1, melee | V | M2 |
+| Dark Worm (THJ, D-623): **a worm splits on the first damage it takes**, into 2 worms of the next size, on its cell and the nearest free cell; its HP doesn't matter until the last children (4 HP, 2 damage), which die normally. So one placed worm = 1 + 2 + 4 split hits, then 8 small worms of 4 HP. Move 1, melee. (The code read found "a killing blow still splits" and the GDD's EN-4 says built worms split on death: T-16 aligns them with THJ's rule) | V (THJ) | M2 |
 | Exploding mushroom: set off by any hit, 1.5 s delay, flat 7 to every unit around it (radius 1 radial: read as the 8 cells), both sides; re-arms after 3 turns; blocks walking; the AI doesn't avoid it (not found) | V / A (shape) | M3 |
 | Dark Shaman: move 3, bolt 2, heal 3, summon 2, 50 HP | V | M4-1 |
 | Corruption pool: a Dark Claw about every 4th turn (interval 3, first at about turn 3) on a free neighbour, one alive per pool; pool health 10; **one Cleanse (50 × DMG, radius 1, diagonals likely) destroys it** | V | M4-1 |
@@ -296,7 +296,7 @@ Read 2026-11-23 from the assets by a read-only Explore agent (paths in its repor
 
 Coordinates in each block start at 0,0 (bottom left). `#` = no GridCell. Big units' footprints grow up and right from their anchor; the Masher is drawn on all four of its cells, as chunk 8 draws it (T-3: confirm the builder reads it as one Masher).
 
-### M1 · Linda & Mark: "The wall that waits" (rebuilds `GB_s2-ridge`)
+### M1 · Linda & Mark: "The wall that waits" (new `GB_m1-ridge`)
 
 **Decided:** the Masher and Catch & Return beat replaces the corridor beat, in a widened stretch (D-605); Mark reaches the catch spot by a side path (D-606). The arrow does pierce a 2 × 2 (section 2), so the fallback isn't needed.
 
@@ -304,7 +304,7 @@ Coordinates in each block start at 0,0 (bottom left). `#` = no GridCell. Big uni
 
 **Why Mark stands next to it for a moment.** Linda's bow reaches 4. With a 2-cell Masher between them and one cell of space on Linda's side, Mark's catch tile is 4 from her and next to the Masher. So the rhythm is: Mark steps in (Move), Linda fires twice (two catches), Mark steps back out (Move). Nobody ends the turn next to it.
 
-```grid id=s2-ridge title="M1 · The Ridge: the wall that waits"
+```grid id=m1-ridge title="M1 · The Ridge: the wall that waits"
 c c c c # # # # # # # # #
 . c . . . . . . . # # # #
 . . . . # # # # . # # # #
@@ -332,7 +332,7 @@ The block has 5 rows, so y runs 0..4 (bottom row y = 0).
 
 | Item | Plan |
 |---|---|
-| Source | `GB_s2-ridge`, rebuilt from this block (GUID kept); `SearchWiring.Ridge` updated (stages, sequences, clue props, HP). Today's corridor queue and Vault beat go |
+| Source | **Big change: a new prefab `GB_m1-ridge`** from this block; the old `GB_s2-ridge` is renamed (D-621) and `MS2 - The Ridge` points at the new one. `SearchWiring.Ridge` targets the new prefab (stages, sequences, clue props, HP). Today's corridor queue and Vault beat go |
 | Teaches | **Catch & Return as the answer to the Masher** (M1-02), after **Watch and Mark's Counter** in the opening fight (M1-03) |
 | Twist | A wall that never moves but punishes anyone beside it; plain arrows get stuck under it |
 | Squad | Linda 1,0, Mark 2,0. Kit: no Vault (X-26), no Cleanse (D-614) |
@@ -340,7 +340,7 @@ The block has 5 rows, so y runs 0..4 (bottom row y = 0).
 | Enemies | **Pack** (alert): Dark Claws 0,4, 2,4, 1,3, factor 0.8 (≈ 13). **Masher** anchor 5,0, alert, factor 0.45 (≈ 36 at Early). **Hidden `back`:** Dark Claws 1,4, 3,4, factor 0.8, revealed at the start of the Masher stage's second family turn |
 | Beat 1: the pack (Roles) | Family first. 1,3 is 3 from Linda (1,0), 2,4 is 4 from Mark (2,0), 0,4 is 5 from Linda: all three reach a hero on enemy turn 1. At 13 HP nothing dies to one hit (bow 6, Explosive 8, Blitz 8), so enemy turn 1 comes: a Claw that ends its move in Linda's row 0 or column 1 within 4 **draws Watch** (her first real use: it was off in Memory 1), and a Claw that hits Linda within 2 of Mark **draws his Counter**. ★ Explosive Arrow on 1,4 from 1,0 (4 away) hits 0,4, 2,4, 1,3 and 1,4's empty cell: 8 on all three; Mark finishes one; Watch and the Counter take the rest on the enemy turn. ● Bow and Blitz one at a time: a round longer |
 | Stage 1 → 2 | Pack dead → sequence: camera along the corridor to the Masher (its first-appearance close-up, EN-10, plays here: last, before control returns, H-01) → the setup lines (below) → objective **"Get past the Masher."** |
-| The setup (M1-02: "a short setup shows how the Masher works") | Mark: "I'll knock it over." · Linda: "Don't stand next to it. Look." The player sees the rule on the board: the Masher is alert, so hovering it shows its counter preview (EN-2: path, cells, damage), and its only two neighbour tiles are the danger. Option b in Q-N2: a scripted Fist Blitz that shows a slam |
+| The setup (M1-02: "a short setup shows how the Masher works") | Mark: "I'll knock it over." · Linda: "Don't stand next to it. Look." The player sees the rule on the board: the Masher is alert, so hovering it shows its counter preview (EN-2: path, cells, damage), and its only two neighbour tiles are the danger. Camera, two lines and the preview, no scripted hit (D-620) |
 | Beat 2: the catch (distances on the grid) | Linda on **3,0**: the Masher's nearest cell 5,0 is 2 away, so she's never next to it, and it can't step to her. Her bow along row 0 reaches 4,0, 5,0 (Masher), 6,0 (same unit), **7,0**: 4 tiles, inside her 4. **Mark** goes up the ledge: from the room's 3,3 to 8,3 is 5 steps, then 8,2, 8,1, 8,0 (3 more): from the ledge's end, **one Move** drops him on the rest tile **8,0** (2 from the Masher's 6,0: safe). Each turn: Mark 8,0 → 7,0 (1 AP), Linda fires twice from 3,0 (the arrow passes the Masher, reaches Mark 4 away with an enemy between: the catch is offered, MA-3), Mark 7,0 → 8,0 (1 AP). Each catch hits the Masher out and back: 6 + 6 = 12, and the arrow returns to her quiver |
 | Answers | ★ **Catch & Return** as above: 24 a turn, quiver full, the Masher dies in 2 of Linda's turns (36 HP). ● **Linda alone from 3,0:** 6 a shot, and each arrow lands under the Masher, locked until it dies: three arrows = 18, then she's empty (Encore: T-4). ● **Explosive Arrow** on the Masher from 3,0: 8, then a grounded arrow too (LI-4, to confirm). ✗ **Mark hits it** (Fist Blitz ends next to it): it slams Mark (6) and the plus around him; his Counter answers, which provokes another slam: a loop paid in FTP and HP (chain cap 10). ✗ **Ending the turn on 7,0 or 4,0:** it slams on its turn |
 | Pressure | The hidden `back` pair arrives in the room on the stage's second family turn (camera and bark), acts the next enemy turn: from 3,4, three steps (3,3, 3,2, 3,1) put a Claw beside Linda on 3,0. So plinking alone gets her hit from behind; the catch kills the Masher first. Mark's Counter can't reach them from 8,0: Linda deals with them (Watch on column 3 or row 0) |
@@ -352,13 +352,13 @@ The block has 5 rows, so y runs 0..4 (bottom row y = 0).
 | Fallback | If Mark never takes the ledge: Linda's plain arrows and Encore still kill it, slower, and the `back` pair hits her. Hint: a `GuidedAbilityHint` on Linda's bow while Mark stands on 7,0 (T-5); Mark's "Shoot at me." line already points at it |
 | Time | ~5 min (beat 1 ~2 rounds, beat 2 ~3: Mark's walk is 2 turns from the room) |
 
-**Note on "one Move" (D-606).** Strictly, no path around a 2 × 2 is one Move: the shortest loop from the tile beside it to the tile beyond it is 5 steps. The ledge keeps Mark 2 cells from the Masher all the way and ends one Move above the rest tile; the whole walk from the room is about 2 turns. If THJ wants it shorter, Q-N1.
+**Note on "one Move" (D-606).** Strictly, no path around a 2 × 2 is one Move: the shortest loop from the tile beside it to the tile beyond it is 5 steps. The ledge keeps Mark 2 cells from the Masher all the way and ends one Move above the rest tile; the whole walk from the room is about 2 turns. THJ: the ledge as drawn (D-619).
 
-### M2 · Lucy & John: "At me!" (rebuilds `GB_s1-river`)
+### M2 · Lucy & John: "At me!" (new `GB_m2-river`)
 
 **Decided:** one level (M2-01); John rushes in, is surrounded, and the player casts Shield Flare (M2-03: a `MoveUnitSequence` moves him, Lucy's embers on him are the play); Dark Worms (M2-05); the Pile at the end is Ryker's clue only (D-607). The ford Archers go: they were the old Shield Flare lesson, and the ring replaces them.
 
-```grid id=s1-river title="M2 · The River: at me!"
+```grid id=m2-river title="M2 · The River: at me!"
 # # . . . . # # # # # # # # # # #
 # . . . . . . # . . . . . . . # #
 # . . . . . c # c . c . . . . # #
@@ -384,14 +384,14 @@ level hidden ring 8,4 10,4 8,2 10,2
 
 | Item | Plan |
 |---|---|
-| Source | `GB_s1-river`, rebuilt (GUID kept); the clearing's cells as built; the islands and Archers go; the ford becomes open shallows x 8..14, y 1..5, joined to the clearing by 7,3; the far bank holds the Pile (props on missing cells 15..16 × 2..4, as the Trail's Pile was drawn). `SearchWiring.River` updated |
+| Source | **Big change: a new prefab `GB_m2-river`** from this block; the old `GB_s1-river` is renamed (D-621) and `MS1 - The River` points at the new one. The clearing's cells as built; the islands and Archers go; the ford becomes open shallows x 8..14, y 1..5, joined to the clearing by 7,3; the far bank holds the Pile (props on missing cells 15..16 × 2..4, as the Trail's Pile was drawn). `SearchWiring.River` updated |
 | Teaches | **Shield Flare** (M2-02, M2-03), after **Lucy's follow-up and John's guard** in the opening fight (M2-06) |
 | Twist | John charges ahead and is surrounded; the worm in the ring splits around him |
 | Squad | Lucy 0,3, John 1,3 (Papa's Shelter at start, as built). No Cleanse |
-| Enemies | **Clearing** (alert): Dark Claws 5,3, 6,4, 6,2, factor 0.8 (≈ 13). **Hidden `ring`** (revealed around John): Dark Claws 8,4, 10,4, 8,2, factor 0.45 (≈ 7); **Dark Worm** 10,2, factor 0.3 (≈ 8), splitting into 12 HP / 6 HP / 4 HP worms around its cell (built values, section 2) |
+| Enemies | **Clearing** (alert): Dark Claws 5,3, 6,4, 6,2, factor 0.8 (≈ 13). **Hidden `ring`** (revealed around John): Dark Claws 8,4, 10,4, 8,2, factor 0.45 (≈ 7); **Dark Worm** 10,2, no HP override (its HP doesn't matter: it splits on the first damage, D-623), splitting around its cell down to 8 worms of 4 HP (section 2) |
 | Beat 1: the clearing (Roles) | Family first. 5,3 is 5 from Lucy. ★ John strikes a Claw within 3 of Lucy: **her follow-up** fires (2 × 3 on it, LU-5). Enemy turn: a Claw that targets Lucy within 2 of John **is taken by John's guard** (×0.5). ★ Lucy's Cyclone in the clearing's mouth (the arms pull and block, LU-3, LU-4). ● Sword and embers one by one |
 | Stage 1 → 2 (M2-03) | Clearing dead → sequence: John "There, by the water. Fur." (he sees the clue) → `MoveUnitSequence` John to **9,3** → reveal `ring` (the four diagonal neighbours of 9,3) → `CastAbilitySequence` John's Shield Up → John "Lucy! At me!" · Lucy "*At* you?" (M2-02, placeholders) → **turn reset** (LSB `reset`, Memory 4's Hold pattern: a fresh family turn with AP) → `GuidedAbilityHint` on Lucy's Fire Embers until used → input on. Objective **"Help John."** (the ring dead) |
-| Beat 2: the Flare (distances on the grid) | John on 9,3 under Shield Up. Each ring unit sits on a diagonal of 9,3, 1 away: Shield Flare's copies fly along the four diagonals and hit the first enemy within 2 (SY table), so **one Flare hits all four**. Lucy needs John within her embers' 3: **7,3** is 2 from John (inside his guard's 2, so a ring hit on her goes to John) and reachable in one Move from anywhere in the clearing at x ≥ 4; **8,3** is next to John (Papa's Shelter: one more ember, so one more Flare) but beside 8,4 and 8,2. ★ Lucy to 7,3 or 8,3, embers on John: the aim preview shows the four copies (CR-56). Damage: 4 a copy from the main ember (7 if every ember flares, T-6): two Flares, or one Flare + John's Sword, clear the Claws; the worm splits beside John and the follow-up and next Flares mop up. ● Embers on each ring unit directly (slower; the worm's splits pile up). ✗ John walks out of the ring (gives up the Shield Up turn, the ring follows) |
+| Beat 2: the Flare (distances on the grid) | John on 9,3 under Shield Up. Each ring unit sits on a diagonal of 9,3, 1 away: Shield Flare's copies fly along the four diagonals and hit the first enemy within 2 (SY table), so **one Flare hits all four**. Lucy needs John within her embers' 3: **7,3** is 2 from John (inside his guard's 2, so a ring hit on her goes to John) and reachable in one Move from anywhere in the clearing at x ≥ 4; **8,3** is next to John (Papa's Shelter: one more ember, so one more Flare) but beside 8,4 and 8,2. ★ Lucy to 7,3 or 8,3, embers on John: the aim preview shows the four copies (CR-56). Damage: 4 a copy from the main ember (7 if every ember flares, T-6): two Flares, or one Flare + John's Sword, clear the Claws; the first Flare copy splits the worm beside John, and each later copy, follow-up or sword hit splits a child, until the 4 HP worms die to any hit: a swarm the Flare's four copies and Lucy's two sidewinders are made for. ● Embers on each ring unit directly (slower; each split needs its own hit). ✗ John walks out of the ring (gives up the Shield Up turn, the ring follows) |
 | Stage 3 | "Clear the river." (defeat all, the worm's children included) |
 | Win / loss | Stage 1 the clearing dead (hidden); stage 2 the ring units dead; stage 3 defeat all. Loss: default |
 | End (M2-04) | The Pile: camera to the far bank, the Pile close-up, Ryker's clue (prints, white fur, the axe-killed Claws of R7-4/5), John and Lucy's lines (placeholders). **No tally beat here** (Linda is absent; D-607) |
@@ -401,13 +401,13 @@ level hidden ring 8,4 10,4 8,2 10,2
 | Fallback | The pulse on Fire Embers and the preview; if the player still doesn't ember John, the ring dies slower and John (24 HP, Shield Up 60%) takes it |
 | Time | ~5 min |
 
-**Worm risk.** Built, one worm becomes 2 + 4 + 8 = 14 children over its life (108 HP in all). One worm, in the Flare's reach, is the start value. If the play check shows a slog, Q-N4.
+**The worm (D-623, as built).** One worm, in the Flare's reach. Its cost is hits, not HP: 7 split hits (1 + 2 + 4), then 8 small worms of 4 HP that any hit kills. Lever if the swarm runs long in play: the worm out of the ring.
 
 ### M3 · Defence: "Hold the yard" (new `GB_m3-defence`, in the `M2 - The Trail` mission asset)
 
 **Decided:** the stone moves by itself while the pusher stands at it (D-608); "Still counting?" plays here (D-607); roster as today: Lucy and Linda fixed, plus 1 pick (D-607). Snapshot M3-02: "the third member (John or Mark) rushes off ... pushes the stone off the cave that hides Toba's camp, for 3 turns to start"; M3-03 barriers (**!**); M3-04 the sisters compete with exploding mushrooms; M3-05 a Black Claw; M3-06 Toba appears and the family goes home.
 
-**Who pushes.** The snapshot says the pick, John or Mark. THJ said it "might be Mark, not John". This level works for either, so I recommend **whoever is picked** (no roster change). The question is Q-N3.
+**Who pushes: whoever is picked**, John or Mark (D-622). No roster change.
 
 ```grid id=m3-defence title="M3 · Defence: hold the yard"
 # # # # # T # # # # #
@@ -423,6 +423,7 @@ c c # # # # # # # c b
 cells 2,3 8,3 note barrier (HP): chunk 3.0
 note 5,8 the stone; Toba hidden under it
 note 5,7 push tile
+note 8,6 Heavenly Sword pickup
 cells 0,0 1,0 enemy hidden: w1
 cells 10,0 9,0 10,1 enemy hidden: w2 (Black Claw 10,0)
 cells 0,2 10,2 enemy hidden: w3
@@ -440,7 +441,7 @@ level hidden w3 0,2 10,2
 
 | Item | Plan |
 |---|---|
-| Source | New level (`GB_m3-defence`), dressed like the Trail (H-11's first pass). **Mission asset:** keep `M2 - The Trail.asset` and make its graph one node, this level. That keeps everything keyed to it: the Yard as its completion sequence, the Map Table clue scene, its Home state, the tally, and the station unlocks after M3 (D-618: Bookshelf, Training Field, Cooking Cabinet). **If a new mission asset is made instead, the station rows and the Yard gate must move to it** |
+| Source | **Big change: a new prefab `GB_m3-defence`** (new layout), dressed like the Trail (H-11's first pass). The four Trail prefabs leave the mission graph and are renamed, not overwritten (D-621); `SearchWiring.Trail` and `SearchTrailTests` either follow the renamed prefabs or are retired with them (coordinator's call). **Mission asset:** keep `M2 - The Trail.asset` and make its graph one node, this level. That keeps everything keyed to it: the Yard as its completion sequence, the Map Table clue scene, its Home state, the tally, and the station unlocks after M3 (D-618: Bookshelf, Training Field, Cooking Cabinet). **If a new mission asset is made instead, the station rows and the Yard gate must move to it** |
 | Teaches | Nothing new as a system: it's the sisters' exam and the first defence. New enemy rules: barriers (one sentence: "they break walls"), the Black Claw (met on the Trail before; now first here) |
 | Twist | The third member leaves the sisters to it; they compete for kills (M3-04) until the end, where they stop |
 | Squad | Linda 4,4, Lucy 6,4, the pick on the deploy slot 5,4 (John or Mark). Linda–Lucy Duo locked (D-470). No Cleanse |
@@ -453,10 +454,10 @@ level hidden w3 0,2 10,2
 | Distances | Breach to pusher: from the neck 2,3 to 5,7 is 7 steps, so a Claw that breaks a barrier needs two turns to reach him; the sisters on the bulges are 1 from the necks' yard side. From 5,4 (the deploy slot) to 5,7: 3, one Move |
 | The Black Claw (M3-05) | w2, east. Hitting it calls every Dark Claw within 5 onto the hitter (EN-1). ★ Ring it from a sister's bulge (9,4, through the gap down column 9) so its pack turns on her and away from the barrier and the pusher (chunk 18, "the bell as a shield"). ✗ The pusher rings it (its pack comes for the stone) |
 | Answers (the hold) | ★ Split the fronts: Linda on one bulge, Lucy on the other, each firing down her column into the lane and its mushroom. ★ Cyclone on a lane's mouth (2,2 or 8,2): its arms hold the lane and pull Claws into the mushroom's blast. ★ The bell, as above. ● Both sisters on one side: the other barrier falls a turn later and the pusher gets company |
-| End | S4 won → end sequence (Q-N5 for the order): the tally alone on screen, Linda: "Still counting?" · Lucy: "…No." (`SistersTally_FadeOut`, moved here from the Pile) → camera on the cave → reveal Toba (non-hostile, `toba` group, after the stone is gone) → his lines: he knows the way to the Rootwell and where Ryker is (M3-06, placeholders) → fade, home (M3-07 is chunk 3.3) |
+| End | S4 won → end sequence (D-624): the tally alone on screen, Linda: "Still counting?" · Lucy: "…No." (`SistersTally_FadeOut`, moved here from the Pile) → camera on the cave → reveal Toba (non-hostile, `toba` group, after the stone is gone) → his lines: he knows the way to the Rootwell and where Ryker is (M3-06, placeholders) → fade, home (M3-07 is chunk 3.3) |
 | Cues | Arrival barks and camera on each wave (the Trail's arrival pattern: input off, camera, reveal, bark, camera back); barks for the tally race (X-02/X-03 if built) |
 | Alert | All alert; waves come in alert |
-| FTP, items, clue | FTP full at start (`LevelStartFPFiller`). Items as the Trail (Potion 2, FP Potion 1). The clue is Toba. X-20's relic (Q-N6) would lie on 8,6 |
+| FTP, items, clue | FTP full at start (`LevelStartFPFiller`). Items as the Trail (Potion 2, FP Potion 1). The clue is Toba. **The Heavenly Sword pickup on 8,6** (X-20, D-625): the yard's east corner, 2 steps off the hold line, so taking it costs a sister a move during the hold; 3 shared uses, a 3 × 3 of 10 × within 5, for the mission (PR-30 to PR-32). Placed by hand (the grid has no relic character) |
 | Fallback | No caps. If the pusher leaves the tile, the stone waits; if both barriers fall, the yard fight still wins. A loss is the whole mission (one level) |
 | Time | ~6 min (S1 2 rounds, hold 3, finish 1) |
 
@@ -494,7 +495,7 @@ level deploy 1,4
 
 | Item | Plan |
 |---|---|
-| Source | New level; dressing from Level2-C1-TArtEx (the old M4 level with pools) |
+| Source | **New prefab `GB_m4-cleanse`**; dressing from Level2-C1-TArtEx (the old M4 level with pools). Nothing is overwritten |
 | Teaches | **Cleanse** (its only level, D-614) and the **sisters' first Duo** (Marks-Sisters, D-470), in the demo's one real fight |
 | Twist | Three circles keep spawning while a Dark Shaman heals and summons behind a screen; the family must split to cleanse |
 | Squad | Linda 0,4, Lucy 0,3, Toba 1,3, the pick on 1,4. Cleanse unlocked here only (Toba has none) |
@@ -513,7 +514,8 @@ level deploy 1,4
 | Item | Plan |
 |---|---|
 | What changes | Name "Mithra's Rest". Add a `SafeRoomFunction` with its heal (the Healing Room's component) to the relic room; place the Heavenly Sword pickup (`DR_PickUp_HeavenlySword`) on the altar (none is placed today, T-12); campfire props; `LevelStartFPFiller` 99 (the "refill" of M4-02). Objective: "Rest by the fire, take the relic, then go on." |
-| Heal value (THJ's) | **Recommend 100% of max HP** (`healHpModifer` `baseFactor` 1.0 on `StatUB_HP`; the Healing Room uses 0.5). The boss is next, and the demo's last fight should start fresh. Q-N7 |
+| Heal value | **50% of max HP, and FTP filled** (D-626): the Healing Room's own value (`healHpModifer` `baseFactor` 0.5 on `StatUB_HP`), plus `LevelStartFPFiller` 99 |
+| Build rule | **Small change: edit in place** (`LevelDivineRelicRoom 1.prefab` is M4's own copy) |
 | Scene | A short campfire scene when the heal triggers: the family recovers; Toba's line (narrative tech, placeholder). Rations need the Home Kitchen: not in this demo (snapshot M4-02) |
 
 #### M4-3 · The Goblin Queen (`Level3-C1`, no grid change)
@@ -522,6 +524,7 @@ level deploy 1,4
 |---|---|
 | What changes | Roster only: Toba placed (as built) is one of the fixed seats; the sisters placed; the deploy slot for the pick. Check that a fixed roster Toba and the placed Toba don't double (T-11). End sequence: saving Ryker (M4-03, narrative tech) |
 | Values | Queen 320 HP at Standard, enemies first, Family Super Time on her death (as built). Lever after a timed play: 150 (the M10 value). The level's hero HP overrides are ignored (D-363) and stay that way |
+| Build rule | **Small change: edit in place** (roster and end sequence only; the deploy slot is already there, C5a) |
 
 ---
 
@@ -531,7 +534,7 @@ level deploy 1,4
 
 The snapshot's candidates: an M1, M2 or M3 reward, or a Home visit. A relic lasts the mission (PR-31), so a mission-end reward is gone before it can be used; a Home visit can show it but not use it.
 
-**Recommendation: a walk-on Heavenly Sword in M3, on 8,6** (the yard's east corner, 2 steps off the hold line; picking it up costs a sister a move during the hold). Three uses, a 3 × 3 of 10 × within 5: it clears a lane mouth the turn a wave arrives. Mithra's Rest then gives it again before the Queen, so the player knows it. Data only (the pickup prefab). Q-N6.
+**Decided (D-625): a walk-on Heavenly Sword in M3, on 8,6** (the yard's east corner, 2 steps off the hold line; picking it up costs a sister a move during the hold). Three uses, a 3 × 3 of 10 × within 5: it clears a lane mouth the turn a wave arrives. Mithra's Rest then gives it again before the Queen, so the player knows it. Data only (the pickup prefab); in the `m3-defence` block as a note.
 
 ### X-19 · Can a `thj/home-test` station join cheaply?
 
@@ -563,6 +566,7 @@ The snapshot's candidates: an M1, M2 or M3 reward, or a Home visit. A relic last
 | T-12 | How Mithra's Gift gives the relic today (no pickup placed in either prefab) | M4-2 | implementer, read |
 | T-13 | `MoveUnitSequence` from wherever John stands at stage 1's end to 9,3 (path length, blockers) | M2 | play |
 | T-15 | Do Linda's arrow and Lucy's ember travel across a missing GridCell (M3's 1,3 and 9,3)? Only play evidence so far, for the bow alone: the Trail tracks log shows an arrow from 4,2 to 4,6 across the gap row (post-Hearth challenge plan, evidence table). Lucy's ember and the code paths are not verified | M3's bulge shots. Fallback above: blocking cells instead of gaps | implementer, read the code + play |
+| T-16 | Does a worm split on its first damage (THJ, D-623) or on death (the code read: "a killing blow still splits"; GDD EN-4 built text)? | M2's swarm count; EN-4's text | implementer, read + play |
 | T-14 | Stage order on a turn: does a "1 turn passed" stage complete at the family turn's start (so the stone notch and the next wave come before input)? | M3 | play (the Trail's arrivals suggest yes) |
 
 ## 6. New tech (marked !) and small new pieces
@@ -586,57 +590,42 @@ The snapshot's candidates: an M1, M2 or M3 reward, or a Home visit. A relic last
 - **Duos:** strengthened. The sisters' first Duo is a planned shot in M4-1 (D-470), right after "Still counting?" / "…No." and the Yard.
 - **Managing the Home as a Family:** neutral on purpose. Keeping M3 in the Trail's mission asset keeps the Yard, the station unlocks (D-618) and the Home states as they are; X-19 adds no station.
 
-## Questions for THJ
+## Answers
 
-**Q-N1 (M1, D-606's "one Move").** Is a ledge that ends one Move from the catch spot (about 2 turns of walking from the room) what you meant?
-- Context: no path around a 2 × 2 is one Move (5 steps minimum). The ledge keeps Mark 2 cells from the Masher and drops him one Move from the rest tile.
-- Options: (a) the ledge as drawn; (b) Mark starts the level nearer the ledge (beat 1 shrinks); (c) the corridor shorter, so the ledge is 3 cells shorter.
-- Recommendation: (a), with (c) if the walk feels long in play.
-- Blocked: M1's build.
+All closed by THJ on 2026-11-23; folded into the levels above.
 
-**Q-N2 (M1, the Masher setup's form).** How does "a short setup shows how the Masher works" play?
-- Context: M1-02 asks for it. The counter preview already shows the slam when the Masher is hovered.
-- Options: (a) camera, two lines and the preview (data, safe); (b) a scripted Fist Blitz by Mark that draws a real slam (6 HP on Mark; whether a sequence cast provokes the counter is untested).
-- Recommendation: (a); (b) if cold players still walk Mark into it.
-- Blocked: M1's stage-2 sequence.
+| Q | Answer | Decision |
+|---|---|---|
+| Q-N1 · M1's ledge | The ledge as drawn (its last leg one Move; about 2 turns from the room) | D-619 |
+| Q-N2 · the Masher setup | Camera, two lines and the counter preview; no scripted hit | D-620 |
+| Q-N3 · who pushes | Whoever is picked, John or Mark | D-622 |
+| Q-N4 · the worm | As built, one worm. THJ: "worm's HP does not matter till the last children; they split with the first damage received" | D-623 |
+| Q-N5 · "Still counting?" | In the end sequence, then Toba | D-624 |
+| Q-N6 · X-20 | The Heavenly Sword pickup in M3 on 8,6 | D-625 |
+| Q-N7 · Mithra's Rest | 50% of max HP and FTP filled (against the 100% I recommended) | D-626 |
 
-**Q-N3 (M3, who pushes).** The pick (John or Mark), or Mark only?
-- Context: the snapshot says the third member, John or Mark. You said it "might be Mark". The level works with either.
-- Options: (a) whoever is picked; (b) Mark only (a roster change: Mark fixed in M3, and the pick goes).
-- Recommendation: (a).
-- Blocked: M3's roster and S2's condition.
+No open questions. THJ's next step: approve each paper level.
 
-**Q-N4 (M2, the worm's split).** Keep the built split (one worm becomes 14 children), or use the planned one for the demo?
-- Context: EN-4 plans that the placed worm and its first split pop on any hit and only the last children have real HP (D-192); built, the chain is 108 HP. M2 places one worm.
-- Options: (a) as built, one worm; (b) build EN-4's planned split first (a rule change, all worms); (c) as built, but the worm out of the ring (a side encounter).
-- Recommendation: (a) and decide after the play check.
-- Blocked: nothing now; the M2 play check.
+## Build rule per level (D-621)
 
-**Q-N5 (M3, where "Still counting?" plays).** After the last kill and before Toba?
-- Context: D-607 puts it in M3. The hold ends with the stone rolling away, then a "finish them" stage.
-- Options: (a) end sequence: the tally line, then Toba; (b) when the stone rolls away, mid-fight; (c) after Toba, before going home.
-- Recommendation: (a): the race ends on its own, then the story moves on.
-- Blocked: M3's end sequence.
+THJ: "Do not override the previous levels if the changes are big, create a new one, and rename the old one." The block ids below are the new prefabs' names, so the grid builder makes new files and never overwrites an old one.
 
-**Q-N6 (X-20).** Introduce the Heavenly Sword as a walk-on pickup in M3?
-- Context: a relic lasts the mission, so a mission-end reward can't be used; Mithra's Rest gives it again in M4.
-- Options: (a) in M3 on 8,6; (b) in M1 or M2; (c) only in M4's Rest.
-- Recommendation: (a).
-- Blocked: M3's item placement.
-
-**Q-N7 (M4-2, heal value).** How much does Mithra's Rest heal?
-- Context: the Healing Room heals 50% of max HP (not a full heal, as the GDD says); the Queen is next.
-- Options: (a) 100% and FTP full; (b) 50% (as built) and FTP full; (c) 50%, no FTP refill.
-- Recommendation: (a).
-- Blocked: M4-2's values.
+| Level | Change | Prefab | The old one |
+|---|---|---|---|
+| M1 The Ridge | Big (new layout) | New `GB_m1-ridge` (block `m1-ridge`); `MS2 - The Ridge` points at it | `GB_s2-ridge` renamed (suggested suffix `_legacy`), kept |
+| M2 The River | Big (new layout) | New `GB_m2-river` (block `m2-river`); `MS1 - The River` points at it | `GB_s1-river` renamed, kept |
+| M3 Defence | Big (new level) | New `GB_m3-defence`; `M2 - The Trail`'s graph becomes this one node | The four `GB_m2-*` Trail prefabs leave the graph and are renamed, kept. Their names also clash with the new `GB_m2-river`, a second reason to rename them |
+| M4-1 The circles | New level | New `GB_m4-cleanse` | Nothing replaced in place; the old M4 levels (duel, C1-TArtEx, C2, C3-1, C3-2) just leave the graph, unchanged |
+| M4-2 Mithra's Rest | Small (components, a pickup, props, name, two values) | Edit `LevelDivineRelicRoom 1.prefab` in place | — |
+| M4-3 The Queen | Small (roster and end sequence) | Edit `Level3-C1.prefab` in place | — |
 
 ## Docs to update (if approved)
 
 - GDD `missions-structure.md`: the mission table and level table (M1 to M4 as here), MI-3 and MI-25 (Toba joins after M3; no duel), MI-22 and Q11 (the Healing Room heals 50%, not full), MI-28 (the tally line in M3), M4's row; Source lines.
-- GDD `enemies.md`: the Masher's first appearance; EN-4 if Q-N4 (b).
+- GDD `enemies.md`: the Masher's first appearance; EN-4's built text to THJ's rule (a worm splits on its first damage, D-623; T-16).
 - GDD `characters/mark.md` (X-26), `characters/toba.md` (joins before M4).
 - `design/level-chunks.md`: chunk 14's Vault row (X-26); a new chunk "the wall that waits" (a stuck Masher and Catch & Return); the knob "the anchor" (a hero who must stay put, M3); the facts in section 2 (Masher, mushroom, worm values) into the enemy and hazard references.
-- `plans/onboarding/2026-10-26-onboarding-levels.md`: mark its `s1-river` and `s2-ridge` blocks superseded (this file reuses those ids to rebuild the same prefabs).
+- `plans/onboarding/2026-10-26-onboarding-levels.md`: its `s1-river` and `s2-ridge` blocks are marked superseded by `m2-river` and `m1-ridge` (done 2026-11-23).
 - `plans/2026-11-18-bond-threads-design.md` §10; `tech/onboarding-merge.md` (M4 rows).
 
 ## Risks
@@ -648,4 +637,4 @@ The snapshot's candidates: an M1, M2 or M3 reward, or a Home visit. A relic last
 
 ## Gates
 
-Design only. The coordinator renders and checks the four new grids (gate 7): `s2-ridge`, `s1-river`, `m3-defence`, `m4-cleanse` (plus the twelve source grids, unchanged). THJ approves each mission before chunks 3.1 to 3.4; chunk 3.0 (barriers) has its own tech plan first.
+Design only. The coordinator renders and checks the four new grids (gate 7): `m1-ridge`, `m2-river`, `m3-defence`, `m4-cleanse` (plus the twelve source grids, unchanged). THJ approves each mission before chunks 3.1 to 3.4; chunk 3.0 (barriers) has its own tech plan first.
