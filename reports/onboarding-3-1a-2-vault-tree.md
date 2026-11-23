@@ -148,3 +148,7 @@ None. The save fixes (2, 3) are general and would also suit `main`, but carry th
 4. Buy Vault. Close and reopen the tree, or leave Home and come back: Vault stays owned and the SP stays spent.
 5. Start a fight with Mark: his bar shows Fist Blitz, Walk, Command **and Vault**. Over a run, the Vault run upgrades (Long Vault, Vault Stun) can now be offered.
 6. Optional: quit Play mode, re-enter and load the save. Vault is still owned.
+
+## Review: SaveFileSerializer (core), 2026-11-23
+
+**APPROVE** (miso-reviewer). Diagnosis right: JsonUtility drops a `values` list it can't serialize (`List<List<int>>`), leaving a keys-only wrapper the old `Normalize` passed through. Output changes only for a known `SerializationWrapper<,>` with nothing but `keys`; no current save type (`EquipmentManager`, `FactionTracker`, `StatAttributeSet` wrappers) can produce one, so existing payloads are unchanged. Loading untouched; legacy path keeps old behaviour. CRLF kept, no BOM, no statics, no private IDs. Should-fix: none. Notes: own commit; tell Khash (about 40 lines inside his `Normalize`); legacy and type-less reads still can't recover a keys-only wrapper (no current type makes one).
