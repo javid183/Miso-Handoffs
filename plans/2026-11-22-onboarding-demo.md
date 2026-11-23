@@ -37,7 +37,7 @@ One writer in the Unity project at a time. Design work (paper levels, X-15, X-27
 
 ### Before the first play check
 
-- **P0. Sequences on.** `main` has THJ's test settings with intro and outro sequences off (D-600). Most chunks below are sequences, so their play checks need them on. THJ turns them on in `GlobalSettings.asset` when Phase 2's first check comes, or tells the coordinator to.
+- **P0. Sequences on.** Done 2026-11-22: THJ turned intro and outro sequences back on (they were off on `main` since D-600).
 
 ### Phase 1: fixes and switches (no design; S each)
 
@@ -138,4 +138,3 @@ Per chunk: compile with a clean console; full EditMode suite green; `miso-review
 | M1-02 | The Masher beat replaces the Ridge's corridor beat? | D3 M1 |
 | M3-07 | The Linda–Lucy scene = today's Yard scene? | 3.3 |
 | X-26 | Mark's setup for the catch without Vault | D3 M1 |
-| P0 | Turn intro and outro sequences on now, or at Phase 2's first check? | P0 |
