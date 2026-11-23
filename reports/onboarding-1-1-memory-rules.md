@@ -49,6 +49,32 @@ Outcome: done (play check still to do, batched with the other Phase 1 chunks)
 
 - (coordinator)
 
+### Review (miso-reviewer, 2026-11-23): APPROVE
+
+Pasted by the coordinator (the reviewer is read-only).
+
+- **Must fix:** none.
+- **Should fix:** split the commits. Commit 1 should hold only the core data (the tag and `excludedTags`) plus `LevelPassByOff` and its gate test. The bark gate (`BarkManager.cs`, `BarkManager.PassBy.cs`) goes in its own commit 1b, with its test moved out of `LevelPassByOffTests.cs` into its own file, so the barks can be reverted alone. Accepted by the coordinator; queued for the implementer after the stations task.
+- **Notes:**
+  - **Core:** no core code changed, only data. `excludedTags` changed at `PlayerController.prefab:2338`, plus the new tag in both tag assets; tags are referenced by id string, so no existing reference shifts.
+  - **`CanPassBy`:** it gates FTP, the synergy event and the VFX. `BarkManager` is the only other listener.
+  - **Core bark system → onboarding constant:** acceptable for now. Move it to a neutral place if a second user appears.
+  - **`LevelPassByOff`:**
+    - No statics.
+    - Worker-thread guarded.
+    - Cleaned up on disable.
+    - Units added mid-level get tagged.
+    - Tags don't persist between levels.
+  - **Prefab YAML:**
+    - The M1-M3 diffs come from the tools, and the M4 hand edit is correct (unique fileID, right targets).
+    - `HearthMemoryRules.Apply` is idempotent.
+  - **No other level is affected:** a test scans `Content/Levels`.
+  - **Tests and code:**
+    - The full-HP test checks the field only; the restore itself needs THJ's play check.
+    - No private IDs anywhere.
+    - Line endings and BOMs unchanged.
+  - **Loose end:** `HearthMemoryWiringMark.Run()` doesn't call `HearthMemoryRules.Apply`. That would be a cheap safety net if M4 is ever regenerated. Outside this plan: backlog.
+
 ## Save reset
 
 No.
