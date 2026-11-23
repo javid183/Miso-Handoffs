@@ -2941,3 +2941,11 @@ Plan `plans/2026-11-19-faster-loop-process.md`, decisions D-575 to D-579.
 **Not verified.** Motion by eye; clip A/B previews; the real duo in combat.
 **Findings.** The first read of clips A/B ("barely move") was wrong (sampling bug); design note corrected. Clip C is clean (no logos); THJ approved committing it: `6eaaa105b` (LFS).
 **Status.** `thj/duo-insert` 7 ahead of `main`, not pushed. Waiting on THJ's play check.
+
+## 2026-11-22: duo insert Lucy clip
+
+**Built.** `7251ce52f` on `thj/duo-insert` (library asset + builder): Lucy's left half in all three Mark-Lucy entries plays THJ's Kling clip (`Content/FamilySuperTime/Sprites/kling_20261123_VIDEO_Lucy__a_yo_3169_0.mp4`, 1280x720, 5.04 s; untracked, KlingAI watermark bottom-right), start 1.2 s, speed 1.3 (needs 3.06 s, ends 4.26 s of 5.04), uvRect (0.30, 0, 0.52, 1) keeps the watermark out, fallback sprite kept.
+**Verified.** Whole EditMode suite 2488/2489 (1 Explicit skipped). Preview in Play mode, no console errors; capture `reports/2026-11-22-duo-insert-lucy-end.png` (no watermark visible).
+**Not verified.** Motion by eye; the real duo in combat.
+**Findings.** The Lucy clip stays out of git until a clean (watermark-free) export. Its .meta was created by the refresh (untracked).
+**Status.** `thj/duo-insert` 9 ahead of `main`, not pushed. Waiting on THJ's play check.
