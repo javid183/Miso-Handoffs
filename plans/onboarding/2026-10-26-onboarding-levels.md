@@ -457,6 +457,8 @@ Without punchline endings (option A) the Hearth runs ~20+ min.
 
 ![s1-river](onboarding-levels/s1-river.svg)
 
+> **Block superseded (2026-11-23)** by `s1-river` in [`plans/2026-11-22-onboarding-d3-paper-levels.md`](../2026-11-22-onboarding-d3-paper-levels.md), which rebuilds `GB_s1-river`. Kept for history.
+
 ```grid id=s1-river title="The River (John + Lucy)"
 # # . . . . # # . . _ . _ . . # #
 # . . . . . . # . a _ . _ a . # #
@@ -501,6 +503,8 @@ level tier tutorial
 > **Superseded** (2026-11-10) by [`2026-11-09-onboarding-after-hearth-design.md`](2026-11-09-onboarding-after-hearth-design.md). Kept as the first paper version.
 
 ![s2-ridge](onboarding-levels/s2-ridge.svg)
+
+> **Block superseded (2026-11-23)** by `s2-ridge` in [`plans/2026-11-22-onboarding-d3-paper-levels.md`](../2026-11-22-onboarding-d3-paper-levels.md), which rebuilds `GB_s2-ridge`. Kept for history.
 
 ```grid id=s2-ridge title="The Ridge (Linda + Mark)"
 # . . . # # # # # # # # # #
