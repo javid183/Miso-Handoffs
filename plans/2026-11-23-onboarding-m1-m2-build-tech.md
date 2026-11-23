@@ -79,6 +79,14 @@ The Ridge and the River missions each play the new paper level from new prefabs 
   - The covering tests pass, updated only where they asserted the old kit.
 - **Commit:** its own. Review: its own (it changes a unit prefab and possibly the skill tree). Model: opus.
 
+### 3.1a-2: Vault buyable in the tree (D-637), after 3.1b
+
+- **Goal:** Mark's skill tree node that unlocked Command (`nodes[0]`) now unlocks Vault, at the cost Command had (1 SP). Command stays open from the start (3.1a).
+- **Data:** Vault's preset gets `upgradable: 1` (a new save key, approved by THJ in D-637) and the `unlockResourceRequirements` Command had; Command's are cleared. The node's title, text and icon become Vault's (text `[PLACEHOLDER]` if no Vault line exists).
+- **Graph:** children of `nodes[0]` that are about Command ("Command applies Weak", `nodes[2]`) must not end up gated behind Vault; the "Stunning Vault" node (`nodes[4]`) should sit behind the Vault node. If that needs more than re-pointing node fields, stop and report the options.
+- **Check:** the Vault run upgrades (`RU_MarkVaultRange`, `RU_MarkVaultStun`) appear once Vault is bought; `SkillTreeSmokeTest` updated to the new kit if cheap.
+- **Tests:** extend `MarkStartingKitTests`. Commit: its own, after 3.1a's. Review: its own (save key). Model: opus.
+
 ### 3.1b: M1, the Ridge (new `GB_m1-ridge`)
 
 1. **Rename the old level.** `GB_s2-ridge.prefab` becomes `GB_s2-ridge_v1.prefab` through `AssetDatabase.MoveAsset`, which keeps the GUID.
