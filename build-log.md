@@ -2964,3 +2964,9 @@ Plan `plans/2026-11-19-faster-loop-process.md`, decisions D-575 to D-579.
 **Not verified.** The real duo in combat; THJ's retime only seen in THJ's preview.
 **Findings.** On another machine Lucy's half falls back to her sprite (her clip is untracked, watermark). `DuoInsertBuilder` still writes the pre-retime values: rerunning its menu would undo THJ's timings. Off switch: `Mode` = Off on the `DuoInsertSequence` component of `Features/UI/DuoInsert/Prefabs/DuoInsertCanvas.prefab`.
 **Status.** Merged. Open: Lucy clean export, builder values, the earlier risks (pause during the card, skip clicks pass through).
+
+## 2026-11-22: duo insert builder matches the hand-tuned timings
+
+**Built.** `1a724fdcd` on `main`: `DuoInsertBuilder` writes THJ's retime (Lucy 0 s x1.07, Mark clip C 0.15 s x2.5; clip A/B entries unchanged); `MakeEntry` takes Lucy's start/speed.
+**Verified.** Builder menu rerun leaves `DuoInsertLibrary.asset` and `DuoInsertCanvas.prefab` byte-identical; `DuoInsertRulesTests` 44/44; whole EditMode suite 2488/2489 (1 Explicit skipped).
+**Status.** `main` 12 ahead of `origin/main`, not pushed. Open: Lucy clean export; pause during the card; skip clicks pass through.
