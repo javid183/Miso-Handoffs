@@ -45,7 +45,11 @@ None of the four stop conditions holds: no core code; no save shape or stored va
 
 ## Reviews and checks
 
-- 3.1a: (written by the coordinator)
+- 3.1a: `miso-reviewer` **APPROVE** (2026-11-23). Checked independently: bar filter, no save key, Super Time a no-op for Mark, AI/run-upgrade/tree readers, tests and line endings. Notes:
+  - **New interaction not in the list above:** `JohnPassiveAbility_CommandShieldDash` (`Unit_John.prefab:3162`) reacts to Mark's Command; gated only by John's Shield Dash being available (not locked in `GB_m4-mark` or the Ridge). So Mark commanding John can pop a Shield Dash QTE from the first fight, including Hearth memory 4. No scripted beat breaks; THJ to see it in the play check.
+  - Tests pin data, not the runtime bar; "on the bar" rests on the play check.
+  - Smoke-test menu tool and the Stunning Vault node: as listed.
+- Follow-up (THJ, D-637): Vault becomes buyable in the tree, in the node that unlocked Command. Queued as chunk 3.1a-2 after 3.1b.
 
 ## Save reset
 
