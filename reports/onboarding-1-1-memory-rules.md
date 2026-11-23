@@ -107,22 +107,26 @@ None.
 
 ## Proposed commits
 
-1. `feat(passby): a level switch that turns Pass-by and its barks off for the family` (core data, its own commit):
+Split on 2026-11-23 after the review, so the bark gate can be reverted alone. In dependency order:
+
+1. `feat(passby): a level switch that turns Pass-by off for the family` (core data, its own commit):
    - `miso/Assets/_Project/Resources/Tags/GTagSet.asset`
    - `miso/Assets/_Project/Resources/Tags/GTagRegistry.asset`
-   - `miso/Assets/_Project/Content/Controllers/PlayerController.prefab`
+   - `miso/Assets/_Project/Content/Controllers/PlayerController.prefab` (the `excludedTags` entry)
    - `miso/Assets/_Project/Features/Onboarding/LevelPassByOff.cs` + `.meta`
+   - `miso/Assets/_Project/Features/Onboarding/Editor/LevelPassByOffTests.cs` + `.meta` (tag, `excludedTags`, handler gate, faction rule)
+2. `feat(barks): no pass-by bark when either unit is tagged no-pass-by` (depends on 1; revertible alone):
    - `miso/Assets/_Project/Core/Systems/BarkSystem/Runtime/BarkManager.cs`
    - `miso/Assets/_Project/Core/Systems/BarkSystem/Runtime/BarkManager.PassBy.cs` + `.meta`
-   - `miso/Assets/_Project/Features/Onboarding/Editor/LevelPassByOffTests.cs` + `.meta`
-2. `feat(hearth): memories have no Revenge, Pass-by or Cleanse, hide the empty item pouch, and start the last two at full health` (plain, depends on 1):
+   - `miso/Assets/_Project/Features/Onboarding/Editor/PassByBarkGateTests.cs` + `.meta` (moved out of `LevelPassByOffTests.cs`)
+3. `feat(hearth): memories have no Revenge, Pass-by or Cleanse, hide the empty item pouch, and start the last two at full health` (plain, depends on 1):
    - `miso/Assets/_Project/Features/Onboarding/Editor/HearthMemoryWiring.Rules.cs` + `.meta`
    - `miso/Assets/_Project/Features/Onboarding/Editor/HearthMemoryWiring.Linda.cs`, `HearthMemoryWiring.Lucy.cs`, `HearthMemoryWiring.John.cs`
    - `miso/Assets/_Project/Content/Levels/Greybox/GB_m1-linda.prefab`, `GB_m2-lucy.prefab`, `GB_m3-john.prefab`, `GB_m4-mark.prefab`
    - `miso/Assets/_Project/Features/Onboarding/Editor/HearthMemoryRulesTests.cs` + `.meta`
    - `miso/Assets/_Project/Features/Onboarding/Editor/HearthMemoryLindaTests.cs`, `HearthMemoryLucyTests.cs`, `HearthMemoryJohnTests.cs`
 
-Commit 1 holds the core prefab data, the new component and the small bark check. It stays separate so it can be reverted on its own. Leave out `Assets/TextMesh Pro/Resources/Fonts & Materials/LiberationSans SDF - Fallback.asset` (Unity noise).
+Commit 1 holds the core prefab data and the new component. Commit 2 is the small core bark check. Leave out `Assets/TextMesh Pro/Resources/Fonts & Materials/LiberationSans SDF - Fallback.asset` (Unity noise). Check run after the split: `LevelPassByOffTests` and `PassByBarkGateTests` pass (with the quiver fixtures, 95 tests, 0 failed).
 
 ## Other branches
 
