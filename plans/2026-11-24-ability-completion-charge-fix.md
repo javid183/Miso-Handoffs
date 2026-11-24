@@ -2,7 +2,7 @@
 
 Size: S/M    Tier: 3 decided (THJ, D-657)    Assigned to: miso-implementer (opus: core)
 Branch: `thj/onboarding-demo` (scope all: the bug is on `main`; list it for the next merge)
-Status: approved, dispatched 2026-11-24
+Status: done 2026-11-24, committed `b55771c90` (review APPROVE + both should-fixes; THJ play-checked)
 
 ## Why
 

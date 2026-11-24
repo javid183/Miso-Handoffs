@@ -117,3 +117,35 @@ Verdict: APPROVE (core chunk reviewed alone).
 - Should fix 1: the late path's `ActionAPCount` reads the live `PhaseData.TargetCells` (may be cleared or belong to another action): capture the first target cell (and single-target flag) in `ApplyAction` and count from those on the late path.
 - Should fix 2: the late branch returns before `SetPotentiallyTargetedCells(false)`; clear the highlights for the acting unit and ability.
 - Notes: same-unit/different-state and re-entry within the hold are not regressions; approach-attack chaining stopped by existing checks; destroyed-but-still-selected unit was already able to throw (out of scope).
+
+## Should-fixes (miso-implementer, 2026-11-24)
+
+Both review should-fixes are done, on the late path only. The normal path runs the same code in the same order. Its only addition: `ApplyAction` now also keeps the target cells when the action starts (a struct read, nothing else).
+
+- Should fix 1 (late count from cells kept at the start):
+  - New `FactionControllerBase.ActionTargetCells`, a public readonly struct (`Count`, `First`; `Of(List<GridCell>)`). `ApplyAction` keeps `actingTargets = ActionTargetCells.Of(PhaseData.TargetCells)` next to `actingUnit` / `actingAbility`.
+  - The formula moved, unchanged, into a private static `ActionAPCount(unit, ability, ActionTargetCells)`. The normal path still calls `ActionAPCount(unit, ability)`, which counts from the live list (`ActionTargetCells.Of(PhaseData.TargetCells)`, same result as before). `ChargeAfterSelectionMoved(unit, ability, targets)` counts from the cells kept at the start.
+  - Decision: I kept the cells, not the computed count. The distance is then still measured at completion, as on the normal path. If the unit moves during the action, both paths count the same way.
+- Should fix 2 (late highlight clear):
+  - New private `ClearPotentiallyTargetedAfterSelectionMoved(unit, ability)`, called first in the late branch, before the charge (the same order as the normal path). It does nothing unless the acting ability has `ShowPotentiallyTargetedHighlight`. Otherwise it makes the same `SetPotentiallyTargetedCells(false)` call the normal path makes, with the acting unit and ability standing in as the selection. The swap goes through the new public static `RunWithSelection(phaseData, unit, ability, action)`, which puts the live selection back afterwards, even when the call throws. Try/catch + `Debug.LogException` keeps the chain running.
+  - Decision: the swap keeps `SetPotentiallyTargetedCells` and `ComputeAbilityRangeCells` untouched. Both read `PhaseData.ActiveUnit` / `ActiveAbility` in several places, and a parameterised copy would have duplicated the range logic.
+- Tests: 4 new in `ActionCompletionChargeTests` (12 in that fixture now, 16 across the two new fixtures):
+  - `TargetCellsKeptAtTheStart_SurviveTheLiveListBeingClearedOrReused`
+  - `TargetCellsKeptAtTheStart_CountEveryCell_AndHandleNoTargets`
+  - `RunWithSelection_StandsInTheActingUnit_ThenPutsTheSelectionBack`
+  - `RunWithSelection_PutsAnEmptySelectionBack_EvenWhenTheCallThrows`
+  - Covered by reading and THJ's play check: the late branch's two calls, and the multi-activation distance branch. A test of that branch needs a real grid and an owned RuntimeAbility.
+- Results:
+  - Covering fixtures (`MISO.Core.Interactions.EditorTests`, `AbilityCostOverrideTests`, `CycloneSteerTests`): 226/226 pass.
+  - Full EditMode suite: 2638 total, 2628 passed, 9 failed, 1 skipped (the Explicit AI test). 8 of the failures are the expected `M1RidgeTests`. The ninth is the GridToLevel flake: `GridToLevelFpTests.Build_FpFullAddsAWiredFillerToATemplateWithoutOne` (`m_LockCount == 0` assert). Rerun alone, `GridToLevelFpTests` passes 4/4.
+  - `AIRegressionTest.Baseline_MatchesCurrentAI` (by name): CHECKS 731, FAILURES 44, the same as the recorded 44.
+- Changed files: `FactionControllerBase.cs` (one captured local, plus the late branch now calls the highlight clear and passes the kept cells), `FactionControllerBase.ActionCompletion.cs`, `ActionCompletionChargeTests.cs`. Encodings are unchanged: the first is LF with a BOM, the other two LF without one.
+- New risk: on a late completion, if the scene is already tearing down (for example `CombatLevel.Instance` is gone), the highlight clear can throw. It would be logged once as an exception, and the chain would still finish. In the John level-end case the level is still alive during the outro.
+- Updated file list and commit: the same single core commit as in "Proposed commits". It has the same file list; only the contents of the three files above changed:
+  1. `fix(core): an ability's completion charges the unit that acted, even after the selection moved on`
+     - `miso/Assets/_Project/Core/Interactions/Runtime/FactionControllerBase.cs`
+     - `miso/Assets/_Project/Core/Interactions/Runtime/FactionPhaseState.cs`
+     - `miso/Assets/_Project/Core/Interactions/Runtime/FactionControllerBase.ActionCompletion.cs` + `.meta`
+     - `miso/Assets/_Project/Core/Interactions/Editor/ActionCompletionChargeTests.cs` + `.meta`
+     - `miso/Assets/_Project/Core/Interactions/Editor/ActionCompletionGuardTests.cs` + `.meta`
+- Docs note for the coordinator (addition to the core-systems text above): the late path counts its cost from the target cells kept at the start (`ActionTargetCells`) and clears the acting ability's potentially-targeted highlight (through `RunWithSelection`). There are two more additive public members: the `ActionTargetCells` struct and static `RunWithSelection`.
