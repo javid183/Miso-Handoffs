@@ -33,7 +33,7 @@ The Cyclone behaves exactly as THJ's three sentences, with one shared planner fo
 
 **Order at the end of a Steer.** Glide → pass hits fire as the Cyclone enters each enemy's cell → at the stopping cell, the knocked enemy is flung to its landing (start-of-move event, unplug, plug: a hazard there fires; end-of-move: Watch answers; it wakes) → the Cyclone takes the cell → reactions settle (as today after a carry landing, D-555) → the Whirl.
 
-**One hit per enemy per Steer (D-583).** The closing Whirl skips every unit already hit by this Steer's pass. The knocked enemy wasn't passed, so the Whirl hits it if it is beside (it always lands beside, unless it died). Cast Whirls and enemy-turn Whirls are unchanged.
+**One hit per enemy per Steer (D-583).** The closing Whirl skips every unit already hit by this Steer's pass. The knocked enemy wasn't passed, so the Whirl hits it if it is beside (it always lands beside, unless it died). Cast Whirls and enemy-turn Whirls are unchanged. **Superseded 2026-11-24 by D-648:** the closing Whirl now also hits passed enemies beside it (onboarding chunk 1.9, `reports/onboarding-1-9-whirl-passed.md`).
 
 **Fixed at the click.** The plan is computed once from the board at the click. A passed enemy dying changes nothing. Safety net at landing only: if the stopping cell or the knock landing is no longer valid (for example a death spawned a unit there), re-run the knock rule live; if that fails too, the Cyclone goes back to its start cell (today's `StayPut` path), no knock, and still Whirls there. Covered by a test.
 
