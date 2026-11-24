@@ -57,7 +57,7 @@ One writer in the Unity project at a time. Design work (paper levels, X-15, X-27
 | --- | --- | --- | --- | --- |
 | 1.7 | X-34 | Mark's avatar draws behind the HUD frame, not in front | 1 | Draw order |
 | 1.8 | X-36 | The selected-unit indicator (`SelectedUnitIndicator`) shows under the hero's feet in every level | 1 (2 if a core file) | Explore which levels fail and why (layer, sort order) first |
-| 1.9 | X-35 | The Whirl doesn't hit an enemy the Steer already hit | 1 if the built Whirl breaks D-583; 3 if THJ wants the rule changed | Ask THJ which it is first |
+| 1.9 | X-35 | The Whirl at the end of a Steer also hits the enemies the Steer passed through (rule change, D-648, reverses D-583) | 3, decided | Cyclone code and tests; designer updates GDD `lucy.md` LU-4/LU-6; check the damage in play (lever: a lighter graze on the pass) |
 
 ### Phase 2: the Hearth (narrative tech; M)
 
