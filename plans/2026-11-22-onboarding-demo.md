@@ -51,6 +51,14 @@ One writer in the Unity project at a time. Design work (paper levels, X-15, X-27
 | 1.5 | X-10, X-04 | "Start Game" over the hearth becomes "World Map"; Encore's flying arrows get a visible colour | 1 / 2 (visual values) | |
 | 1.6 | X-24, X-25 | Bugs: the Kitchen and stat-up stations don't open or give no feedback; the Family tree doesn't open after M3's Linda–Lucy scene | 1 (2 if a core file) | Explore first. X-24 first suspect: the onboarding station locks (Bookshelf, Training Field, Cooking Cabinet until after M4) |
 
+### Phase 1 follow-ups (added 2026-11-23; S each)
+
+| Chunk | IDs | What | Tier | Notes |
+| --- | --- | --- | --- | --- |
+| 1.7 | X-34 | Mark's avatar draws behind the HUD frame, not in front | 1 | Draw order |
+| 1.8 | X-36 | The selected-unit indicator (`SelectedUnitIndicator`) shows under the hero's feet in every level | 1 (2 if a core file) | Explore which levels fail and why (layer, sort order) first |
+| 1.9 | X-35 | The Whirl doesn't hit an enemy the Steer already hit | 1 if the built Whirl breaks D-583; 3 if THJ wants the rule changed | Ask THJ which it is first |
+
 ### Phase 2: the Hearth (narrative tech; M)
 
 | Chunk | IDs | What | Tier | Notes |
