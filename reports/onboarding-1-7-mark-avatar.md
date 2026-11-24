@@ -74,3 +74,7 @@ none (look at it in Play; if the ring of ornament should be thinner or thicker i
 ## How to see it
 
 Open a combat level with Mark in the squad, select Mark: his portrait in the bottom-left unit panel sits inside the ornament window with a thin ornament margin, like John or Toba. Also check the turn-order bar and a dialogue with Mark.
+
+## Review (miso-reviewer, 2026-11-24)
+
+Checked with the code chunks: only the PNG is modified, `.meta` unchanged (stale 567x567 rect ignored in single-sprite mode). Nothing else rides along.

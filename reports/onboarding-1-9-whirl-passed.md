@@ -76,3 +76,13 @@ none stated (applies to all per the request; coordinator decides whether `main` 
 4. Click: A takes a pass hit as the Cyclone enters its cell, then the Whirl hit after the breath; the two total the preview.
 5. Route that turns (right through A, then up one): A ends diagonal to the stop, is not pulled and takes only the pass hit; the preview shows a single hit.
 6. The knocked enemy still takes two hits (knock, then Whirl).
+
+## Review (miso-reviewer, 2026-11-24)
+
+Verdict: APPROVE.
+- Not a core change (Cyclone feature files and tests only).
+- Preview equals execution: the planner drops its passHit filter just as execution drops skipHits; both preview tests check it with PreviewThenExecute.
+- Knocked enemy unchanged; dead units skipped (IsAlive check in the Whirl loop, gone-set in the planner; test covers it).
+- No callers of skipHits remain.
+- LF/no BOM kept, no private IDs, no statics.
+- Should fix: CycloneSteerPreview.cs header comment, edited line (~21) is overlong; re-wrap.

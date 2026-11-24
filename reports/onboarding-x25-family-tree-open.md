@@ -74,3 +74,14 @@ none
 1. Save state needed: The River, The Ridge and The Trail completed, the Trail's Yard not yet played, and the marker not set. Fastest: a fresh/reset save, then use the cheats/mission completion to finish Hearth, River, Ridge, Trail in order (or complete the Trail with the existing cheat and return to Home); a save reset is the surest way to clear the `FamilyTreeAutoOpened` and Yard entries.
 2. Enter Home after the Trail: Yard plays, the camera pans back, then the upgrades panel opens on the Family tab with Sister's Rivalry pulsing. Stations were not clickable until then.
 3. Close it; it works as a normal close. Leave and re-enter Home: it does not open again.
+
+## Review (miso-reviewer, 2026-11-24)
+
+Verdict: APPROVE.
+- Not a core change.
+- Ordering: the open starts after EndOpening() at the end of StartIE (memoryOpening returns earlier), so nothing opens during the opening.
+- Marker set only after OpenOnCharacter succeeds. If the Family tab never builds: warning, panel stays on the first tab, marker unset; retries while last completed is still The Trail (acceptable).
+- Edge-scroller guard is restored correctly: OnPanelClosed re-enables it; closing before the delay works as before; scene exit needs nothing.
+- Guided spend is exclusive by last mission; old Home flow unaffected.
+- No statics, LF/no BOM kept, no private IDs, new partial for HomeManager.
+- Play check (open, pulse, close; save reset) still pending with THJ.
