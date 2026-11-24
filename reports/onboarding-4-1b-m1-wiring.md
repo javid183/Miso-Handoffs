@@ -252,3 +252,33 @@ Before you start: set `GlobalSettings` › `deactivateIntroOutroSequences` off. 
 ## Resume from
 
 Delete the 17 orphaned 3.1b assets. The coordinator settles the commit split and the two Needs-THJ points. Then the `miso-reviewer` pass over 4.1a and 4.1b, and THJ's play check.
+
+## Review (miso-reviewer, 4.1a + 4.1b together, 2026-11-24)
+
+**Verdict: APPROVE.** No must-fix items.
+
+### Should-fix
+
+1. **`MissionWiring.Ridge.Sequences.cs:115-129`: end the rockfall with `ShowHUDSequence`.**
+   - Hiding the HUD in the rockfall races with `StartLevelIE`'s `ShowHUD()`. If the hide wins, family turn 1 opens with no HUD.
+   - Update `LindasRunEnds…`'s step expectations to match.
+   - Coordinator: **fix before the play check.**
+2. **The bark gate's `RockNickname` (`MissionWiring.Ridge.Bark.cs:33`) and the rock's title "Rock" (`MissionWiring.Ridge.Layout.cs:108`) aren't tied by any test, and "Rock" is a generic name.**
+   - Add a test, or give the rock a distinctive title.
+   - Coordinator: **fix with 1.**
+3. **The two-commit split fails its own tests.**
+   - Make it one commit for 4.1a+4.1b: the rock prefab and mission asset included.
+   - Delete the 17 old sequences in a follow-up commit.
+   - Coordinator: **accepted.**
+4. **On S2's fallback path, `M1Ridge_Catch_SelectLinda` runs on the enemy turn.** It logs a warning and doesn't select Linda. There's no hang.
+   - Coordinator: **deferred to the trigger-component chunk (D-653).** Noted for THJ.
+
+### Notes
+
+- The M1 bark graph is a frozen copy of `Bark_Phase_CharacterHealth_Low`. Edit it in its own file; add this to `tech/onboarding-merge.md`.
+- Lucy's old branch is still in the copy, behind the gate. Harmless.
+- The off-switch relies on `SignalAction` subscribing in `Start`, before `levelStarted`. Watch it when `deactivateIntroOutroSequences` is on.
+
+### Checks with no finding
+
+No core files, idempotent wiring, no softlock, the switch turns back on, the filler isn't on `levelStarted`, no statics, LF/no BOM, no private IDs, no references to the 17 old sequences, the rock prefab set up sanely, the prefab's stale overrides dropped, text matches.
