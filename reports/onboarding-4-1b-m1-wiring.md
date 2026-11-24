@@ -282,3 +282,34 @@ Delete the 17 orphaned 3.1b assets. The coordinator settles the commit split and
 ### Checks with no finding
 
 No core files, idempotent wiring, no softlock, the switch turns back on, the filler isn't on `levelStarted`, no statics, LF/no BOM, no private IDs, no references to the 17 old sequences, the rock prefab set up sanely, the prefab's stale overrides dropped, text matches.
+
+## Fix round (miso-implementer, 2026-11-24)
+
+Editor was not in Play mode. Both review should-fixes done.
+
+### What changed
+
+1. **HUD comes back after the rockfall.** `BuildRockfall` now ends with `Common("ShowHUDSequence")` after the Watch page; the step-list comment says so. The step list asset already existed and the wiring keeps an existing list (by design), so I appended `ShowHUDSequence` to `M1Ridge_Rockfall_SequentialSequence.asset` once through the editor; the wiring then ran with no "kept the hand-edited step list" warning. `LindasRunEnds...` now checks the Watch page follows the Claws, the last step is `ShowHUDSequence`, and only it follows the page.
+2. **Rock title tied to the bark gate.** `RockNickname` is now "Fallen Rock" (`MissionWiring.Ridge.Bark.cs`). The rock prefab builder uses that constant for the title, and for an already-built prefab it now syncs the title (`SyncRockTitle`). `Unit_Rock.prefab` title is "Fallen Rock". The bark graph is baked only once, so its gate value (line 2564 of `Bark_Phase_M1Ridge_LowHP.barkphase`) was changed by a one-line YAML edit; the existing bark test already compares the gate to the constant. New test `TheRockPrefabCarriesTheBarkGatesTitleAndNoOtherUnitPrefabDoes`: the rock prefab's `Nickname` equals the constant, and no other prefab under `Features/` with a `GUnit` uses it.
+
+### Files
+
+- `miso/Assets/_Project/Features/Onboarding/Editor/MissionWiring.Ridge.Sequences.cs`
+- `miso/Assets/_Project/Features/Onboarding/Editor/MissionWiring.Ridge.Layout.cs`
+- `miso/Assets/_Project/Features/Onboarding/Editor/MissionWiring.Ridge.Bark.cs`
+- `miso/Assets/_Project/Features/Onboarding/Editor/M1RidgeTests.cs`
+- `miso/Assets/_Project/Features/NPCs/Rock/Prefabs/Unit_Rock.prefab` (title)
+- `miso/Assets/_Project/Resources/Sequences/M1Ridge/M1Ridge_Rockfall_SequentialSequence.asset` (one step added)
+- `miso/Assets/_Project/Resources/BarkSystemData/CharacterHealth/Bark_Phase_M1Ridge_LowHP.barkphase` (gate value)
+
+The level prefab and mission asset were rewritten by the wiring run as before. LF, no BOM kept. No core files; `GlobalSettings.asset`, the TextMesh Pro fallback and Lucy's memory level untouched by me.
+
+### Tests
+
+- `M1RidgeTests` + `M1RidgeLayoutTests` + `SearchRidgeTests`: 45 run, 45 passed (one new test).
+- Full EditMode suite: 2620 total, 2619 passed, 0 failed, 1 skipped (`AIRegressionTest.Baseline_MatchesCurrentAI`, Explicit; AI content not changed, so not run).
+- Wiring menu `Tools/Onboarding/The Ridge: Apply Layout and Wire`: the second run left every changed or new non-`.cs` asset under `Assets/_Project` byte-identical (hash of all files before and after).
+
+### Loose ends
+
+- The bark graph is baked only when its file is missing, and an existing rockfall step list is never rewritten. A fresh checkout builds both correctly from code; an already-built copy needs the hand edits made here (both are in the assets above).
