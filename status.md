@@ -90,6 +90,8 @@ Owner: coordinator. Every item has a scope: `all` or a branch. Started 2026-10-1
 
 ## Inbox
 
+- 2026-11-24 `onboarding-demo` X-37 from THJ (thj/onboarding-demo; plan chunk 4.8): the world-space HP bar over playable units should look slightly different from the enemies' bar; they mix up when units stand close.
+
 - 2026-11-24 `narrative-sheet` (thj/onboarding-demo): the narrative designer's sheet `narrative/narrative-sheet.xlsx` (Tasks map, 274 lines, 14 new lines, 10 tutorial pages, 51 names and texts, 785 barks; each with its file) and `narrative/README.md` (statuses, import rules). Built from the project on 2026-11-24 (`narrative/extract_lines.py`, `build_sheet.py`). **Superseded same day:** the project already has **Tools > Dialogues > DialogueExcel** (export/import, the format of THJ's attached `Morta-dialogue3`), so no new import tool; plan chunk 4.7 now uses it. Folder `Narrative/` at the shared repo's root, Numbers round-trip, Google Drive copy (D-655). **Next:** chunk 4.7 in a session with Unity (empty sequences for new beats first, then the export).
 
 - 2026-11-23 `onboarding-demo` follow-ups from THJ (thj/onboarding-demo; plan chunks 1.7 to 1.9, tweak doc X-34 to X-36): Mark's avatar draws in front of the HUD frame (should be behind); the Whirl now also hits enemies the Steer passed through (THJ 2026-11-24, D-648, reverses D-583); `SelectedUnitIndicator` doesn't show under the hero's feet in some levels (layer or sort order).
