@@ -99,6 +99,7 @@ The designer also writes two short notes in the same pass: X-20 (where a Divine 
 | 4.3 | X-11, X-18 | Idles per Home state; the skill tree tutorial | 2 |
 | 4.4 | X-22, X-21, X-23 | The coordinator lines up the insert-shot options for THJ (OnScreenAvatar, FTPPanel, StuntCamActorSet, and the Mark–Lucy duo insert built on 2026-11-22); after THJ picks, Synergy inserts and the other Duo inserts | 3 (game feel) for the pick, then 2 |
 | 4.5 | X-08 | Workshop: a quiver item for Linda in place of her ribbon | 2 (name and text by narrative) |
+| 4.7 | — | Narrative import: a script that applies the writer's sheet (`narrative/narrative-sheet.xlsx`) to the assets and bark CSVs, skipping any line edited in Unity since the snapshot (D-526) | 3 (new tool) |
 | 4.6 | X-17 | Tutorial pages: draft screenshots captured in Play (check whether a page can play video) | 2 |
 
 Narrative runs alongside: `miso-narrative` writes each placeholder as its container is built; the narrative designer gets the doc's section 8 list (X-05 enemy names, X-16 ability descriptions in one voice, W-01, W-07, H-10 texts and the final lines).

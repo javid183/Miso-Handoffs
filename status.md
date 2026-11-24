@@ -90,6 +90,8 @@ Owner: coordinator. Every item has a scope: `all` or a branch. Started 2026-10-1
 
 ## Inbox
 
+- 2026-11-24 `narrative-sheet` (thj/onboarding-demo): the narrative designer's sheet `narrative/narrative-sheet.xlsx` (Tasks map, 274 lines, 14 new lines, 10 tutorial pages, 51 names and texts, 785 barks; each with its file) and `narrative/README.md` (statuses, import rules). Built from the project on 2026-11-24 (`narrative/extract_lines.py`, `build_sheet.py`). **Waiting on THJ:** OK for the import script (plan chunk 4.7, new tool).
+
 - 2026-11-23 `onboarding-demo` follow-ups from THJ (thj/onboarding-demo; plan chunks 1.7 to 1.9, tweak doc X-34 to X-36): Mark's avatar draws in front of the HUD frame (should be behind); the Whirl now also hits enemies the Steer passed through (THJ 2026-11-24, D-648, reverses D-583); `SelectedUnitIndicator` doesn't show under the hero's feet in some levels (layer or sort order).
 
 - 2026-11-22 THJ's play check of the Cyclone controls: everything works except Mark's Command (thj/cyclone). (a) `cyclone-command-locked-ability` (bug, S): IndexOutOfRange in `AbilityPreset.GetEffectSetLevel` via `CycloneButtonSwap.IsSteer` ← `CycloneEntity.SteerEffect` (scans all of Lucy's abilities; a locked ability has upgrade level -1 → `higherLevels[-2]`). (b) `command-reach-gaps` (Tier 3): the Command's first pick can't reach an enemy or the Cyclone across a missing tile (Mark [1,1], target [1,3], no [1,2]); the asset uses `cellApplyTraverseMode: Adjacent`, `allowRangedReach: 0`. Already the case before the Cyclone work (data on `main` too). (c) THJ: drop the free first Steer (reverses part of D-591). (d) Arrow size: `CycloneTetherLook` defaults (0.3 × 0.3 cells); the previews are added at runtime, so only the code defaults stick.
