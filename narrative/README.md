@@ -1,3 +1,5 @@
+> **Superseded 2026-11-24.** The project already has a dialogue export/import tool, **Tools > Dialogues > DialogueExcel** (`miso/Assets/_Project/Core/Levels/Editor/DialogueExport/`, its own README). Its workbook is the format the narrative team knows (one sheet per Mission asset, rows in play order, new lines inserted in place with Node ID cleared and Sequence ID kept, fingerprints against stale edits). Use it for dialogue. This folder's sheet stays only as a record of the 2026-11-24 snapshot and of the non-dialogue text (tutorial pages, names, barks).
+
 # Narrative: the writer's sheet
 
 Owner: coordinator (the sheet's shape); the narrative designer writes in it. Scope `thj/onboarding-demo`.
