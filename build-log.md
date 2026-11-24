@@ -2986,8 +2986,8 @@ Plan `plans/2026-11-19-faster-loop-process.md`, decisions D-575 to D-579.
 
 ## 2026-11-23: Phase 1 passed, origin/main merged, Vault in Mark's tree (branch `thj/onboarding-demo`)
 
-**Built:** Play-check fixes `e4a2e38d9`, `500bfd1e0` (other device). `32c7e3cf2` intro/outro sequences on. Merge of `origin/main` `55f51381b` (Khash's 9: save-file restructure, enemy awareness/targets display off, custom cursor off, Archer Goblin WebThrow; D-642). `d99f0accc` Unaware tag test follows main (D-645); `f627b6de3` core serializer fix (D-646); `a0c8759cc` core: Super Time copy skips saving (D-647). Vault in Mark's tree (3.1a-2, D-637) built, not committed.
+**Built:** Play-check fixes `e4a2e38d9`, `500bfd1e0` (other device). `32c7e3cf2` intro/outro sequences on. Merge of `origin/main` `55f51381b` (Khash's 9: save-file restructure, enemy awareness/targets display off, custom cursor off, Archer Goblin WebThrow; D-642). `d99f0accc` Unaware tag test follows main (D-645); `f627b6de3` core serializer fix (D-646); `a0c8759cc` core: Super Time copy skips saving (D-647). Vault in Mark's tree (3.1a-2, D-637) `db4a47acd`.
 **Verified:** THJ's Phase 1 play check passed (D-641). Post-merge: compile clean, suite 2596/2599 (2 merge failures, now fixed). After the fixes: full suite 2604/2605 (1 Explicit skipped), AI regression 44 (was 43; new failure is Khash's WebThrow baseline line, D-644). Reviews APPROVE: serializer, Super Time save skip, Vault in tree. Save read: nothing on our branch breaks (`reports/merge-origin-main-2026-11-23-save-read.md`).
-**Not verified:** Vault bought in play; M1 (THJ reworking it elsewhere).
+**Not verified:** Vault bought in play (committed before THJ's play check, at his request); M1 (THJ reworking it elsewhere).
 **Findings:** Khash's new save code: a failed load blocks all saves for the session silently; a duplicate dictionary key drops one whole save; Clear Save Data in Play mode isn't a real reset. Ability stat sets share the Super Time key clash (harmless today).
-**Status:** 17 commits on the branch since `551685704` plus the merge, not pushed. Next: THJ plays Vault → commit 4; then 3.2 M2.
+**Status:** branch 16 ahead of `origin/thj/onboarding-demo`, not pushed. Paused by THJ; next: 3.2 M2 when he says go.
