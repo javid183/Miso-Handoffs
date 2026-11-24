@@ -1,3 +1,45 @@
+# Report: onboarding 1.7 Mark avatar (second try)
+
+Plan: chunk 1.7, D-656 (reverses D-652)    Agent: miso-implementer    Branch: thj/onboarding-demo
+Outcome: done (needs THJ's eye in Play)
+
+## Second try (2026-11-24)
+
+### Revert confirmation
+`Avatar_Mark.png` copied back from `claude-handoff/backups/2026-11-24-avatar-mark/Avatar_Mark.png` (cmp: byte-identical, 567x567). `git status` shows neither the PNG nor its `.meta` modified. Unity refreshed (force). HUD unit panel, turn bar and `Unit_Mark` / `PlayerController` references are back to the original asset (they still point at GUID `e8a20854...`; nothing in them was edited).
+
+### Root cause in the dialogue panel
+`DialoguePanel.prefab`: `AvatarLeftImg` / `AvatarRightImg` are plain Images (preserveAspect on) that fill the avatar box minus 44 px width; the ornate frame is a separate background behind them. The other heroes' avatar PNGs (342x335) have the frame/border and a margin baked in, so they sit inside the background frame. Mark's PNG (567x567) is unframed art running edge to edge, so it covers the frame and tops it.
+
+### Options checked
+- (a) per-character scale/offset/padding/dialogue-sprite field: none exists. `DialogueCharacterSO` has only `characterAvatar` (one sprite for everything). Adding a field would be code in `Core/Data` plus `DialoguePlayerUI`, not done.
+- (b) separate sprite, used. (c) not needed.
+
+### The fix
+New asset `Avatar_Mark_Dialogue.png` (600x588, Mark's original art pasted unscaled at offset 16,10 on a transparent canvas, same padding as the first try, so no resampling), with a `.meta` copied from Mark's (same sprite settings, new GUID `b7c41e5a2d9f4c3e8a1f6d0b95e27c43`, stale sprite table removed). `Mark_DialogueCharacter.asset` `characterAvatar` now points to it. Unity also serialized `isGeneric: 0` (an existing field of the SO, default value) into that asset; harmless.
+
+Side effect to know: `characterAvatar` is also read by the Home panels (character select, upgrade panel icon, workshop, equipment select) and `DialogUIWidget`. They now show Mark's padded sprite too. These are not the HUD; I did not render them. If THJ wants those unchanged, the alternative is a new `dialogueAvatar` field on `DialogueCharacterSO` (small code change in a Core data class plus `DialoguePlayerUI`): say if wanted.
+
+### Renders (edit mode, temporary additive scene with the real `DialoguePanel.prefab`, closed after; nothing saved; scratch PNGs only)
+Left box with old Mark art: portrait overruns the frame (square corners over the ornament). Left box with the new padded Mark: sits inside the frame with a thin ornament margin, same as Toba shown in the right box (default art, unchanged). Scratch renders: `C:/Users/javid/AppData/Local/Temp/claude/9ec5439f3060d705/aae08076-80d3-4d28-9e6e-e22d35fb62f5/scratchpad/dlg0.png` (old), `dlg1.png` (new), `dlg2.png` (Toba both sides). HUD not re-rendered: its asset is the unmodified original.
+
+### Files changed
+- `miso/Assets/_Project/Features/UI/Panels/HUD/Avatars/Avatar_Mark_Dialogue.png` (new)
+- `miso/Assets/_Project/Features/UI/Panels/HUD/Avatars/Avatar_Mark_Dialogue.png.meta` (new)
+- `miso/Assets/_Project/Resources/DialogueCharacters/Mark_DialogueCharacter.asset` (modified)
+- `Avatar_Mark.png` and its `.meta`: net unchanged vs git.
+THJ's uncommitted files, Cyclone and X-25 changes, M1: untouched. Save reset: no. Tests: none needed (no code).
+
+### How to see it in Play
+Any dialogue with Mark on screen: Mark intro levels (`Resources/Sequences/Mission Mark Intro/...`), or the Hearth memory 4 (Mark) sequences. Mark's portrait should sit inside the frame like the others. In combat, select Mark: the HUD unit panel is as it was originally.
+
+### Proposed commit
+`fix(ui): give Mark a padded portrait for the dialogue panel`: the PNG, its `.meta`, and `Mark_DialogueCharacter.asset`.
+
+---
+
+# SUPERSEDED (first try, D-652): content below no longer applies; the HUD padding was reverted
+
 # Report: onboarding 1.7 Mark avatar padding
 
 Plan: chunk 1.7 (D-652 Option 1)    Agent: miso-implementer    Branch: thj/onboarding-demo
