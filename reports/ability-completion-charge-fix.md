@@ -106,3 +106,14 @@ none (play check below)
 2. Watch the Console while the outro starts: no `NullReferenceException` (previously `FactionPhaseState.cs:73`), and nothing at `FactionControllerBase.cs:480`. The win panel follows as usual.
 3. In any level, play a few normal actions and end the turn: AP drops exactly as before, and the next unit or turn follows as usual. If the Cyclone's free first Steer is on, it still costs nothing.
 4. Optional: let an enemy turn run with AI actions. Turns hand over as before.
+
+## Review (miso-reviewer, 2026-11-24)
+
+Verdict: APPROVE (core chunk reviewed alone).
+- Normal path: only two `ReferenceEquals` checks added; then the old code in the same order (virtual `ConsumeActionCost(int)` incl. PlayerController's reactive FTP override, `AbilityCostOverride.Charge` with the free-use record, reselect/cleanup, `onCompletion`, `GetNextState`/`SetNextPhaseState`, `OnUnitTurnComplete`, `abilityPerformed`, `OnActionResolved`, turn-end request). `ActionAPCount` moved unchanged.
+- Late path: one charge, one `onCompletion`; `IsInProgress` cleared first, then `abilityPerformed` and `OnActionResolved` once each, no state entered; `RuntimeAbility.OnCompletionShared` now runs to the end.
+- AI unaffected (no overrides; AI 44). Reactive interrupts and Family Role answers unaffected. API additive only; no statics; no private IDs; BOM/LF kept.
+- Tests drive the real helpers; the completion lambda and the guard line are covered by reading and THJ's play check.
+- Should fix 1: the late path's `ActionAPCount` reads the live `PhaseData.TargetCells` (may be cleared or belong to another action): capture the first target cell (and single-target flag) in `ApplyAction` and count from those on the late path.
+- Should fix 2: the late branch returns before `SetPotentiallyTargetedCells(false)`; clear the highlights for the acting unit and ability.
+- Notes: same-unit/different-state and re-entry within the hold are not regressions; approach-attack chaining stopped by existing checks; destroyed-but-still-selected unit was already able to throw (out of scope).
