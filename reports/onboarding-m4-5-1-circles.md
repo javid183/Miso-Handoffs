@@ -276,3 +276,20 @@ none
 3. To play it before 5.2 puts it in the mission: pick `GB_m4-cleanse` in the level toolbar's dropdown and press Play (sandbox mission; the roster is whoever the level places, so the slot on 1,4 may stay empty). Expect: the camera goes to the three pools, Toba's stand-in line, the camera comes back, the Cleanse button pulses, FTP full. Check that Explosive Arrow and the Linda–Lucy Duo can be used on turn 1. Then check that a pool spawns a Claw on round 3, not again while that Claw lives, that a Cleanse from an adjacent cell destroys a pool, and that the level is won once the pools are gone and every enemy is dead.
 4. Re-run `Tools/Onboarding/The circles: Apply Wiring`: no diff. `Tools/Onboarding/The circles: Build Level` only warns that the level exists.
 5. (5.2) Run `Tools/Onboarding/White Mothers: Apply Mission Wiring` (already run; a re-run changes nothing). Open `M4 - The White Mothers.asset` in the mission graph window: three levels in a line. Open `LevelDivineRelicRoom 1.prefab`: root `CombatLevel` name "Mithra's Rest"; `ObjectiveTrigger` has `SafeRoomFunction` and its `TriggerOverlapTerminal` calls it once; `GlobalEventBus` has a `LevelStartFPFiller` (99); `Environment/Campfire (placeholder)` has two lamps; the relic is on cell 10,-2. `Level3-C1.prefab` and the room each have a `LevelAbilityLock` with Cleanse for the five heroes. From a cleared save, play M4 with John once and Mark once: the pick should stand on the slot in each level, one Toba, Cleanse usable only in The circles, a heal and full FTP in Mithra's Rest.
+
+---
+
+## Review (5.1 + 5.2) — miso-reviewer, 2026-11-25
+
+**Verdict: FIX** (pasted by the coordinator; the reviewer is read-only).
+
+Must fix:
+1. `MissionWiring.WhiteMothers.Rest.cs:147-177` `RemoveOldRoom` runs on every wiring run and removes by type/name (every non-heal listener on `ObjectiveTrigger.OnTriggerEnter`, every `SequencePlayHandle` / `LevelSpecificBehaviour` on the trigger, objects named Ryker / Shrine / Environment/SequenceTrigger). A re-run would strip 5.3's campfire scene or THJ's later edits. Match only the old content (handle playing `LevelHealingRoom_Mid_SequenctialSequence`, `LevelSpecificBehaviour` with `callId` `DisableRoomFunction`, `SequenceTrigger` with `sequenceToPlay` `Level1C1_Mid_SequentialSequence`, Ryker by its `Ryker.prefab` source), or move it to a one-time menu.
+
+Should fix:
+1. `M4WhiteMothersTests.cs:185` and `:251-252` freeze the trigger's exact contents: assert no old pieces remain and the heal is called once instead.
+2. `M4WhiteMothersTests.cs:72-77` `LevelNamesAreUniqueInTheMission` checks the exact titles: rename or add a distinctness assert.
+3. This report's "Proposed commits" item 2 and "What changed" are stale (Toba prefab / graph test reverted; `WorldMapPanel.prefab` missing).
+4. `MissionWiring.Circles.cs:148` `Run()` has no Play-mode guard (copy `MissionWiringWhiteMothers.Run` :77-81).
+
+Notes: circles wiring re-run nulls the win group's `onCompleteSequence` (:200) and deletes extra `GuidedAbilityHint`s (:232), so 5.3 must keep its end sequence out of the win group or teach the wiring; the roster fill test mirrors `FillRosterSlots`' filter (private, runtime), so the play check must confirm the pick lands on the slot; the heal fires once per level load; the "(placeholder)" prefix in Toba's line breaks `conventions.md` › Text (5.3 replaces it); mission `missionName`/`missionDescription` unchanged (outside the plan); pool lifetime 25 rounds (THJ after play).
