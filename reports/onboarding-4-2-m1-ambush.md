@@ -276,6 +276,8 @@ Before you start: set `GlobalSettings` › `deactivateIntroOutroSequences` **off
 10. **Next family turn:** the Black Claw close-up plays first.
 11. **Win:** kill all five. The objective counts down "Drive them off the ridge. N remaining.". Then the camera on the clue, "Still in one piece, little brother?" / "Side by side. Nothing got through." / "It still smells of salve…" / "Or someone.", and the outro.
 12. **Timing:** note the total length (the design expects about 10 minutes; option B is parked if it runs long).
+13. **A sibling falls → loss** (fix round): in any fight, let Linda or Mark drop to 0 HP. The level ends at once in a defeat, the usual defeat panel and its Retry/Home choice, with no waiting on "Reach the clue together".
+14. **Ambush on the enemy turn** (fix round, *not fixed yet*, waits on the decision in "Fix round" item 2): with both siblings already standing in the 8 tiles, kill the last plateau Claw with a Watch on the enemy turn. Today the ambush plays at once, on the enemy turn. Once item 2 is decided and built, it should wait for the family turn.
 
 ## Review (miso-reviewer, 4.2a + 4.2b, 2026-11-24), pasted by the coordinator
 
@@ -284,3 +286,56 @@ Before you start: set `GlobalSettings` › `deactivateIntroOutroSequences` **off
 - **Must fix (decision first):** S4 "Reach the clue together" can never complete if a sibling is down. One sibling down doesn't lose (defeat = Bergsons living ≤ 0, `LevelBase.prefab:779-787`), no mid-level revive, `TilesOccupiedLOCondition` counts living units only (`LevelObjectiveConditions.cs:170-173`), S4 has no turn fallback, no enemy alive: family turns loop forever. Likely on the plateau, where low HP first happens and the potion is no longer taught. Fix options go to THJ.
 - **Should fix (play-check item):** if the last plateau Claw dies on the enemy turn (Watch/Counter) with both siblings already in the zone (plateau Claws stand on top-zone tiles 1,4 and 3,4), S3 and S4 complete on the enemy turn; the pack is registered with full AP and acts that same turn (`AIController.cs:77`), and the family's leftover AP is lost. Often S4 completes as soon as it's shown; the empty enemy round may never happen.
 - **Notes:** no core code; no new mutable statics; no private IDs; line endings kept; rock controller safe for the `EntityAnimationHandler` throw paths (not seen in Play); THJ's rock scale and 48 cells kept; ambush units, factors, alert flags and sequence order match design; `SetClawHealth` skips ambush tiles by position (a hand-moved ambush unit would get a duplicate; low risk); tests cover the behaviour; AI regression 45; commit split acceptable (rock fix stands alone only after commit 2); TMP fallback reset for THJ to confirm.
+
+## Fix round (miso-implementer, 2026-11-24)
+
+The editor was not in Play mode. No core code, no new statics, no git writes, and none of THJ's files touched.
+
+### 1. One sibling down loses M1 (must-fix, done)
+
+- `MissionWiring.Ridge.cs`:
+  - new constant `DefeatAtFamilyStanding = 1`;
+  - new `WireDefeat`, called from `WireLevel`. It finds the level's single defeat condition (the template's Bergsons `LivingUnitsLOCondition`) and sets it to `Exist`, `LessThanOrEqual`, count 1. It throws if there isn't exactly one.
+  - The template prefab isn't touched.
+- Result in `GB_m1-ridge.prefab`: a single new override, `managedReferences[8046274707106824281].count = 1`, on the inherited condition. A second wiring run left the level byte-identical.
+- **Loss path:** unchanged. `CombatLevelRunHandler.UpdateObjectives` → `LevelObjectives.Evaluate` returns Defeat → `ForceEndTurnSafe` → `EndLevel(Defeat)`, then the defeat panel and `EndMission(false)` or `RestartLevel`. Only the threshold moved.
+- **Defeat while a stage advances:** `TryEvaluateWin` checks defeat before it advances a stage, so a sibling falling on the same hit that clears a stage still loses.
+- **Revive on win:** unaffected.
+  - `EndLevel` resurrects the dead player units only when the result is Win.
+  - With one down the level now loses first, except in one case: the last enemy and a sibling fall in the same evaluation. There, the final-stage win is checked before defeat, so it is still a win and the fallen sibling is revived as before.
+- **Test:** `M1RidgeTests.TheLevelIsLostOnceOneSiblingIsDown`.
+  - the level has exactly one defeat condition, the Bergsons living-units check, `Exist`;
+  - `MathUtils.Compare` with that condition: 1 and 0 standing lose, 2 standing plays on;
+  - the mission's family is the two fixed siblings.
+
+### 2. The ambush only on a family turn (should-fix): stopped, options below
+
+**No built condition does it.** The objective conditions are `LivingUnits`, `UnitDeath`, `EntitiesDestroyed`, `EntitiesCaptured`, `TilesOccupied`, `UnitTileOccupied`, `FalseObjective` and `TurnReached`; none reads whose turn it is. No combination of them can tell the family turn from the enemy turn:
+- `TurnReached` counts rounds, and with the enemies first a round starts on the enemy turn.
+- No built sequence step waits for a faction's turn.
+- `LevelSpecificBehaviour`'s `CurrentPhase` action can reset or end the current phase, but not "only if it's the enemy's". Ending the phase in the ambush sequence would end the family's own turn in the usual case.
+
+So nothing is changed for item 2. **Options:**
+
+| | What | Code | Notes |
+|---|---|---|---|
+| **A (recommended)** | A small new objective condition outside core, e.g. `Features/Onboarding/FactionTurnLOCondition` ("it is [faction]'s turn": `CombatLevelRunHandler.Instance.CurrentFaction == Faction`). S4's one objective holds two conditions, `TilesOccupied AtLeast 2` and "Bergsons' turn", aggregation All | ~15 lines of new game code in `Features/`, plus wiring and a test. It subclasses core's `LevelObjectiveConditionBase` and changes nothing in core; no static | Objectives are re-evaluated right after every `StartTurn` (`SwitchTurnIE`), so a stage that is true on the enemy turn completes at the next family turn start: fresh AP, and the pack doesn't act first. It's needed because otherwise the stage completes the moment both siblings stand in the zone |
+| B | A non-core component in the level that delays S3's completion: the S3 condition stays false until a family turn (the same new condition as A, on S3 instead of S4) | Same as A | A puts the gate where the reveal happens. B would also hold back the N1 line and camera |
+| C | Change core so queued stages only advance on the player's turn (`LevelObjectives`/`CombatLevelRunHandler`) | Core | Tier 3; affects every level with queued stages. Not recommended |
+| D | Accept it for the play check | None | The family loses its leftover AP, and the pack gets a free climb on that enemy turn. The spawn distances still give the family one turn before any hit lands (design §4), but the close-up then plays after the pack's first move |
+
+### Files (fix round)
+
+- `miso/Assets/_Project/Features/Onboarding/Editor/MissionWiring.Ridge.cs` (defeat wiring)
+- `miso/Assets/_Project/Features/Onboarding/Editor/M1RidgeTests.cs` (one test)
+- `miso/Assets/_Project/Content/Levels/Greybox/GB_m1-ridge.prefab` (one override)
+
+LF, no BOM, as before.
+
+### Tests
+
+- `M1RidgeTests` + `M1RidgeLayoutTests` + `SearchRidgeTests`: **53/53 passed**.
+- Full EditMode suite: **2677 total, 2676 passed, 0 failed, 1 skipped** (`AIRegressionTest.Baseline_MatchesCurrentAI`, Explicit). Not re-run by name: no AI graph, AI ability or unit prefab changed in this round. The last run, this session, gave 45.
+- `GlobalSettings.asset` and the TextMesh Pro fallback asset were untouched in this round.
+
+"How to see it" has two new steps: 13 for the loss, and 14 for the ambush on the enemy turn, which stays open until item 2 is decided.
