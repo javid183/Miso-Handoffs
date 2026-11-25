@@ -92,6 +92,8 @@ Owner: coordinator. Every item has a scope: `all` or a branch. Started 2026-10-1
 
 ## Inbox
 
+- 2026-11-25 `onboarding-demo` Goblin Queen pass from THJ (thj/onboarding-demo; plan chunks 3.5a to 3.5d, tweak doc M4-04 to M4-08): bug, after Toba's Wall stops her charge she never attacks again and wanders; her charge into the Wall should stop, stun her and break the Wall; harder (options: +1 AP, Masher counter, more enemies, poison pools); less HP; fight narrative.
+
 - 2026-11-25 `onboarding-demo` from THJ (thj/onboarding-demo): X-38 pouch hides 0-use items from level start (chunk 1.10); X-39 Home anticipation lines before the River/Ridge and before M3 (chunk 4.9); X-40 Khash's Bonds / Family menu shows the demo's lock states (chunk 4.10).
 
 - 2026-11-24 `onboarding-demo` X-37 from THJ (thj/onboarding-demo; plan chunk 4.8): the world-space HP bar over playable units should look slightly different from the enemies' bar; they mix up when units stand close.

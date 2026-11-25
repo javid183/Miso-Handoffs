@@ -90,6 +90,10 @@ The designer also writes two short notes in the same pass: X-20 (where a Divine 
 | 3.2 | M2 | Same; the rush is a sequence (MoveUnitSequence), the player casts Shield Flare | 2 | |
 | 3.3 | M3, M3-06, M3-07 | Same, plus Toba's appearance and the Home beat after it (the house reacts to Toba, then the Linda–Lucy scene) | 3 for the story beats | Needs 3.0 |
 | 3.4 | M4 | Mission asset with 3 levels; roster Toba fixed + picks; the cleanse fight, the rest level, the boss and the end sequence | 3 (roster and story beat) | Changes C5a's roster and `M4SquadPickTests`; Toba now joins before M4, so the Bond Threads plan's demo section changes too |
+| 3.5a | M4-04 | Bug: after Toba's Wall stops the Queen's charge once, she never attacks again and only walks at random | 2 (fix; `BossGoblinQueen.cs`) | Explore the cause first; a covering test |
+| 3.5b | M4-05 | Her charge into Toba's Wall stops at it, stuns her and destroys the Wall | 3 (rule) | Designer proposes the stun length and what the family gets from it; GDD EN-6 and Toba TO (Wall) follow |
+| 3.5c | M4-06, M4-07 | Harder but shorter: lower HP (320 today; M10's 150 is the reference, D-613) and more threat. Options to compare: +1 AP (the Hungry Moon rule from `thj/home-test`, D-011), a Masher-style counter when hit (`MasherGoblinFactionRoleHandler`), more enemies in `Level3-C1`, poison pools (the Mountain Deev's) | 3 (design), then 2 (values) | `miso-game-designer` with a timed play of today's fight as the baseline |
+| 3.5d | M4-08 | Narrative during the fight: lines at its turning points (her first charge, a stun, low HP) | 2 (narrative tech; text by `miso-narrative`, then the writer) | Check for an HP-threshold sequence trigger; if none, use turns or stages, or ask before adding one |
 
 ### Phase 4: presentation and text
 
