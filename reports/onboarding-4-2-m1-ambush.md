@@ -279,6 +279,7 @@ Before you start: set `GlobalSettings` › `deactivateIntroOutroSequences` **off
 12. **Timing:** note the total length (the design expects about 10 minutes; option B is parked if it runs long).
 13. **A sibling falls → loss** (fix round): in any fight, let Linda or Mark drop to 0 HP. The level ends at once in a defeat, the usual defeat panel and its Retry/Home choice, with no waiting on "Reach the clue together".
 14. **The ambush waits for your turn** (fix round): stand both siblings in the 8 tiles in front of the clue while a plateau Claw is still alive. Kill the last plateau Claw with a Watch on the enemy turn. The N1 line and camera play, but the ambush doesn't start on that enemy turn: it plays at the start of your next turn, and the pack only moves on the enemy turn after it. (If the Claw dies on your own turn with both already in the zone, the ambush plays at once, on your turn, and you keep the AP you had left.)
+15. **The ambush waits for the next family turn** (fix round 2): stand both siblings in the zone with one plateau Claw left, and kill it with the family's last AP (the turn then ends by itself, or press End Turn). The N1 line and camera play, but the ambush doesn't start in the pause between turns or on the enemy turn: it plays at the start of the next family turn.
 
 ## Review (miso-reviewer, 4.2a + 4.2b, 2026-11-24), pasted by the coordinator
 
@@ -427,3 +428,53 @@ Nothing was built or run in this step. The last results stand: 53/53 in the thre
   - Checked OK: turn-start re-check, no S4 softlock, defeat at ≤1 standing, prefab overrides, house rules.
 - AI regression 46: acceptable explained delta (`intent.condition-count` list check). Baseline fix session: list known types without a handler instead of counting them as drift.
 - Docs: record the planner's skip in `tech/combat-architecture.md`.
+
+### Fix round 2: review 2's must-fix (the gap after the family's turn) and the comment
+
+The core change was approved as is and left untouched.
+
+**Must fix: the condition was still true in the pause after the family's turn ended.** `SwitchTurnIE` calls `EndTurn()`, raising `turnEnded`, then waits `timeBetweenFactionTurns` before it moves the turn index and starts the next turn. During that pause, both the started phase and the turn order still named the family.
+
+The fix needs no core code:
+- **New `Features/Onboarding/OpenTurnWatch.cs`** (+ `.meta`), a plain level component, not static:
+  - it listens to the level's `GlobalEventBus` `turnStarted`/`turnEnded` and holds, in an instance property, the faction whose turn is open (null between turns);
+  - it subscribes in `OnEnable`, and again in `Start` in case the bus wakes later (the bus lives in the level too);
+  - it unsubscribes and clears in `OnDisable`, which runs on a level restart (the level is destroyed) and on leaving Play mode. No subscription outlives the level, and with domain reload off nothing static is left behind.
+  - A turn that ends only clears it if it was that faction's turn.
+- **`FactionTurnLOCondition`:**
+  - it now finds the watch on `CombatLevel.Instance` (main thread) and requires the faction's turn to be open, as well as its phase to have started;
+  - the pure check is `IsTurnOf(faction, phaseStarted, turnOpen)`. I dropped the turn-order input: it moves later than `turnEnded` and so added nothing;
+  - without a watch on the level the condition stays false;
+  - doc comments rewritten.
+- **Wiring:** new `WireOpenTurnWatch` puts exactly one `OpenTurnWatch` beside the level's `CombatLevel`, and removes any duplicate. The level gains +15 lines (the added component), and a second run left it byte-identical.
+- **Tests** (`FactionTurnLOConditionTests`, rewritten, 7 tests, driving a real `OpenTurnWatch` through its turn calls):
+  - true on the family's turn;
+  - false on the enemies' turn;
+  - **false once the family's turn has ended while the phase still names it** (replaces the misleading "order moved on" test);
+  - true again when the family's next turn starts;
+  - another faction's turn ending doesn't close the family's;
+  - false before any turn, and with no faction;
+  - false with no level running.
+  - `M1RidgeTests` also checks that the level has exactly one watch, beside the `CombatLevel`.
+
+**Should fix:** the stage comment in `MissionWiring.Ridge.cs` (stages 1 to 5) is rewrapped, one line per stage.
+
+**Files:**
+- `miso/Assets/_Project/Features/Onboarding/OpenTurnWatch.cs` + `.meta` (new)
+- `miso/Assets/_Project/Features/Onboarding/FactionTurnLOCondition.cs`
+- `miso/Assets/_Project/Features/Onboarding/Editor/FactionTurnLOConditionTests.cs`
+- `MissionWiring.Ridge.cs`
+- `M1RidgeTests.cs`
+- `GB_m1-ridge.prefab`
+
+All feature-side: they go with the wiring commit. LF, no BOM.
+
+**Tests:**
+
+| Run | Result |
+|---|---|
+| M1/Ridge classes + `FactionTurnLOConditionTests` + `AIStrategyPlannerTests` | 62/62 passed |
+| Full EditMode suite | 2686 total, 2685 passed, 0 failed, 1 skipped (`AIRegressionTest.Baseline_MatchesCurrentAI`, Explicit) |
+| `AIRegressionTest.Baseline_MatchesCurrentAI` by name | **46**, the same lines as the previous run (the 45 plus `intent.condition-count`); none new, none gone |
+
+"How to see it" has a new step 15: the last plateau kill with the family's last AP → the ambush at the next family turn start.
