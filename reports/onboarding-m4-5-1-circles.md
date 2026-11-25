@@ -5,7 +5,11 @@ Outcome: partial (chunks 5.1 and 5.2 done; 5.3 not started)
 
 ## What changed
 
-Chunk 5.1 only: the new level `GB_m4-cleanse` ("The circles"), its build and wiring menus, its start sequence, and `M4CirclesTests`. Details under "Chunks". Nothing existing was edited: no level, mission, roster, `M4SquadSlots`, Mithra's Rest or `Level3-C1`; no core-systems file.
+Chunks 5.1 and 5.2 (5.3 not started).
+
+- **5.1:** the new level `GB_m4-cleanse` ("The circles"), its build and wiring menus, its start sequence, `M4CirclesTests`.
+- **5.2:** the M4 mission graph (The circles, Mithra's Rest, the Queen) and roster (Linda, Lucy, Toba fixed plus one free seat); Toba's select button on the roster screen unlocks after the Trail (`WorldMapPanel.prefab`, one line); Mithra's Rest reworked in place (title, objective, heal on the altar trigger, family time points full, campfire props, old Ryker/shrine/scenes removed); the Queen's level relabelled; Cleanse locked in Mithra's Rest and the Queen; `M4SquadSlots` cut to the three levels; `M4SquadPickTests` rewritten; new `M4WhiteMothersTests`; levels titled (1/3) to (3/3).
+- No core-systems file was edited. `Unit_Toba.prefab` and `OnboardingMissionGraphTests` are unchanged.
 
 ## Acceptance criteria
 
@@ -263,7 +267,7 @@ Decided (see the 5.2 follow-up). Open: one more full EditMode run in the editor 
 
 1. `feat(onboarding): add The circles, a new opening level for the White Mothers mission` (plain): `miso/Assets/_Project/Content/Levels/Greybox/GB_m4-cleanse.prefab` + `.meta`; `miso/Assets/_Project/Features/Onboarding/Editor/MissionWiring.Circles.cs` + `.meta`; `miso/Assets/_Project/Features/Onboarding/Editor/MissionWiring.Circles.Dressing.cs` + `.meta`; `miso/Assets/_Project/Features/Onboarding/Editor/M4CirclesTests.cs` + `.meta`; `miso/Assets/_Project/Resources/Sequences/M4Circles.meta`; `miso/Assets/_Project/Resources/Sequences/M4Circles/M4Circles_Start_SequentialSequence.asset` + `.meta`; `.../M4Circles_Start_CameraOnPools.asset` + `.meta`; `.../M4Circles_Start_CameraBack.asset` + `.meta`; `.../M4Circles_Start_Toba_DialogNodeSequence.asset` + `.meta`. One unit: the tests read the prefab and the sequences, and the menus made them. The plan's commit 1 (after THJ's play check).
 
-2. `feat(onboarding): M4 runs The circles, Mithra's Rest and the Queen with Toba in the squad` (plain): `miso/Assets/_Project/Content/Levels/M4 - The White Mothers.asset`; `miso/Assets/_Project/Content/Levels/DungeonSafeRooms/LevelDivineRelicRoom 1.prefab`; `miso/Assets/_Project/Content/Levels/Level3/Level3-C1.prefab`; `miso/Assets/_Project/Features/Player/Dom/Prefabs/Unit_Toba.prefab`; `miso/Assets/_Project/Features/Onboarding/Editor/M4SquadSlots.cs`, `M4SquadPickTests.cs`, `MissionWiring.WhiteMothers.cs` + `.meta`, `MissionWiring.WhiteMothers.Rest.cs` + `.meta`, `M4WhiteMothersTests.cs` + `.meta`; `miso/Assets/_Project/Core/Levels/Editor/OnboardingMissionGraphTests.cs`. Depends on commit 1 (the graph points at the circles prefab). If THJ wants Toba's unlock apart, `Unit_Toba.prefab` plus the test line can be its own commit (the test fails without it).
+2. `feat(onboarding): M4 runs The circles, Mithra's Rest and the Queen with Toba in the squad` (plain): `miso/Assets/_Project/Content/Levels/M4 - The White Mothers.asset`; `miso/Assets/_Project/Content/Levels/DungeonSafeRooms/LevelDivineRelicRoom 1.prefab`; `miso/Assets/_Project/Content/Levels/Level3/Level3-C1.prefab`; `miso/Assets/_Project/Features/UI/Panels/Prefabs/UI/Home/WorldMapPanel.prefab`; `miso/Assets/_Project/Features/Onboarding/Editor/M4SquadSlots.cs`, `M4SquadPickTests.cs`, `MissionWiring.WhiteMothers.cs` + `.meta`, `MissionWiring.WhiteMothers.Rest.cs` + `.meta`, `M4WhiteMothersTests.cs` + `.meta`. Depends on commit 1. Not in it: `Unit_Toba.prefab` and `OnboardingMissionGraphTests.cs` (unchanged). Commit 1 also carries 5.1's `LevelTitle` constant and the Play-mode guard in `MissionWiring.Circles.cs`.
 
 ## Other branches
 
@@ -279,6 +283,16 @@ none
 
 ---
 
+## Review fixes (implementer, after the FIX verdict)
+
+- **Must-fix 1, `RemoveOldRoom` only removes the old content.** It now matches by what the old pieces play, call or are made from: the `SequencePlayHandle` whose sequence is `LevelHealingRoom_Mid_SequenctialSequence` and the trigger call that starts it; the `LevelSpecificBehaviour` with the `DisableRoomFunction` call; the `Environment/SequenceTrigger` whose `LevelSequenceTrigger` plays `Level1C1_Mid_SequentialSequence`; `Ryker` only when it is an instance of `Ryker.prefab`; `Shrine` only when its `Visual` child draws the old altar sprite (`Body_0`). Other handles, listeners and objects on the trigger or in the room are never touched, so a later campfire scene, listener or prop survives a re-run. New test `ARerunKeepsLaterEditsOnTheTriggerAndOnlyRemovesTheOldScene` (in-memory copy of the room, nothing saved): a handle on another sequence plus its listener survives, an old-scene handle added back and its listener are removed, and a second run finds nothing.
+- **Should-fix 1:** the trigger tests no longer freeze its contents: `TheOldRoomIsGone...` asserts no old-scene handle and no `DisableRoomFunction` behaviour remain and the heal is still there; `TheHealRunsOnceFromTheRoomsTrigger` asserts the heal is called once (no total-call count).
+- **Should-fix 2:** `LevelNamesAreUniqueInTheMission` is now `LevelTitlesCarryTheirPlaceInThreeAndAreDistinct`, with a distinctness assert added.
+- **Should-fix 3:** "What changed" and "Proposed commits" above are updated (Toba prefab and graph test out, `WorldMapPanel.prefab` in, `LevelTitle` with commit 1).
+- **Should-fix 4:** `MissionWiring.Circles.Run()` has the Play-mode guard (same as the White Mothers menu).
+- **Notes left as they are:** 5.3 handles the circles end sequence (the win group's `onCompleteSequence` is nulled by the circles wiring) and the "(placeholder)" prefix; the roster-fill test mirrors a private runtime filter, so the play check confirms the pick lands on the slot.
+- **Re-run check:** both Apply menus run again after the fixes; `LevelDivineRelicRoom 1.prefab`, `Level3-C1.prefab`, the mission asset, `GB_m4-cleanse.prefab` and `WorldMapPanel.prefab` have identical checksums before and after. Tests: `M4CirclesTests`, `M4WhiteMothersTests` (18), `M4SquadPickTests`, `OnboardingMissionGraphTests` pass 51/51. No full suite run (nothing outside these files changed).
+
 ## Review (5.1 + 5.2) — miso-reviewer, 2026-11-25
 
 **Verdict: FIX** (pasted by the coordinator; the reviewer is read-only).
@@ -293,3 +307,5 @@ Should fix:
 4. `MissionWiring.Circles.cs:148` `Run()` has no Play-mode guard (copy `MissionWiringWhiteMothers.Run` :77-81).
 
 Notes: circles wiring re-run nulls the win group's `onCompleteSequence` (:200) and deletes extra `GuidedAbilityHint`s (:232), so 5.3 must keep its end sequence out of the win group or teach the wiring; the roster fill test mirrors `FillRosterSlots`' filter (private, runtime), so the play check must confirm the pick lands on the slot; the heal fires once per level load; the "(placeholder)" prefix in Toba's line breaks `conventions.md` › Text (5.3 replaces it); mission `missionName`/`missionDescription` unchanged (outside the plan); pool lifetime 25 rounds (THJ after play).
+
+**Coordinator, after the fixes (2026-11-25):** read the new `RemoveOldRoom` (matches by sequence, call id, source prefab and sprite only); must-fix resolved, should-fixes done, covering 51/51, menus re-run with identical checksums. Accepted: 5.1 + 5.2 pass review. Waiting on THJ's play check of M4.
