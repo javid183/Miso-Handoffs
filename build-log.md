@@ -3023,3 +3023,11 @@ Plan `plans/2026-11-19-faster-loop-process.md`, decisions D-575 to D-579.
 **Not verified:** individual "How to see it" steps weren't reported back one by one; the Catch reaction lines R1/R2 aren't wired (trigger chunk).
 **Findings:** TMP `LiberationSans SDF - Fallback.asset` was re-saved to HEAD by Unity during the build (THJ's local change lost). Unused untracked `M1Ridge_Cleared_PotionPage.asset` left on disk. Handoff merge resolved (D-682).
 **Status:** committed, not pushed. Next: designer/narrative doc updates, glossary for approved lines, then the trigger-component chunk, 3.2 (M2), M3 paper review (Masher placement parked).
+
+## 2026-11-25: duo panel sides per character; size caps removed (branch `thj/onboarding-demo`)
+
+**Built:** `fa9764069` John and Mark's duo panels on the right, Linda and Lucy's on the left (per-character `DuoPanelSide` fields on `FactionRoleVisual`; same-side pairs put the acting unit left). THJ: Lucy–Linda and John–Mark stay locked in the demo so two same-side panels don't meet. Duo size fractions no longer clamped to 1 and no screen-height cap; FR Image's prefab scale multiplies the fitted duo size; `FamilyRoleVideoPanel` applies Size Scale/Offset every frame. THJ's tweaks: two FR Images at 1.4, two clip offsets -30.
+**Verified:** full EditMode 2698: 2696 passed, 1 Explicit skipped, 1 GridToLevel lock flake (passes alone); `M1RidgeTests` now pass. THJ played and asked to commit.
+**Not verified:** the same-side fallback in play (those duos are locked).
+**Findings:** the FR Image scale also sizes that character's solo and trio panels.
+**Status:** committed, not pushed. Frames for the two-corner layout still to come from the art team.
