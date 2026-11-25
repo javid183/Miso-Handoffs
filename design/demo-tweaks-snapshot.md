@@ -183,8 +183,9 @@ Today's M4 is 7 levels: Toba's duel, two Whitemother levels, the escort, the rel
 | X-11 | Idles per Home state                                                                                           | Tech, Art            | Claude                 | ✓                                                                                                                              |
 | X-12 | Avatars for Kevin, Ben and Mary, used in story dialogue                                                        | Art, Tech, Narrative | Art, Claude, Narrative | ✓ New dialogue characters with portraits                                                                                       |
 | X-34 | Mark's avatar sits behind the HUD frame (today it draws in front of it) | UI | Claude | ✓ Draw order in the HUD |
-| X-35 | The Cyclone's Whirl doesn't damage enemies the Cyclone already hit while moving through them | Tech | Claude | This is the rule as decided (D-583: one hit per enemy per Steer). To confirm: a bug where the built Whirl hits them again, or a wish to change the rule? The knocked enemy takes two hits by D-587 |
+| X-35 | The Cyclone's Whirl also damages the enemies the Cyclone already hit while moving through them | Tech | Claude | Rule change (THJ, Nov 24, D-648, reverses D-583): a passed enemy takes two hits, as the knocked one already does (D-587). Check the damage in play |
 | X-36 | Bug: the selected-unit indicator doesn't show under the hero's feet in some levels (its layer or sort order) | Tech | Claude | ✓ Find which levels and compare their ground sorting with the indicator's |
+| X-37 | The world-space HP bar over playable units looks slightly different from the enemies' bar, so they don't mix up when units stand close | UI, Art | Claude | ✓ A frame, tint or shape difference on the family's bar; to check what the bar prefab offers |
 
 ### Final passes, presentation and open design work
 

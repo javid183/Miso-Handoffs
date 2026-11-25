@@ -2991,3 +2991,11 @@ Plan `plans/2026-11-19-faster-loop-process.md`, decisions D-575 to D-579.
 **Not verified:** Vault bought in play (committed before THJ's play check, at his request); M1 (THJ reworking it elsewhere).
 **Findings:** Khash's new save code: a failed load blocks all saves for the session silently; a duplicate dictionary key drops one whole save; Clear Save Data in Play mode isn't a real reset. Ability stat sets share the Super Time key clash (harmless today).
 **Status:** branch 5 ahead of `origin/thj/onboarding-demo` (the 4 fix/Vault commits and the merge or settings commit pushed earlier, see git), not pushed. Paused by THJ; next: 3.2 M2 when he says go.
+
+## 2026-11-24: onboarding demo Phase 1 leftovers (`thj/onboarding-demo`)
+
+**Built:** 1.9 the Steer's closing Whirl also hits passed enemies beside it (D-648; `8b76218b4`); X-25 the Family tree opens by itself after the Trail's Yard, once per save, pulsing Sister's Rivalry (home-flow C3; D-653, D-654; `13f354a8c`); core fix: an ability's completion charges the unit that acted and finishes cleanly when the controller already moved on (console error from THJ's play check; D-657, D-660; `b55771c90`). Not pushed.
+**Verified:** compile clean; full EditMode 2628/2638 (8 `M1RidgeTests` expected on THJ's M1 rework, D-651; 1 GridToLevel flake passing alone; 1 Explicit); AI regression 44 unchanged; reviews APPROVE (1.9 + X-25 together, core fix alone); THJ play-checked 1.9, X-25, the Vault in Mark's tree and a Memory 3 win.
+**Not verified:** which call clears the active unit before a late completion (needs a Play-mode log); the late multi-activation charge in play.
+**Findings:** 1.8 was Khash's to fix (done on main); 1.7 closed with no change (Mark's portrait needs a framed version from the art team, D-661); the Shift stats panel queue error goes to Khash (D-658, `reports/console-errors-2026-11-24.md`).
+**Status:** Phase 1 done. Next: 3.2 (M2) when THJ says; M1 is redone on his other device.

@@ -1,6 +1,6 @@
 # M1 "The Ridge" redesign: lines and tutorial pages
 
-Owner: miso-narrative. Scope `thj/onboarding-demo`. Written 2026-11-24 for the approved redesign (`plans/2026-11-24-m1-ridge-redesign.md`, D-648 to D-653).
+Owner: miso-narrative. Scope `thj/onboarding-demo`. Written 2026-11-24 for the approved redesign (`plans/2026-11-24-m1-ridge-redesign.md`, D-662 to D-667).
 Status: **proposed, waiting on THJ.** Every line here is Tier 3 until he approves it.
 
 How to paste:
@@ -17,7 +17,7 @@ Voice: Linda is the older sister, quick and proud ("Keep up, little brother", "I
 
 ## 1. Intro (`M1Ridge_Start_SequentialSequence`)
 
-Order (plan §5, §7): input and HUD off → camera to the clue → sighting lines → camera back → Linda rushes → walk → shake → rock on 5,-5 → rock lines → camera on the pocket, Claws revealed → Claw lines → Watch page (D-652). The intro ends there; the enemy turn comes next.
+Order (plan §5, §7): input and HUD off → camera to the clue → sighting lines → camera back → Linda rushes → walk → shake → rock on 5,-5 → rock lines → camera on the pocket, Claws revealed → Claw lines → Watch page (D-666). The intro ends there; the enemy turn comes next.
 
 | # | Beat | Hangs on | Speaker (side) | Rec. line | Alternatives / notes |
 |---|---|---|---|---|---|
@@ -36,7 +36,7 @@ Order (plan §5, §7): input and HUD off → camera to the clue → sighting lin
 | 2.7 | 2 → 4 | Same dialog, last line before the page | Linda (R) | Let them come. Anything in my line gets an arrow. | **Rec.:** the old Role line, reworded; it hands straight over to the Watch page. B "Good. I hate waiting." (the first Ridge's line; pure attitude, teaches nothing) |
 | 2.8 | 4 Watch page | `TutorialSequence` + new `TutorialDataSO` (suggested name `M1Ridge_Watch_Panels`), last step of the intro | Page | See §2 | |
 
-## 2. Watch tutorial page (beat 4, D-652)
+## 2. Watch tutorial page (beat 4, D-666)
 
 Same shape as `Ridge_Start_Panels` ("Mark's Family Role") and `River_Start_Panels` ("Lucy's Family Role"): a "<Name>'s Family Role" title, two bullets, what it does first, then the key and the cost.
 
@@ -67,12 +67,14 @@ YAML to paste:
 
 | # | Beat | Hangs on | Speaker (side) | Rec. line | Alternatives / notes |
 |---|---|---|---|---|---|
-| 3.1 | 5 | Stage S1 `onCompleteSequence` (`TurnReached` 1), camera on Mark, before `SelectUnitSequence` Mark and the pan to 7,-2 | Mark (L) | Hold on, Linda! I see a way. | **Rec.:** the camera pan to 7,-2 that follows shows "the way". B "Hold on, Linda! I'm coming." (warmer, but he doesn't reach her this turn). C "Hold on. I'll clear you a path." (calm Mark) |
+| 3.1 | 5 | Stage S1 `onCompleteSequence` (`TurnReached` 1), camera on Mark, before `SelectUnitSequence` Mark and the pan to 7,-2. *(As built, it opens the Catch dialog instead; replaced there by §11 C1.)* | Mark (L) | Hold on, Linda! I see a way. | **Rec.:** the camera pan to 7,-2 that follows shows "the way". B "Hold on, Linda! I'm coming." (warmer, but he doesn't reach her this turn). C "Hold on. I'll clear you a path." (calm Mark) |
 | 3.2 | 5 | Same dialog | Linda (R) | Then move, little brother! | Optional, recommended: her bar is locked, and this tells the player it's Mark's turn, in her voice (UX critic: "Linda's empty bar looks like a bug") |
 | 3.3 | 5 | Stage S2 objective text (shown) | Objective | Mark: reach the ledge. | The plan's text, kept. Replaces 3.1b's "Get past the Masher." |
 | — | 5 | Mark steps onto 7,-2 and picks up her arrows | (hand-back) | *No new line* | The built hand-back plays by itself: Mark "Yours, sister." / "Nothing is lost." / "It returns to you.", Linda "Thank you, Mark." (`HandBackLines.cs`, still `[PLACEHOLDER]`). That covers the critic's "Your arrows, Linda." moment |
 
 ## 4. Before Linda's bar unlocks (beat 5 → 6)
+
+> **Replaced (2026-11-24, after THJ's playtest):** the built Catch dialog (3.1 + 4.2 + 4.3, as wired in `MissionWiring.Ridge.Sequences.cs`) is superseded by §11. The lines below are kept for the record.
 
 Stage S2 `onCompleteSequence`, before `UnlockAbilitiesSequence`. As briefed, Mark also says the plateau Claws are asleep here (they've been on screen since the start and didn't move on enemy turn 1, and the Unaware tag is hidden, D-645). §5 repeats it in other words when the camera actually goes up there.
 
@@ -84,7 +86,7 @@ Stage S2 `onCompleteSequence`, before `UnlockAbilitiesSequence`. As briefed, Mar
 
 ## 5. Pocket cleared (S3): fallback for Catch & Return, reunion, plateau, Counter
 
-Stage S3 `onCompleteSequence` (the three pocket Claws destroyed). D-653: these ship first, in place of a trigger on the catch. **They must be true whether the catch fired or not** (plan §3, beat 7), so they react to saving each other across the gap, not to the catch itself. They stay true once the trigger exists (§7), so nothing needs rewriting then.
+Stage S3 `onCompleteSequence` (the three pocket Claws destroyed). D-667: these ship first, in place of a trigger on the catch. **They must be true whether the catch fired or not** (plan §3, beat 7), so they react to saving each other across the gap, not to the catch itself. They stay true once the trigger exists (§7), so nothing needs rewriting then.
 
 Order: lines → FTP top-up (framed as the reunion: the "breathe" line comes right before it) → Continuous Attack back on → camera up to the plateau → asleep line → Counter line.
 
@@ -103,7 +105,7 @@ Order: lines → FTP top-up (framed as the reunion: the "breathe" line comes rig
 
 Objective S4: **Clear the ridge. {alive_0} remaining.** (as built, kept).
 
-## 6. Low HP, fallback bark (beat 8, D-653)
+## 6. Low HP, fallback bark (beat 8, D-667)
 
 `HPBelowPercent` 50 on a Bergson, `PlayOnce` TRUE, M1 only if the bark graph can be scoped to the level (otherwise it plays the first time in any mission, which still reads fine). Recommended: the **other** sibling speaks, since a nudge from family is warmer and the hurt one is the one who should act. If the graph can only make the hurt unit speak, use the self rows.
 
@@ -129,7 +131,7 @@ Mark,1,TRUE,"[PLACEHOLDER] A potion, then back to it.",LowHP_Self
 
 ---
 
-## 7. Final variants for the trigger component (later chunk, D-653)
+## 7. Final variants for the trigger component (later chunk, D-667)
 
 For the small non-core trigger (synergy by id, ability used, HP threshold). Not for the first M1 build.
 
@@ -192,7 +194,7 @@ Camera on the clue, then the lines, then `OutroCutscene` (as 3.1b built). The ne
 
 | Where | Rec. | Alternatives / notes |
 |---|---|---|
-| The rock unit's name (Neutral `GUnit` on 5,-5, D-650), if hover or a card ever shows it | Fallen Rock | "Boulder", "Rockfall". Only matters if the name shows anywhere (plan: "to check: no HP bar or hover clutter") |
+| The rock unit's name (Neutral `GUnit` on 5,-5, D-664), if hover or a card ever shows it | Fallen Rock | "Boulder", "Rockfall". Only matters if the name shows anywhere (plan: "to check: no HP bar or hover clutter") |
 
 ---
 
@@ -205,3 +207,144 @@ Camera on the clue, then the lines, then `OutroCutscene` (as 3.1b built). The ne
 | **Counter** (Mark's Family Role) | Add to the combat terms as a design word: GDD `characters/mark.md` calls Mark's role Counter. On screen the page title is "Mark's Family Role" and lines don't name it. Ask THJ whether "Counter" becomes a screen name (like Watch) or stays a design word |
 | **FP on tutorial pages** | Add a note to the FTP row: Mark's and Lucy's Role pages and the Trail's pass-by page still say "family time point"; new pages write "FP" (pending THJ, §2) |
 | **Fallen Rock** | Only if THJ approves §9 |
+
+---
+
+## 11. Revision 2026-11-24: Catch dialog, in-action version
+
+> **Superseded by §12 (2026-11-24, THJ):** Mark alone, one line, no promise to send it back; Linda says nothing. C1 to C3 below, 7.1a/7.1b and 5.1 to 5.3 are kept for the record only.
+
+THJ after playing: "The dialog lines between catch and return should be shorter and sound more like in action. They now sound as if there are no enemies close by."
+
+Hangs on `M1Ridge_Catch_DialogNodeSequence` (`BuildCatch` in `MissionWiring.Ridge.Sequences.cs`), S2 complete, before the unlock and `SelectUnitSequence` Linda. The pocket Claws are on her, the rock between them. So: combat-bark register, shouted across the gap, a few words a line. They still have to teach the catch (aim at Mark, through the Claws, it comes back) and still read right if S2 ended on its turn fallback with Mark out of line. Mark stays the calm, clipped one; Linda stays proud and teasing, even under pressure. No FP.
+
+| # | Speaker (side) | Replaces | Rec. line | Alternative | Notes |
+|---|---|---|---|---|---|
+| C1 | Mark (L) | "Hold on, Linda! I see a way." | Linda! Aim at me! | Linda! Over here! | **Rec.** gives the order at once: she aims at *him*. The alt just pulls her eye to him; it could read as "come to me", which she can't |
+| C2 | Mark (L) | "Shoot at me, through them. I'll send it back." | Through them. I'll send it back! | Hit them on the way. I'll send it back! | "Send it back" kept on purpose: the later trigger line (7.1a, "Told you I'd send it back.") pays it off. The alt is more explicit about the Claws taking the hit both ways |
+| C3 | Linda (R) | "Gladly." | Catch it, little brother! | Don't drop it! | **Rec.** is her voice under fire ("Keep up, little brother") and names the catch. The alt is 4.3's old B, shorter and tenser |
+
+Lines to paste (Rec. set, no tag, per the dialogue rule at the top):
+
+```csharp
+Line(Who.Mark, Side.Left, "Linda! Aim at me!"),
+Line(Who.Mark, Side.Left, "Through them. I'll send it back!"),
+Line(Who.Linda, Side.Right, "Catch it, little brother!"),
+```
+
+Two-line cut, if THJ wants it shorter still: drop C1 and open C2 with her name, "Linda! Through them, at me!" then C3. It loses "I'll send it back", so the return preview alone teaches the return.
+
+Status: **proposed, waiting on THJ** (Tier 3, like the rest of this file). The old lines in §3.1, §4.2 and §4.3 are kept above for the record.
+
+---
+
+## 12. Revision 2026-11-24 (2): the surprise catch, and the ambush at the clue
+
+Inputs: THJ's direction of 2026-11-24 on the Catch set-up ("Mark: one line if can't two. Yes cut Linda's reply. Don't hint what Mark is going to do with it, only asking Linda to do it; let it be a surprise for the player. Then their reaction after can adjust to that, like with Linda's surprise but without wanting to admit it directly"), and section 12 of `plans/2026-11-24-m1-ridge-ambush-design.md` (option A approved: plateau kept, then "reach the clue together", then a Black Claw + 4 Dark Claws from behind, the potion page at the end of the ambush sequence).
+
+Rules held: mid-fight register wherever enemies are on the board; Mark calm and clipped, Linda proud and teasing; no FP anywhere; under about 55 characters. Sides as built: **Mark Left, Linda Right.** Dialogue pastes without a tag; barks keep `[PLACEHOLDER] `.
+
+Status: **proposed, waiting on THJ** (Tier 3).
+
+### 12.1 Catch set-up (replaces §11 C1 to C3)
+
+Hangs on `M1Ridge_Catch_DialogNodeSequence` (`BuildCatch`), S2 complete, before the unlock, `SelectUnitSequence` Linda and the `GuidedAbilityHint` on her bow. Mark only. Linda says nothing: she is the player, Mark is guiding. Nothing about catching or sending it back; the return is the surprise.
+
+| # | Speaker (side) | Rec. line | Alternative | Notes |
+|---|---|---|---|---|
+| K1 | Mark (L) | Linda! Shoot through them. At me! | Linda! Aim at me. Through them! | **Rec.:** the targets first, then the odd part last, so "At me!" lands as the surprise in the order. Alt puts the strange ask first, which makes the player stop and wonder (a little more mystery, a little less clear on the Claws). Both one line, both still read right if S2 ended on its turn fallback with Mark out of line |
+
+Two-line form, if THJ wants a beat of urgency first: Mark "Linda!" / Mark "Through them, at me. Now!"
+
+```csharp
+Line(Who.Mark, Side.Left, "Linda! Shoot through them. At me!"),
+```
+
+### 12.2 Reaction right after the catch lands (replaces §7.1, for the later trigger chunk)
+
+Fires on the first `"Catch & Return"` in M1, after the returned arrow lands; a non-blocking bubble (as the hand-back) is best, since the turn goes on and the other pocket Claw may still be standing. Linda is surprised and impressed and will not say so; Mark takes it dry and keeps her shooting (the second catch the plan relies on).
+
+| # | Speaker (side) | Rec. line | Alternative | Notes |
+|---|---|---|---|---|
+| R1 | Linda (R) | Lucky catch. | Huh. You caught it. | **Rec.:** the surprise dressed as a shrug: she won't call it skill. Alt is flatter, the surprise shows a bit more |
+| R2 | Mark (L) | Then shoot again. | Shoot again. Before they move. | **Rec.:** dry ("test my luck, then") and it invites the second catch. Alt is more fight-aware, less teasing |
+
+Avoid "Show-off." here: it is already Linda's hand-back reply to Lucy.
+
+### 12.3 Pocket cleared (replaces §5.1 to §5.3; §5.4 onwards kept)
+
+Hangs on `M1Ridge_Cleared_DialogNodeSequence`, S2 complete (the three pocket Claws dead). The plateau sleepers are still up top, so the register stays low and quick. **Must read right whether the catch fired or not** (D-667 fallback): both sets react to Mark asking her to shoot at him, which always happened, and to the surprise without naming it. If the trigger (12.2) ships, these follow it without repeating it.
+
+| # | Speaker (side) | Rec. line (Set A) | Alternative (Set B) | Notes |
+|---|---|---|---|---|
+| P1 | Linda (R) | Next time, warn me. | You asked me to shoot you. | **Set A (Rec.):** her surprise turned into a complaint: she was caught off guard and won't admit it. **Set B:** she states it as if it were his mistake, works even more plainly without a catch |
+| P2 | Mark (L) | You'd have argued. | And you didn't even pause. | A: dry, knows his sister. B: a little dig back, sibling tone |
+| P3 | Linda (R) | ...I'd have won. | Don't make it a habit. | A: the last word is hers, still not admitting. B: the same, gruffer |
+
+§5.4 ("Breathe, sister. Then we climb." / "Race you to the top.") and §5.6 to §5.9 (plateau, Counter) follow unchanged.
+
+### 12.4 The ambush at the clue (plan §12, N1 to N11)
+
+| # | Where (plan) | Speaker (side) | Rec. line | Alternative | Notes |
+|---|---|---|---|---|---|
+| N1 | S3 complete (plateau cleared), camera on the clue | Mark (L) | The tracks, sister. Together this time. | Linda (R): "Now the tracks. I'll even wait for you." | **Rec.:** points up and says "together", which the objective then repeats. Alt: Linda owns her rush from beat 2 with a joke; the "together" lives in the objective only |
+| N2 | S4 objective | Objective | Reach the clue together. | Both Bergsons: reach the clue. | Plan's text kept. Alt is more literal if "together" is misread as "one is enough" |
+| N3a | Ambush sequence, camera on the clue | Linda (R) | Told you there was something up here. | (cut it) | §8.1 moved here: callback to her rush. Optional if the sequence runs long |
+| N3b | Same dialog | Mark (L) | A man's tracks. Deep. He was carrying something. | A man's tracks, deep. Carrying something. | §8.2 moved. The Home recap quotes these facts (`HomeVisitsWiring.cs`). Alt is the recap's exact wording |
+| N3c | Same dialog | Linda (R) | Healing herbs, crushed fresh. And a leaf wrapper. | Herbs, crushed fresh. A poultice. | §8.3 moved. Alt matches the recap's "And herbs. A poultice." |
+| N4 | Same dialog, last line before the turn-round camera | Linda (R) | Mark. Listen. Behind us. | Mark (L): "We're not alone. Behind us." | **Rec.:** she is the one with sharp eyes (she saw the tracks first); breaks the discovery mid-thought. Alt gives it to the calm one, colder |
+| N5 | After `RevealUnitsSequence` `ambush` | Narrator | Black Claw. Hit it, and the pack comes for you. | (none: reused as is) | The Trail's caption (`SearchWiring.Trail.cs` `BlackClawCaption`), reused for M1. Approve it for M1 |
+| N6 | After the east-path camera | Mark (L) | Five. Hit the big one only at my side. | They follow the big one. Stay close when you hit it. | **Rec.:** tense, counts them, ties the Black Claw to Counter (stand by me when you hit it). Alt is plainer on the rule, less tense, and doesn't count them |
+| N7 | Same dialog (optional) | Linda (R) | Then keep up, little brother. | Five? I've got arrows for six. | **Rec.:** her opening line from the first Ridge, now said shoulder to shoulder. Alt: pure bravado under pressure |
+| N8 | Same dialog, last line, just before `SignalSequence` `M1Ridge_Reunion` (optional) | Mark (L) | Breathe. Back to back. | (none: cut the line) | Frames the FTP top-up as the two of them steadying, as §5.4 did ("Breathe, sister"). Cut it if N7 is cut, so Mark doesn't speak twice in a row |
+| N9 | Potion page, last step before control returns | Page | See below | | Kept from §7.2c with one change |
+| N10 | S5 objective | Objective | Drive them off the ridge. {alive_0} remaining. | Hold the ridge. {alive_0} remaining. | Plan's text kept. Alt is shorter and fits "they came for us" |
+| N11 | Outro on the clue, after the win (`M1Ridge_End_Clue_DialogNodeSequence`) | See 12.5 | | | |
+
+Lines to paste for the ambush dialog (Rec. set, no tag; narrator call as the Trail builds it):
+
+```csharp
+// discovery (camera on the clue)
+Line(Who.Linda, Side.Right, "Told you there was something up here."),
+Line(Who.Mark, Side.Left, "A man's tracks. Deep. He was carrying something."),
+Line(Who.Linda, Side.Right, "Healing herbs, crushed fresh. And a leaf wrapper."),
+Line(Who.Linda, Side.Right, "Mark. Listen. Behind us."),
+// after the reveal: the Black Claw caption, as in SearchWiring.Trail.cs
+// after the east-path camera
+Line(Who.Mark, Side.Left, "Five. Hit the big one only at my side."),
+Line(Who.Linda, Side.Right, "Then keep up, little brother."),
+Line(Who.Mark, Side.Left, "Breathe. Back to back."),
+```
+
+**N9, potion page (`M1Ridge_Potion_Panels`).** One change: "carries one" is false if the family already drank it on the plateau (the low-HP bark can prompt that). "Brought" stays true either way. The rest fits the start of a fight as is.
+
+| Field | Rec. | Was |
+|---|---|---|
+| pageTitle | Health Potion | Same |
+| pageText | • The family brought one Health Potion on this mission.<br>• Select the hurt Bergson, then the Health Potion in the abilities bar. It heals them. | "The family carries one Health Potion on this mission." |
+
+```yaml
+  pages:
+  - pageTitle: Health Potion
+    pageType: 0
+    videoClip: {fileID: 0}
+    image: {fileID: 21300000, guid: 2097e2cde38afeb49a8ae81a6fc4246f, type: 3}
+    pageText: "• The family brought one Health Potion on this mission.\n•
+      Select the hurt Bergson, then the Health Potion in the abilities bar. It heals
+      them."
+```
+
+### 12.5 Outro (N11; replaces §8.1 and §8.4 to §8.7; §8.2 and §8.3 moved to N3)
+
+Camera on the clue after the win, then `OutroCutscene`. "Next time, we climb together" no longer fits (they did). Close on having stood together, then back to the clue for the hope-and-dread hook. I kept the salve line here rather than in N3: the Home recap only quotes the tracks and the herbs, and this gives the outro a reason to look at the clue again.
+
+| # | Speaker (side) | Rec. line (Close A) | Alternative (Close B) | Notes |
+|---|---|---|---|---|
+| O1 | Linda (R) | Still in one piece, little brother? | Mark (L): "It still smells of salve. He's tending something." | **Close A (Rec.):** sibling check-in after the fight, then the clue, ending dark. **Close B:** clue first, ending on the family motif |
+| O2 | Mark (L) | Side by side. Nothing got through. | Linda (R): "Or someone." | A: Mark, quietly proud of "together" |
+| O3 | Mark (L) | It still smells of salve. He's tending something. | Mark (L): "Then we follow it. Together." | A: §8.4 kept. B: the Trail's family motif, word for word |
+| O4 | Linda (R) | Or someone. | (B ends at O3) | A: §8.5 kept. The Home recap ("Someone's carrying her. And tending her.") pays it off |
+
+### 12.6 What is unchanged
+
+§5.4 to §5.9, §6 (low-HP bark), §9 (Fallen Rock). The Black Claw close-up stays the name only (X-05). Nothing for M3 until its paper level is approved.

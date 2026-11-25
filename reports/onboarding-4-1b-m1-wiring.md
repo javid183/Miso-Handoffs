@@ -59,7 +59,7 @@ I applied the brief's fallback: S1 is dropped as a stage and its sequence goes i
 - S1's line 3.1 ("Hold on, Linda! I see a way.") now opens S2's completion sequence, ahead of 4.2 and 4.3. It reads well there: "the way" is the catch.
 - S1's `SelectUnitSequence` Mark and the pan to 7,-2 are dropped. Once Mark is on the ledge they mean nothing.
 - The optional line 3.2 ("Then move, little brother!") is dropped too. It makes no sense after he has moved.
-- What changes for the player: family turn 1 opens with no line. Only the objective "Mark: reach the ledge." names him, and Linda's bar is empty. This is the risk the UX critic flagged. **For the coordinator and THJ:** fixing it properly needs a turn-start trigger, which could join the D-653 trigger component.
+- What changes for the player: family turn 1 opens with no line. Only the objective "Mark: reach the ledge." names him, and Linda's bar is empty. This is the risk the UX critic flagged. **For the coordinator and THJ:** fixing it properly needs a turn-start trigger, which could join the D-667 trigger component.
 - A side benefit: S2 is now evaluated from level start, so its fallback completes at enemy turn 2 and Linda's bar is back for family turn 2, which is the design's intent. With S1 kept, the fallback would have landed a round later.
 
 **2. Reveals inside the intro happen before turn 1, and the revealed Claws act on enemy turn 1: yes, but not inside `introSequence`.**
@@ -112,7 +112,7 @@ Open editor, Unity MCP:
 |---|---|
 | `M1RidgeTests` + `M1RidgeLayoutTests` + `SearchRidgeTests` (by full class name) | 44/44 passed |
 | Full EditMode suite | 2618 passed, 0 failed, 1 skipped (`AIRegressionTest.Baseline_MatchesCurrentAI`, Explicit) |
-| `AIRegressionTest.Baseline_MatchesCurrentAI` by name | **45 failures, the same as D-659.** No new lines; the `Unit_Rock` line is 4.1a's. Not re-baselined |
+| `AIRegressionTest.Baseline_MatchesCurrentAI` by name | **45 failures, the same as D-673.** No new lines; the `Unit_Rock` line is 4.1a's. Not re-baselined |
 
 The console has no compile errors. The warnings are the existing "Serialization depth limit" ones and older compiler warnings, none from this change.
 
@@ -125,17 +125,17 @@ All Rec. lines from `design/m1-ridge-redesign-text.md`. Dialogue carries no tag;
 - **Intro:** 1.1, 1.2, 1.3 (the optional line, kept); 2.1, 2.2, 2.3 (the optional line, kept).
 - **Rockfall:** 2.4, 2.5; 2.6, 2.7; then the Watch page (2.8).
 - **Catch (S2 end):** 3.1, 4.2, 4.3.
-  - 4.1 is cut (D-657).
+  - 4.1 is cut (D-671).
   - 3.2 is dropped and 3.1 moved here (T-14, check 1).
   - 3.3 is the S2 objective, "Mark: reach the ledge."
-- **Cleared (S3 end):** 5.1, 5.2, 5.3 (set A); 5.4, 5.5; 5.6, 5.7. Lines 5.8 and 5.9 are left out (D-656).
+- **Cleared (S3 end):** 5.1, 5.2, 5.3 (set A); 5.4, 5.5; 5.6, 5.7. Lines 5.8 and 5.9 are left out (D-670).
 - **Outro:** 8.1 to 8.7 (close A).
 - **S4 objective:** "Clear the ridge. {alive_0} remaining." (kept).
 - **Bark rows** (keep `[PLACEHOLDER] `; `PlayOnce` TRUE; tag `LowHP_Other`): Mark "Linda! Drink a potion. Now." and Linda "Mark, you're hurt. Potion. Now." The two "self" rows aren't used: the graph can make the other sibling speak, so I left them out.
 
 **Text I had to write or change** (for THJ to approve):
-- **Watch page body (D-655, no FP).** "• On the enemies' turn, when an enemy ends its move in Linda's row or column, within her bow's range, she can shoot it. This is her Watch. • Press the key shown above her, and be quick. Each shot costs an arrow, but no action points." This is the narrative's text with "1 FP and" removed. The title is "Linda's Family Role".
-- **Potion page:** §7.2's "Health Potion" page, used unchanged in S3 per D-654.
+- **Watch page body (D-669, no FP).** "• On the enemies' turn, when an enemy ends its move in Linda's row or column, within her bow's range, she can shoot it. This is her Watch. • Press the key shown above her, and be quick. Each shot costs an arrow, but no action points." This is the narrative's text with "1 FP and" removed. The title is "Linda's Family Role".
+- **Potion page:** §7.2's "Health Potion" page, used unchanged in S3 per D-668.
 
 ## How the bark is built
 
@@ -163,7 +163,7 @@ It still triggers at the start of a family turn (PhaseDirection = Player), so ne
 
 ## Needs THJ
 
-1. **Family turn 1 has no Mark line** (T-14 fallback, check 1). Accept it for now, or have the D-653 trigger component add a "family turn N starts" cue? Recommendation: accept for now and add it to the trigger plan.
+1. **Family turn 1 has no Mark line** (T-14 fallback, check 1). Accept it for now, or have the D-667 trigger component add a "family turn N starts" cue? Recommendation: accept for now and add it to the trigger plan.
 2. **Linda can still act on family turn 1 by clicking cells** (check 4). Accept it, or plan a small non-core click-path guard? Recommendation: judge it in the play check.
 
 ## Docs to update
@@ -271,7 +271,7 @@ Delete the 17 orphaned 3.1b assets. The coordinator settles the commit split and
    - Delete the 17 old sequences in a follow-up commit.
    - Coordinator: **accepted.**
 4. **On S2's fallback path, `M1Ridge_Catch_SelectLinda` runs on the enemy turn.** It logs a warning and doesn't select Linda. There's no hang.
-   - Coordinator: **deferred to the trigger-component chunk (D-653).** Noted for THJ.
+   - Coordinator: **deferred to the trigger-component chunk (D-667).** Noted for THJ.
 
 ### Notes
 

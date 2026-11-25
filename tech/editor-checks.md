@@ -25,7 +25,7 @@ Read the end of the Editor log after the time you triggered the compile; older e
 
 ## EditMode tests
 
-- **Confirmed 2026-11-19:** an editor-open run (Test Runner or the Unity MCP `run_tests`) writes `%USERPROFILE%/AppData/LocalLow/Dead Mage/miso/TestResults.xml`. A full run through the MCP took about 400 s for 2174 tests on `thj/cyclone`; `get_test_job` drops or times out during domain reloads, retry it with `wait_timeout`. `AIRegressionTest.Baseline_MatchesCurrentAI` is `[Explicit]`: it counts in `total` and shows as skipped.
+- **Confirmed 2026-11-19:** an editor-open run (Test Runner or the Unity MCP `run_tests`) writes `%USERPROFILE%/AppData/LocalLow/Dead Mage/miso/TestResults.xml`. A full run through the MCP took about 400 s for 2174 tests on `thj/cyclone`; `get_test_job` drops or times out during domain reloads, retry it with `wait_timeout`. **2026-11-24:** after an MCP run `TestResults.xml` was not refreshed: take the counts from `get_test_job`, not the file. `AIRegressionTest.Baseline_MatchesCurrentAI` is `[Explicit]`: it counts in `total` and shows as skipped.
 
 - **Editor open:** Window > General > Test Runner > EditMode > Run All. The results show in the window; a session without computer use asks THJ for the pass/fail counts and the names of any failures *(unconfirmed: whether the run also leaves a results file on disk)*.
 - **Editor closed:** the command line in `CLAUDE.md` (Unity 6000.3.4f1 path, `-testResults` and `-logFile` in the scratchpad). The full EditMode run took about 53 s on Oct 4. Read the NUnit XML: totals on the root `test-run` element, failures as `test-case` elements with `result="Failed"`.

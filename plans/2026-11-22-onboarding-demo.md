@@ -57,7 +57,7 @@ One writer in the Unity project at a time. Design work (paper levels, X-15, X-27
 | --- | --- | --- | --- | --- |
 | 1.7 | X-34 | Mark's avatar draws behind the HUD frame, not in front | 1 | Draw order |
 | 1.8 | X-36 | The selected-unit indicator (`SelectedUnitIndicator`) shows under the hero's feet in every level | 1 (2 if a core file) | Explore which levels fail and why (layer, sort order) first |
-| 1.9 | X-35 | The Whirl doesn't hit an enemy the Steer already hit | 1 if the built Whirl breaks D-583; 3 if THJ wants the rule changed | Ask THJ which it is first |
+| 1.9 | X-35 | The Whirl at the end of a Steer also hits the enemies the Steer passed through (rule change, D-648, reverses D-583) | 3, decided | Cyclone code and tests; designer updates GDD `lucy.md` LU-4/LU-6; check the damage in play (lever: a lighter graze on the pass) |
 
 ### Phase 2: the Hearth (narrative tech; M)
 
@@ -99,6 +99,8 @@ The designer also writes two short notes in the same pass: X-20 (where a Divine 
 | 4.3 | X-11, X-18 | Idles per Home state; the skill tree tutorial | 2 |
 | 4.4 | X-22, X-21, X-23 | The coordinator lines up the insert-shot options for THJ (OnScreenAvatar, FTPPanel, StuntCamActorSet, and the Mark–Lucy duo insert built on 2026-11-22); after THJ picks, Synergy inserts and the other Duo inserts | 3 (game feel) for the pick, then 2 |
 | 4.5 | X-08 | Workshop: a quiver item for Linda in place of her ribbon | 2 (name and text by narrative) |
+| 4.7 | — | Narrative workbook in the shared repo: (1) create the empty sequences for new beats (Mary's hand-offs, the Hearth ending, Toba in M3, the house's reaction, M4's end) so the writer can add lines in place; (2) export with the existing **Tools > Dialogues > DialogueExcel** (no new tool); (3) fill its Notes column with the tweak doc's task IDs; (4) check Preview import accepts the file unchanged; (5) a Numbers round-trip check: open the export in Numbers, export back to `.xlsx`, and Preview import must accept it; (6) commit it to `Narrative/` at the shared repo's root and put a copy in THJ's Google Drive (D-655). Which copy the writer edits: the Drive one; the repo keeps each exported and each imported version. THJ may do the export himself before this chunk; then 4.7 covers only what is left. Tutorial pages, names and barks (not covered by the tool) go in a small sheet in the same style; barks can also be edited in their CSVs | 2 (uses the existing tool; shared-repo commit needs THJ's yes) |
+| 4.8 | X-37 | The world-space HP bar over playable units looks slightly different from the enemies' (frame, colour or shape), so they don't mix up when units stand close | 2 (visual values; 3 if it needs a new bar prefab) |
 | 4.6 | X-17 | Tutorial pages: draft screenshots captured in Play (check whether a page can play video) | 2 |
 
 Narrative runs alongside: `miso-narrative` writes each placeholder as its container is built; the narrative designer gets the doc's section 8 list (X-05 enemy names, X-16 ability descriptions in one voice, W-01, W-07, H-10 texts and the final lines).

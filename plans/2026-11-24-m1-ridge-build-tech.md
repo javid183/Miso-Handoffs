@@ -6,7 +6,7 @@ Status: approved (THJ's go, 2026-11-24)
 
 ## Why
 
-THJ played M1 and didn't like it: the Masher was stuck on its tiles (`playtests/2026-11-23-m1-play-check.md`). The redesign `plans/2026-11-24-m1-ridge-redesign.md` is approved: D-648 to D-653, all decided by THJ. This plan builds it.
+THJ played M1 and didn't like it: the Masher was stuck on its tiles (`playtests/2026-11-23-m1-play-check.md`). The redesign `plans/2026-11-24-m1-ridge-redesign.md` is approved: D-662 to D-667, all decided by THJ. This plan builds it.
 
 ## Goal
 
@@ -19,12 +19,12 @@ The design's criteria (redesign plan, "Acceptance criteria"), made checkable:
 - [ ] `GB_m1-ridge` matches block `m1-ridge-2` (redesign plan §7) when read back with `level_to_grid.py` (block = prefab + (1,5)). THJ's art, the clue prop and `alertRangeBonus` -1 are unchanged.
 - [ ] Tile 5,-5 exists. Linda starts on 5,-5 and Mark on 6,-5. The Masher and the Claws on 2,2 and 5,2 are gone. The plateau has Claws on 1,4, 3,4 and 5,4 (factor 0.7, visible). The pocket Claws 5,-2 and 5,-1 (0.7) and 7,-2 (0.45) are in hidden group `fall`.
 - [ ] A neutral, unmovable rock unit with no abilities sits in hidden group `rock` on 5,-5. Once revealed it blocks walking, shows no HP bar or hover clutter, isn't counted by "defeat all enemies", and isn't targeted by enemies.
-- [ ] Intro (D-652): arrival lines and camera on the clue; Linda walks to 3,-2 (`MoveUnitSequence`); camera shake (`CFXSequence` + `ShakeCameraEffect`, `durationOverride` -1); `rock` and `fall` are revealed; the Watch page (`TutorialSequence`) plays last.
+- [ ] Intro (D-666): arrival lines and camera on the clue; Linda walks to 3,-2 (`MoveUnitSequence`); camera shake (`CFXSequence` + `ShakeCameraEffect`, `durationOverride` -1); `rock` and `fall` are revealed; the Watch page (`TutorialSequence`) plays last.
 - [ ] Turn order is Enemy, Bergsons, Neutral.
-- [ ] Mark's `MarkPassiveAbility_ContinuousAttack` is off from level start until S3 completes, then back on (D-649). FP stays full: no FP 2 filler.
+- [ ] Mark's `MarkPassiveAbility_ContinuousAttack` is off from level start until S3 completes, then back on (D-663). FP stays full: no FP 2 filler.
 - [ ] Linda's bar and Mark's Command are locked (`LevelAbilityLock`) until S2 completes. Watch still fires while her bar is locked.
 - [ ] Stages S1 to S4 are as in redesign plan §5 "Systems". S2 also completes on its `TurnReached` fallback (aggregation any). S3 tops FTP back up to full through a second `LevelStartFPFiller`, which isn't wired to `levelStarted`.
-- [ ] Fallback cues (D-653): the S3 lines react to Catch & Return, and an `HPBelowPercent` bark at 50% nudges the potion.
+- [ ] Fallback cues (D-667): the S3 lines react to Catch & Return, and an `HPBelowPercent` bark at 50% nudges the potion.
 - [ ] `MS2 - The Ridge.asset` `initialItemsAvailability` holds `Bergsons_Ability_HealthPotion` × 1. Its other fields are unchanged.
 - [ ] Every line and page uses the text from `design/m1-ridge-redesign-text.md` (`miso-narrative`), marked as placeholder the same way 3.1b did (until THJ approves the text).
 - [ ] `M1RidgeTests` is rewritten to match (layout, groups, factors, turn order, locks, switch, stages, potion). The rock's Neutral faction and its exclusion from "defeat all" are covered by an edit-mode test.
@@ -34,8 +34,8 @@ The design's criteria (redesign plan, "Acceptance criteria"), made checkable:
 
 In: THJ's prefab edits, the rock prefab variant, `MissionWiring.Ridge.cs` rewritten, the `Resources/Sequences/M1Ridge/` sequences, the mission's potion, `M1RidgeTests`, the narrative's text pasted in.
 Out:
-- The trigger component for Catch & Return, low HP and "ability used" (D-653: its own plan, after M1).
-- The Watch page on the first prompt (D-652: not wanted).
+- The trigger component for Catch & Return, low HP and "ability used" (D-667: its own plan, after M1).
+- The Watch page on the first prompt (D-666: not wanted).
 - Final art for the rock.
 - Lucy's memory level (`GB_m2-lucy` and its wiring: still hands-off, D-643).
 - M2 to M4.
@@ -64,7 +64,7 @@ Two chunks, run one after the other by one implementer. The riskiest parts come 
 
 - Apply the change list in redesign plan §7 "Source" to THJ's committed `GB_m1-ridge` (`f20f9a5ab`): add tile 5,-5, move the units, remove the Masher and the two Claws, set the factors, and set up hidden groups `fall` and `rock`. Remove the old `back` group and 3.1b's stages.
   - Use an editor script, or `GridToLevelBuilder`'s helpers on the existing prefab. Hand-edit YAML only for single fields.
-  - **Don't** rebuild from the block (D-651).
+  - **Don't** rebuild from the block (D-665).
 - Create the rock: a prefab variant like the Deer, in the Neutral faction, Unmovable, with no abilities and no HP bar or hover. Place it in group `rock` on 5,-5.
   - First check that a neutral unit works inside `HiddenLevelUnits`. If it doesn't, stop and report; don't change core code.
 - Add the potion to `MS2 - The Ridge.asset`.

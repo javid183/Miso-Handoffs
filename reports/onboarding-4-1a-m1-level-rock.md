@@ -170,7 +170,7 @@ None.
 - **Art under 5,-5.** THJ's `TestLevel` art was drawn when 5,-5 was a gap. The new tile may sit on painted rock or a hole until the art is touched up. The rock unit covers it once it is revealed, but Linda starts there.
 - **The rock's look:** `CaveRock 01` on the unit's Body with size 0.8 × 1.24 and no animator controller (the base has none). Its scale and pivot are not checked by eye.
 - **Don't run `Tools/Onboarding/Wire Mission: The Ridge` (3.1b's tool) before 4.1b.** It still targets the old layout. Its first pass throws on a missing cell (8,3) before it saves anything, so it can't damage the prefab, but it no longer works.
-- **`GridToLevelBuilder` rebuild rule:** the prefab is the master now. Never rebuild `GB_m1-ridge` from the block (D-651); re-run the layout tool instead.
+- **`GridToLevelBuilder` rebuild rule:** the prefab is the master now. Never rebuild `GB_m1-ridge` from the block (D-665); re-run the layout tool instead.
 - **For 4.1b:**
   - Linda's `MoveUnitSequence` must run before `RevealUnitsSequence` `rock`, or the rock lands on the nearest free cell.
   - `fall` and `rock` can be revealed in either order.
