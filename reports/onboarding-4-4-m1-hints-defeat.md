@@ -156,3 +156,72 @@ The wiring wasn't re-run (not needed): the level and every M1Ridge asset are byt
 | Full EditMode suite | 2716 total, 2715 passed, 0 failed, 1 skipped (`AIRegressionTest.Baseline_MatchesCurrentAI`, Explicit) |
 
 Files: `Features/Levels/Sequences/CastAbilitySequence.cs`, `Features/Levels/Sequences/Editor/CastAbilitySequenceTests.cs`, `Features/Onboarding/PouchHint.cs`, `Features/Onboarding/Editor/MissionWiring.Ridge.Layout.Ambush.cs`. LF, no BOM.
+
+## THJ's play of 4.4: Encore cast and the ledge Blitz (miso-implementer, 2026-11-25)
+
+### 1. Encore didn't cast: fixed (no core code)
+
+**Cause** (confirmed in code): Encore's check `LindaQuiver.HasGroundedArrows` also asks for Encore's full AP cost (`RecallRules.CanRecall(…, EncoreAp.points, EncoreAp.cost)`). By the time the scripted cast runs, Linda has spent her AP; the turn reset comes after the cast.
+
+**Fix:**
+- New `Features/Levels/Sequences/IWaivableApCheck.cs`: a unit component that adds its own AP check to an ability can leave the AP part out for the length of a scope (`IDisposable WaiveApCost()`).
+- `LindaQuiver.EncoreAp.cs` implements it with a counter. While the AP part is waived, the check compares (0, 0) for AP and cost, which blocks nothing. **Grounded arrows and quiver room still count.**
+  - `LindaQuiver.cs` changes one line: `HasGroundedArrows` reads `EncoreApForCheck`.
+  - Outside a scripted cast the check is exactly as before. The bar, the grey reason and the AI read `EncoreAp` unchanged.
+- `CastAbilitySequence`: new serialized option **`ignoreApCost`**, default **off**, so Memory 4's cast and any other existing cast check exactly as before.
+  - When it is on, a Self cast's feasibility check runs inside `CheckWithApWaived`: every `IWaivableApCheck` on the caster waives the AP part, and the waiver is put back afterwards, also when the check throws. The throw is still caught by the existing guard.
+  - Targeted casts run no feasibility check, so the option only matters for Self casts.
+- **THJ's `M1Ridge_Ambush_LindaCastRecall.asset`:** one field added, `ignoreApCost: 1`; the rest of his asset is unchanged.
+- The wiring's `BuildEncoreCast` sets the option too, for a freshly built asset; an existing one is still kept. The wiring wasn't re-run.
+
+**AP spent: none.** `AbilityOrchestrator.ActivateAbility` → `RuntimeAbility.Activate` charges no AP; AP is charged only on the player's action path (`FactionControllerBase`). The turn reset right after the cast refills AP anyway.
+
+**Tests:**
+- `CastAbilitySequenceTests`:
+  - `IgnoringTheApCost_WaivesItOnlyWhileChecking`;
+  - `IgnoringTheApCost_KeepsTheChecksAnswerAndPutsTheWaiverBackWhenItThrows` (no arrows still blocks);
+  - `IgnoringTheApCost_IsOffByDefault`.
+- `EncoreApTests.TheFeasibilityCheck_LeavesTheApOutWhileWaivedButStillNeedsArrows`: with 0 AP, waived, no grounded arrows → not castable; an arrow down → castable; the waiver over → blocked again. The existing test still covers the AP check with the option off.
+- `M1RidgeTests`: the ambush's Encore cast has `ignoreApCost` on.
+
+| Run | Result |
+|---|---|
+| `CastAbilitySequenceTests`, `EncoreApTests`, M1/Ridge classes, `PouchHintAndDefeatRelaxTests` | 98/98 passed |
+| Full EditMode suite | 2720 total, 2719 passed, 0 failed, 1 skipped (`AIRegressionTest.Baseline_MatchesCurrentAI`, Explicit) |
+
+**Files:**
+- `Features/Levels/Sequences/IWaivableApCheck.cs` + `.meta` (new)
+- `Features/Levels/Sequences/CastAbilitySequence.cs`
+- `Features/Levels/Sequences/Editor/CastAbilitySequenceTests.cs`
+- `Features/Player/Linda/Scripts/Quiver/LindaQuiver.cs`, `LindaQuiver.EncoreAp.cs`
+- `Features/Player/Linda/Scripts/Quiver/Editor/EncoreApTests.cs`
+- `Features/Onboarding/Editor/MissionWiring.Ridge.Sequences.cs`, `M1RidgeTests.cs`
+- `Resources/Sequences/M1Ridge/M1Ridge_Ambush_LindaCastRecall.asset`
+
+`CastAbilitySequence`, `IWaivableApCheck` and the quiver change belong in the shared-cast commit.
+
+### 2. Mark sometimes ends on prefab 7,-3 after killing the ledge Claw: investigated (no code changed)
+
+**What the code does** (`Core/Systems/AbilitySystem/Effects/Runtime/AEffectDashAttack.cs`):
+- **`ApplyUnguarded` (:142-153)** decides once, at activation, with `PredictsLethal` (:220-227 → `AbilityDamagePreview.PredictsLethalOn`, `damage >= hp`):
+  - **predicted lethal:** no staging. Mark strikes from where he stands, then hops straight into the target cell (`ApplyDirect`);
+  - **not predicted lethal:** Mark first walks to `TryResolveApproachCell`, which is `path[^2]`, the tile before the target on the path (:58-82). Coming up the east column, that is **7,-3**.
+- **`DashAttackIE` (:155-202)**, after the hit: waits `vacatedCellCheckDelay`, then hops into the target cell only if `entity.CurrentCell == approachCell && targetCell.IsWalkable` (:185-193). **Mark's `Mark_Ability_Attack_Primary_Effect_DashEffect.asset` sets `vacatedCellCheckDelay: 0` (line 32)**, so the check happens right after the attack's effects report done, in a single attempt.
+- **Ending on 7,-3 therefore needs both:**
+  - (a) Mark stood on, or staged to, 7,-3: either the preview wasn't lethal, or the auto move-attack walked him there first. `PlayerController.TryFindApproachCell` (:1411-1450) picks a cell in Blitz range and prefers to stay back, so it isn't always 7,-3.
+  - (b) The one-shot "vacated cell" check didn't see the cell free.
+- **Why (b) can miss:** the check doesn't wait for the target to be gone. It only waits `WaitForEndOfFrame` plus "no attack effect in progress", then 0 s. If the Claw's removal from the cell lands later than that, for any reason, the hop is skipped for good.
+  - `GUnit.Die` → `DieInternal` unplugs at once (`GUnit.cs:771-775`), but `Die` is called from the HP attribute's `onMinReached`, wired in the Inspector.
+  - `IsWalkable` is also false while anything is stashed or planted with walking disallowed on the cell (`GridCell.cs:22-27`).
+- **Why (a) can happen:**
+  - The preview leaves out damage-reduction chances below 100% (`AbilityDamagePreview.ApplyGuaranteedDecrementModifiers`) and leaves crits out entirely. Blitz's crit chance reads `Stat_CRC` × 0, so it's off.
+  - The hit is `8 × Stat_DMG`, bounded by `StatUB_DMG` (`Mark_Ability_Attack_Primary_Effect_AttrMod.asset`). With Stat_DMG exactly 1, the prediction is 8 ≥ 8: lethal. Anything that leaves Mark's Stat_DMG under 1 makes the preview round to 7 and stage.
+  - Continuous Attack is off then (the start signal), and the ledge Claw can't move (Unaware, skipped), so neither explains it.
+- **Not reproduced in edit mode:** the lethal check, the transporter and the death path all need a running level (units initialized on a grid, the HP attribute's death event). I couldn't pin which of (a)/(b) THJ hit without a log from a run where it happened.
+
+**Smallest fixes, in order of preference:**
+1. **Data, not core:** set `vacatedCellCheckDelay` on `Mark_Ability_Attack_Primary_Effect_DashEffect.asset` to about 0.2. The field's own tooltip says the delay is there to give death and push reactions time to resolve; 0 removes that margin. One field, it affects every Blitz, and it adds a 0.2 s beat.
+2. **Core, robust:** in `DashAttackIE` (:185-193), instead of one check after the delay, wait up to a short limit (for example 0.5 s) until the target is no longer alive or no longer on the cell, then check `IsWalkable` and hop. That fixes (b) whatever the timing.
+3. **Level only:** let S1 also accept 7,-3 again (THJ dropped that in 4.3). It hides the symptom for M1, not the Blitz behaviour.
+
+**To pin it in play:** a temporary log in `DashAttackIE` (direct or staged, preview damage vs HP, and `targetCell.IsWalkable` / the target's `IsAlive` at the check). The coordinator can schedule it with THJ.
