@@ -277,7 +277,7 @@ Before you start: set `GlobalSettings` › `deactivateIntroOutroSequences` **off
 11. **Win:** kill all five. The objective counts down "Drive them off the ridge. N remaining.". Then the camera on the clue, "Still in one piece, little brother?" / "Side by side. Nothing got through." / "It still smells of salve…" / "Or someone.", and the outro.
 12. **Timing:** note the total length (the design expects about 10 minutes; option B is parked if it runs long).
 13. **A sibling falls → loss** (fix round): in any fight, let Linda or Mark drop to 0 HP. The level ends at once in a defeat, the usual defeat panel and its Retry/Home choice, with no waiting on "Reach the clue together".
-14. **Ambush on the enemy turn** (fix round, *not fixed yet*, waits on the decision in "Fix round" item 2): with both siblings already standing in the 8 tiles, kill the last plateau Claw with a Watch on the enemy turn. Today the ambush plays at once, on the enemy turn. Once item 2 is decided and built, it should wait for the family turn.
+14. **Ambush on the enemy turn** (fix round, *not fixed yet*: option A turned out to need a core edit, see "Fix round" › "Option A: stopped"): with both siblings already standing in the 8 tiles, kill the last plateau Claw with a Watch on the enemy turn. Today the ambush plays at once, on the enemy turn. Once item 2 is decided and built, it should wait for the family turn.
 
 ## Review (miso-reviewer, 4.2a + 4.2b, 2026-11-24), pasted by the coordinator
 
@@ -339,3 +339,30 @@ LF, no BOM, as before.
 - `GlobalSettings.asset` and the TextMesh Pro fallback asset were untouched in this round.
 
 "How to see it" has two new steps: 13 for the loss, and 14 for the ambush on the enemy turn, which stays open until item 2 is decided.
+
+### Option A: stopped before building (needs a core edit)
+
+THJ approved option A. While reading what touches objective conditions, I found that a new condition type breaks the enemy AI's planning. So I stopped, as instructed, and **changed nothing**: no file has changed since the fix round above, and its tests still stand.
+
+**Why it needs core.** The AI planner reads every active objective's conditions and looks up a handler by exact type. Neither file is under `Features/`:
+- `Core/Systems/AISystem/Runtime/ActionPlanning/AIStrategyPlanner.cs:137` does `_intentGenMap[objective.GetType()]` for each unsatisfied condition.
+- The map (lines 113-122) knows only the eight built types, and a dictionary indexer throws `KeyNotFoundException` for any other.
+- A subclass of a built type doesn't help: the lookup is by exact type.
+
+**How it would trigger in M1.**
+1. When S3 completes, `objectivesSetAdvanced` makes every `AIController` call `AIFactionBrain.RefreshObjectives` with the new stage's objectives (`AIController.cs:268`, `PrepareObjectives` → `ActiveObjectives`). Those are S4's: the new condition is among them, and unsatisfied when they're copied.
+2. `RefreshObjectives` runs `PlanStrategy` → `Plan()` on the AI worker thread, so it throws there.
+3. `AIWorker.Consume` swallows the exception silently (`AIWorker.cs:39-43`). `_planExpired` stays true and the old plan is kept.
+
+**Effect in M1:** probably none you'd see. The Enemy faction has no living unit during S4. When S4 completes, S5 becomes active and the next refresh carries S5's objectives (`LivingUnits` only), so planning works again before the pack is revealed. Still, it would ship a feature that relies on a swallowed exception inside the AI, and any other level using the condition with live enemies would lose its AI plan updates.
+
+**Options:**
+
+| | What | Code |
+|---|---|---|
+| **A1 (recommended)** | Core: in `AIStrategyPlanner.Plan`, skip condition types it has no handler for (`TryGetValue`), as it already does for `TurnReached`/`FalseObjective`, which map to a no-op handler. Then build A exactly as approved (the condition in `Features/Onboarding`, S4 = top zone + family's turn) | One line in a core AI file (Tier 3, its own commit), plus the feature code. AI behaviour for existing levels doesn't change: all their condition types keep their handlers. `AIRegressionTest` should be run by name |
+| A2 | Build A without the core line and accept the silent exception on the AI worker while S4 is active | Feature code only. Not recommended (see above) |
+| B | No new condition: hold the start of S4 by other means. I checked: no built sequence step or level behaviour waits for a faction's turn. A "wait for the family's turn" sequence step would deadlock (the enemy turn waits while a sequence plays). A deferring step would let S5 (no enemy alive yet) win the level at once | — |
+| D | Accept it for the play check | None |
+
+Nothing was built or run in this step. The last results stand: 53/53 in the three classes, the full suite with 0 failures.
