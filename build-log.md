@@ -3031,3 +3031,17 @@ Plan `plans/2026-11-19-faster-loop-process.md`, decisions D-575 to D-579.
 **Not verified:** the same-side fallback in play (those duos are locked).
 **Findings:** the FR Image scale also sizes that character's solo and trio panels.
 **Status:** committed, not pushed. Frames for the two-corner layout still to come from the art team.
+
+## 2026-11-25 · M4 "The White Mothers": The circles, Mithra's Rest, the Queen (thj/onboarding-demo)
+
+**Built** (plan `plans/2026-11-25-onboarding-m4-build-tech.md`, report `reports/onboarding-m4-5-1-circles.md`; D-690 to D-698):
+- 5.1 `GB_m4-cleanse` "The circles (1/3)": new level from block `m4-cleanse`, cave dressing from `Level2-C1-TArtEx`, Dark Shaman + 5 Claws, 3 pools (spawner defaults: a Claw on rounds 3/7/11, one alive), one stage "Cleanse the circles." + "Defeat the dark claws.", Cleanse pulse turns 1–99, FP 99, Toba's placeholder line. Menus `Tools/Onboarding/The circles: Build Level` / `Apply Wiring`.
+- 5.2 Mission graph `GB_m4-cleanse` → Mithra's Rest (2/3) → Into the Rootwell (3/3); roster Linda, Lucy, Toba fixed + 1 pick; Toba's World Map select button opens after the Trail (rest of Toba's gates stay after M4, D-696); Mithra's Rest: Healing Room heal (0.5 HP) on the altar trigger once, FP 99, placeholder campfire lamps, relic on 10,-2 kept; Ryker, shrine and old Gift scenes removed (D-697); Cleanse locked in M4-2/M4-3. Menu `Tools/Onboarding/White Mothers: Apply Mission Wiring` (re-run safe after review fix).
+
+**Verified:** covering tests 51/51; full EditMode 2732/2733 (1 Explicit) before the review fixes; AI regression 46 (unchanged); gate 7 read-back matches `m4-cleanse`; review FIX → fixed, accepted. **THJ played M4 to the Queen: works (2026-11-25).**
+
+**Not verified / findings:** THJ saw the Goblin Queen stop attacking and wander (trace running; cause unknown, may predate this work); console error from `EntityInfoPanelUI.Show:176` via the info-panel input (likely the known Shift-queue error, D-658; being checked). Mithra's Rest has no altar art behind the relic now. 5.3 (lines, campfire scene, saving Ryker) waits on THJ's text answers. River level still has Cleanse unlocked.
+
+**Commits:** `8f24d0433` feat(onboarding) The circles; `4ed943758` feat(onboarding) M4 mission, roster, rest, Queen. Not pushed.
+
+**Status:** M4 built except 5.3. Next: Queen trace, then M3 greybox (D-695).
