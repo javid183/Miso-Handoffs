@@ -547,3 +547,37 @@ Playing M1 like this would run the `reset` call on a level with no `LevelSpecifi
   - `M1Ridge_Ambush_ResetTurn.asset` + `.meta` (new)
 - **Not mine, not to stage:** `M1Ridge_Cleared_PotionPage.asset` + `.meta` (untracked leftover; delete), `miso.slnx`, `LevelM2-C1.prefab`.
 - Nothing played. "How to see it" for 4.3 is above.
+
+### Round 4.3: Neutral relation fix (THJ's KeyNotFoundException, 2026-11-25)
+
+**Cause** (confirmed): `LevelFactionRelations` only lists a faction's enemies when it has an Enemy relation. The 4.1 build made Enemy and Neutral allies, so Neutral had none: its relations with Bergsons and with Stranger were already Ally. `GetFactionEnemies(Neutral)` then throws `KeyNotFoundException`, which the AI hits when it predicts targets.
+- **Reproduced in edit mode:** I copied the level's relations to a temporary `LevelFactionRelations`, ran `Initialize()`, then `GetFactionEnemies`. Before the fix it threw for Neutral and for Stranger; Enemy and Bergsons were fine.
+
+**Checks first:**
+- No unit in M1 belongs to Stranger: every placed unit is Enemy, Bergsons or the Neutral rock. No unit prefab under `Assets/_Project` is assigned to Stranger, so nothing can spawn as one.
+- No code reads the Neutral–Stranger relation: "Stranger" appears in code only as a nickname string in a Linda hand-back test.
+- Linda's and Mark's targeting, the rock (Bergsons–Neutral and Enemy–Neutral Ally), the objectives and the barks don't involve it.
+
+**Fix** (level data, through the wiring, no core): `MissionWiringRidgeLayout.MakeEnemyAndNeutralAllies` now also sets Neutral–Stranger to Enemy. New constant `StrangerFactionId`; the comment says why.
+- Level diff: one value, `relationEntries.Array.data[5].relationType` 1 → 2.
+- A second run left the level byte-identical.
+- The edit-mode probe now gives Enemy, Bergsons, Neutral and Stranger each a list without throwing. All four lists are empty in edit mode, where no faction has a controller; in play, Neutral's list stays empty because Stranger has no units.
+
+**Test:** `M1RidgeLayoutTests.EveryFactionInTheTurnOrderHasAnEnemyListAndNeutralsIsEmpty`.
+- every faction in M1's turn order gets an enemy list without throwing (from the level's own relations, initialized in edit mode);
+- Neutral's enemies don't include Enemy, and Neutral and Enemy are still allies (the Claws leave the rock alone);
+- no placed unit belongs to Stranger.
+
+**Tests run:**
+
+| Run | Result |
+|---|---|
+| M1/Ridge classes + `FactionTurnLOConditionTests` | 63/63 passed |
+| Full EditMode suite | 2700 total, 2699 passed, 0 failed, 1 skipped (`AIRegressionTest.Baseline_MatchesCurrentAI`, Explicit) |
+| `AIRegressionTest.Baseline_MatchesCurrentAI` by name | 46, the same lines as before |
+
+The level stayed as I left it throughout (checked at 10:42).
+
+**Not verified in Play.** The play check should show no `KeyNotFoundException` at any turn start.
+
+**Files:** `MissionWiring.Ridge.Layout.cs`, `M1RidgeLayoutTests.cs`, `GB_m1-ridge.prefab`.
