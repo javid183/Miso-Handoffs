@@ -104,6 +104,8 @@ Console: no compile errors; only the usual "Serialization depth limit" and older
 
 ### Chunk 5.2: mission, roster, Toba, Mithra's Rest, the Queen
 
+**Read the follow-up block at the end of this chunk first: THJ's decisions changed Toba's gates, the labels and Ryker after this text was written.**
+
 **Changed files** (paths under `miso/Assets/_Project/`; no core-systems file edited):
 
 ```
@@ -184,6 +186,40 @@ So the River and the whole Trail (M3) can still Cleanse. The paper says M3 gets 
 - **Not play-checked:** the heal firing once, FTP full on turn 1, the pick landing on the slot in a real run, the relic grant (3 uses), Toba's tile on the select screen.
 - **Mission blurb is old.** `missionName` "Into the Rootwell" and its description ("Follow the clue John and Linda found...") were not in the plan; they still show on the map.
 
+#### Chunk 5.2 follow-up: THJ's decisions (2026-11-25), built
+
+This block replaces the parts of the 5.2 text above that say otherwise: Toba's unlock (the unit prefab is back on M4 and only his select button moved), the level labels (now on all three), and Ryker (removed).
+
+**1. Toba's gates**
+- **Unit prefab:** `Unit_Toba.prefab` `unlockedAfterMission` is back on `M4 - The White Mothers` (no diff against HEAD). The two `OnboardingMissionGraphTests` lines are back as they were (no diff against HEAD). The wiring no longer touches the unit prefab.
+- **Moved to after the Trail:** only the select button on the roster screen, the `unlockedAfterMission` override on the Dom button in `WorldMapPanel.prefab`. One line changed (`git diff --stat`: 1 file, 1 insertion, 1 deletion). Saving the panel through Unity rewrote eight unrelated sibling-order values in it, so the wiring changes that one value as a text edit and re-imports the asset (the code explains why). Re-run: no change.
+- **"His home presence": there is no gate for Toba to move.** Nothing of Toba stands at Home (`HomeMemory/Entities/Bergsons` lists Mary, John, Linda, Lucy, Ben, Kevin and Ryker). All three `HomeIdleCharacter` gates (`Home - Scene.unity`, `Home - Memory.unity`, `HomeMemory.prefab`) are **Ryker's** (`Ryker.prefab`, appears at Home after M4: left as is, it fits "Ryker is found after the Queen"). The three `HomeInteractables` gated on M4 in `HomeMemory.prefab` and `Home - Memory.unity` are the **Bookshelf, the Cooking Cabinet (kitchen) and the Training Field**: stations, not Toba's presence, so left alone as asked. **No Home scene was edited** (scene diff stat: none; the only scene in `git status` is THJ's `PreloadScreen.unity`).
+- **Kept after M4:** the `UpgradesPanel.prefab` skill-tree entry (and its overrides in the Home scenes) and the `FamilyMenu.prefab` row; Workshop gear (the unit prefab field) too.
+- **Test:** `TobasSelectButtonOpensAfterTheTrail` (the one Dom button in the panel unlocks after `M2 - The Trail`) and `TobasUnitSkillTreeAndFamilyEntryStayAfterThisMission` (unit prefab, skill-tree entry and Family row all on M4). Replaces `TobaUnlocksAfterTheTrail`.
+- **What now changes at Home after M3:** nothing visible. Toba's tile shows on the roster screen of M4 (so the fixed seat is visible); the Workshop gear, skill tree and Family entry still open after M4.
+
+**2. Mithra's Rest, old room removed** (`LevelDivineRelicRoom 1.prefab`, this prefab only; no asset file deleted)
+- **Removed objects:** `Ryker` (a `Ryker.prefab` instance), `Shrine` (root child with its `Visual`, the altar art and its two lights) and `Environment/SequenceTrigger` (a `LevelSequenceTrigger` that played `Level1C1_Mid_SequentialSequence`).
+- **Removed on the altar trigger (`ObjectiveTrigger`):** the `SequencePlayHandle` (it played `LevelHealingRoom_Mid_SequenctialSequence`), the `LevelSpecificBehaviour` ("DisableRoomFunction", which dimmed the shrine's `Light` and `Top`) and the entry event's call to start that sequence. It keeps its collider, `TriggerOverlapTerminal` (one call: the heal, once) and `SafeRoomFunction`.
+- **Dangling references:** none. Those references pointed only into the removed objects (the `LevelSpecificBehaviour` actions into the shrine's lights; the sequence handle into the trigger's own call). Test `NothingInTheRoomPointsAtAMissingObject` scans every component's serialized references for missing targets and `TheOldRoomIsGoneLeavingTheFireAndTheRelicOnly` checks the trigger's components. The objective (Bergson on the exit tile) and the level's own sequences (`SistersTally_*` on the event bus, unrelated) are intact. The five old sequence assets stay in `Resources/Sequences` (`Level1C1_Mid_*`, `SafeRoomSequences/LevelHealingRoom_Mid_*`); nothing else in the project was edited for this.
+- **Side effect to know:** the shrine was the altar's art. The relic still sits on cell 10,-2, with no altar drawn behind it, and the two campfire lamps stand in the gap where the shrine was. The heal now fires silently (no scene) until 5.3 builds the campfire scene on that trigger. The room's objective, the relic, the heal and the family time points are as before.
+
+**3. Labels:** `The circles  (1/3)`, `Mithra's Rest  (2/3)`, `Into the Rootwell  (3/3)`. The circles' title is a new constant (`MissionWiringCircles.LevelTitle`, the block's own name stays `LevelName`, so `M4CirclesTests` is unchanged and passes); this is the one edit to a 5.1 file, and the circles' wiring writes it too. `LevelNamesAreUniqueInTheMission` updated.
+
+**4.** Heal on reaching the altar tile, once: accepted as built.
+
+**Re-run results**
+
+| Run | Result |
+|---|---|
+| `M4SquadPickTests`, `M4WhiteMothersTests` (now 17), `M4CirclesTests`, `OnboardingMissionGraphTests` | 50/50 pass |
+| `HomeVisitsTests` and every other Home test (in the full suite) | pass |
+| Full EditMode suite | 2733 tests: 2731 passed, 1 skipped (Explicit AI baseline), **1 failed: `GridToLevelFacingTests.Build_HiddenEnemiesGetTheFacingToo`**, an unhandled Unity-internal log (`Assertion failed on expression: 'm_LockCount == 0'` from `PrefabUtility.UnloadPrefabContents` inside the builder test). It passed in the first full run and passes on its own with its whole class (13/13) on re-run; the editor session dropped its MCP connection during the long run, which is the likely trigger. Not related to a file in this chunk, but not a clean single full-suite pass: please run the suite once more in the editor. |
+
+**Diff stat now** (tracked files, `git diff --stat`): `LevelDivineRelicRoom 1.prefab` 721 lines (removals of the three objects and the scene wiring plus the heal, filler and lamps), `Level3-C1.prefab` 33, `M4 - The White Mothers.asset` 107, `WorldMapPanel.prefab` 2, `M4SquadSlots.cs` 71, `M4SquadPickTests.cs` 106. `Unit_Toba.prefab` and `OnboardingMissionGraphTests.cs` no longer differ from HEAD. New files: `MissionWiring.WhiteMothers.cs`, `MissionWiring.WhiteMothers.Rest.cs`, `M4WhiteMothersTests.cs` (+ `.meta`). `MissionWiring.Circles.cs` (5.1, untracked) gained the one constant.
+
+**Proposed commit 2 is now:** the mission asset, `LevelDivineRelicRoom 1.prefab`, `Level3-C1.prefab`, `WorldMapPanel.prefab`, `M4SquadSlots.cs`, `M4SquadPickTests.cs`, `MissionWiring.WhiteMothers.cs` + `.meta`, `MissionWiring.WhiteMothers.Rest.cs` + `.meta`, `M4WhiteMothersTests.cs` + `.meta`. Not in it any more: `Unit_Toba.prefab` and `OnboardingMissionGraphTests.cs` (unchanged). `MissionWiring.Circles.cs` goes with commit 1 (one added constant).
+
 ## Reviews and checks
 
 - 5.1: none yet. The plan has one `miso-reviewer` pass over 5.1 to 5.3.
@@ -206,7 +242,7 @@ No. Play mode was never started.
 
 ## Needs THJ
 
-From 5.2: (a) which of Toba's five other "after M4" Home gates move to the Trail (see Chunk 5.2, "Toba's unlock"); (b) whether Ryker stays in Mithra's Rest; (c) level labels "(n/3)" on all three levels or plain names.
+Decided (see the 5.2 follow-up). Open: one more full EditMode run in the editor (one unrelated builder test failed once on a Unity-internal log and passes alone); whether the altar art (the removed shrine) should be redrawn for Mithra's Rest.
 
 ## Docs to update
 
