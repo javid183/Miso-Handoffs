@@ -139,3 +139,20 @@ Clear the save and set `deactivateIntroOutroSequences` off. Close GB_m1-ridge's 
 ## Review (miso-reviewer, 4.3 + 4.4, 2026-11-25), pasted by the coordinator
 
 **APPROVE.** Should-fix: (1) `CastAbilitySequence.cs:134-142` Self-cast feasibility check outside the try (an effect check can throw with input off) → wrap and `yield break`; (2) `PouchHint.cs:69` `FindObjectsByType` every frame → cache/refresh per bob; (3) `MissionWiring.Ridge.Layout.Ambush.cs:10-12` long comment line. Notes: only Memory 4 Cyclone and the Ridge Encore use `CastAbilitySequence` (targeted path unchanged); scripted Encore ignores cooldown and the level lock (fine for M1); THJ's 5 s Encore timeout may return input while arrows still fly (watch in play); defeat relax touches the level instance only (restart restores it); AI's copy of the defeat check stays at 1 until the next stage change (intent weighting only); turn reset runs one frame after input returns. Separate commit first: `CastAbilitySequence.cs` + `CastAbilitySequenceTests.cs`.
+
+## Should-fixes from the 4.3 + 4.4 review (miso-implementer, 2026-11-25)
+
+1. **`CastAbilitySequence`: the Self-cast check is now guarded.** New `SelfCastBlockerSafely(name, upgradeLevel, isFeasible)` reads the upgrade level and runs the activation check inside a try/catch. A throw is logged (`Debug.LogException`) and counts as a reason to skip: the sequence warns and stops the cast, the same as for the activation call. `PlaySequence` uses it.
+   - New tests: `SelfCast_IsSkippedWhenItsCheckThrows` and `SelfCast_IsSkippedWhenReadingItsLevelThrows`, both expecting the logged exception.
+   - `SelfCast_GoesAheadWhenLearnedAndUsable` also checks the guarded path.
+2. **`PouchHint` no longer searches the scene every frame.** The bars are cached and looked up again once per bob, or straight away when the cache is empty or a cached bar is gone. The cache is cleared in `OnDisable`.
+3. **`MissionWiring.Ridge.Layout.Ambush.cs`:** the class comment is rewrapped.
+
+The wiring wasn't re-run (not needed): the level and every M1Ridge asset are byte-identical to the end of round 4.4.
+
+| Run | Result |
+|---|---|
+| `CastAbilitySequenceTests`, M1/Ridge classes, `FactionTurnLOConditionTests`, `PouchHintAndDefeatRelaxTests` | 90/90 passed |
+| Full EditMode suite | 2716 total, 2715 passed, 0 failed, 1 skipped (`AIRegressionTest.Baseline_MatchesCurrentAI`, Explicit) |
+
+Files: `Features/Levels/Sequences/CastAbilitySequence.cs`, `Features/Levels/Sequences/Editor/CastAbilitySequenceTests.cs`, `Features/Onboarding/PouchHint.cs`, `Features/Onboarding/Editor/MissionWiring.Ridge.Layout.Ambush.cs`. LF, no BOM.
