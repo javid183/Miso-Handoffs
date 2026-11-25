@@ -242,6 +242,7 @@ No. Play mode was never started.
 
 To be proposed after THJ's play check (plan: 4.1 build, 4.2 changes, rock fix, then the deletion of the old sequences). 4.2 touches the same files as 4.1, which is uncommitted, so the 4.1 and 4.2 wiring can only go in together. The rock fix separates cleanly:
 
+0. **Core, own commit, first** (added in the fix round): `fix(ai): the strategy planner skips objective conditions it has no intent for`: `Core/Systems/AISystem/Runtime/ActionPlanning/AIStrategyPlanner.cs`, `Core/Systems/AISystem/Editor/AIStrategyPlannerTests.cs` + `.meta`. The feature files from the fix round (`FactionTurnLOCondition.cs`, its tests, each with its `.meta`) go into commit 2.
 1. `fix(onboarding): the fallen rock gets an idle animator so it no longer throws when revealed` (plain): `Features/NPCs/Rock/` (the whole folder, `Rock.meta` included, since 4.1 never committed it), `MissionWiring.Ridge.Layout.Rock.cs` + `.meta`. **Caveat:** the layout file's call to `SyncRockAnimator` and the rock test live in files that also carry 4.1 and 4.2 changes. Unless commit 2 comes first, fold this into commit 2.
 2. `feat(onboarding): The Ridge ends on an ambush at the clue, with the potion page there and tougher pocket Claws` (plain): `GB_m1-ridge.prefab`, `MS2 - The Ridge.asset`, every `MissionWiring.Ridge*.cs` + `.meta`, `M1RidgeTests.cs`, `M1RidgeLayoutTests.cs` + `.meta`, `Resources/Sequences/M1Ridge/` (4.1b's 33 assets plus the 16 new `ToClue`/`Ambush` assets, each with its `.meta`), the bark graph and CSV + `.meta`.
 3. `chore(onboarding): remove The Ridge's unused sequences` (plain): the 17 old 3.1b sequences and `M1Ridge_Cleared_PotionPage`, each with its `.meta`.
@@ -277,7 +278,7 @@ Before you start: set `GlobalSettings` › `deactivateIntroOutroSequences` **off
 11. **Win:** kill all five. The objective counts down "Drive them off the ridge. N remaining.". Then the camera on the clue, "Still in one piece, little brother?" / "Side by side. Nothing got through." / "It still smells of salve…" / "Or someone.", and the outro.
 12. **Timing:** note the total length (the design expects about 10 minutes; option B is parked if it runs long).
 13. **A sibling falls → loss** (fix round): in any fight, let Linda or Mark drop to 0 HP. The level ends at once in a defeat, the usual defeat panel and its Retry/Home choice, with no waiting on "Reach the clue together".
-14. **Ambush on the enemy turn** (fix round, *not fixed yet*: option A turned out to need a core edit, see "Fix round" › "Option A: stopped"): with both siblings already standing in the 8 tiles, kill the last plateau Claw with a Watch on the enemy turn. Today the ambush plays at once, on the enemy turn. Once item 2 is decided and built, it should wait for the family turn.
+14. **The ambush waits for your turn** (fix round): stand both siblings in the 8 tiles in front of the clue while a plateau Claw is still alive. Kill the last plateau Claw with a Watch on the enemy turn. The N1 line and camera play, but the ambush doesn't start on that enemy turn: it plays at the start of your next turn, and the pack only moves on the enemy turn after it. (If the Claw dies on your own turn with both already in the zone, the ambush plays at once, on your turn, and you keep the AP you had left.)
 
 ## Review (miso-reviewer, 4.2a + 4.2b, 2026-11-24), pasted by the coordinator
 
@@ -366,3 +367,63 @@ THJ approved option A. While reading what touches objective conditions, I found 
 | D | Accept it for the play check | None |
 
 Nothing was built or run in this step. The last results stand: 53/53 in the three classes, the full suite with 0 failures.
+
+### Option A1 built (THJ approved, 2026-11-24)
+
+**Core change.** This is the only core edit, and it needs its own commit. `Core/Systems/AISystem/Runtime/ActionPlanning/AIStrategyPlanner.cs` (BOM and LF kept):
+- `Plan()` now plans from `PlannableConditions(_objectiveConditions, _intentGenMap.ContainsKey)` instead of `Where(!IsSatisfied)`.
+- The new public static `PlannableConditions` keeps the unsatisfied conditions whose type has an intent handler.
+- A condition type with no handler is skipped instead of throwing `KeyNotFoundException` on the AI worker.
+- Nothing else in core changed. Every built condition type keeps its handler, so existing levels plan exactly as before.
+- New test file: `Core/Systems/AISystem/Editor/AIStrategyPlannerTests.cs` (+ `.meta`), 2 tests:
+  - `APlanOverAnObjectiveWithAnUnknownConditionTypeDoesNotThrow` runs the real `Plan()` over an objective with an unknown condition type and a satisfied known one: no throw, no intents;
+  - `ThePlanStillComesFromTheKnownUnsatisfiedConditions` checks that the unknown one is dropped and the known unsatisfied one kept, the known satisfied one left out.
+- The real `Plan()` with a known *unsatisfied* condition needs a running `CombatLevel` (faction relations), so that half is tested on the helper.
+
+**Feature side (not core).**
+- New `Features/Onboarding/FactionTurnLOCondition.cs` (+ `.meta`), "it is [faction]'s turn":
+  - true when the started phase (`SessionLogs.Instance.CurrentPhaseFaction`) and the turn order (`CombatLevelRunHandler.CurrentFactionControllerOrNull`) both point at the faction;
+  - so it is false on the enemies' turn, and in the gap after the family's turn has ended;
+  - the pure check is `IsTurnOf(faction, phaseStarted, currentInOrder)`.
+- No static state. It is evaluated only by the objectives, on the main thread. The AI never evaluates conditions; it reads `IsSatisfied` and the type, and now skips this one.
+- `MissionWiring.Ridge.cs`: S4 now has two objectives, aggregation All:
+  - "Reach the clue together." (shown, `TilesOccupied AtLeast 2`);
+  - a hidden `FactionTurnLOCondition` for Bergsons.
+  - Still no turn fallback.
+- Objectives are re-checked right after every `StartTurn`. So when S3 completes on the enemy turn with both siblings already in the zone, S4 completes at the family's next turn start: fresh AP, and the pack only acts on the enemy turn after it.
+- Level change (`GB_m1-ridge.prefab`): +29/−1 lines, the second objective and its condition. A second wiring run left it byte-identical.
+- Tests:
+  - new `Features/Onboarding/Editor/FactionTurnLOConditionTests.cs` (+ `.meta`), 6 tests: true on the family's turn; false on the enemies' turn, after the family's turn ended, before it started, with no faction, and with no level running;
+  - `M1RidgeTests.FiveStages…` now checks S4: aggregation All, two objectives, the hidden family's-turn condition for Bergsons, no `TurnReached`.
+
+**Tests run.**
+
+| Run | Result |
+|---|---|
+| `M1RidgeTests` + `M1RidgeLayoutTests` + `SearchRidgeTests` + `FactionTurnLOConditionTests` + `AIStrategyPlannerTests` | 61/61 passed |
+| Full EditMode suite | 2685 total, 2684 passed, 0 failed, 1 skipped (`AIRegressionTest.Baseline_MatchesCurrentAI`, Explicit) |
+| `AIRegressionTest.Baseline_MatchesCurrentAI` by name | **46 failures (was 45)** |
+
+**The AI baseline's 46th failure.** The new line is `intent.condition-count`. That check compares every condition type in the game assembly with the regression test's own list of expected types; `FactionTurnLOCondition` is new to that list. It's a list check, not a change in AI behaviour: no plan, intent or graph line changed, and the other 45 are the same as before. Not re-baselined. The fix belongs to the baseline's own fix session: add the type to `ExpectedIntentConditionTypes`, or have the check expect unmapped types to be skipped.
+
+**Files in this step.**
+- Core, its own commit: `miso/Assets/_Project/Core/Systems/AISystem/Runtime/ActionPlanning/AIStrategyPlanner.cs`, and `miso/Assets/_Project/Core/Systems/AISystem/Editor/AIStrategyPlannerTests.cs` + `.meta`.
+- Feature, goes with the 4.1/4.2 wiring commit:
+  - `miso/Assets/_Project/Features/Onboarding/FactionTurnLOCondition.cs` + `.meta`
+  - `miso/Assets/_Project/Features/Onboarding/Editor/FactionTurnLOConditionTests.cs` + `.meta`
+  - `MissionWiring.Ridge.cs`
+  - `M1RidgeTests.cs`
+  - `GB_m1-ridge.prefab`
+- The core commit goes **before** the wiring commit: without it, M1's S4 condition makes the enemy AI's planning throw, silently, while S4 is active.
+
+`GlobalSettings.asset` and the TextMesh Pro fallback were not touched in this step.
+
+## Review 2 (miso-reviewer, core skip + fix round, 2026-11-24), pasted by the coordinator
+
+- **Core (`AIStrategyPlanner.Plan` skips types with no handler): APPROVE.** Minimal; identical for the eight built types; worker-safe; public static `PlannableConditions` justified (tests can't see internals); tests meaningful. Own commit before the feature.
+- **Feature: FIX.**
+  - Must fix: `FactionTurnLOCondition` is still true in the 0.25 s gap after the family's `EndTurn` (`CombatLevelRunHandler.SwitchTurnIE` :496-505 moves the turn index only after the wait). Last family AP kills the last plateau Claw with both in the zone → S3 → ToClue → turn ends → S4 evaluated in the gap → ambush after the family's turn, pack at full AP, enemy turn may start mid-sequence. Fix without core: a non-static level component in `Features/Onboarding` tracking the open turn via `GlobalEventBus.turnStarted/turnEnded`; the condition requires turn open; test "phase/order still family, turn ended → false"; correct the doc comments and the misleading test.
+  - Should fix: `MissionWiring.Ridge.cs:162-165` comment wraps mid-sentence.
+  - Checked OK: turn-start re-check, no S4 softlock, defeat at ≤1 standing, prefab overrides, house rules.
+- AI regression 46: acceptable explained delta (`intent.condition-count` list check). Baseline fix session: list known types without a handler instead of counting them as drift.
+- Docs: record the planner's skip in `tech/combat-architecture.md`.
