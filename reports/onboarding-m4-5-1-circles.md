@@ -1,7 +1,7 @@
 # Report: M4 "The White Mothers" build (The circles, Mithra's Rest, the Queen)
 
 Plan: plans/2026-11-25-onboarding-m4-build-tech.md    Agent: miso-implementer    Branch: thj/onboarding-demo
-Outcome: partial (chunk 5.1 done; 5.2 and 5.3 not started)
+Outcome: partial (chunks 5.1 and 5.2 done; 5.3 not started)
 
 ## What changed
 
@@ -102,6 +102,88 @@ Console: no compile errors; only the usual "Serialization depth limit" and older
 
 **Decisions and loose ends:** see "Decisions I made" and "Risks and loose ends" below.
 
+### Chunk 5.2: mission, roster, Toba, Mithra's Rest, the Queen
+
+**Changed files** (paths under `miso/Assets/_Project/`; no core-systems file edited):
+
+```
+ M  Content/Levels/M4 - The White Mothers.asset                      +-107  graph and roster (data)
+ M  Content/Levels/DungeonSafeRooms/LevelDivineRelicRoom 1.prefab    +-336  Mithra's Rest (edited in place)
+ M  Content/Levels/Level3/Level3-C1.prefab                           +-33   label (3/3) and the Cleanse lock
+ M  Features/Player/Dom/Prefabs/Unit_Toba.prefab                     1 line: unlockedAfterMission -> M2 - The Trail
+ M  Features/Onboarding/Editor/M4SquadSlots.cs                       table cut to the 3 levels; ApplyAll(); stale-decision code dropped
+ M  Features/Onboarding/Editor/M4SquadPickTests.cs                   rewritten
+ M  Core/Levels/Editor/OnboardingMissionGraphTests.cs                2 lines: Toba test now expects the Trail
+ new Features/Onboarding/Editor/MissionWiring.WhiteMothers.cs        (+ .meta) mission, roster, Toba, Cleanse lock, the Queen
+ new Features/Onboarding/Editor/MissionWiring.WhiteMothers.Rest.cs   (+ .meta) Mithra's Rest
+ new Features/Onboarding/Editor/M4WhiteMothersTests.cs               (+ .meta) 14 tests
+```
+`git diff --stat` of the tracked files: 7 files changed, 483 insertions, 176 deletions. THJ's own files (`LevelM2-C1.prefab`, `PreloadScreen.unity`, `ProjectSettings/*`, `Content/FamilySuperTime/DUO/Inserts/`) were not touched.
+
+**How.** One menu, `Tools/Onboarding/White Mothers: Apply Mission Wiring` (class `MissionWiringWhiteMothers`), re-runnable (a second run changed nothing; it only saves what differs). It also runs `M4SquadSlots` for the three levels. `Tools/Onboarding/Apply M4 Squad Slots` still works on its own.
+
+**Criteria met**
+
+- [x] **Graph** `GB_m4-cleanse` -> `LevelDivineRelicRoom 1` -> `Level3-C1`, one initial node, no gates. The duel, `Level2-C1-TArtEx`, `Level2-C2`, `Level2-C3-1`, `Level2-C3-2` left the graph; their files are unchanged. Tests: `TheGraphIsTheThreeLevelsInOrder`, `TheOldLevelsAreOutOfTheGraphButTheirFilesStay`. **Labels: see Decisions** (level names, not "(n/3)" on all three).
+- [x] **Roster** Linda, Lucy, Toba fixed + 1 free; `forcedExcludedUnits` empty. Test: `TheRosterIsLindaLucyAndTobaPlusOneFreePickAndNobodyIsForcedOut`. **Fill order checked in tests:** the game's fill rule (roster units whose Nickname is not already placed, first in roster order) repeated on a copy of the mission for each of the three levels and for John and for Mark: exactly one unit is left, the pick, and one slot exists (`ThePickTakesTheDeploySlotNotAFixedSeatWhoeverThePickIs`, `NoSecondTobaIsDeployedAndNoFixedHeroIsLeftForTheSlot`). One placed Toba per level (`TobaIsPlacedOnceInEveryLevel`). The real spawn is only play-checkable.
+- [x] **Toba's unlock** `Unit_Toba.prefab` `unlockedAfterMission` = `M2 - The Trail` (one line in the prefab). Tests: `TobaUnlocksAfterTheTrail`; `OnboardingMissionGraphTests.Mark_JoinsAfterTheHearth_TobaAfterTheTrail` (was `...TobaStaysOnTheRootwell`) updated to match. **Readers and Home effect: see "Toba's unlock" below. Needs a decision.**
+- [x] **`M4SquadSlots`** table is the three graph levels (slot cells: circles 1,4; rest 10,-4; Queen 7,-2, all facing +x). The FP filler check applies to the circles and Mithra's Rest and compares the set of nicknames (Linda, Lucy, Toba), not the order (the builder lists them Lucy, Toba, Linda). Dead code for the levels that left (stale decisions entry, the FP fix for `Level2-C3-2`) removed. Re-run: all three levels "already up to date". `M4SquadPickTests` rewritten (3 fixed, Toba not excluded, graph levels, fill order, one Toba).
+- [x] **Mithra's Rest** (`LevelDivineRelicRoom 1.prefab`, in place): level title "Mithra's Rest"; objective "Rest by the fire, take the relic, then go on." (the room's one objective, a Bergson on the exit tile, otherwise unchanged). A `SafeRoomFunction` on the room's own `ObjectiveTrigger` with the Healing Room's heal copied value for value (`Specs_Health`, `baseFactor` 0.5 of `StatUB_HP`); the call is added to that trigger's `TriggerOverlapTerminal` entry event (tag Player, `disableAfterTrigger` on, so it runs once). `LevelStartFPFiller` 99 on the event bus, wired to level start, listing Linda, Lucy, Toba (gauges left alone). Cleanse locked. Campfire props: two `Cave_LightStand` lamps under `Environment/Campfire (placeholder)` at (4.6, 0.6) and (5.5, 0.6), above the altar gap where no tile is. Tests: `MithrasRestIsNamedAndHasItsOneObjective`, `TheHealIsHalfOfMaxHpAndIsTheHealingRoomsOwn`, `TheHealRunsOnceFromTheRoomsTrigger`, `TheFamilyTimePointsAreFullAtLevelStart`, `TheCampfirePropsAreThere`.
+- [x] **The relic** `DR_PickUp_HeavenlySword` was already in the room and stays: on cell **10,-2** (world 5.25, -0.75), 3 uses, reachable on foot from every placed hero by a walk over neighbouring tiles; the room's trigger box (5.26, -0.44, 0.5 x 0.5) overlaps that tile's top edge. Test: `TheRelicIsPlacedOnACellTheFamilyCanReachAndGivesThreeUses`.
+- [x] **`Level3-C1`** roster works as built (Toba, Linda, Lucy placed, one slot on 7,-2); nothing else changed besides the label and the lock. Queen values untouched.
+- [x] **Cleanse locked** in Mithra's Rest and `Level3-C1`: a `LevelAbilityLock` on each level root, one entry per hero prefab (John, Linda, Lucy, Mark, Toba, matched by Nickname so the pick is covered), each holding only Cleanse. Tests: `CleanseIsLockedInMithrasRestAndTheQueenForEveryHeroWhoCanBeThere`, `TheLocksOnlyHoldCleanseAndAreMatchedByNickname`, `CleanseIsOnlyUsableInTheFirstLevel`.
+- [x] **Tests** all above; `OnboardingMissionGraphTests` still pass.
+
+**Tests run** (editor open, Unity MCP)
+
+| Run | Result |
+|---|---|
+| `M4SquadPickTests` (8), `M4WhiteMothersTests` (14), `M4CirclesTests` (16), `OnboardingMissionGraphTests` | all pass (one graph test first needed the graph's in-memory links initialised, fixed) |
+| Full EditMode suite (includes `HomeVisitsTests` and every test that scans levels or missions) | 2730 tests: 2729 passed, 0 failed, 1 skipped (the Explicit AI baseline) |
+| `AIRegressionTest.Baseline_MatchesCurrentAI` | not run: no AI graph, ability or unit prefab changed |
+
+**Toba's unlock: what reads it, and what changes at Home after M3**
+
+The field is `GUnit.unlockedAfterMission` on `Unit_Toba.prefab`. One thing reads it: `GUnit.IsUnitUnlocked()`, called by `WorkshopPanelUI.ShowPanel`, which lists the equipment that is generic or specific to an unlocked unit. Toba has two specific items (`Equipment_Exquisite Stone Axe`, `Equipment_Tribal Necklace`), so **after M3 the Home Workshop lists those two (unless their state is Hidden) instead of after M4.** That is the whole visible change from the field itself. Nothing else reads it: no Bond Threads or station code, no sequence (`HomeVisitsTests` and the Bond tests pass).
+
+Toba is also gated by **five separate serialized values that are still "after M4"** (not this field; not changed):
+1. `WorldMapPanel.prefab`: Toba's character select button, `unlockedAfterMission` = M4. **This matters for M4 itself:** `CharacterSelectButton.SetState` hides the button while its mission is not completed, and M4 is not completed while it starts, so Toba's tile is hidden on the pre-mission roster screen even though he is a fixed seat (the roster still includes him; `ApplyRosterStates` adds him to the fixed list first). The seat works but is invisible; the selected count may look short by one.
+2. `UpgradesPanel.prefab` characters[4] (Toba) `requiredMissionToUnlock` = M4, and the same override in `Home - Scene.unity` and `Home - Memory.unity`: his skill-tree entry.
+3. `FamilyMenu.prefab` Toba row `requiredMission` = M4: the Family tree entry.
+4. `HomeIdleCharacter.missionRequirement` = M4 in `Home - Scene.unity`, `Home - Memory.unity` and `HomeMemory.prefab`: an idle figure at Home (which character: not verified).
+5. `HomeInteractables.UnlockAfterMissions` = M4 on three objects in `HomeMemory.prefab` and `Home - Memory.unity`: hover props (which characters: not verified).
+
+Result: with only the plan's field changed, Toba appears in the Workshop after M3 but in the select screen, skill tree, Family tree and Home scene only after M4. Moving those five to the Trail would make Toba appear everywhere after M3, but it would also open his skill tree and Family entry (the guided skill-spend flow and the Family tab) and change the Home scene, which is Home flow beyond "Toba appearing", so I stopped. **Decision for the coordinator/THJ:** at least (1) is probably needed for M4 to show his seat; (2) to (5) are the "Toba appears at Home after M3" change. Each is a single-field edit.
+
+**Cleanse status of every other level in the demo's mission graph** (read from the prefabs; none changed here)
+
+| Mission / level | Cleanse |
+|---|---|
+| M0 Hearth: Memory 1 Linda, Memory 2 Lucy, Memory 3 John, Memory 4 Mark | locked for each placed hero |
+| MS1 The River (`GB_s1-river`) | **unlocked** (no `LevelAbilityLock` at all; John and Lucy placed) |
+| MS2 The Ridge (`GB_m1-ridge`) | locked for Linda and Mark (the two placed) |
+| M2 The Trail: The Trailhead, Follow the blood, Follow the tracks, The Pile | **unlocked** (each has a `LevelAbilityLock` but no Cleanse entry; Lucy and Linda placed, plus the free pick) |
+| M4: The circles | unlocked on purpose; Mithra's Rest and the Queen locked |
+
+So the River and the whole Trail (M3) can still Cleanse. The paper says M3 gets its lock in its own plan.
+
+**Decisions I made (5.2)**
+
+- **Level names, not "(1/3)" to "(3/3)" on all three.** 5.1 names the first level "The circles", the plan names the second "Mithra's Rest", and the Trail (M3) also uses plain unique names. Only the Queen's level carried an old "Into the Rootwell  (5/5)", wrong now, so it reads "Into the Rootwell  (3/3)". If the labels should be on all three, it is one constant per level (the circles' constant is in 5.1's wiring, which I did not touch). Level names are part of the level ids (`missionName|levelName`), so a save made mid-level in the old M4 would not match; play checks use a cleared save.
+- **The heal is on the room's existing trigger, not a copy of the Healing Room's strip.** The relic room already has a `TriggerOverlapTerminal` beside the altar (Player tag, fires once) that plays the room's old scene; the heal is added to the same event, in the Healing Room's order (sequence, then heal). Same behaviour as the plan (heal once on a trigger, with the Healing Room's component and value); the heal and the scene that 5.3 builds fire together.
+- **Heal value copied from the Healing Room's data** rather than typed, so the two cannot drift; a test checks 0.5 on `StatUB_HP` and equality with the Healing Room.
+- **Cleanse lock lists all five heroes** (John, Linda, Lucy, Mark, Toba), by unit prefab, so the pick is covered whoever it is. Toba has no Cleanse; his entry is harmless.
+- **`M4SquadSlots` filler check is a set comparison** (see above).
+- **Edited `OnboardingMissionGraphTests`** (a test file under `Core/`) because it asserted Toba unlocks after M4, which this plan changes.
+
+**Risks and loose ends (5.2)**
+
+- **The room still plays its old scene and has Ryker in it.** `LevelDivineRelicRoom 1` is the old "Mithra's Gift" room: `Ryker` (an NPC at cell 13,-2) and `Shrine` stand in it, a `SequenceTrigger` plays `Level1C1_Mid_SequentialSequence`, and the trigger beside the altar plays `LevelHealingRoom_Mid_SequenctialSequence` (then dims the room). Their existing content was not touched; 5.3 replaces the campfire scene. Ryker standing in Mithra's Rest contradicts "saving Ryker" at the Queen's end: needs a decision for 5.3 (hide or remove him).
+- **Look not checked.** The campfire lamps are placeholders placed by coordinates without a visual check; THJ dresses them.
+- **The heal happens when a hero reaches the altar tile**, not on arrival at the level (the trigger fires when a Player-tagged collider overlaps its 0.5 x 0.5 box at the altar). If the paper means "heal on arrival", it needs a start call instead (the start filler has a `heal` option, off here).
+- **Not play-checked:** the heal firing once, FTP full on turn 1, the pick landing on the slot in a real run, the relic grant (3 uses), Toba's tile on the select screen.
+- **Mission blurb is old.** `missionName` "Into the Rootwell" and its description ("Follow the clue John and Linda found...") were not in the plan; they still show on the map.
+
 ## Reviews and checks
 
 - 5.1: none yet. The plan has one `miso-reviewer` pass over 5.1 to 5.3.
@@ -124,7 +206,7 @@ No. Play mode was never started.
 
 ## Needs THJ
 
-none
+From 5.2: (a) which of Toba's five other "after M4" Home gates move to the Trail (see Chunk 5.2, "Toba's unlock"); (b) whether Ryker stays in Mithra's Rest; (c) level labels "(n/3)" on all three levels or plain names.
 
 ## Docs to update
 
@@ -145,6 +227,8 @@ none
 
 1. `feat(onboarding): add The circles, a new opening level for the White Mothers mission` (plain): `miso/Assets/_Project/Content/Levels/Greybox/GB_m4-cleanse.prefab` + `.meta`; `miso/Assets/_Project/Features/Onboarding/Editor/MissionWiring.Circles.cs` + `.meta`; `miso/Assets/_Project/Features/Onboarding/Editor/MissionWiring.Circles.Dressing.cs` + `.meta`; `miso/Assets/_Project/Features/Onboarding/Editor/M4CirclesTests.cs` + `.meta`; `miso/Assets/_Project/Resources/Sequences/M4Circles.meta`; `miso/Assets/_Project/Resources/Sequences/M4Circles/M4Circles_Start_SequentialSequence.asset` + `.meta`; `.../M4Circles_Start_CameraOnPools.asset` + `.meta`; `.../M4Circles_Start_CameraBack.asset` + `.meta`; `.../M4Circles_Start_Toba_DialogNodeSequence.asset` + `.meta`. One unit: the tests read the prefab and the sequences, and the menus made them. The plan's commit 1 (after THJ's play check).
 
+2. `feat(onboarding): M4 runs The circles, Mithra's Rest and the Queen with Toba in the squad` (plain): `miso/Assets/_Project/Content/Levels/M4 - The White Mothers.asset`; `miso/Assets/_Project/Content/Levels/DungeonSafeRooms/LevelDivineRelicRoom 1.prefab`; `miso/Assets/_Project/Content/Levels/Level3/Level3-C1.prefab`; `miso/Assets/_Project/Features/Player/Dom/Prefabs/Unit_Toba.prefab`; `miso/Assets/_Project/Features/Onboarding/Editor/M4SquadSlots.cs`, `M4SquadPickTests.cs`, `MissionWiring.WhiteMothers.cs` + `.meta`, `MissionWiring.WhiteMothers.Rest.cs` + `.meta`, `M4WhiteMothersTests.cs` + `.meta`; `miso/Assets/_Project/Core/Levels/Editor/OnboardingMissionGraphTests.cs`. Depends on commit 1 (the graph points at the circles prefab). If THJ wants Toba's unlock apart, `Unit_Toba.prefab` plus the test line can be its own commit (the test fails without it).
+
 ## Other branches
 
 none
@@ -155,3 +239,4 @@ none
 2. Select the root: `CombatLevel` › level name "The circles", turn order Bergsons then Enemy, one win group with "Cleanse the circles." and "Defeat the dark claws."; a `GuidedAbilityHint` on `CleanseAbility` (turns 1..99); a `SequencePlayHandle` on `M4Circles_Start_SequentialSequence`; no `LevelAbilityLock`. The `GlobalEventBus` child has the `LevelStartFPFiller` (99).
 3. To play it before 5.2 puts it in the mission: pick `GB_m4-cleanse` in the level toolbar's dropdown and press Play (sandbox mission; the roster is whoever the level places, so the slot on 1,4 may stay empty). Expect: the camera goes to the three pools, Toba's stand-in line, the camera comes back, the Cleanse button pulses, FTP full. Check that Explosive Arrow and the Linda–Lucy Duo can be used on turn 1. Then check that a pool spawns a Claw on round 3, not again while that Claw lives, that a Cleanse from an adjacent cell destroys a pool, and that the level is won once the pools are gone and every enemy is dead.
 4. Re-run `Tools/Onboarding/The circles: Apply Wiring`: no diff. `Tools/Onboarding/The circles: Build Level` only warns that the level exists.
+5. (5.2) Run `Tools/Onboarding/White Mothers: Apply Mission Wiring` (already run; a re-run changes nothing). Open `M4 - The White Mothers.asset` in the mission graph window: three levels in a line. Open `LevelDivineRelicRoom 1.prefab`: root `CombatLevel` name "Mithra's Rest"; `ObjectiveTrigger` has `SafeRoomFunction` and its `TriggerOverlapTerminal` calls it once; `GlobalEventBus` has a `LevelStartFPFiller` (99); `Environment/Campfire (placeholder)` has two lamps; the relic is on cell 10,-2. `Level3-C1.prefab` and the room each have a `LevelAbilityLock` with Cleanse for the five heroes. From a cleared save, play M4 with John once and Mark once: the pick should stand on the slot in each level, one Toba, Cleanse usable only in The circles, a heal and full FTP in Mithra's Rest.
