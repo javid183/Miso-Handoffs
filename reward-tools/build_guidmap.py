@@ -12,6 +12,6 @@ for root in ['Content', 'Features']:
                 with open(p) as fh:
                     for line in fh:
                         if line.startswith('guid:'):
-                            m[line.split()[1]] = p[:-5]; break
+                            m[line.split()[1]] = p[:-5].replace(os.sep, '/'); break  # forward slashes on Windows too
 json.dump(m, open(GUIDMAP, 'w'), indent=0)
 print(len(m), 'prefabs mapped')
