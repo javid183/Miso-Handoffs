@@ -186,6 +186,9 @@ Today's M4 is 7 levels: Toba's duel, two Whitemother levels, the escort, the rel
 | X-35 | The Cyclone's Whirl also damages the enemies the Cyclone already hit while moving through them | Tech | Claude | Rule change (THJ, Nov 24, D-648, reverses D-583): a passed enemy takes two hits, as the knocked one already does (D-587). Check the damage in play |
 | X-36 | Bug: the selected-unit indicator doesn't show under the hero's feet in some levels (its layer or sort order) | Tech | Claude | ✓ Find which levels and compare their ground sorting with the indicator's |
 | X-37 | The world-space HP bar over playable units looks slightly different from the enemies' bar, so they don't mix up when units stand close | UI, Art | Claude | ✓ A frame, tint or shape difference on the family's bar; to check what the bar prefab offers |
+| X-38 | The item pouch hides items with 0 uses from the start of a level (for example the FP potion) | UI | Claude | ✓ Wider than H-06 (memories only, D-610): every level, per item |
+| X-39 | Anticipation lines at Home: after the Hearth and before the River and the Ridge, hint at where they are and what the family will face; after both, the same for M3 | Narrative tech, Narrative | Claude, Narrative | ✓ In the existing Home sequences (HomeVisits), so the writer can add them in the workbook |
+| X-40 | Khash's new Bonds / Family menu reflects the demo's lock and unlock states | UI | Claude (check with Khash) | ✓ Match the demo cap (sisters to Lv 2, the rest visible and locked) and Toba's gates after M3 (D-696) |
 
 ### Final passes, presentation and open design work
 
