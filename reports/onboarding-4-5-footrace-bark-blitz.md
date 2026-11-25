@@ -104,3 +104,31 @@ No. Play mode was never started.
 ## Review (miso-reviewer, 4.5, 2026-11-25), pasted by the coordinator
 
 **APPROVE** on all four (Encore free cast, Core A Blitz vacate wait, Core B race listener, Feature C Footrace bark). Should-fix (Core A): `AEffectDashAttack.cs:252-257` `IsVictimGone` treats a pushed-off living victim as gone, so Mark can wait 0.5 s and not hop if someone else steps on the cell → wait only for dead/destroyed/0 HP; add a test on a real unit state. Notes: report misdescribed line endings (files are CRLF; kept as they were); `IsInProgress` window up to 0.5 s longer if the owner is destroyed mid-wait (pre-existing pattern). Commit plan: merge the Self-cast and AP-waiver work into one `CastAbilitySequence` commit (CastAbilitySequence + tests, `IWaivableApCheck`, LindaQuiver files, EncoreApTests), before the M1 commit; A and B in their own commits; C its own.
+
+## Should-fix from the 4.5 review (miso-implementer, 2026-11-25)
+
+**A: the hop waits only for a dead or dying target.**
+- In `AEffectDashAttack.cs`, `IsVictimGone` became the public `IsVictimDead`: dead or destroyed only. A target that is alive with health left but was pushed off its cell no longer causes a wait; the hop is decided at once.
+- `IsVictimHealthDepleted` (0 health, death on its way) is unchanged and now public.
+- The `DecideVacate` parameter is renamed `targetDead`; the doc comment says the same.
+
+**New test** `DashAttackVacateTests.OnlyADeadOrDestroyedVictimCountsAsGone`, on a real `GUnit`:
+- a unit that is not alive counts as dead: wait;
+- the same unit set alive counts as not dead, and `DecideVacate` with its state decides at once (the pushed-off case);
+- a destroyed unit counts as dead;
+- nobody on the cell means no wait.
+
+The health-zero state can't be built in edit mode: an uninitialized unit has no attribute set, and `GetHealthAttribute` throws there. That input stays covered through `DecideVacate`.
+
+**Line endings (correction to the coordinator's note).** I checked before writing; both core files are **LF** in the index and in the working tree:
+- `git ls-files --eol` gives `i/lf w/lf attr/text eol=lf` for both, and the repo's `.gitattributes` has `* text=auto`.
+- In HEAD as well, neither file has a CRLF.
+- `UnitsCooperationHandler.cs` has a BOM and `AEffectDashAttack.cs` doesn't. Both were kept as they were, so the report's earlier note stands.
+
+| Run | Result |
+|---|---|
+| `DashAttackVacateTests` | 5/5 passed |
+| Full EditMode suite | 2734 total, 2733 passed, 0 failed, 1 skipped (`AIRegressionTest.Baseline_MatchesCurrentAI`, Explicit) |
+| `AIRegressionTest.Baseline_MatchesCurrentAI` by name | 46, the same lines as before |
+
+Files: `Core/Systems/AbilitySystem/Effects/Runtime/AEffectDashAttack.cs`, `Core/Systems/AbilitySystem/Effects/Editor/DashAttackVacateTests.cs` (commit A).
