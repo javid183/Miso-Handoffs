@@ -2,7 +2,7 @@
 
 Size: L    Tier: 2 (inside an approved design, D-690; no core code)    Assigned to: miso-implementer (5.1 opus, 5.2 and 5.3 sonnet)
 Branch: thj/onboarding-demo
-Status: draft (coordinator, 2026-11-25); dispatch on THJ's go
+Status: in progress (THJ's go 2026-11-25, D-691); 5.1 dispatched
 
 ## Why
 
