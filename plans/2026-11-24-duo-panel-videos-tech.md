@@ -2,7 +2,7 @@
 
 Size: M    Tier: 3 (C2 changes the duo flow in a core system; THJ approved 2026-11-24: "Yes, build it")    Assigned to: miso-implementer
 Branch: thj/onboarding-demo (THJ's current branch; it contains the duo insert work from `main`)
-Status: approved 2026-11-24. C1, C2 to build.
+Status: done 2026-11-24. C1 `06604c15b` (with the clips), THJ's timing tune `1ed8b2b9a`, C2 `f39ffe37c`. Review APPROVE, should-fixes applied; THJ play-checked and asked to commit (bigger-monitor look pending).
 
 ## Why
 

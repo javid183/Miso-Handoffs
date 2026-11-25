@@ -64,3 +64,44 @@ On each `FamilyRoleVideoPanel` (prefab `FTPPanel`, `<Name>Role` > `FR Image`): `
 - `FR BG` Image is disabled while the video plays; the `FR BG` GameObject is still toggled by the animator.
 - Audio tracks exist in the clips (stereo); audio output is set to none.
 - C2 not started.
+
+## Review fixes (applied after the review)
+
+1. `FamilyRoleVideoPanel`: new `Fail()` used by the timeout and the error path: sets failed, unsubscribes `prepareCompleted` and `frameReady`, turns frame events off, `Stop()`. `OnPrepared` returns early when failed, so a late prepare never plays.
+2. Frame-ready events are turned on just before `Prepare()` and off again after the first frame shows.
+3. The sprite `Image` and `FR BG` image now stay visible until the first video frame is ready, then are hidden and the video shown; on failure/timeout they stay. `FamilyRoleVideoRules.ShouldShowStillArt(hasClip, hasMaterial, failed, videoShowing)` changed to match; tests rewritten.
+   - Extra (not asked): the timeout now needs 2 s and 30 frames (`HasTimedOut(seconds, frames, showing)`). In my background editor a few frames took about 0.6 s each and the 2 s limit alone fired before the player could prepare (the clips prepare in about 5 frames), wrongly dropping to the still art.
+4. `DuoInsertSequence.mode` has the tooltip (Off also turns off the card-first flow; Full / ShortAfterFirst only matter with Play Comic Insert on).
+5. Card title: new pure helper `DuoInsertRules.CardTitle(caption, abilityTitle)` (caption, else the trigger ability's Title, never null) used in `UnitsCooperationHandler.Insert.cs` (`RunCardFirstIE` computes `DuoInsertRules.CardTitle(entry?.caption, triggerPreset ? triggerPreset.Title : null)` and passes it into the static `RunCardQteIE` as `cardTitle`). Glyph check: the card's font (alagard SDF) has no U+2011 and no fallbacks, and the Linda/Lucy trigger title "Marks-Sisters" contains it, so the helper swaps U+2011 for a plain hyphen for display only (ability data untouched). Test added (`CardTitle_...`).
+6. `importAudio: 0` on the four clip metas; Mark's trim/transcode kept.
+
+Results: compiles clean. CooperationInsertTests, FamilyRoleVideoRulesTests and DuoInsertRulesTests: 51 of 51 passed. Full EditMode (editor open, final code): 2654 run, 2645 passed, 1 skipped, 8 failed = the 8 known `M1RidgeTests`; the lock-count stall did not appear this time. Play re-check (temporary canvas, animator triggers): Mark and Lucy show the video with the sprite and backdrop hidden and frame events off; stopped Play after. Note: with the editor in the background the game loop runs in bursts, so Play checks need several polls.
+
+## Final file lists
+
+C1 code/assets (commit together): 
+- `miso/Assets/_Project/Features/UI/Panels/Scripts/FamilyRoleVideoPanel.cs`, `FamilyRoleVideoRules.cs` (+ .meta)
+- `miso/Assets/_Project/Features/UI/Panels/Editor/FamilyRoleVideoRulesTests.cs` (+ .meta)
+- `miso/Assets/_Project/Features/UI/Panels/Shaders.meta`, `Shaders/MaskedVideo.shader`, `MaskedVideo.mat` (+ .meta)
+- `miso/Assets/_Project/Features/UI/Panels/Prefabs/FTPPanel.prefab` (+80, 0 removed)
+- `miso/Assets/_Project/Content/FamilySuperTime/Sprites/Masks.meta`, `Masks/{Mark,Lucy,John,Linda}Mask.png` (+ .meta)
+
+C1 clips (separate group, THJ decides): `Content/FamilySuperTime/Sprites/{Mark,Lucy,John,Linda}.mp4` and `.mp4.meta` (metas carry `importAudio: 0`, and Mark's trim/transcode).
+
+C2 (its own commit): `Core/Systems/AbilitySystem/Abilities/Runtime/UnitsCooperationHandler.cs`, `UnitsCooperationHandler.Insert.cs`, `Core/Systems/AbilitySystem/Abilities/Editor/CooperationInsertTests.cs`, `Features/UI/DuoInsert/DuoInsertSequence.cs`, `DuoInsertRules.cs`, `Editor/DuoInsertRulesTests.cs` (all under `miso/Assets/_Project/`).
+
+Never stage: `PreloadScreen.unity` (its diff grew from 1 to 15 lines during my Play sessions: editor noise, not mine), ProjectSettings, `LevelM2-C1.prefab`, the TMP fallback asset, `DUO/Inserts/`.
+
+## git diff --stat (tracked files, project assets)
+
+```
+CooperationInsertTests.cs                | 74 +++ (C2)
+UnitsCooperationHandler.Insert.cs        | 77 +++++--- (C2)
+UnitsCooperationHandler.cs               | 17 ++- (C2)
+DuoInsertRules.cs                        |  6 + (C2)
+DuoInsertSequence.cs                     |  9 + (C2)
+Editor/DuoInsertRulesTests.cs            |  9 + (C2)
+Features/UI/Panels/Prefabs/FTPPanel.prefab | 80 +++ (C1)
+(not ours: LevelM2-C1.prefab 1, PreloadScreen.unity 15)
+```
+New untracked C1 files are listed above (code, shader, material, masks, clips).

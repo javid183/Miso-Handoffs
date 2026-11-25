@@ -2999,3 +2999,11 @@ Plan `plans/2026-11-19-faster-loop-process.md`, decisions D-575 to D-579.
 **Not verified:** which call clears the active unit before a late completion (needs a Play-mode log); the late multi-activation charge in play.
 **Findings:** 1.8 was Khash's to fix (done on main); 1.7 closed with no change (Mark's portrait needs a framed version from the art team, D-661); the Shift stats panel queue error goes to Khash (D-658, `reports/console-errors-2026-11-24.md`).
 **Status:** Phase 1 done. Next: 3.2 (M2) when THJ says; M1 is redone on his other device.
+
+## 2026-11-24: duo panels play the art team's clips; QTE card first for every QTE duo
+
+**Built:** Family Role panels play each character's animated clip through a mask cut from the clip (`06604c15b`, clips, masks, shader `MISO/UI/MaskedVideo`, `FamilyRoleVideoPanel`; Mark's first 3 white frames trimmed via transcode); THJ's own timing tune, duo panels slower and held 0.5 s longer (`1ed8b2b9a`); core: every duo with a QTE shows the card first, then the panels, then acts; the comic insert is opt-in (`f39ffe37c`). Plan `plans/2026-11-24-duo-panel-videos-tech.md`. Not pushed.
+**Verified:** compile clean; full EditMode 2654 run, only the 8 expected `M1RidgeTests` failed; review APPROVE with should-fixes applied; THJ play-checked and asked to commit.
+**Not verified:** look on a bigger monitor (THJ checking now); time-window QTEs on the card in play were not called out separately.
+**Findings:** the card title falls back to the ability title (U+2011 swapped for a hyphen, the card font lacks it). The core change is needed on main at the next merge.
+**Status:** done; waiting on THJ's bigger-monitor look.
