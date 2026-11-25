@@ -2,7 +2,7 @@
 
 Size: L    Tier: 2 (inside an approved design; no core code), one Tier 3 question (6.3)    Assigned to: miso-implementer (6.1 opus, 6.2 and 6.4 sonnet)
 Branch: thj/onboarding-demo
-Status: draft (coordinator, 2026-11-25); runs after M4 (D-691), on THJ's go
+Status: approved (THJ, 2026-11-25, D-695); runs after M4. 6.3 approved (D-694)
 
 ## Why
 
@@ -34,7 +34,7 @@ The M3 mission (`M2 - The Trail`) plays the new `GB_m3-defence` as its only leve
 - [ ] `SistersTally_FadeOut` plays at M3's end, not at the Pile; the Pile file is unchanged otherwise.
 - [ ] `OnboardingMissionGraphTests`, Home tests that read the Trail mission, and the tally tests pass.
 
-**6.3 · Tally credit for mushroom kills (only if THJ says yes)**
+**6.3 · Tally credit for mushroom kills (THJ: yes, D-694)**
 - [ ] When a sister's ability sets off an exploding mushroom, enemies the blast kills count for her (`SistersTallyListener`, a window like the Bloom window; feature-side, not core). Tests for: arrow-set blast kill counts for Linda; ember-set for Lucy; an enemy-set or ownerless blast counts for no one.
 
 **6.4 · Lines**
