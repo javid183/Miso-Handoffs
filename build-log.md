@@ -3015,3 +3015,11 @@ Plan `plans/2026-11-19-faster-loop-process.md`, decisions D-575 to D-579.
 **Not verified:** the final tuned numbers on several monitor sizes.
 **Findings:** the clip frames' shapes don't suit a two-corner layout (the right panel can sit further left than the left one, edges cross the screen); THJ will ask the art team for frames made for it, then the layout gets re-tuned. A new test file was not picked up by Unity's compile list until renamed (stale script list); check test counts after adding a test file.
 **Status:** committed, not pushed. Waiting on new frames from the art team.
+
+## 2026-11-24: M1 "The Ridge" rebuilt: rockfall split, plateau, ambush (`thj/onboarding-demo`)
+
+**Built:** `920ae7b1a` fix(ai): `AIStrategyPlanner.Plan` skips condition types with no intent handler (D-686, core, own commit). `61b88e404` feat(onboarding): 4.1 (THJ's layout + rock unit, rockfall intro, Mark-alone ledge, Catch & Return, plateau, locks, Continuous Attack switch, low-HP bark, potion) and 4.2 (rock Idle controller fixing the `EntityAnimationHandler` IndexOutOfRange, pocket Claws 0.75 / ledge 0.5, ledge also 7,-3, "Reach the clue together", Black Claw + 4 Claws ambush from behind, potion page at the ambush's end, defeat when a sibling falls, ambush gated to the family's turn via `FactionTurnLOCondition` + `OpenTurnWatch`, §12 lines as placeholders). `2f2bb28e2` chore: 17 old 3.1b sequences removed. Menu `Tools/Onboarding/The Ridge: Apply Layout and Wire`.
+**Verified:** full EditMode 2685/2686 (1 Explicit skipped); AI regression 46 (D-687, explained); gate 7 read-backs match `m1-ridge-3a`; reviews: 4.1 APPROVE, 4.2 ESCALATE → THJ decisions D-683 to D-686, core APPROVE, feature FIX → fixed; THJ played it and asked to commit.
+**Not verified:** individual "How to see it" steps weren't reported back one by one; the Catch reaction lines R1/R2 aren't wired (trigger chunk).
+**Findings:** TMP `LiberationSans SDF - Fallback.asset` was re-saved to HEAD by Unity during the build (THJ's local change lost). Unused untracked `M1Ridge_Cleared_PotionPage.asset` left on disk. Handoff merge resolved (D-682).
+**Status:** committed, not pushed. Next: designer/narrative doc updates, glossary for approved lines, then the trigger-component chunk, 3.2 (M2), M3 paper review (Masher placement parked).

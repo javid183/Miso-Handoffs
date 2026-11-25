@@ -84,3 +84,7 @@ Plan `plans/2026-11-11-cyclone-redesign-tech.md`; reports `reports/cyclone-c1a.m
 - Steer = a second ability `Lucy_Ability_Steer` (cooldown 1) swapped into the Cyclone button's slot by `AbilitiesBarHUDUI.CycloneSteer.cs` while her Cyclone is out; Gust = pull only. AI-controlled Lucy refuses Steer (D-540).
 - Setup tools (re-runnable, set values only on create/swap): `Tools/Lucy/Apply Anchored Cyclone Setup`, `Tools/Lucy/Apply Cyclone Steer Setup`.
 - Known: AI regression inner count 43 (new Steer preset in the catalog scan; fix session). Dead Linda-folder Cyclone copies untouched.
+
+## AI planner and level-only objective conditions (2026-11-24, core `920ae7b1a`, scope all)
+
+`AIStrategyPlanner.Plan` plans only from unsatisfied objective conditions whose type has an intent handler (`PlannableConditions`); other types are skipped instead of throwing on the AI worker. This is the extension point for level-only conditions such as `Features/Onboarding/FactionTurnLOCondition` ("it is [faction]'s turn", needs an `OpenTurnWatch` beside the level's `CombatLevel`). `AIRegressionTest`'s `intent.condition-count` counts such types as drift (count 46, D-687); its fix session should list them as known.
