@@ -12,6 +12,8 @@ Owner: coordinator; THJ approves. `claude-handoff/` doesn't change when the shar
 
 ## `thj/onboarding-demo`
 
+**Merged into `main` on 2026-11-26 (`42bcfd32a`, `--no-ff`, D-723); kept for history.** Items scoped to it now count as `all`. Last branch commit `40736dcd1` (M1 4.6), equal to `origin/thj/onboarding-demo`.
+
 - Created 2026-11-22 by the coordinator at THJ's request ("Before you commit anything create a branch. I said main, but now that i think it is safer to create a branch") from `main` @ `551685704`. THJ's working branch. Reverses D-602's "build on `main`" (D-604).
 - **Purpose:** the onboarding demo, the Hearth to the end of M4 (`plans/2026-11-22-onboarding-demo.md`).
 - Combat resource and AP: same as `main`.
@@ -49,6 +51,7 @@ Owner: coordinator; THJ approves. `claude-handoff/` doesn't change when the shar
 
 ## `main`
 
+- **2026-11-26: `thj/onboarding-demo` merged in** (D-723): `main` fast-forwarded from `551685704` to `origin/main` `8588e5eb8` (Khash: Family menu opens on C, pause/main-menu/settings visuals, bonds art), then merge commit `42bcfd32a` (no conflicts). Brings the onboarding demo so far (Phase 1, The Ridge rebuild through 4.6, M3 Hold the yard greybox, M4 The circles / Mithra's Rest / Queen with Toba, River Cleanse lock, duo panel rework, tally blast credit, the core fixes listed in `tech/core-systems.md`). 52 ahead of `origin/main`, not pushed. THJ is on `main`. Uncommitted in the tree (THJ's, leave alone): `LevelM2-C1.prefab`, `PreloadScreen.unity`, `ProjectSettings/EditorSettings.asset` and `ProjectSettings.asset`, untracked `DUO/Inserts/` and `M3Defence_Notch3_HideLastStone.asset`.
 - **2026-11-22: the onboarding demo is built here** (D-602, `plans/2026-11-22-onboarding-demo.md`); risky new tech gets its own branch, asked first.
 - Combat resource: **FTP** since `92853a5a9` (2026-10-16; `GlobalSettings.asset` `pointConsumptionMode: 0`); ATB before that. Duos pay 2 FTP. Family Roles still pay 1 FTP each with no per-round limit; the design (D-036 to D-042) makes them free and limited per round, and that code is built on `main` later, not on `thj/home-test`. Rules as built: GDD [Combat rules](design/gdd/combat-rules.md#family-time-points-ftp) and [Family systems](design/gdd/family-systems.md).
 - AP: PerUnit (`aPConsumptionMode: 1`), escalation `[1,1,2,4]`. Fixed AP is the decision (D-037).
