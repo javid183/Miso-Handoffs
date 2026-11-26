@@ -3079,3 +3079,10 @@ Plan `plans/2026-11-19-faster-loop-process.md`, decisions D-575 to D-579.
 **Not verified:** play-through on `main` (Khash's menu changes against the onboarding flow); AI regression baseline (no AI changes in the merge).
 **Findings:** untracked `M3Defence_Notch3_HideLastStone.asset` is unreferenced (orphan).
 **Status:** merged, not pushed (52 ahead of `origin/main`).
+
+## 2026-11-26 M3 "Hold the yard" round two, chunk 7.1 (main)
+**Built:** new `GB_m3-defence.prefab` from block `m3-defence-3` (old level kept as `GB_m3-defence_v1`); `HoldUnitsUntilSignal.holdFromLevelStart`; `Unit_Barricade` (Unit_Rock variant, 8 HP) ×6; `Unit_Rock_Stone4`; stone in Stranger; Mark held on 4,11 (Unmovable, Unable to Swap, Role off, Duos locked, IgnoreObjective); waves w1/w2/w3 and the Masher; five stages + Mark defeat group; Trail free seats 0; sequences in `Resources/Sequences/M3Yard`. Report `reports/onboarding-m3-round-two.md`.
+**Verified:** compile clean; full EditMode 2882: 2881 passed, 0 failed, 1 Explicit; AI regression by name 52 (was 50, +2 expected unexpected-unit lines); review APPROVE; gate 7 read-back matches the paper block.
+**Not verified:** play-through (THJ's play check pending).
+**Findings:** all enemies are drawn to Mark (defeat group); Masher counter-push can move Mark; Claw 4 / slam 6 damage, two hits per barricade; "Mark has fallen." needs loss-panel plumbing (7.2).
+**Status:** uncommitted in the shared repo, waiting on THJ's play check.

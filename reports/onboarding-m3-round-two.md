@@ -354,3 +354,17 @@ none (`thj/onboarding-demo` is merged into `main`)
 - Asset refs: only the Trail points at the new GUID; the old GUID lives only in `_v1`.
 - LF / no BOM, no private IDs, no core files, commit grouping sound.
 - Carried risks: Masher counter-push has no tag filter (can push Mark); both defeat groups draw enemies to Mark; `WireHold` deletes any other hold in the level (fine now).
+
+## Verification
+
+Verified 2026-11-26 on branch `main`, scope `all`, editor open, Unity MCP. Quiet checks only; no play session, so the M3 play-through is Not run (THJ plays it himself).
+
+- **Result:** PASS (quiet checks)
+- **Compile:** clean. Forced refresh plus compile request; no `error CS` entries in the console. The only warnings are "Serialization depth limit 10 exceeded" (StatBackedValueBase / GTag.subTags composition cycles, 18 entries). None mention `Features/Onboarding`; they are the existing serialization-cycle warnings on core types.
+- **Tests (full EditMode suite, MCP job):** 2882 total, 2881 passed, 0 failed, 1 skipped (the Explicit `AIRegressionTest.Baseline_MatchesCurrentAI`). 486 s. Last known: 2861 passed + 1 Explicit, so +20 tests, all green.
+- **AIRegressionTest.Baseline_MatchesCurrentAI (by name, not fixed or re-baselined):** failed as expected. Report line `CHECKS: 739  FAILURES: 52`, against the last recorded 50. The +2 are `units.unexpected` lines for `Unit_Barricade.prefab` and `Unit_Rock_Stone4.prefab` (the expected ones). I found no other new line type; the remaining failures are the existing set (graph fingerprints, new abilities, units.count / units.missing, units.ability, the final NullReferenceException). The gate does not fail on this.
+- **Acceptance criteria:** compile clean: Pass. Full suite green: Pass. Baseline within expectation: Pass. In-game behaviour of M3: Not run, needs a play session.
+- **Bugs found:** none.
+- **Save reset:** no.
+- **Editor state at the end:** the active scene is untitled (empty name and path), not dirty, 1 root object. Nothing was saved by me. Play mode off.
+- **Editor checks corrections:** the full-suite MCP run took about 486 s for 2882 tests, and `get_test_job` disconnected during domain reloads three times (retrying with `wait_timeout` worked, as the file says). The Explicit test's failure output via `get_test_job include_failed_tests` is about 195 KB and is saved to a file; read it with Python.
