@@ -279,3 +279,18 @@ Proposed commit (after the play check, own commit): `feat(sisters-tally): mushro
 - `Features/Onboarding/SistersTally/SistersTallyListener.cs`
 - `Features/Onboarding/SistersTally/SistersTallyListener.Blast.cs` (+ .meta)
 - `Features/Onboarding/SistersTally/Editor/SistersTallyTests.Blast.cs` (+ .meta)
+
+---
+
+## Review (6.1–6.3) — miso-reviewer, 2026-11-25 (pasted by the coordinator)
+
+**Verdict: FIX.** No core file edited; the planner only reads `IsSatisfied`/`GetType()` and skips the new types; no statics; Trail renames keep GUIDs and bytes; the mission diff is the graph only; level wiring, stages, pick conditions, outro order, River lock and commit split are sound.
+
+Must fix:
+1. `SistersTally/SistersTallyListener.Blast.cs:47-57, 79-92, 94-108`: the window closes only on the mushroom's dispose/destroy, but `MushroomExplosion.prefab` survives its blast (`disposeOnActivation 0`, `lifeTurns 25`; re-arms after 3 ticks), so the window stays open for the level. `unitDied` is synchronous and precedes `onUnitDamageDone`, so `RecordBlastDeath` claims later kills (Lucy's, the pick's, enemy-side) for the window's sister; an enemy-first touch blocks sister credit for the level. Fix: (a) open only when the hazard can blast now (`HazardEntity.CanPerform` and alive); (b) also close at the end of the turn it opened in (`turnEnded`) besides dispose/destroy/level end/new level; (c) ignore deaths while any ability is in progress (`_inProgress.Count > 0`). Tests: mushroom alive after the blast and a later Lucy kill counts for Lucy; a pick kill after a Linda-set blast counts for no one; the window is closed by the next turn.
+
+Should fix:
+1. `MissionWiring.HoldTheYard.cs:216-221`: comments use plan stage labels (S1, S2, S3a–S3c, S4): plain words instead.
+2. `MissionWiring.HoldTheYard.Sequences.cs:135-138, 187-189, 192-198`: remove the first-build migration code (`EarlierLastStoneHideName`, the `earlier` lists, `StepListUpgrading`'s upgrade branch); a plain `BuildSequential` is enough.
+
+Notes: **the pick dying softlocks S2/S3** (only the pick completes them; only defeat is "no Bergson standing"); a dead pick before S2 shows a raw `{pick_0}` → design decision for THJ. Pick-held condition resets on every level load; early-count edge case harmless; the faction-identity check is play-check only. Sandbox: every family member counts as the pick (documented). Stone order tested. Menus guarded, re-run safe. AI 50 accepted (D-701).
