@@ -6,6 +6,11 @@ Rows D-001 to D-011 were carried over on 2026-10-15 from the Home handoff and pr
 
 | Date | ID | Tier | Scope | Decided by | Decision | Why | Affects |
 | --- | --- | --- | --- | --- | --- | --- | --- |
+| 2026-11-26 | D-735 | 2 | all | coordinator | M3 text Q2/Q3: "the wall" stays a spoken word only for a row of barricades; Mark doesn't say a push count (the objective carries it). Narrative's defaults | Text in the established voice; keeps lines independent of the hold-length lever | design/m3-text.md; chunk 7.2 |
+| 2026-11-26 | D-734 | 3 | all | THJ | Toba's first M3 line becomes "You moved the stone. Thank you."; Mark takes the closing "We follow. Stay sharp." | Recommended (John not in M3) | design/m3-text.md; chunk 7.2 |
+| 2026-11-26 | D-733 | 3 | all | THJ | M3 shows the loss rule: objective "Keep Mark standing." and defeat line "Mark has fallen." (two text keys) | Recommended | design/m3-text.md; chunk 7.2; defeat group text |
+| 2026-11-26 | D-732 | 3 | all | THJ | Mark's notch-4 line stays "It's open! Now the big one!" even if the Masher is already dead (rare mismatch accepted; no branch) | Against the recommendation (one line for both) | design/m3-text.md; chunk 7.2 |
+| 2026-11-26 | D-731 | 3 | all | THJ | The M3 wall pieces are called "Barricade" (unit title; glossary row approved) | Recommended | design/m3-text.md; chunk 7.2; `Unit_Barricade` title; glossary.md (narrative) |
 | 2026-11-26 | D-730 | 3 | all | THJ | Go on the M3 round-two build plan (`plans/2026-11-26-m3-redesign-build-tech.md`) in the open editor, with `miso-narrative` drafting the new M3 text in parallel | Recommended; no core code | chunk 7.1 dispatched (opus) |
 | 2026-11-26 | D-729 | 3 | all | THJ | Grid tools: no barricade character yet; the M3 wiring hand-places the six barricades; add one if a second level uses them | Recommended (Q6) | plans/2026-11-26-m3-redesign.md; grid tools |
 | 2026-11-26 | D-728 | 3 | all | THJ | M3 waves as proposed even with two sisters: Claws factor 1.0, w1 3 west at start, w2 2 east turn 2, w3 2 west + 1 east turn 3; Heavenly Sword on 8,10; tune in play | Against the recommendation (designer retune for 2); THJ prefers to play it first (Q5) | plans/2026-11-26-m3-redesign.md; M3 enemy data; reverses D-625's tile 8,6 |
