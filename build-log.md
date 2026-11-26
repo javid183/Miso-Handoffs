@@ -3053,3 +3053,13 @@ Plan `plans/2026-11-19-faster-loop-process.md`, decisions D-575 to D-579.
 **Not verified:** re-running the wiring menu after the sixth Claw (not needed; tests read the wiring's tile list).
 **Findings:** THJ's toggle button saved the ambush pack active in the prefab; set back to inactive (runtime hides them anyway). Wiring loose ends: the east ambush camera path is built from `AmbushClawTiles.Skip(1)` and now includes the west-side (1,1) (only on a re-wire); the bell line still says "Five" for a pack of six. A run of the suite before the fix showed two `M4WhiteMothersTests` failures (the mission's Circles node pointed at a fileID not in `GB_m4-cleanse.prefab`); they passed on the next full run, likely an import-order glitch, watch for it. Left uncommitted: `LevelM2-C1.prefab`, `miso.slnx` (not this work), unused `M1Ridge_Cleared_PotionPage.asset`.
 **Status:** committed, not pushed. Next proposed: 4.6, Linda can't act until Mark reaches the ledge (`Status.Inactive` skip tag).
+
+## 2026-11-25 · M3 "Hold the yard" greybox (thj/onboarding-demo)
+
+**Built** (plan `plans/2026-11-25-onboarding-m3-greybox-tech.md`, report `reports/onboarding-m3-defence.md`; D-688, D-689, D-694, D-695, D-713 to D-720): new `GB_m3-defence` (Masher in the yard, three hidden waves, stone as four rock variants swapped per notch, Heavenly Sword on 8,6, Cleanse and the sisters' Duo locked); feature-side conditions for the squad pick (on a tile, held the tile at family turn starts, fallen); the level is lost when the pick falls (D-718); `M2 - The Trail` plays only M3; the four Trail prefabs renamed `_legacy`; the tally beat moved to M3's end; Cleanse locked in the River.
+
+**Verified:** covering tests and full EditMode 2803/2805 (1 GridToLevel flake passing alone, 1 Explicit); AI regression 50 (D-715); gate 7 read-back matches `m3-defence`; reviews FIX → fixed; re-check FIX on the tally blast credit (fix running). **THJ played M3:** hold too easy, yard too hard; redesign direction D-722 (`playtests/2026-11-25-m3-play-check.md`), not started.
+
+**Commits:** `c0d642766` pick conditions, `e3f6d00c7` M3 level + mission + Trail renames, `335d3b511` River Cleanse lock. `eb0839f55` tally blast credit (after its re-check APPROVE). Not pushed. Play check of the blast credit still owed.
+
+**Status:** greybox committed as played; redesign next session.

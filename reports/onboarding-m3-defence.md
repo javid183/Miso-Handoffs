@@ -327,3 +327,37 @@ Must fix: `SistersTallyListener.Blast.cs:116` (used :57): the `CanPerform` check
 Deviation (b) (second turn end): reasoning sound, but the window spans the whole enemy turn: deaths outside abilities then (the other mushroom set off by an enemy, damage over time, hazard ticks, sequence damage) go to the sister; a blast landing while an enemy ability runs is lost. Low stakes for M3. Should fix (optional): tie the window to the blast's timing (blast delay + margin, injectable clock) or close at the first turn end unless the blast is pending; credit a death only to the window of the mushroom that just blew up.
 
 Pick-falls defeat: no issues (dead units deactivate, not destroy; pick seen at level start; sandbox safe; no statics; planner skips it; template group's meaning unchanged under Any; win checked before defeat). Should-fixes from the first review: done. Notes: the loss panel shows no reason when the pick falls (empty objective text) → a line like "{pick} fell" (6.4 text); re-run `GridToLevelCameraStartTests` before the commit.
+
+## Re-check fixes (tally blast credit), implementer, 2026-11-25
+
+What I chose:
+- **Source of a blast kill:** not identifiable without a core change. The blast is `SpawnableEntity.ApplyEffectIE` → `effect.Apply(owner = hazard, ...)` → `AEffectAttributeModifier` calls `target.AttributeSet.ApplyModifiers(mods, statCtx, ...)`: the owner is dropped there, `RuntimeAAttributeBase` doesn't record a source, the attacker memory takes only `GUnit`s, `unitDied` carries only the unit, and `onAbilityEffectPerformedOn` is raised only when the stat context is a `RuntimeAbility` (a placed hazard has none). So I fell back to timing, tied to each mushroom (D-706). Core options if exact credit is ever wanted: a bus event "effect applied by owner X on target Y" in `AEffectCompound.Apply` for non-ability owners, or a public `HazardEntity` "blast landed" event around `base.Activate` in `ApplyMainEffectAfterDelay`.
+- **Must-fix (window never opened):** `CanPerform` is no longer read at all. The listener subscribes to each mushroom's public `onMainEffectPerformed`, which fires during the damage, before the touch report and before the prefab's own `CanPerform = false`. Mushrooms are found at level start (`FindObjectsByType<HazardEntity>` in play only, injectable as `FindHazards`), and any hazard touched by an ability starts being watched then.
+- **Blast-bound window (D-706):** the main effect opens a pending blast that lands at now + the hazard's own delay (read from its private serialized `mainEffectDelay` by reflection, since `HazardEntity` has no getter; fallback 1.5 s). The first ability that touches the mushroom while that blast is pending decides it: a sister credits her, anything else credits no one; a blast no ability set off (hazard tick, chain, sequence) credits no one. A death counts only from the landing moment (−0.05 s) to `BlastMargin` (0.5 s) after it; if two blasts match, the one that landed last wins. Clock injectable (`Clock`, default `Time.time`, scaled like `WaitForSeconds`).
+- Removed: the turn-end ageing (its call in `OnTurnEnded` deleted) and the "ignore deaths while an ability runs" rule, so a blast landing during an enemy ability still credits. Arrow + blast on one Claw still counts once in both orders through `_killedByPlayer`.
+- Close paths kept: dispose / destroy (also stop watching), level end (blasts cleared), new level and disconnect (blasts cleared and every watch removed). No statics added (only `const`s and static methods); every `AddListener` has its `RemoveListener` in the unwatch delegate.
+
+Files (feature-side only; no core file edited):
+- `Features/Onboarding/SistersTally/SistersTallyListener.Blast.cs` (rewritten, 211 lines, untracked + .meta)
+- `Features/Onboarding/SistersTally/SistersTallyListener.cs` (diff vs HEAD 14+/3-: doc paragraph, `ForgetAllHazards` in `ForgetLevel`, `WatchLevelHazards` in `RecordLevelStart`, `AgeBlasts` call removed)
+- `Features/Onboarding/SistersTally/Editor/SistersTallyTests.Blast.cs` (rewritten, 477 lines, 28 tests, untracked + .meta)
+
+Tests:
+- The fake `IsBlastSource` / `WatchBlastEnd` seams are gone. Every test uses a real `HazardEntity` and the default watch, delay read and decide path; only the clock is the test's. `Blast_TheRealMushroomSetOffByLindasArrowCountsForHer` instantiates `MushroomExplosion.prefab`, finds it through the level start, calls the real `PerformMainEffect()` with the prefab's `CanPerform = false` reaction reproduced (its persistent calls are runtime-only), asserts `CanPerform` is already false when the arrow's report arrives, then lands the blast after the prefab's 1.5 s: counts for Linda (the previous code fails this).
+- Kept/added: later Lucy kill stays Lucy's; pick kill counts for no one; arrow + blast once in both orders and when the blast lands after the arrow ended; enemy-set, ownerless, other player unit and no-ability blasts count for no one; first toucher decides; enemy-set second mushroom landing inside Linda's margin counts for no one; a blast landing during an enemy ability still counts; deaths before the landing don't count; window closed after the landing margin (mushroom stays watched); dispose/destroy/level end/new level/disconnect; Duo and Bloom claims; min health only; each enemy once; a mushroom first seen on a touch is watched for its next blast.
+- `SistersTallyTests*` 112/112. `M3DefenceTests` 34/34. Full EditMode suite 2809 passed, 0 failed, 1 skipped (Explicit AI baseline); `GridToLevelCameraStartTests` passed inside the suite. AIRegressionTest not run (no AI content). No Play session started.
+
+Limits (for the play check):
+- Timing only: an unrelated enemy death in the 0.55 s span around a sister-set blast's landing counts for her (no sister-independent source of such deaths is expected in M3).
+- A mushroom that appears after the level starts is watched from its first touch; that first blast counts for no one.
+- If the first touch report comes after the blast lands (an ability whose touch is reported only at its completion, more than 1.5 s after the hit), the blast counts for no one.
+- The delay is read by reflection: renaming `mainEffectDelay` in `HazardEntity` falls back to 1.5 s silently.
+- Play check unchanged: Linda's bow from 1,4 into the mushroom on 1,1 with a Claw beside it; the tally rises by one when it explodes.
+
+Proposed commit unchanged: `feat(sisters-tally): mushroom blast kills count for the sister who set it off` with `SistersTallyListener.cs`, `SistersTallyListener.Blast.cs` (+ .meta), `Editor/SistersTallyTests.Blast.cs` (+ .meta).
+
+## Re-check 2 (tally blast) — miso-reviewer, 2026-11-25 (pasted by the coordinator)
+
+**Verdict: APPROVE.** Event order checked against the code (the mushroom's `onMainEffectPerformed` opens a pending blast before the touch report picks its owner); deaths land inside the landing window; clock is scaled time like the blast's own wait; arrow+blast counts once; every listener removed on every close path, no double subscribe; no statics, no core edit, no private IDs, LF/no BOM; the real-prefab test would have caught the old bug. Timing limits acceptable for M3. Optional should-fix: a one-time warning if the `mainEffectDelay` reflection lookup fails (`SistersTallyListener.Blast.cs:205-209`); a public getter on `HazardEntity` later needs THJ's OK (core). Play check still owed: Linda's bow from 1,4 into the mushroom on 1,1 with a Claw beside it → tally +1.
+
+**Committed** `eb0839f55` feat(sisters-tally) (not pushed).
