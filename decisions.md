@@ -6,6 +6,7 @@ Rows D-001 to D-011 were carried over on 2026-10-15 from the Home handoff and pr
 
 | Date | ID | Tier | Scope | Decided by | Decision | Why | Affects |
 | --- | --- | --- | --- | --- | --- | --- | --- |
+| 2026-11-26 | D-733 | 2 | all | implementer, coordinator accepted | The shared health-potion page plays through a new non-core step `PlayOncePerSaveSequence` (checks and marks `PlayedSequencesTracker` itself, plays the page in place) instead of a top-level `SequencePlayHandle`: the sequence player holds one sequence, so a handle mid-ambush would cut the running ambush. Same behaviour: once per save across M1 and M2, keyed by `Onboarding_HealthPotion_Page`, pouch hint only with the page | Plan's route breaks the running sequence | round 2 R2 |
 | 2026-11-26 | D-732 | 3 | all | THJ | M2 gets one Health Potion and its tutorial right after the ambush starts; M1 and M2 share one potion page that plays once per save (whichever mission comes first) | THJ's play check note 7; M1 and M2 play in either order | round 2 R2, M1 ambush wiring |
 | 2026-11-26 | D-731 | 3 | all | THJ | M2 rush: Lucy auto-moves to 7,2 (her embers reach John on 9,2); "Sheltered by John" is explained by a page at level start, where she starts next to John; the Fire Embers hint follows her run | THJ chose 7,2 + explain at start over 8,2 | round 2 R2 |
 | 2026-11-26 | D-730 | 3 | all | THJ | M2 horn: a stand-in sound for now (THJ replaces it later) plus a dialogue line "Horn Sounding" | No horn clip in the project | round 2 R2 |
