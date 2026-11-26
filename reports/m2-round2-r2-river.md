@@ -235,3 +235,63 @@ Editor not in Play mode. I did the must-fix and all four should-fixes, and corre
 ### Commits
 
 The split is unchanged. Commit 3 (The River) also takes `MoveGroupUnitSequence.cs` + `.meta` and `MoveGroupUnitSequenceTests.cs` + `.meta`, and its M2River folder now holds 35 assets + 35 `.meta`.
+
+## Round 3 (miso-implementer, 2026-11-26)
+
+THJ played round 2 and asked for four changes. All four are done. No core change. M1, R1's Lucy files and M1's unused potion assets are untouched.
+
+### What changed
+
+1. **The ambush has no wide camera.** `M2River_Ambush_CameraOnCorridors` is out of the ambush code and its step list, so the camera stays on the fight. The asset (new, untracked, unreferenced) is deleted. No other ambush step frames the corridors. `Points.Corridors` is removed.
+2. **The four corridor Archers walk at the same time.**
+   - `Features/Onboarding/MoveGroupUnitSequence.cs` now takes a list of walks (`Walk { memberIndex, destination }`). It starts every walk together and waits until all have ended.
+   - One asset, `M2River_Ambush_CorridorArchersRun` (group `ambush`, members 0–3 to 8,4 · 13,4 · 8,0 · 13,0), replaces `M2River_Ambush_CorridorArcherRuns1` to `4`. Those four (new, untracked, unreferenced) are deleted.
+   - The runner's exit (`M2River_Ambush_RunnerLeavesRun`) is unchanged.
+   - **Shared move effect: checked, no core change needed.**
+     - The Archer's walk effect (`ArcherGoblin_Ability_Walk_Effect_Transport`) keeps per-move state on the shared asset: `IsInProgress`, `_owner`, `_parameters`, `_statCtx`, `_playedMovementAnimation`.
+     - Each walk runs as its own coroutine on its own unit, with its own path. During the walk the shared fields are read only for walkability, which uses the owner's faction (all four are Enemy), and for tile and end-of-move effects. This effect has none: `onTileEffects` 0, `movementEndEffect` 0, `differentEffectsOnEndTile` off.
+     - `IsInProgress` is cleared by the first walk to end, so the step doesn't wait on it. It waits for each unit's own end of move: the bus's `unitEndMoving` for that unit, or the unit dead or off the board. A 15 s cap stops a missed end from holding the sequence.
+     - The class remarks say walks started together are only right for move effects like this one. A test guards the Archer effect's lack of tile and end effects.
+3. **Rush order:** ring reveal → Lucy's run → turn reset → **John: "They were waiting for us!"** (new, `M2River_Rush_Surprised_DialogNodeSequence`) → Shield Up → "Lucy! At me!" / "At you?" → embers pulse → input and HUD on.
+   - The surprised line (click to continue) now sits between the reset and the cast.
+   - The kept rush step list was updated once with a one-off editor call: surprised line inserted after the reset, John's call moved after the shield. The code builds the same order.
+4. **The four corridor Archers' health factor is ×0.75** (`AmbushArcherHealthFactor`). The runner keeps ×0.45.
+
+Code files changed this round: `MoveGroupUnitSequence.cs`, `MissionWiring.River.cs` (health factors and summary), `MissionWiring.River.Sequences.cs` (rush order, new line constant `SurprisedLine`), `MissionWiring.River.Ambush.cs` (no camera, one group walk, factor), `M2RiverTests.cs`, `MoveGroupUnitSequenceTests.cs`. All LF, no BOM.
+
+### Text
+
+New placeholder (untagged, D-348): John, in the rush after the turn reset: "They were waiting for us!"
+
+### Tests
+
+- `M2RiverTests` has 42 tests.
+  - Rush test renamed `TheRushMovesJohnRevealsTheRingRunsLucyResetsTheTurnThenJohnsSurpriseHisShieldAndHisCall`; it checks every step is adjacent.
+  - `ALineStandsBetweenTheResetAndTheShield` replaces the old lines test.
+  - Ambush test: no camera step, one group walk between the two reveals with four walks in member order.
+  - Corridor Archers at ×0.75.
+  - New `TheArchersMoveEffectHasNothingThatReadsTheSharedMover`.
+- `MoveGroupUnitSequenceTests` has 5 tests: the walks list, and the new `WalkOver_OnTheUnitsOwnEndOfMoveDeathOrLeaving_NotOnAnotherUnitsEnd`.
+- The River wiring re-run left a clean console. `TheWiringRerunLeavesTheLevelUnchanged` green.
+- `M2RiverTests`, `MoveGroupUnitSequenceTests`, `OnboardingHealthPotionPageTests`: 53/53.
+- Full EditMode suite: **2947 total: 2946 passed, 0 failed, 1 skipped** (`AIRegressionTest`, Explicit; not run, no AI content or unit prefab changed).
+- M1's diff is still only the ambush step list and the signal line.
+
+The wiring and tests waited until THJ left Play mode; nothing ran while he was playing.
+
+### Commits
+
+The split is unchanged. Commit 3 (The River) still takes `MoveGroupUnitSequence.cs` + `.meta` and `MoveGroupUnitSequenceTests.cs` + `.meta`. Its M2River folder is now **32 assets + 32 `.meta`**: round 3 added `M2River_Ambush_CorridorArchersRun` and `M2River_Rush_Surprised_DialogNodeSequence`, and removed `M2River_Ambush_CameraOnCorridors` and `M2River_Ambush_CorridorArcherRuns1` to `4`.
+
+### What THJ checks in play
+
+1. **Rush:** after the ring appears and Lucy reaches 7,2:
+   - "They were waiting for us!", then John raises Shield Up, then "Lucy! At me!" / "At you?".
+   - When control returns: Shield Up still on John, full AP, the embers pulse.
+2. **Ambush:**
+   - The camera doesn't move.
+   - The runner Archer walks out and fades, then the horn and its caption.
+   - **The four corridor Archers come in and walk at the same time**, each to its stop. Watch that all four arrive, that none freezes mid-walk or in a walk pose, and that control comes back only after the last one stops.
+   - Then the wave, the potion page (if not yet seen on this save), and control back.
+3. **Health:** the corridor Archers die a bit sooner than a full Archer (×0.75).
+4. **Edge case (optional):** stand John or Lucy on a corridor end before the last ring Claw dies. That Archer comes in on a free tile nearby and still walks to its stop; the hero isn't moved.
