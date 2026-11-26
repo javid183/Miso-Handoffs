@@ -257,3 +257,25 @@ none
    - the outro, then the Yard at Home as before.
 9. Play The River: Cleanse is missing from every hero's bar.
 10. Also try: Linda on 1,4 shooting down column 1, across the gap at 1,3, into the mushroom on 1,1. Then Lucy's ember the same way.
+
+## Chunk 6.3 (tally credit for mushroom blast kills)
+
+Built (feature-side; no core file touched; Play not started):
+- `Features/Onboarding/SistersTally/SistersTallyListener.Blast.cs` (new partial): the first ability that touches an alive `HazardEntity` (heard on `onAbilityEffectPerformedOn`) opens a window for that mushroom. A sister owner credits her; an enemy, another player unit or an ownerless ability opens a window crediting no one (first touch wins, so a later sister hit can't take over an enemy-set blast). An enemy that dies (`unitDied`) at minimum health while a credited window is open counts for her, claiming it in `_killedByPlayer`, so a later lethal report from the arrow on the same Claw adds nothing (and the reverse order also counts once). Skipped when a Duo or a Bloom already holds the enemy.
+- Window closing: the hazard's `onDisposeReady` / `onDestroy` (public `SpawnableEntity` events, no core edit), level end, new level (`ForgetLevel`), `Disconnect`. Unwatch delegates remove the listeners from the hazard; no statics added, so no `PlayModeStaticReset` hook needed.
+- `SistersTallyListener.cs`: `partial`, four one-line hooks (touch, death, level end, ForgetLevel) and a doc paragraph.
+- `Editor/SistersTallyTests.Blast.cs`: 16 tests with fake mushroom seams (`IsBlastSource`, `WatchBlastEnd` public properties).
+
+Diff stat: `SistersTallyListener.cs` 11+/2-; two new files (`SistersTallyListener.Blast.cs` ~110 lines, `SistersTallyTests.Blast.cs` ~230 lines, + .meta).
+
+Tests: arrow-set -> Linda, ember-set -> Lucy, enemy-set / ownerless / other player unit -> no one, first-touch wins, arrow + blast on the same Claw counts once (both orders), Duo and Bloom claims respected, min-health only, each enemy once, window closed after the mushroom is gone / level end / new level / disconnect, non-mushroom entity opens nothing. SistersTallyTests 85/85. Full EditMode suite 2778 passed, 0 failed, 1 skipped (the Explicit AI baseline). `M3DefenceTests` and the Bond classes are inside the suite. AIRegressionTest not run (no AI content changed).
+
+Deviations / limits (for the play check):
+- The window is not bounded to the blast's own moment: there is no bus event for the blast, so any enemy that dies at minimum health between the mushroom being touched and its disposal counts for the sister who touched it, including a death from another source in that span (there is no sister ability running then in practice). A sister touching a hazard that never explodes keeps a window open until it is disposed or the level ends.
+- A chain blast (a mushroom's blast setting off a second mushroom) has no touch event: the second one's kills count for whoever's window is open, else no one.
+- Assumes an enemy's `unitDied` fires synchronously on the blast's damage, before the mushroom's dispose. Play check: Linda's bow from 1,4 into the mushroom on 1,1 with a Claw beside it; the tally should rise by one.
+
+Proposed commit (after the play check, own commit): `feat(sisters-tally): mushroom blast kills count for the sister who set it off`
+- `Features/Onboarding/SistersTally/SistersTallyListener.cs`
+- `Features/Onboarding/SistersTally/SistersTallyListener.Blast.cs` (+ .meta)
+- `Features/Onboarding/SistersTally/Editor/SistersTallyTests.Blast.cs` (+ .meta)
