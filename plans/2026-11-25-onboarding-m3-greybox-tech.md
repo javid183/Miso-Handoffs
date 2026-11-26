@@ -31,7 +31,7 @@ The M3 mission (`M2 - The Trail`) plays the new `GB_m3-defence` as its only leve
 **6.2 · Mission and the old Trail**
 - [ ] `M2 - The Trail.asset`'s graph is one node, `GB_m3-defence`. Everything keyed to the mission stays (the Yard as completion sequence, Map Table clue scene, Home state, the tally, station unlocks after M3, Toba's unlock from 5.2).
 - [ ] The four `GB_m2-*` Trail prefabs are renamed with `AssetDatabase.MoveAsset` (suffix `_legacy`, D-621; guids kept) and leave the graph. `SearchWiring.Trail` and `SearchTrailTests` follow the new paths and still pass, but the wiring menu no longer wires a level the mission plays (comment why).
-- [ ] The River level (`MS1 - The River`) gets a Cleanse lock for every hero (D-699), so Cleanse is usable only in M4-1.
+- [ ] The River level (`MS1 - The River`) gets a Cleanse lock for every hero (D-713), so Cleanse is usable only in M4-1.
 - [ ] `SistersTally_FadeOut` plays at M3's end, not at the Pile; the Pile file is unchanged otherwise.
 - [ ] `OnboardingMissionGraphTests`, Home tests that read the Trail mission, and the tally tests pass.
 

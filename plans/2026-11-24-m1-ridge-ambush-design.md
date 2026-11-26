@@ -19,6 +19,81 @@ Inputs: THJ's change requests 2, 4, 5, 6 (`playtests/2026-11-24-m1-redesign-play
 
 Consistency fix: every ambush Dark Claw is **factor 0.6 (10 HP)** (the first draft's section 10 said 0.7).
 
+## Revision 2026-11-25 (THJ played the build, `61b88e404`)
+
+THJ: "The ambushing enemies start way too far." Two more changes from him: the ambush sequence now **ends with a turn reset** (Memory 4's `ResetTurn` call, the lever parked in section 4), so the family always acts first with full AP; and the **ledge goal is 8,3 only** (prefab 7,-2; the 8,2 / prefab 7,-3 extra tile from section 6 is dropped).
+
+This revision **supersedes** section 4's spawn table, its "no hit on the first enemy turn" distances, and the "no turn reset" paragraph. Everything else in section 4 stands (trigger, top zone, `startsAlert`, factors, win condition, potion page, FTP top-up).
+
+**Read-back.** No shell, so `level_to_grid.py` could not run again; the prefab was re-checked by hand: still 48 GridCells with the same names (the cell at prefab 2,3 is now named `GridCell - (2, 3)`), 14 units (Linda, Mark, the rock, the six M1 Claws, the five ambush units). The cells match `m1-ridge-thj-1124`. The coordinator should still confirm with the tool.
+
+**The new rule for the spawn tiles:** from behind (the tops of the two climbs and row 7), never on or beside the top zone, and close enough that most of the pack can strike a sibling standing in the zone on the first enemy turn. The reset turn is then a real choice under threat: strike first, ring the bell or not, regroup, before the pack lands.
+
+| Unit | Block | Prefab | Factor | Where |
+|---|---|---|---|---|
+| **Black Claw** | **2,6** | **1,1** | 0.45 (18 HP) | Top of the west climb |
+| Dark Claw W1 | **3,6** | **2,1** | 0.6 (10 HP) | Beside it, top of the west climb |
+| Dark Claw E1 | **6,7** | **5,2** | 0.6 | Row 7, east end |
+| Dark Claw E2 | **6,6** | **5,1** | 0.6 | Top of the east climb |
+| Dark Claw E3 | **7,6** | **6,1** | 0.6 | One step back down the east climb |
+
+Hidden group `ambush`, `startsAlert` on each, as before. All five tiles are free at the reveal (every earlier enemy is dead; the family is in the zone).
+
+**Distance count** (block coordinates; top zone = 2,10, 3,10, 4,10, 1,9, 2,9, 3,9, 4,9, 5,9; the tiles beside it, off-limits as spawns: 0,9, 6,9, 1,8, 3,8, 4,8, 5,8). Reach: a Dark Claw walks 4 and hits 1 away (5); the Black Claw walks 3 (4).
+
+| Unit | Beside the zone? | Steps to strike a sibling in the zone (usual spots 3,9 and 4,9) | Strikes on enemy turn 1? |
+|---|---|---|---|
+| Black Claw 2,6 | No (neighbours 2,5, 2,7, 3,6) | To 3,8 (beside 3,9): 2,6 → 3,6 → 3,7 → 3,8 = 3 (once W1 has moved); or to 1,8 (beside 1,9): 2,7 → 1,7 → 1,8 = 3 | **Yes** (walk 3) |
+| W1 3,6 | No (neighbours 3,7, 2,6) | To 3,8: 3,7 → 3,8 = 2 | **Yes** |
+| E1 6,7 | No (neighbours 5,7, 6,6) | To 4,8 (beside 4,9): 5,7 → 4,7 → 4,8 = 3; to 5,8: 5,7 → 5,8 = 2 | **Yes** |
+| E2 6,6 | No | To 4,8: 5,6 → 5,7 → 4,7 → 4,8 = 4; to 5,8: 3 | **Yes** |
+| E3 7,6 | No | To 5,8: 6,6 → 5,6 → 5,7 → 5,8 = 4 (strikes a sibling on 5,9); to 4,8: 5 | Only a sibling on 5,9 (or one who stepped down) |
+| Closest any spawn gets to a zone tile | | W1 3,6 → 3,9: 3; E1 6,7 → 5,9: 3; Black Claw 2,6 → 1,9 or 3,9: 4 | |
+
+**The call (radius 5) from the Black Claw on 2,6:** W1 3,6: 1; E2 6,6: 4; E1 6,7: 5; E3 7,6: 5. **All four answer**, counted in four directions as well as eight. Hitting the Black Claw turns the whole pack on the hitter.
+
+**The reset turn, in practice** (Linda 3,9, Mark 4,9, both with full AP):
+- Linda's bow reaches W1 down column 3 (3,9 → 3,6: 3) without ringing the bell, and the Black Claw down column 2 from 2,9 or 2,10 (3 or 4, over the gap 2,8): **ringing it is now a choice she can make at once**.
+- Mark reaches E1: move to 5,8 (4,9 → 5,9 → 5,8: 2 steps), Blitz 6,7 (2 away); a kill chains Continuous Attack onto E2 on 6,6 (1 from 6,7).
+- Or they regroup (side by side for Counter) and let the pack come, with Watch on the Claws stopping in her row and column.
+- In the enemy turn that follows, W1, E1 and E2 can strike, and the Black Claw too. Danger if nothing was killed: up to 3 × 4.5 + 7.5 = 21 spread over the two siblings; on Linda alone only if she rang the bell. Levers if it's too hard: E3 back to 7,5 (block; prefab 6,0), or drop W1.
+
+```grid id=m1-ridge-3b title="M1 · The Ridge, ambush close in (revision 2026-11-25; offset x+1, y+5; origin -1,-5)"
+_ _ . . . _ _ _ _
+. . c . c . c _ _
+. . _ . . . _ _ _
+. . . . . . c _ _
+_ _ b c _ . c c _
+_ _ . _ _ _ _ . .
+_ _ . . . _ c _ .
+_ _ _ _ . . c _ c
+_ _ _ _ . _ _ _ .
+_ _ _ _ . . _ . .
+_ _ _ _ _ . L M _
+--
+cells 6,3 6,4 8,3 enemy hidden: fall
+cells 2,6 3,6 6,7 6,6 7,6 enemy hidden: ambush
+cells 2,10 3,10 4,10 1,9 2,9 3,9 4,9 5,9 note top zone
+arrow 3,6 3,7 3,8 enemy W1
+arrow 6,7 5,7 4,7 4,8 enemy dx=4 E1
+arrow 3,9 3,6 linda dy=-8 reset turn: shoot
+zone 8,3 8,3 mark ledge goal
+note 2,9 plateau Claws (visible, asleep)
+note 6,0 rock (hidden: rock)
+note 3,10 clue
+level name The Ridge
+level tier early
+level origin -1,-5
+level hidden fall 6,3 6,4 8,3
+level hidden ambush 2,6 3,6 6,7 6,6 7,6
+```
+
+![m1-ridge-3b](2026-11-24-m1-ridge-ambush-design/m1-ridge-3b.svg)
+
+Checked in the text (not in a drawing): 11 rows of 9 cells; every unit on a cell of the read-back; the walk arrows are 4-way steps on cells (3,6 → 3,7 → 3,8; 6,7 → 5,7 → 4,7 → 4,8); the bow line runs down column 3 over cells 3,8 and 3,7. The plateau Claws (2,9, 4,9, 6,9) are dead before the ambush; they are drawn because the block shows the whole level.
+
+**Change list (prefab coordinates):** move the five `ambush` units from 1,-1, 2,-1, 7,-1, 7,-3, 7,-4 to **1,1** (Black Claw), **2,1**, **5,2**, **5,1**, **6,1** (Dark Claws); the ambush sequence ends with the `ResetTurn` call; the ledge stage's tiles go back to 7,-2 only.
+
 ## Why
 
 THJ played the rebuilt M1 and liked it. He wants an ending with more bite: once the Claws are beaten and the siblings reach the clue at the top, a fresh pack climbs up behind them, led by a Black Claw with its introduction. The Masher, which M1 no longer uses, goes to M3 in place of M3's Black Claw. The potion page moves to this ambush. Two HP intents change (items 2 and 6).

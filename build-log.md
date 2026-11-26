@@ -3045,3 +3045,11 @@ Plan `plans/2026-11-19-faster-loop-process.md`, decisions D-575 to D-579.
 **Commits:** `8f24d0433` feat(onboarding) The circles; `4ed943758` feat(onboarding) M4 mission, roster, rest, Queen. Not pushed.
 
 **Status:** M4 built except 5.3. Next: Queen trace, then M3 greybox (D-695).
+
+## 2026-11-25: M1 rounds 4.3-4.5 committed; Encore cast, Blitz landing, Footrace bark (`thj/onboarding-demo`)
+
+**Built:** `5d9bbd8ea` CastAbilitySequence: Self casts + AP waiver (`IWaivableApCheck`, Linda's quiver honours it for Encore). `f9ae671ac` core: lethal dash waits up to 0.5 s for a dead/0 HP target to vacate (D-710). `4451ca714` core: Footrace damage listener removed from the right event (D-709). `802aced65` Footrace result bark on Linda's prefab (D-708). `934c8d6b3` M1 4.3+4.4: ledge single tile, turn reset after the ambush, Encore cast in the ambush, Footrace locked until the reunion + hint, pouch hint, defeat relaxed for the last fight, Neutral-Stranger Enemy, THJ's level tweaks incl. a sixth ambush Claw (prefab 1,1, factor 0.6, added to `AmbushClawTiles`), his HiddenLevelUnits toggle. `ae1b091d9` Black Claw damage factor 10 to 6 (THJ).
+**Verified:** full EditMode 2771: 2770 passed, 1 Explicit skipped; AI regression 46 (unchanged); M1 tests 46/46; THJ played 4.3-4.5 and asked to commit (D-711).
+**Not verified:** re-running the wiring menu after the sixth Claw (not needed; tests read the wiring's tile list).
+**Findings:** THJ's toggle button saved the ambush pack active in the prefab; set back to inactive (runtime hides them anyway). Wiring loose ends: the east ambush camera path is built from `AmbushClawTiles.Skip(1)` and now includes the west-side (1,1) (only on a re-wire); the bell line still says "Five" for a pack of six. A run of the suite before the fix showed two `M4WhiteMothersTests` failures (the mission's Circles node pointed at a fileID not in `GB_m4-cleanse.prefab`); they passed on the next full run, likely an import-order glitch, watch for it. Left uncommitted: `LevelM2-C1.prefab`, `miso.slnx` (not this work), unused `M1Ridge_Cleared_PotionPage.asset`.
+**Status:** committed, not pushed. Next proposed: 4.6, Linda can't act until Mark reaches the ledge (`Status.Inactive` skip tag).

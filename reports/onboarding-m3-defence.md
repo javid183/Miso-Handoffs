@@ -293,7 +293,7 @@ Should fix:
 1. `MissionWiring.HoldTheYard.cs:216-221`: comments use plan stage labels (S1, S2, S3a–S3c, S4): plain words instead.
 2. `MissionWiring.HoldTheYard.Sequences.cs:135-138, 187-189, 192-198`: remove the first-build migration code (`EarlierLastStoneHideName`, the `earlier` lists, `StepListUpgrading`'s upgrade branch); a plain `BuildSequential` is enough.
 
-Notes: **the pick dying softlocks S2/S3** (only the pick completes them; only defeat is "no Bergson standing"); a dead pick before S2 shows a raw `{pick_0}` → design decision for THJ. Pick-held condition resets on every level load; early-count edge case harmless; the faction-identity check is play-check only. Sandbox: every family member counts as the pick (documented). Stone order tested. Menus guarded, re-run safe. AI 50 accepted (D-701).
+Notes: **the pick dying softlocks S2/S3** (only the pick completes them; only defeat is "no Bergson standing"); a dead pick before S2 shows a raw `{pick_0}` → design decision for THJ. Pick-held condition resets on every level load; early-count edge case harmless; the faction-identity check is play-check only. Sandbox: every family member counts as the pick (documented). Stone order tested. Menus guarded, re-run safe. AI 50 accepted (D-715).
 
 ## Review fixes (6.1–6.3), implementer
 

@@ -348,3 +348,37 @@ Camera on the clue after the win, then `OutroCutscene`. "Next time, we climb tog
 ### 12.6 What is unchanged
 
 §5.4 to §5.9, §6 (low-HP bark), §9 (Fallen Rock). The Black Claw close-up stays the name only (X-05). Nothing for M3 until its paper level is approved.
+
+---
+
+## 13. Footrace barks (2026-11-25)
+
+THJ: a short bark (floating bubble, one line, not a dialogue panel: "there is already too much dialog happening") when Family Footrace ends, depending on who got there first. The winner speaks; the loser's reply is optional. Each line is 2 to 6 words, sibling teasing, no FP. Status: **proposed, waiting on THJ** (Tier 3).
+
+**Who said "Race you".** As built (`MissionWiring.Ridge.Sequences.cs`, `BuildCleared`) and in §5.5, **Linda** says "Race you to the top." and Mark says "Breathe, sister. Then we climb." The brief for this section had Mark saying it. The lines below are written for the built order (her challenge). If THJ moves "Race you" to Mark, only M-W2's alternative ("You did say race.") needs to change; everything else works either way.
+
+Timing: winner's bubble when the race resolves, the reply about 0.6 s later, non-blocking, the way the hand-back plays. The plateau Claws are still asleep nearby, so the register stays quick and low-key, no shouting.
+
+Avoided on purpose: "Keep up, little brother" (already 2.3 and N7), "Show-off." (Linda's hand-back reply to Lucy), "...I'd have won." (P3), "Side by side" (O2).
+
+| # | Outcome | Speaker | Rec. line | Alternative | Notes |
+|---|---|---|---|---|---|
+| L-W | Linda wins | Linda | Too slow, little brother. | First. As always. | **Rec.:** her usual "little brother" jab, and she's proud of it. Alt: older-sister smugness, says she's won before |
+| L-R | Linda wins (reply, optional) | Mark | You started early. | I let you win. | **Rec.:** dry, and true: she called the race and ran. Alt: the classic little-brother excuse, said deadpan |
+| M-W | Mark wins | Mark | Patience climbs faster. | You did say race. | **Rec.:** a monk's short saying, with a dig at her rushing (beat 2). Alt: turns her own challenge back on her (only works while Linda is the one who says "Race you") |
+| M-R | Mark wins (reply, optional) | Linda | That one didn't count. | Rematch. After the Claws. | **Rec.:** a sore loser who won't admit it, as in P1 to P3. Alt: she wants another go and keeps the fight in mind |
+| T-W | Tie (optional, if the race can end level) | Linda | I was first. | Draw. For now. | Linda speaks first in a tie: she always claims it. **Rec.:** she claims it anyway. Alt: she grudgingly allows a draw, and wants a rematch |
+| T-R | Tie (reply, optional) | Mark | We both were. | Together, then. | **Rec.:** calm, and ends the argument. Alt: a quiet nod to "together", which the clue objective uses next (N1, N2) |
+
+CSV rows, if the barks go in the CSV (`Unit,Weight,PlayOnce,Dialogue,Tag`; the tags are suggestions and need a trigger on the race result, which may not exist yet: an implementer question):
+
+```csv
+Linda,1,TRUE,"[PLACEHOLDER] Too slow, little brother.",Footrace_LindaWins
+Mark,1,TRUE,[PLACEHOLDER] You started early.,Footrace_LindaWins_Reply
+Mark,1,TRUE,[PLACEHOLDER] Patience climbs faster.,Footrace_MarkWins
+Linda,1,TRUE,[PLACEHOLDER] That one didn't count.,Footrace_MarkWins_Reply
+Linda,1,TRUE,[PLACEHOLDER] I was first.,Footrace_Tie
+Mark,1,TRUE,[PLACEHOLDER] We both were.,Footrace_Tie_Reply
+```
+
+`PlayOnce` TRUE, because the Duo can be used more than once in M1 and the same tease twice would wear thin. If THJ wants a bark every time, set it to FALSE and add the alternatives as second rows (Weight 1 each), so the two lines take turns.

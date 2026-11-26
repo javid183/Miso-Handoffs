@@ -478,3 +478,106 @@ All feature-side: they go with the wiring commit. LF, no BOM.
 | `AIRegressionTest.Baseline_MatchesCurrentAI` by name | **46**, the same lines as the previous run (the 45 plus `intent.condition-count`); none new, none gone |
 
 "How to see it" has a new step 15: the last plateau kill with the family's last AP → the ambush at the next family turn start.
+
+## Round 4.3 (miso-implementer, 2026-11-25): built, then blocked: the level prefab was put back to HEAD from outside
+
+**Code (done, compiles, LF/no BOM, no core):**
+- `MissionWiring.Ridge.cs`:
+  - `LedgeTiles` is back to the ledge tile only (prefab 7,-2); the turn fallback is kept.
+  - New `WireResetCall` gives the level a `LevelSpecificBehaviour` with call `reset`: a `CurrentPhaseManipulationAction` in Reset mode, required faction Bergsons. This is Memory 4's pattern; on another faction's turn it does nothing.
+- `MissionWiring.Ridge.Sequences.cs`: `M1Ridge_Ambush_SequentialSequence` ends with the new `M1Ridge_Ambush_ResetTurn` (`LSBExecutionSequence`, call `reset`), after input and the HUD come back. The doc comment is updated.
+- `MissionWiring.Ridge.Layout.Ambush.cs`: the spawn tiles move to prefab 1,1 (Black Claw) and 2,1, 5,2, 5,1, 6,1 (Dark Claws). `EnsureAmbush` now reuses the units the `ambush` group already lists, moving each to its new tile, so no second pack is left behind. Factors and `startsAlert` are unchanged.
+- `MissionWiring.Ridge.Layout.cs`:
+  - The old 5,2 → 5,4 Claw move skips units listed in the ambush group (an ambush Claw now waits on 5,2).
+  - `SetClawHealth` skips the ambush units by identity, not by tile, so the plateau's 0.7 pass can't reach them.
+- `HearthMemoryWiring.Mark.Level.cs`: `CallActions` and `ClaimAction` go from `private` to `internal`, so the Ridge reuses them. No behaviour change.
+- Tests:
+  - `M1RidgeLayoutTests`: block `m1-ridge-3b`; ambush tiles off the top zone and the tiles beside it; new `EachAmbushUnitIsPlacedOnceAndThePlateauClawsKeepTheirHealth`.
+  - `M1RidgeTests`: the ledge tile only; the ambush ends on the reset step; new `TheResetCallStartsOnlyTheFamilysTurnOver`.
+- New asset `Resources/Sequences/M1Ridge/M1Ridge_Ambush_ResetTurn.asset` + `.meta`. The kept step list `M1Ridge_Ambush_SequentialSequence` had the reset step appended once in the editor (the step list is only seeded once, as before).
+
+**What I verified before the prefab changed:**
+- Wiring runs left the level matching **`m1-ridge-3b` exactly** (`level_to_grid.py`): 48 cells, 1 Black Claw, 10 Dark Claws, `level hidden ambush 2,6 3,6 6,7 6,6 7,6`.
+- The prefab diff showed the five ambush units moved (same fileIDs, re-parented, none recreated), the ledge tile count 2 → 1, and the reset call added.
+- A second run was byte-identical (md5).
+- `M1RidgeTests` + `M1RidgeLayoutTests` + `SearchRidgeTests` + `FactionTurnLOConditionTests`: **62/62 passed**.
+
+**Blocked.** At 09:44:24, between that test run and the full suite, `GB_m1-ridge.prefab` was written back to its committed content (`git status` shows it unmodified). It wasn't my tools: nothing of mine was running then, no prefab stage is open now, and the editor reported focus. So the full suite then failed 6 tests, all on the level: the old ambush tiles, the old ledge tiles, no reset call.
+
+The working tree is now **inconsistent**:
+- the sequence assets carry 4.3, including the reset step at the end of the ambush;
+- the level doesn't (no `LevelSpecificBehaviour`).
+
+Playing M1 like this would run the `reset` call on a level with no `LevelSpecificBehaviour` (`LevelSpecificBehaviour.Execute` iterates a list that is null then), most likely a NullReferenceException at the end of the ambush.
+
+**To finish** (I didn't re-run, so as not to overwrite whatever was done in the editor): with THJ's OK, close any open prefab of the level, then run `Tools/Onboarding/The Ridge: Apply Layout and Wire` once. Then rerun the full EditMode suite and the AI regression by name (expect 46). Not run yet: the full suite with 4.3 applied, and the AI regression.
+
+**How to see it** (once the level is re-wired, cleared save, `deactivateIntroOutroSequences` off):
+1. Family turn 1: the ledge stage completes only with Mark on 7,-2 (block 8,3). Ending one short on 7,-3 no longer counts; the round fallback still unlocks Linda.
+2. Ambush: when the pack appears, the Black Claw and a Claw stand at the top of the west climb (block 2,6 and 3,6), and three Claws at the east climb (6,7, 6,6, 7,6).
+3. After the potion page and the camera back on the family, the family's turn starts over: full AP for both, and the Black Claw close-up plays right away. The pack moves only on the enemy turn after it.
+4. If the ambush was reached on an enemy-turn kill, it still waits for the family's turn start (unchanged), then resets.
+
+### Round 4.3: re-applied (THJ: "Re-apply it", 2026-11-25)
+
+- No prefab stage was open and the editor was not in Play mode. I ran `Tools/Onboarding/The Ridge: Apply Layout and Wire` once, at 10:00:44.
+- **Read-back** (`level_to_grid.py`): it matches **`m1-ridge-3b` exactly**. THJ's 48 cells are kept; placed: 1 Black Claw, 10 Dark Claws, Linda, Mark, the rock; `level hidden ambush 2,6 3,6 6,7 6,6 7,6`.
+- **Rock:** `Unit_Rock.prefab` is unchanged against HEAD, with THJ's scale overrides (0.07 and 0.5) kept.
+- **Prefab diff vs HEAD:** `GB_m1-ridge.prefab` +89/−56 (144 lines), only the 4.3 changes:
+  - the five ambush units re-parented to their new cells (same fileIDs, none recreated, no duplicates);
+  - the ledge objective's tile count 2 → 1;
+  - the new `LevelSpecificBehaviour` with call `reset`.
+- **Idempotent:** a second run left the level, the mission and every M1Ridge sequence asset byte-identical (md5).
+- **Not reverted this time:** the level stayed unchanged from the wiring run through the end of all the test runs (checked at 10:01:25 and 10:04:34).
+- **Tests:**
+
+| Run | Result |
+|---|---|
+| `M1RidgeTests` + `M1RidgeLayoutTests` + `SearchRidgeTests` + `FactionTurnLOConditionTests` | 62/62 passed |
+| Full EditMode suite | **2699 total, 2698 passed, 0 failed, 1 skipped** (`AIRegressionTest.Baseline_MatchesCurrentAI`, Explicit) |
+| `AIRegressionTest.Baseline_MatchesCurrentAI` by name | **46**, the same lines as the last run; none new, none gone |
+
+- The NullReferenceException risk from the half-applied state is gone: the level and the sequences agree again.
+- **Files (4.3):**
+  - `GB_m1-ridge.prefab`
+  - `MissionWiring.Ridge.cs`, `MissionWiring.Ridge.Sequences.cs`, `MissionWiring.Ridge.Layout.cs`, `MissionWiring.Ridge.Layout.Ambush.cs`
+  - `HearthMemoryWiring.Mark.Level.cs` (two helpers made internal)
+  - `M1RidgeTests.cs`, `M1RidgeLayoutTests.cs`
+  - `Resources/Sequences/M1Ridge/M1Ridge_Ambush_SequentialSequence.asset`, `M1Ridge_Ambush_CameraOnWestPath.asset`, `M1Ridge_Ambush_CameraOnEastPath.asset`, `M1Ridge_Ambush_CameraOnFamily.asset` (re-framed on the new tiles)
+  - `M1Ridge_Ambush_ResetTurn.asset` + `.meta` (new)
+- **Not mine, not to stage:** `M1Ridge_Cleared_PotionPage.asset` + `.meta` (untracked leftover; delete), `miso.slnx`, `LevelM2-C1.prefab`.
+- Nothing played. "How to see it" for 4.3 is above.
+
+### Round 4.3: Neutral relation fix (THJ's KeyNotFoundException, 2026-11-25)
+
+**Cause** (confirmed): `LevelFactionRelations` only lists a faction's enemies when it has an Enemy relation. The 4.1 build made Enemy and Neutral allies, so Neutral had none: its relations with Bergsons and with Stranger were already Ally. `GetFactionEnemies(Neutral)` then throws `KeyNotFoundException`, which the AI hits when it predicts targets.
+- **Reproduced in edit mode:** I copied the level's relations to a temporary `LevelFactionRelations`, ran `Initialize()`, then `GetFactionEnemies`. Before the fix it threw for Neutral and for Stranger; Enemy and Bergsons were fine.
+
+**Checks first:**
+- No unit in M1 belongs to Stranger: every placed unit is Enemy, Bergsons or the Neutral rock. No unit prefab under `Assets/_Project` is assigned to Stranger, so nothing can spawn as one.
+- No code reads the Neutral–Stranger relation: "Stranger" appears in code only as a nickname string in a Linda hand-back test.
+- Linda's and Mark's targeting, the rock (Bergsons–Neutral and Enemy–Neutral Ally), the objectives and the barks don't involve it.
+
+**Fix** (level data, through the wiring, no core): `MissionWiringRidgeLayout.MakeEnemyAndNeutralAllies` now also sets Neutral–Stranger to Enemy. New constant `StrangerFactionId`; the comment says why.
+- Level diff: one value, `relationEntries.Array.data[5].relationType` 1 → 2.
+- A second run left the level byte-identical.
+- The edit-mode probe now gives Enemy, Bergsons, Neutral and Stranger each a list without throwing. All four lists are empty in edit mode, where no faction has a controller; in play, Neutral's list stays empty because Stranger has no units.
+
+**Test:** `M1RidgeLayoutTests.EveryFactionInTheTurnOrderHasAnEnemyListAndNeutralsIsEmpty`.
+- every faction in M1's turn order gets an enemy list without throwing (from the level's own relations, initialized in edit mode);
+- Neutral's enemies don't include Enemy, and Neutral and Enemy are still allies (the Claws leave the rock alone);
+- no placed unit belongs to Stranger.
+
+**Tests run:**
+
+| Run | Result |
+|---|---|
+| M1/Ridge classes + `FactionTurnLOConditionTests` | 63/63 passed |
+| Full EditMode suite | 2700 total, 2699 passed, 0 failed, 1 skipped (`AIRegressionTest.Baseline_MatchesCurrentAI`, Explicit) |
+| `AIRegressionTest.Baseline_MatchesCurrentAI` by name | 46, the same lines as before |
+
+The level stayed as I left it throughout (checked at 10:42).
+
+**Not verified in Play.** The play check should show no `KeyNotFoundException` at any turn start.
+
+**Files:** `MissionWiring.Ridge.Layout.cs`, `M1RidgeLayoutTests.cs`, `GB_m1-ridge.prefab`.
