@@ -168,6 +168,7 @@ Today the order is different: "Ryker? Come back by the fire", then Margaret's "L
 | M4-06 | A harder Queen: options are +1 AP (the Hungry Moon rule), a Masher-style counter when hit, more enemies in the level, poison pools | Design | Game designer, THJ | Designer compares them against a timed play of today's fight |
 | M4-07 | Her HP is too high for how little threat she poses | Design | Game designer | 320 today; M10's 150 is the reference (D-613) |
 | M4-08 | Narrative during the fight | Narrative tech, Narrative | Claude, Narrative | Lines at her first charge, a stun, low HP; check for an HP trigger |
+| M4-09 | Explosive enemies or traps in the level, so Toba's swap matters more | Design | Game designer | Weighed with M4-05 to M4-07; reuse what exists |
 
 Today's M4 is 7 levels: Toba's duel, two Whitemother levels, the escort, the relic room and the Goblin Queen. Cutting to 3 drops Toba's duel (THJ, Nov 20). Squad: Toba, Linda and Lucy fixed, 1 pick (D-613). This changes today's onboarding roster (Lucy and Linda fixed, Toba excluded) and the Bond Threads plan, where Toba joins only after M4.
 
@@ -194,6 +195,9 @@ Today's M4 is 7 levels: Toba's duel, two Whitemother levels, the escort, the rel
 | X-38 | The item pouch hides items with 0 uses from the start of a level (for example the FP potion) | UI | Claude | ✓ Wider than H-06 (memories only, D-610): every level, per item |
 | X-39 | Anticipation lines at Home: after the Hearth and before the River and the Ridge, hint at where they are and what the family will face; after both, the same for M3 | Narrative tech, Narrative | Claude, Narrative | ✓ In the existing Home sequences (HomeVisits), so the writer can add them in the workbook |
 | X-40 | Khash's new Bonds / Family menu reflects the demo's lock and unlock states | UI | Claude (check with Khash) | ✓ Match the demo cap (sisters to Lv 2, the rest visible and locked) and Toba's gates after M3 (D-696) |
+| X-41 | Cyclone destroyed early (Masher, Queen, anything) gets its cooldown back as if it had run its course | Tech | Claude | Too unforgiving today |
+| X-42 | Health potion can target a chosen ally; a character with 0 AP can't drink one today | Tech | Claude | Default: adjacent ally |
+| X-43 | Bug: playing quickly lets you act twice in a row (auto-move, auto-attack move or attack with the previously selected character) | Tech | Claude | Lock input while an action resolves |
 
 ### Final passes, presentation and open design work
 

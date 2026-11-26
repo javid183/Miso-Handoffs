@@ -92,6 +92,8 @@ Owner: coordinator. Every item has a scope: `all` or a branch. Started 2026-10-1
 
 ## Inbox
 
+- 2026-11-25 `onboarding-demo` four more from THJ (plan 1.11 to 1.13, 3.5e; tweak doc X-41 to X-43, M4-09): Cyclone destroyed early gets its cooldown back; health potion targets an ally; bug, acting twice in a row when playing fast (auto-move, auto-attack); explosive enemies or traps for Toba's swap in M4.
+
 - 2026-11-25 `onboarding-demo` Goblin Queen pass from THJ (thj/onboarding-demo; plan chunks 3.5a to 3.5d, tweak doc M4-04 to M4-08): bug, after Toba's Wall stops her charge she never attacks again and wanders; her charge into the Wall should stop, stun her and break the Wall; harder (options: +1 AP, Masher counter, more enemies, poison pools); less HP; fight narrative.
 
 - 2026-11-25 `onboarding-demo` from THJ (thj/onboarding-demo): X-38 pouch hides 0-use items from level start (chunk 1.10); X-39 Home anticipation lines before the River/Ridge and before M3 (chunk 4.9); X-40 Khash's Bonds / Family menu shows the demo's lock states (chunk 4.10).
