@@ -6,6 +6,7 @@ Rows D-001 to D-011 were carried over on 2026-10-15 from the Home handoff and pr
 
 | Date | ID | Tier | Scope | Decided by | Decision | Why | Affects |
 | --- | --- | --- | --- | --- | --- | --- | --- |
+| 2026-11-26 | D-730 | 3 | all | THJ | Go on the M3 round-two build plan (`plans/2026-11-26-m3-redesign-build-tech.md`) in the open editor, with `miso-narrative` drafting the new M3 text in parallel | Recommended; no core code | chunk 7.1 dispatched (opus) |
 | 2026-11-26 | D-729 | 3 | all | THJ | Grid tools: no barricade character yet; the M3 wiring hand-places the six barricades; add one if a second level uses them | Recommended (Q6) | plans/2026-11-26-m3-redesign.md; grid tools |
 | 2026-11-26 | D-728 | 3 | all | THJ | M3 waves as proposed even with two sisters: Claws factor 1.0, w1 3 west at start, w2 2 east turn 2, w3 2 west + 1 east turn 3; Heavenly Sword on 8,10; tune in play | Against the recommendation (designer retune for 2); THJ prefers to play it first (Q5) | plans/2026-11-26-m3-redesign.md; M3 enemy data; reverses D-625's tile 8,6 |
 | 2026-11-26 | D-727 | 3 | all | THJ | M3 Masher: in play from start, anchor 6,1 east lane, factor 0.6, plow as built (counter step only); no Masher code | Recommended (Q4); reverses D-688's yard spot | plans/2026-11-26-m3-redesign.md; M3 level data |
