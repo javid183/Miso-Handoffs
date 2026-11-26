@@ -16,7 +16,8 @@ Outcome: done (play check pending)
   - :224-248 activation snapshot also stores each enemy's tile; pruned with the HP reading.
   - :288-289 `Activate` stops the watch (fire).
   - :326-450 new `LucySplitFollowUp` class in the same file: `Start(bus, target, owner)` / `Stop()`, listeners on `unitBorn`, `unitDied`, `onFamilyRoleOutcome`, `turnEnded`, `levelStarted`, `levelEnded`; static `Replace` and generic `TryFindParent` (pure, used by case (b)).
-- `miso/Assets/_Project/Features/Player/Lucy/Scripts/Editor/LucyRoleSplitFollowUpTests.cs` (+ `.meta`, Unity-generated): 23 EditMode tests.
+- `miso/Assets/_Project/Features/Player/Lucy/Scripts/Editor/LucyRoleSplitFollowUpTests.cs` (+ `.meta`, Unity-generated): 23 EditMode tests (32 after the review fix round).
+- `miso/Assets/_Project/Features/Player/Lucy/Scripts/Editor/LucyRoleSplitFollowUpHandlerTests.cs` (+ `.meta`), added in the review fix round: 3 tests on a real handler.
 
 No change to `FactionRoleHandlerBase.cs`, `PlayerController.cs`, `DarkWormPassiveAbility.cs` or any other file.
 
@@ -48,6 +49,16 @@ The watch's six listeners are removed by `Stop()`, called on: fire (`Activate`),
 - Lucy/role fixtures (`LucyRole*`, `FactionRole*`): 78/78 pass.
 - Full EditMode suite: 2912 total, 2903 passed, 8 failed, 1 skipped (`AIRegressionTest.Baseline_MatchesCurrentAI`, Explicit, not run). **All 8 failures are `M2RiverTests`** (the uncommitted chunk 3.2 tests vs THJ's tweaked `GB_m2-river.prefab`: ring Archer expected on 11,2 but is on 12,2; `TileOf`/`CellAt` failing on renamed/removed cells). They don't touch Lucy or roles; R2 updates them to THJ's layout. The `GridToLevel` flake did not show.
 - Not covered by EditMode: the handler's own wiring inside `PrepareTargets` (needs SessionLogs, CombatLevel, a grid); the verifier's play check covers it.
+
+## Review fix round
+
+Review verdict APPROVE; the three should-fixes are done. Same files plus one new test file; no other core file touched.
+
+1. **Heir guard** (`LucyFactionRoleHandler.cs:109`): the heir branch now goes through `LucySplitFollowUp.TakesParentsPlace(health != null, hpBefore.HasValue, ...)` (:367), so an existing enemy without health never counts as hurt by standing where an enemy died.
+2. **Watch only when a prompt can follow** (:133, :139-143): `FollowUpOn` sets `Targets` and starts the watch only when `FactionRoleRules.AnyUnsilenced(Targets, SilencedTargets)` holds. The watch now listens to `onFamilyRolePrompt` (:386, :438) and records `PromptOpened` (:346). `RetargetToChild` (:146-150) still swaps the child in, but logs only when this role's prompt opened. The swap stays silent before the prompt, so a split in the camera steps before the prompt is still caught. The remaining linger case (the QTE can't start because another one is active) rewrites idle `Targets` without a log and ends at the turn end or the next check.
+3. **Stop rule and handler test**: the stop rule is now `LucySplitFollowUp.RoleEndedWithoutFollowUp(role, handler, pressed)` (:360), used by the watch (which now takes the role handler in its constructor) and tested directly against a real `LucyFactionRoleHandler`'s `Targets`. New `LucyRoleSplitFollowUpHandlerTests` drives a real handler on a test grid with the family and an enemy faction (`CycloneTestGrid`/`CycloneTestFactions`). It calls the private `Rebind` and `FollowUpOn` by reflection, as the Cyclone tests do. Three tests: a split while the role waits leaves `Targets == [child]`, `KeepLivingTargets() == 1` and the log after the prompt; a silenced target is not watched (`Targets` keeps the dead worm, `KeepLivingTargets() == 0`); a plain kill gives 0. `PrepareTargets` itself is still not driven: it needs SessionLogs with a logged action, ability presets and the role ability's radius. Its heir decision is covered through `TakesParentsPlace` (with health, no reading → takes; no health → never; had a reading → never).
+
+Tests: `LucyRoleSplitFollowUpTests` 32 (was 23: +2 prompt-open, +4 stop rule, +3 heir guard), `LucyRoleSplitFollowUpHandlerTests` 3. Lucy/role fixtures (`LucyRole*`, `FactionRole*`) 90/90 pass. Full EditMode suite: 2941 total, **2940 passed, 0 failed**, 1 skipped (`AIRegressionTest.Baseline_MatchesCurrentAI`, Explicit, not run). The 8 `M2RiverTests` failures from the first run are gone (R2's work). The `GridToLevel` flake did not show.
 
 ## Reviews and checks
 
@@ -82,7 +93,7 @@ none
 
 ## Proposed commits
 
-1. `fix(lucy): her follow-up passes to the Dark Worm child born on the target's tile when it splits`: `miso/Assets/_Project/Features/Player/Lucy/Scripts/LucyFactionRoleHandler.cs`, `miso/Assets/_Project/Features/Player/Lucy/Scripts/Editor/LucyRoleSplitFollowUpTests.cs`, `miso/Assets/_Project/Features/Player/Lucy/Scripts/Editor/LucyRoleSplitFollowUpTests.cs.meta` (core, own commit)
+1. `fix(lucy): her follow-up passes to the Dark Worm child born on the target's tile when it splits`: `miso/Assets/_Project/Features/Player/Lucy/Scripts/LucyFactionRoleHandler.cs`, `miso/Assets/_Project/Features/Player/Lucy/Scripts/Editor/LucyRoleSplitFollowUpTests.cs` (+ `.meta`), `miso/Assets/_Project/Features/Player/Lucy/Scripts/Editor/LucyRoleSplitFollowUpHandlerTests.cs` (+ `.meta`) (core, own commit)
 
 ## Other branches
 
