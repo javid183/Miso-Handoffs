@@ -3071,3 +3071,11 @@ Plan `plans/2026-11-19-faster-loop-process.md`, decisions D-575 to D-579.
 **Not verified:** Linda's barks are muted while held (low-HP line on turn 1 can be lost).
 **Findings:** wiring re-run side effects still open (ambush list order, camera offsets). `GB_m3-defence.prefab` needs restoring.
 **Status:** committed, not pushed.
+
+## 2026-11-26: `thj/onboarding-demo` merged into `main` (`all`)
+
+**Built:** `main` fast-forwarded `551685704` → `origin/main` `8588e5eb8` (Khash's 4 commits: Family menu on C, pause/main-menu/settings visuals, bonds art), then `--no-ff` merge `42bcfd32a` of the branch (51 commits through `40736dcd1`). No conflicts (D-723). THJ is on `main`.
+**Verified:** command line (6000.3.4f1, editor closed): compile clean; full EditMode 2862: 2861 passed, 0 failed, 1 Explicit skipped. The 8 earlier `M1RidgeTests` failures are gone. Report `reports/2026-11-26-merge-onboarding-demo-into-main.md`.
+**Not verified:** play-through on `main` (Khash's menu changes against the onboarding flow); AI regression baseline (no AI changes in the merge).
+**Findings:** untracked `M3Defence_Notch3_HideLastStone.asset` is unreferenced (orphan).
+**Status:** merged, not pushed (52 ahead of `origin/main`).
