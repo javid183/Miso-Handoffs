@@ -1,0 +1,19 @@
+# Code read: holding the M3 pick at runtime (Explore, 2026-11-26)
+
+Written by the coordinator from the Explore agent's report (Explore is read-only). Answers T-P1, T-P3, T-P6 of `plans/2026-11-26-m3-pick-and-opening.md` for D-744. Paths under `miso/Assets/_Project/`.
+
+| # | Item | From Onboarding, no core change? | How / why not |
+| --- | --- | --- | --- |
+| 1 | Family Role trigger off/on per unit | **No** | `FactionRoleHandlerBase` (core): `activationPhase`/`showRoleZone` are protected serialized fields with getters only (lines 37, 40, 61, 64). The only tag gate is the role preset's `activationTagQuery` (empty; Mark's role preset is his primary attack `Mark_Ability_Attack_Primary.asset`, John's `John_Ability_FR_Shield.asset`). `FactionControllerBase.ApplyFactionRolesIfPossible` (139-164) has no Inactive check. `Silence()` useless (`silenceTurnsOnIgnore` 0). Choices: reflection on `activationPhase` (hack), tag query on the presets (global, gates Mark's primary too), or an additive core hook (Tier 3). |
+| 1b | Role zone hidden | Yes | `IRoleZoneVisibility` (public, used by `LindaQuiver`); `RoleZonePresenter` re-reads `HidesRoleZone` every redraw and watches it in `Update`. |
+| 1c | Family Super Time | **No** | `PlayerController.SuperTimeUnits` (line 35, core) = alive units with a handler, no tag filter: a held pick would join. |
+| 2 | Duos | Partly | Nothing excludes a held unit as a partner (`CooperationEntry.Available`, `UnitsCooperationHandler.cs:64-73`; partner presets filter only `Status.Crippled`). `LevelAbilityLock` (`Features/Levels/AbilityLock`, not core) is built in `Awake`, has `Unlock`/`UnlockAll` but no runtime `Lock`; `HiddenFromBar` hides the partner's Duo button when (unit, preset) is locked. Level-start lock = pure data (no Duos with the pick in the opening). Lock at the push = additive `Lock(...)` in `LevelAbilityLock`. |
+| 3a | Pass-by | Yes, already | `UnitsPassByHandler.excludedTags` has `Status.Inactive` on `PlayerController.prefab`. |
+| 3b | Papa's Shelter | Yes (toggle) | `LucyPassiveAbility_PapasShelter` (not core): `enabled=false` cleans up in `OnDisable`; re-enable doesn't refresh (`_set` not reset, line 119): one-line fix in that file. |
+| 3c | Catch & Return | **No (non-core change)** | `ProjectileCatchAndReturn` (not core): no tag gate; disabling doesn't stop `OnTriggerEnter2D`, `CatchSweep` calls `TryCatch` directly, `WouldCatch` ignores `enabled`. Needs a skip-when-held check in that file. |
+| 4 | Unmovable / Unable to Swap at runtime | Yes | Live `TagSet` read by `AEffectBase.CheckApplyConditions`, swapper, vortex pull, Masher plow (`plowPushableTagQuery` none-of Unmovable; counter-push asset only used as `plowPusher` through `TryMoveTo`, so the plow query governs: the 7.1 "counter-push gap" is not real). Unfiltered pushers: Queen charge, Deev shockwave, John taunt push, Mark vault push, Whirl pusher (data fix if they meet a held unit). |
+| 5 | IgnoreObjective at runtime | Yes | `PlayerController.prefab` `objectivesIgnoreTagsQuery`; `LivingUnitsLOCondition` re-checks each evaluation. The pick defeat (`PickFallenLOCondition`) still needed. |
+| 6 | Release AP same turn | Yes | `SwitchTurnIE`: `StartTurn` (held unit gets Closure) → `turnStarted` → `UpdateObjectives` → stage sequence → `Release()` → `ResetToInitial()`; PerUnit AP: full AP. Not auto-selected. |
+| 7 | Holding a runtime unit | New Onboarding component | No step holds/tags a runtime unit. `HoldUnitsUntilSignal.Set` is public but an empty-list `Hold()` sets `Holding` and blocks later holds: add the component at hold time (or keep it disabled), then `Set` + `Hold`. Find the pick via `PickOnTilesLOCondition.IsPick` or `MoveUnitSequence.FindUnitOnCell`. Called through `SignalAction`. |
+
+Not checked: whether enemies still attack an Inactive unit (play check; the 7.1 read said they target Mark).
