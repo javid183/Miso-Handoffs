@@ -7,7 +7,7 @@ Outcome: R2 done. Built, wired on THJ's prefab, tested; the full EditMode suite 
 
 ### What changed
 
-All paths are under `miso/Assets/_Project/`. Every `.cs` file here is CRLF with no BOM, like its neighbours (the 3.2 report called them LF; the working copies are CRLF).
+All paths are under `miso/Assets/_Project/`. Every `.cs` file here is LF with no BOM, like its neighbours (`git ls-files --eol`: `w/lf`, `eol=lf`). An earlier draft said CRLF; that came from a broken shell check.
 
 **Code**
 - `Features/Onboarding/PlayOncePerSaveSequence.cs` (new, runtime, + `.meta`): a step that plays a wrapped sequence only if it's not on the save's played list (`PlayedSequencesTracker`, keyed by the wrapped asset's name), plays it in place, then marks it. No statics. Not core.
@@ -26,7 +26,7 @@ All paths are under `miso/Assets/_Project/`. Every `.cs` file here is CRLF with 
 **Assets**
 - `Content/Levels/Greybox/GB_m2-river.prefab` (edited in place, never rebuilt): THJ's 80 tiles untouched. The five `ring` units and THJ's four corridor Archers are saved inactive. New hidden group `ambush` (the four corridor Archers) and `wave` (new instances: Dark Worm 10,2; Dark Claws 11,3 and 11,1 at ×0.45). The John–Lucy Duo is merged into John's and Lucy's lock entries next to Cleanse. The stage 2 objective lists the four Claws, and the stage plays the ambush on completion. `River Switches` has a `PouchHint` and a second `SignalAction`. Pile pieces: same positions, new sorting orders (the grid's top row is now y 7).
 - `Content/Levels/MS1 - The River.asset`: `initialItemsAvailability` = one `Bergsons_Ability_HealthPotion`.
-- `Resources/Sequences/M2River/`: 18 new assets (+ `.meta`): `M2River_Intro_ShelterPage`, `M2River_Shelter_Panels`, `M2River_Rush_LucyRuns`, `M2River_Ambush_SequentialSequence`, `_Ambush_CameraOnCorridors`, `_Ambush_ArcherRuns`, `_Ambush_ArcherLeaves`, `_Ambush_Horn`, `_Ambush_Shake`, `_Ambush_Horn_DialogNodeSequence`, `_Ambush_RevealArchers`, `_Ambush_ArcherRuns1` to `4`, `_Ambush_RevealWave`. Changed: `M2River_Intro_SequentialSequence` and `M2River_Rush_SequentialSequence` (one step inserted each, see decision 3), and `M2River_Rush_CameraToShallows` (the ring's Archer now on 12,2).
+- `Resources/Sequences/M2River/`: 16 new assets (+ `.meta`): `M2River_Intro_ShelterPage`, `M2River_Shelter_Panels`, `M2River_Rush_LucyRuns`, `M2River_Ambush_SequentialSequence`, `_Ambush_CameraOnCorridors`, `_Ambush_RunnerLeavesRun`, `_Ambush_ArcherLeaves`, `_Ambush_Horn`, `_Ambush_Shake`, `_Ambush_Horn_DialogNodeSequence`, `_Ambush_RevealArchers`, `_Ambush_CorridorArcherRuns1` to `4`, `_Ambush_RevealWave` (names as of the review fix round). Changed: `M2River_Intro_SequentialSequence` and `M2River_Rush_SequentialSequence` (one step inserted each, see decision 3), and `M2River_Rush_CameraToShallows` (the ring's Archer now on 12,2).
 - `Resources/Sequences/Shared.meta` and `Resources/Sequences/Shared/` (new): `Onboarding_HealthPotion_OncePerSave`, `Onboarding_HealthPotion_Page` (the save key), `_PageTutorial`, `_Panels`, `_PouchHint` (+ `.meta` each).
 - `Resources/Sequences/M1Ridge/M1Ridge_Ambush_SequentialSequence.asset` (M1): the potion page and pouch-hint steps replaced by the shared step (3-line diff).
 - `Content/Levels/Greybox/GB_m1-ridge.prefab` (M1): one line, the pouch hint's listener now listens for `Onboarding_PouchHint` (2-line diff).
@@ -106,7 +106,7 @@ Unchanged and reused: the Health Potion page title and text (M1's, word for word
    - With a one-off editor call, I inserted `M2River_Intro_ShelterPage` after the Role page and `M2River_Rush_LucyRuns` after the ring reveal (the code's order). M1's ambush list got the same treatment (page + pouch hint → shared step).
    - Re-running both wirings then logged nothing. A fresh build gets these orders from code.
 4. **Lucy's run uses `MoveUnitSequence` by nickname.** If she already stands on 7,2, or the tile is taken, the move is cancelled with a console warning and she stays. The only realistic blocker is John stuck on 7,2 because Lucy stood on 9,2 (T-13 in the 3.2 report). I added no fallback.
-5. **The ring's Archer is found by nickname, the corridor Archers by tile.** The ring's Archer may have walked during stage 2, so a tile wouldn't find it. When it's dead, the move logs "No unit found named 'Archer Goblin'" and skips. A corridor Archer that came in on another tile (its corridor end taken) is skipped the same way and stays where it came in.
+5. **The ring's Archer is found by nickname, the corridor Archers through the `ambush` group** (corrected in the review fix round; the first version found the corridor Archers by tile, which was wrong). The ring's Archer may have walked during stage 2, so a tile wouldn't find it. When it's dead, the move logs "No unit found named 'Archer Goblin'" and skips.
 6. **The ambush starts with a wide camera** over the shallows and the corridor ends, so the Archer's exit and the corridors are in view. The plan named no camera.
 7. **The corridor Archers keep their own health** (no factor; the plan named none). The runner keeps ×0.45.
 8. **The Pile's anchor moved** from 14,2 to 13,2 (`EastEdgeTile`). The props land on the same world spots.
@@ -124,7 +124,9 @@ None beyond the play check. The coordinator should confirm decision 1.
   - it reordered the `ambush` group's units in `GB_m1-ridge.prefab`.
 
   I restored those three changes from HEAD (file contents only, no git write), so M1's diff is just the shared-page step and the signal line. The drift predates this task (probably the last M1 commit changed code without a re-run, or the assets were hand-tuned). M1's tests pass both ways. Worth a look before M1 is next re-wired.
-- **Corridor congestion:** the four walks are serial, about 4 to 6 s in all. A family unit on a corridor or a stop tile cancels that walk (warning, the Archer stays).
+- **Corridor congestion:** the four walks are serial, about 4 to 6 s in all.
+  - A hero on a corridor end: that Archer comes in on the nearest free tile and still walks to its stop.
+  - A hero on a stop tile, or blocking the only path: that walk is cancelled (warning) and the Archer stays where it came in.
 - **The horn on the ambient source.** If a later system puts a looping ambience on `DefaultAmbient`, the horn would replace it until the next clip. Nothing does today.
 - **Stage 2 can complete on the enemies' turn.** The ambush then plays mid-enemy-turn. Revealed units are alert and can act on the next enemy turn. No turn reset was asked for.
 - **No camera bounds check** for the wide ambush framing (y -3..7) or the Pile (x 15..16): play check.
@@ -165,7 +167,8 @@ R1 first, as in its report. Then:
    - `miso/Assets/_Project/Features/Onboarding/Editor/MissionWiring.RiverCleanseLock.cs`
    - `miso/Assets/_Project/Content/Levels/Greybox/GB_m2-river.prefab` + `.meta`
    - `miso/Assets/_Project/Content/Levels/MS1 - The River.asset`
-   - `miso/Assets/_Project/Resources/Sequences/M2River.meta` and `miso/Assets/_Project/Resources/Sequences/M2River/` (37 assets + 37 `.meta`)
+   - `miso/Assets/_Project/Features/Onboarding/MoveGroupUnitSequence.cs` + `.meta`, `miso/Assets/_Project/Features/Onboarding/Editor/MoveGroupUnitSequenceTests.cs` + `.meta` (review fix round)
+   - `miso/Assets/_Project/Resources/Sequences/M2River.meta` and `miso/Assets/_Project/Resources/Sequences/M2River/` (35 assets + 35 `.meta`)
 
 **Order note:** the brief listed the M1 shared page last. Committed last, the River commit would refer to `OnboardingHealthPotionPage` before it exists and wouldn't build alone, so I put it second. To keep it last, move `PlayOncePerSaveSequence.cs` and `OnboardingHealthPotionPage.cs` (+ the Shared assets) into the River commit, and leave a final commit with only the M1 files (the two Ridge wiring files, `M1RidgeTests.cs`, the M1 ambush asset and `GB_m1-ridge.prefab`).
 
@@ -193,3 +196,42 @@ Before you start: `GlobalSettings` › `deactivateIntroOutroSequences` off. **Cl
 2. **M1 The Ridge, same save (don't clear it):** play to the ambush at the clue. The pack comes, the points top up, and **no potion page or pouch bob** this time; then the sibling-may-fall step, the camera back, Linda's Encore, control back.
 3. **The other order:** clear the save, play M1's ambush first (the page shows there, as before), then M2's ambush (no page).
 4. Watch for: the camera reaching the Pile past x 13, and the wide ambush frame fitting.
+
+## Review fix round (miso-implementer, 2026-11-26)
+
+Editor not in Play mode. I did the must-fix and all four should-fixes, and corrected the report. R1's Lucy files and M1's three unused potion assets are untouched.
+
+### What changed
+
+1. **Must-fix: the corridor runs find their Archer through the `ambush` group.**
+   - New non-core step `Features/Onboarding/MoveGroupUnitSequence.cs` (+ `.meta`, LF). It moves the group's member at a given place in its list, wherever that unit stands now.
+   - A member that's not in play (still hidden, dead or taken off the board) is skipped: no move, and the step never falls back to a tile lookup.
+   - The walk itself is `MoveUnitSequence`'s: it calls that class's public `PickMoveAbility` and `CanReachDestination`. `Core/Levels/Runtime/MoveUnitSequence.cs` is unchanged.
+   - `MissionWiring.River.Ambush.cs`: `BuildMoveByTile` is replaced by `BuildGroupMove`. Run i moves `ambush` member i to `AmbushStopTiles[i]`. The group lists the Archers in start-tile order, and a test checks that member i waits on start tile i.
+   - The comment that was wrong about this is rewritten.
+   - Assets: `M2River_Ambush_CorridorArcherRuns1` to `4` (new). The old `M2River_Ambush_ArcherRuns1` to `4` (untracked, made in this round, referenced by nothing) are removed. The kept ambush step list was updated once to the new steps, as in decision 3.
+   - **The ring Archer's exit move:** checked, and it doesn't have the same issue.
+     - It finds its unit by nickname ("Archer Goblin") among living, active units. When it plays, the corridor Archers are still hidden (inactive), and no hero has that name.
+     - So it can only move the ring's Archer, or nothing if it's dead (warning, skip).
+     - Kept as `MoveUnitSequence`. A test now asserts that John's and Lucy's nicknames differ from the Archer's.
+2. **`PlayOncePerSaveSequence`** now overrides `StartSequence()` and clears `_playingWrapped` before `base.StartSequence()`, like `HideUnitsSequence` does with `_skipFade`.
+3. **Rename:** `M2River_Ambush_ArcherRuns` → `M2River_Ambush_RunnerLeavesRun`, through `AssetDatabase.RenameAsset`. The GUID is kept (checked before and after).
+4. **`M2RiverTests` comments** now say "the tweaked layout" instead of "THJ".
+5. **Report:** the line-ending claim is fixed (LF), and the M2River count is corrected to 16 new assets, 35 in all. Decision 5, the congestion risk and the commit list are updated.
+
+### Tests
+
+- New `Features/Onboarding/Editor/MoveGroupUnitSequenceTests.cs` (+ `.meta`), 4 tests:
+  - `PickMember_AHeroOnTheStartTile_IsNotPicked_TheMemberIsWhereverItCameIn`: a hero on 6,7 with the Archer on 7,7; the step picks the Archer.
+  - `PickMember_AMemberNotInPlay_PicksNothingEvenWithAUnitOnItsStartTile`: the member hidden, then dead.
+  - `PickMember_TakesTheMemberAtItsPlaceInTheList` (with the edge cases).
+  - `Set_KeepsTheIndexAtZeroOrAbove`.
+- `M2RiverTests` ambush test: each run is a `MoveGroupUnitSequence` on `ambush` with member i, stop i, and member i on start tile i. No step in the ambush finds its unit by tile. The runner's step name and the hero nicknames are checked.
+- `The River: Apply Wiring` re-run: clean console. `TheWiringRerunLeavesTheLevelUnchanged` green.
+- `M2RiverTests`, `M1RidgeTests`, `OnboardingHealthPotionPageTests`, `MoveGroupUnitSequenceTests`, `HideUnitsSequenceTests`: 89/89 passed.
+- Full EditMode suite: **2945 total: 2944 passed, 0 failed, 1 skipped** (`AIRegressionTest.Baseline_MatchesCurrentAI`, Explicit; not run, no AI content changed). The total includes R1's tests.
+- After the suite, `git diff` on M1 is still only the ambush step list and the one signal line.
+
+### Commits
+
+The split is unchanged. Commit 3 (The River) also takes `MoveGroupUnitSequence.cs` + `.meta` and `MoveGroupUnitSequenceTests.cs` + `.meta`, and its M2River folder now holds 35 assets + 35 `.meta`.
