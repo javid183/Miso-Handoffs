@@ -24,7 +24,7 @@ Owner: narrative agent. Names and terms as the game uses them, with the code nam
 | Deevoted | Mountain Deev's tentacles; must be destroyed before hitting the boss. Not independent enemies |
 | Dark Claw | Pack enemy |
 | Black Claw | Dark Claw pack leader. Attacking it makes every Dark Claw within 5 cells target the attacker (inverse taunt); never used alone |
-| Archer Goblin, Masher Goblin, Dark Shaman | Regular enemies. Masher Goblin counter-attacks (enemy-side faction role) and is Immovable |
+| Archer Goblin, Masher Goblin, Dark Shaman | Regular enemies. Masher Goblin counter-attacks (enemy-side faction role) and is Immovable. Its first appearance in the demo is M3 (Hold the yard), walking up the east lane; its counter is taught in a line as "every hit brings it a step closer" (`design/m3-text.md` M3.0.1). Its close-up shows the name only |
 | Dark Worm | Minor; splits into halves |
 
 ### Enemy abilities and kin
@@ -92,6 +92,18 @@ Scope all: built on `thj/cyclone`, merged into `main` 2026-11-22 (`049897aae`, D
 | **Howling Gale** | `LucyCycloneWeak` (unlockable and `RU_LucyCycloneWeak`) | Weak for 2 turns on every enemy a Cyclone hit lands on (cast, Steer, end of turn, burst) |
 | ~~Gust~~ (**retired**) | | The old name for the Steer's closing pull. Retired everywhere by THJ (2026-11-17, round 2): a Steer ends in a Whirl. Never write "Gust" |
 | Eye of the Storm (suggestion only) | | Was suggested for the carry rule (now dropped) or round 2 as a whole. A design label for now, with nothing to name since the reset; not on screen unless THJ picks it |
+
+## M3: Hold the yard
+
+Scope all (`main`). Approved by THJ 2026-11-26 with `design/m3-text.md` (D-731 to D-735). Toba, the Rootwell and Ryker first appear here, but their rows stay proposed (`m4-text.md` §6, `m1-ridge-redesign-text.md` §10): no canon is claimed.
+
+| Term (player-facing) | Code name | Meaning |
+| --- | --- | --- |
+| **Hold the yard** | mission asset still `M2 - The Trail`; level prefab `GB_m3-defence-3` | M3's on-screen name |
+| **Barricade** | `Unit_Barricade` (a `Unit_Rock` variant) | M3's breakable barrier unit: Neutral, Unmovable, 8 HP in M3. Goblins can't pass it and attack it; the family walks through it, can't stop on it and can't hurt it; no repair. On screen: unit title "Barricade" and "the barricades". Not "barrier" on screen (D-731). Not chosen: Palisade, Stakes |
+| **the wall** (speech only) | | A row of three barricades across a neck, as the characters say it. A spoken word only, never a term on screen (D-735) |
+| **the stone** | stone units at 4,12 (five variants) | The rock on the cave mouth that **Mark** pushes in M3: one notch at each family turn start for 4 turns, then it rolls away. Written "the stone" in lines; unit title "Stone" (placeholder). Not "Fallen Rock" (that is M1) |
+| the pick (design word, not on screen) | | The free squad seat in the old M3 draft. No longer used in M3 (the squad is Linda and Lucy, fixed); still used in `m4-text.md` if M4 keeps a free seat |
 
 ## Home terms (scope `thj/home-test`; Bond row also `thj/bond-lite`)
 

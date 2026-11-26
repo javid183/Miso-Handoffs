@@ -2,12 +2,13 @@
 
 Owner: miso-narrative. Scope `all` (`main`).
 **Current text: the 2026-11-26 redesign** (plan `plans/2026-11-26-m3-redesign.md` › Text impact, level `m3-defence-3`; build tech plan `plans/2026-11-26-m3-redesign-build-tech.md`, chunk 7.2). THJ's decisions of 2026-11-26: the squad is **Linda and Lucy only**; Mark is placed on the stone, held, not playable, and can be attacked; the level is lost if he falls; the stone moves one notch at each family turn start for 4 turns; six barricades close two necks; the Masher comes up the east lane; the end stays.
-Status: **proposed, waiting on THJ.** Every line in §0 to §6 is Tier 3 until he approves it. Kept as written: **"Still counting?" / "…No."** (D-624).
+Status: **Approved by THJ 2026-11-26 (D-731 to D-735).** Every **Rec.** line in §0 to §6 is approved as written, with the answers folded in: the unit is **Barricade** (D-731); notch 4 has one line and no branch (D-732); the loss rule shows on screen, M3.6.6 and M3.6.7 (D-733); Toba opens with "You moved the stone. Thank you." and Mark closes with "We follow. Stay sharp." (D-734); "the wall" is speech only and Mark gives no push count (D-735). Alternatives stay in the tables as history; paste only the Rec. Kept as written: **"Still counting?" / "…No."** (D-624). Canon (Q7): nothing new is claimed; the M4 §5 questions stay open. §7 is the final line map for the build (chunk 7.2).
 The 2026-11-25 draft (yard opening, John or Mark as the pick, 3 notches) is kept as history under [Superseded](#superseded-2026-11-25-draft-old-level-m3-defence) at the end. Nothing below depends on it.
 
 How to paste (same rules as `m1-ridge-redesign-text.md` and `m4-text.md`):
-- **Dialogue** (`DialogNodeSequence`, `Line(Who.X, Side.Y, "...")`): paste **without** a tag. Dialogue shows `[PLACEHOLDER]` and the onboarding tests forbid it (`conventions.md` › Text). This file is the placeholder list until THJ signs off.
-- **Barks** (CSV rows): keep the `[PLACEHOLDER] ` prefix; the bark system strips it.
+- **Dialogue** (`DialogNodeSequence`, `Line(Who.X, Side.Y, "...")`): paste **without** a tag. Dialogue shows `[PLACEHOLDER]` and the onboarding tests forbid it (`conventions.md` › Text).
+- **Barks** (CSV rows): approved, so the CSV blocks below carry no `[PLACEHOLDER] ` prefix. (The bark system would strip it anyway.)
+- **On-screen text** (§6): approved; paste as written.
 - **Rec.** is the line to paste; alternatives are for THJ, one line on the feel of each.
 - **IDs** (`M3.x.y`) are for the build (7.2) to map lines to sequences; they are design labels and never go into code comments or test names (CLAUDE.md, no private IDs). The **Build slot** column names the sequence or constant the line lands in, as the wiring is today (`MissionWiring.HoldTheYard.Sequences.cs`).
 - **Sides** as built: Linda Left, Lucy Right, Toba Right. Mark: Right (suggested; the builder may swap).
@@ -23,7 +24,7 @@ Voice (as in M1 and M4):
 - **Mark:** calm, clipped, a dry streak. On the stone he is all effort: short lines, no speeches. He is the one person in the level who can't fight, and he says so once.
 - **Toba:** gentle, plain, unhurried; short sentences, no jokes. A stranger being slowly trusted.
 
-Terms (glossary): **Dark Claws**, **Masher Goblin** (the close-up shows the name only, EN-10), **Rootwell**, **Ryker** (she). **the stone** in lines (unit title "Stone", placeholder). **Barricade** for the unit (placeholder, Q1); in speech a row of three is **the wall** (Q2). The D-689 ban on "wall" / "barrier" / "they break" lifts with the barricades: it existed only because they were deferred. "Wounded" and "Bloodied" are not used.
+Terms (glossary): **Dark Claws**, **Masher Goblin** (the close-up shows the name only, EN-10), **Rootwell**, **Ryker** (she). **the stone** in lines (unit title "Stone", placeholder). **Barricade** for the unit (D-731); in speech a row of three is **the wall**, a spoken word only, never an on-screen term (D-735). The D-689 ban on "wall" / "barrier" / "they break" lifts with the barricades: it existed only because they were deferred. "Wounded" and "Bloodied" are not used.
 
 Canon not touched (M4 file's §5 questions stay open): who Ryker is, why Toba hid in the cave, whether he carried or tended her, how he knows her.
 
@@ -37,7 +38,7 @@ Order (plan › Cues): input off → camera over the Masher (its close-up plays 
 |---|---|---|---|---|---|
 | M3.0.1 | Linda | Masher close-up | Every hit brings that one a step closer. | A: "Shoot that one and it comes for you." (blunter; the slam is implied). B, two lines: Lucy "It's slow." / Linda "Hit it, and it isn't." (the sisters' banter carries the rule; one line longer). **Rec.** states the new rule plainly (the UX critic: the old "keep your distance" taught the old rule). Linda says it because her bow is what pulls it | **(changed)** from old 0.1 |
 | M3.0.2 | Mark | Camera on Mark at the stone | A cave behind this stone. I'll shift it. | A: "There's a cave behind this. Give me time." (softer, no job named). **Rec.** keeps the Mark line from the old draft (old 1.1 M), now said at the stone instead of after a yard fight | **(changed)** from old 1.1 M |
-| M3.0.3 | Mark | Same dialog | I can't push and fight. Keep them off me. | A: "Four pushes. Don't let them near." (gives the count in his voice; must change if the hold length lever moves to 3 or 5). B: "Can't fight and push. The yard's yours." (hands the level to the sisters; says less about him being a target). **Rec.** is the one line that tells the player Mark is not theirs to move and that he can be hit | **(new)** |
+| M3.0.3 | Mark | Same dialog | I can't push and fight. Keep them off me. | A: "Four pushes. Don't let them near." (gives the count in his voice; must change if the hold length lever moves to 3 or 5). B: "Can't fight and push. The yard's yours." (hands the level to the sisters; says less about him being a target). **Rec.** is the one line that tells the player Mark is not theirs to move and that he can be hit. No push count: the objective carries it (D-735) | **(new)**, approved |
 | M3.0.4 | Linda | Camera back on the yard | Keep them off him, Lucy! | **(kept)** from old 2.1, now in the opening (w1 is on the board at start). Same text as the built `PushLine` plus Lucy's name | **(changed)** trigger |
 | M3.0.5 | Lucy | Same dialog, optional | And keep count, sister. | A: "Nobody touches Mark." (protective; drops the race). B: "Mine, mostly." (cockier). **Rec.** opens the tally race the HUD is showing; it pays off at "Still counting?" | **(kept)** from old 2.2 |
 
@@ -64,17 +65,14 @@ The stone moves one notch at the start of family turns 2, 3, 4 and 5. Each notch
 | M3.1.1 | Mark | Notch 1 (turn 2 start), before the w2 arrival | It moves. | A: "It's giving." (the old John line, works for Mark too, a little warmer). **Rec.** flat, a fact: Mark's voice | **(kept)** from old 3.3 M |
 | M3.1.2 | Mark | Notch 2 (turn 3 start), before the w3 arrival | Halfway. Hold them. | A: "Halfway. Don't stop." (urges the sisters on). With four notches, notch 2 is the true halfway | **(kept)** from old 3.4 M |
 | M3.1.3 | Mark | Notch 3 (turn 4 start), no wave: the crisis turn | Nearly. Keep them off me. | A: "One more. Don't let them near." B: "Almost. Hold." (shortest). **Rec.** is the second and last time he asks for help; this is the turn breachers are one move from him | **(new)** |
-| M3.1.4 | Mark | Notch 4 (turn 5 start), the stone rolls away; **the Masher is alive** | It's open! Now the big one! | A: "It's open. The big one's at the wall!" (THJ's beat, most vivid; only true if the Masher stands at the east neck, and wrong if it's still in the lane or already in the yard). B: "Open! Mind the big one!" (a warning, not a call to arms). **Rec.** hands over to the threat wherever the Masher is. Then "Finish them." shows | **(new)** |
-| M3.1.4b | Mark | Same, **the Masher is dead** (if the build can branch; else skip) | It's open. Finish them. | Echoes the objective. Only needed if the player killed the Masher in the hold; if the build can't branch, M3.1.4's "Now the big one!" would be wrong in that case, so prefer the neutral A2: "It's open! Finish them!" for both cases | **(new)** |
-
-If the build can't branch on the Masher being alive: use **"It's open! Finish them!"** for M3.1.4 and lose the handover, or keep the Rec. and accept the rare mismatch. THJ's call (Q4).
+| M3.1.4 | Mark | Notch 4 (turn 5 start), the stone rolls away; **always**, whether the Masher is alive or dead | It's open! Now the big one! | A: "It's open. The big one's at the wall!" (THJ's beat, most vivid; only true if the Masher stands at the east neck, and wrong if it's still in the lane or already in the yard). B: "Open! Mind the big one!" (a warning, not a call to arms). **Rec.** hands over to the threat wherever the Masher is. Then "Finish them." shows. **D-732:** the line plays even if the Masher is already dead; THJ accepts the rare mismatch. No branch | **(new)**, approved |
+| ~~M3.1.4b~~ | Mark | ~~Same, the Masher is dead~~ | ~~It's open. Finish them.~~ | **Dropped (D-732):** no branch at notch 4 | dropped |
 
 ```csharp
 Line(Who.Mark, Side.Right, "It moves."),                    // M3.1.1, notch 1
 Line(Who.Mark, Side.Right, "Halfway. Hold them."),          // M3.1.2, notch 2
 Line(Who.Mark, Side.Right, "Nearly. Keep them off me."),    // M3.1.3, notch 3
-Line(Who.Mark, Side.Right, "It's open! Now the big one!"),  // M3.1.4, notch 4, Masher alive
-Line(Who.Mark, Side.Right, "It's open. Finish them."),      // M3.1.4b, notch 4, Masher dead (optional)
+Line(Who.Mark, Side.Right, "It's open! Now the big one!"),  // M3.1.4, notch 4, always
 ```
 
 ---
@@ -106,9 +104,9 @@ These fire on events that may happen in the enemy turn, so a **bark** (non-block
 | M3.3.3 | Mark | Reply to M3.3.2, same event, optional | Still pushing. | A: "I'm fine. Keep going." **Rec.** the dry streak: he's hurt and won't make it a moment | **(new)**, optional |
 
 ```csv
-Linda,1,TRUE,[PLACEHOLDER] A barricade's down! They're coming through!,M3_BarricadeDown
-Lucy,1,TRUE,[PLACEHOLDER] Get away from him!,M3_MarkHit
-Mark,1,TRUE,[PLACEHOLDER] Still pushing.,M3_MarkHitReply
+Linda,1,TRUE,A barricade's down! They're coming through!,M3_BarricadeDown
+Lucy,1,TRUE,Get away from him!,M3_MarkHit
+Mark,1,TRUE,Still pushing.,M3_MarkHitReply
 ```
 
 (Tags are suggestions. If M3.3.1 plays as a dialog instead, paste it without the tag.)
@@ -127,10 +125,10 @@ The old §4 stands as written: the four rows below, max 4, only if cheap. Mushro
 | M3.4.4 | Linda | Tally lead changes to Linda, once | Not for long. | **(kept)** old 4.4 |
 
 ```csv
-Linda,1,TRUE,"[PLACEHOLDER] Mushrooms count, you know.",M3_MushroomBlast
-Lucy,1,TRUE,[PLACEHOLDER] Only if you lit it.,M3_MushroomReply
-Lucy,1,TRUE,[PLACEHOLDER] One ahead.,M3_LeadLucy
-Linda,1,TRUE,[PLACEHOLDER] Not for long.,M3_LeadLinda
+Linda,1,TRUE,"Mushrooms count, you know.",M3_MushroomBlast
+Lucy,1,TRUE,Only if you lit it.,M3_MushroomReply
+Lucy,1,TRUE,One ahead.,M3_LeadLucy
+Linda,1,TRUE,Not for long.,M3_LeadLinda
 ```
 
 ---
@@ -143,13 +141,13 @@ Order as built: "Finish them." complete → input off, HUD off → the tally alo
 |---|---|---|---|---|---|
 | M3.5.1 | Linda | The tally, alone on screen | Still counting? | Written (D-624) | **(kept)** |
 | M3.5.2 | Lucy | Same | …No. | Written (D-624); the single ellipsis character U+2026 | **(kept)** |
-| M3.5.3 | Toba | Revealed at the cave mouth | You moved the stone. Thank you. | **Rec. changed** (was alt B of old 5.3): Mark pushed the stone in front of the player for four turns, so Toba's first words acknowledge it. A: "Please. Don't be afraid." (the old Rec., plainest). Built placeholder "You held them. Good." is replaced | **(changed)** |
+| M3.5.3 | Toba | Revealed at the cave mouth | You moved the stone. Thank you. | **Rec. changed** (was alt B of old 5.3): Mark pushed the stone in front of the player for four turns, so Toba's first words acknowledge it. A: "Please. Don't be afraid." (the old Rec., plainest). Built placeholder "You held them. Good." is replaced. Approved (D-734) | **(changed)**, approved |
 | M3.5.4 | Linda | Same dialog | Who are you? | As old 5.4 | **(kept)** |
 | M3.5.5 | Toba | Same dialog | I am Toba. I know the way to the Rootwell. | As old 5.5. **Canon (the Rootwell)** | **(kept)** |
 | M3.5.6 | Toba | Same dialog | And I know where Ryker is. | As old 5.6. **Canon (Ryker)** | **(kept)** |
 | M3.5.7 | Lucy | Same dialog | Ryker? Where is she? | As old 5.7 | **(kept)** |
 | M3.5.8 | Toba | Same dialog | I will take you. Follow me. | As old 5.8. **Canon (Toba's role)** | **(kept)** |
-| M3.5.9 | Mark | After Toba's last line, before the fade | We follow. Stay sharp. | **Changed:** Mark speaks (he's there; John isn't). A: "Then we follow. Lead on." (the old Mark line; the first family member to accept Toba). B: Linda "Fine. Lead on, and we'll see." (wary-dry). **Rec.** accepts the help, not the man, which keeps Toba "not yet family" (D-048) | **(changed)** |
+| M3.5.9 | Mark | After Toba's last line, before the fade | We follow. Stay sharp. | **Changed:** Mark speaks (he's there; John isn't). A: "Then we follow. Lead on." (the old Mark line; the first family member to accept Toba). B: Linda "Fine. Lead on, and we'll see." (wary-dry). **Rec.** accepts the help, not the man, which keeps Toba "not yet family" (D-048). Approved (D-734) | **(changed)**, approved |
 
 ```csharp
 Line(Who.Linda, Side.Left, "Still counting?"),                          // M3.5.1 (kept)
@@ -178,15 +176,17 @@ Build slots: `HoldObjectives` and `FinishObjective` in `MissionWiring.HoldTheYar
 | M3.6.3 | Objective S3 (turn 3) | Hold them off. 2 turns left. | As above | **(new)** |
 | M3.6.4 | Objective S4 (turn 4) | Hold them off. Last turn. | A: "Hold them off. 1 turn left." (strict pattern). **Rec.** "Last turn." reads as the crisis it is, avoids "1 turns" plural traps, and stays true if the hold length lever changes | **(new)** |
 | M3.6.5 | Objective S5 | Finish them. | Unchanged | **(kept)** |
-| M3.6.6 | Second objective line, S1 to S4 (optional, if objectives take a second line) | Keep Mark standing. | A: "Mark must not fall." (states the loss; colder). The design plan names it a lever; I'd use it, because Mark falling is a new way to lose and nothing on screen says so except his own line (M3.0.3). Needs a text key: THJ's call (Q5) | **(new)**, optional |
-| M3.6.7 | Loss panel, Mark's defeat group (only if the panel takes per-condition text) | Mark has fallen. | A: "Mark fell. The stone stays shut." (adds the cost). **Rec.** plain | **(new)**, optional |
-| M3.6.8 | Unit title of the barricade | Barricade | See Q1 | **(new)**, placeholder |
+| M3.6.6 | **Objective text of Mark's defeat group** (the loss condition "Mark falls"), shown with the hold objectives S1 to S4 | Keep Mark standing. | A: "Mark must not fall." (colder; not chosen). Mark falling is a new way to lose; this says so on screen. **D-733:** shown | **(new)**, approved |
+| M3.6.7 | **Defeat message of Mark's defeat group**, shown when the level is lost because Mark fell | Mark has fallen. | A: "Mark fell. The stone stays shut." (not chosen). **D-733:** shown | **(new)**, approved |
+| M3.6.8 | Unit title of the barricade | Barricade | **D-731** | **(new)**, approved |
 
 Gone: "Clear the yard." (S1 of the old level) and "{Pick}: push the stone." (the pick is out of M3).
 
 ---
 
-## 7. Line map for the build (7.2)
+## 7. Line map for the build (7.2): final
+
+Final for chunk 7.2 (approved 2026-11-26, D-731 to D-735). Paste the Rec. text from §0 to §6 for each ID. Bark rows need a trigger the build can hear; if one isn't cheap, the row is dropped (the build's call, as §3 and §4 say), not reworded.
 
 | Build slot today | Today's placeholder | Becomes |
 |---|---|---|
@@ -198,17 +198,23 @@ Gone: "Clear the yard." (S1 of the old level) and "{Pick}: push the stone." (the
 | Notch2 line (new) | none | M3.1.2 |
 | `Wave3Line` / Notch2 bark | "Both sides now!" (Linda) | M3.2.2 |
 | Notch3 line (was `OpenLine`) | "It's moving... it's open!" (the pick) | M3.1.3 |
-| Notch4 line (new) | none | M3.1.4 (and M3.1.4b if it branches) |
+| Notch4 line (new) | none | M3.1.4, always (no branch, D-732) |
 | Bark events (new) | none | M3.3.1, M3.3.2, M3.3.3 (CSV) |
 | Tally barks | none built | M3.4.1 to M3.4.4 (CSV, only if cheap) |
 | `StillCountingLine`, `NoLine` | as written | M3.5.1, M3.5.2 (unchanged) |
 | `TobaLines` | "You held them. Good." / "I know the way to the Rootwell. And where Ryker is." | M3.5.3, M3.5.5, M3.5.6, M3.5.8 (Toba); M3.5.4, M3.5.7 (sisters) and M3.5.9 (Mark) as separate dialog nodes |
 | `HoldObjectives`, `FinishObjective` | "Hold them off (1/3)" ... / "Finish them." | M3.6.1 to M3.6.4, M3.6.5 |
-| Barricade unit title | "Barricade" | M3.6.8 |
+| Mark's defeat group: objective text (new) | none | M3.6.6 "Keep Mark standing." (D-733) |
+| Mark's defeat group: defeat message (new) | none | M3.6.7 "Mark has fallen." (D-733) |
+| Barricade unit title | "Barricade" | M3.6.8 (D-731) |
 
 ---
 
-## 8. Questions for THJ
+## 8. Questions for THJ (answered 2026-11-26)
+
+Answers: **Q1** Barricade (D-731). **Q2** "the wall" in speech only, never on screen (D-735, coordinator, my default). **Q3** no push count in Mark's line; M3.0.3 Rec. stands (D-735). **Q4** no branch; "It's open! Now the big one!" always, rare mismatch accepted; M3.1.4b dropped (D-732). **Q5** yes, both: M3.6.6 as the defeat group's objective text, M3.6.7 as its defeat message (D-733). **Q6** "You moved the stone. Thank you." approved, with Mark's closing "We follow. Stay sharp." (D-734). **Q7** nothing new claimed; no change, the M4 §5 questions stay open.
+
+The questions as asked:
 
 - **Q1 · The barricade's name.** Options: **Barricade** (rec.: plain, reads at once, matches the rule sentence "goblins can't get past the barricades"); **Palisade** (rustic sharpened stakes, matches the planned sprite; a word some players must look up); **Stakes** (homely, short; reads as a weapon, not a wall). On screen it is only the unit title and M3.3.1.
 - **Q2 · "the wall" in speech.** Characters call a row of three barricades "the wall" (M3.1.4 alt A, and your own "the big one's at the wall"). OK as a spoken word only, never on screen as a term? If not, M3.1.4 Rec. already avoids it.
@@ -218,17 +224,17 @@ Gone: "Clear the yard." (S1 of the old level) and "{Pick}: push the stone." (the
 - **Q6 · Toba's first words.** M3.5.3 changed to "You moved the stone. Thank you." (acknowledges Mark's four turns). Canon-neutral, but it is his first line in the demo.
 - **Q7 (canon, still open from M4 §5):** M3.5.5 to M3.5.8 assert only that Toba knows the way to the Rootwell and where Ryker is, and offers to lead. Nothing on why he hid or how he knows her.
 
-## 9. Glossary proposals (not applied; `glossary.md` is untouched)
+## 9. Glossary rows (applied to `glossary.md` 2026-11-26, section "M3: Hold the yard")
 
-| Term | Proposal | Status |
+| Term | Row | Status |
 | --- | --- | --- |
-| **Barricade** | M3's breakable barrier unit (`Unit_Barricade`, a `Unit_Rock` variant): Neutral, Unmovable, 8 HP in M3; goblins can't pass and attack it; the family walks through, can't stop on it, can't hurt it; no repair. On screen: unit title "Barricade" and "the barricades". Not "barrier" on screen | Proposed (Q1) |
-| **the wall** (speech only) | A row of three barricades across a neck, as the characters say it. Never a term on screen | Proposed (Q2) |
-| **the stone** | Update: the rock on the cave at 4,12 that **Mark** pushes in M3, one notch per family turn for 4 turns, then it rolls away; unit title "Stone" (placeholder); five variants. Not "Fallen Rock" (M1) | Proposed (replaces the 2026-11-25 row: "the pick, three notches") |
-| **Hold the yard** | M3's on-screen name (mission asset still `M2 - The Trail`); level prefab `GB_m3-defence-3` | Proposed (from the 2026-11-25 file) |
-| **the pick** (design word) | No longer used in M3 (squad is Linda and Lucy, fixed). Still used in `m4-text.md` if M4 keeps a free seat | Proposed |
-| **Masher Goblin** | Add: first appearance in the demo is M3, walking up the east lane; its counter "every hit brings it a step closer" | Proposed |
-| **Toba, Rootwell, Ryker** | As already proposed in `m4-text.md` §6 and `m1-ridge-redesign-text.md` §10; M3 is Toba's first appearance and the Rootwell's first mention | Proposed |
+| **Barricade** | M3's breakable barrier unit (`Unit_Barricade`, a `Unit_Rock` variant): Neutral, Unmovable, 8 HP in M3; goblins can't pass and attack it; the family walks through, can't stop on it, can't hurt it; no repair. On screen: unit title "Barricade" and "the barricades". Not "barrier" on screen | Approved (D-731), applied |
+| **the wall** (speech only) | A row of three barricades across a neck, as the characters say it. Never a term on screen | Approved (D-735), applied |
+| **the stone** | The rock on the cave at 4,12 that **Mark** pushes in M3, one notch per family turn for 4 turns, then it rolls away; unit title "Stone" (placeholder); five variants. Not "Fallen Rock" (M1) | Applied (unit title still placeholder) |
+| **Hold the yard** | M3's on-screen name (mission asset still `M2 - The Trail`); level prefab `GB_m3-defence-3` | Applied |
+| **the pick** (design word) | No longer used in M3 (squad is Linda and Lucy, fixed). Still used in `m4-text.md` if M4 keeps a free seat | Applied |
+| **Masher Goblin** | First appearance in the demo is M3, walking up the east lane; its counter "every hit brings it a step closer" | Applied (Enemies row) |
+| **Toba, Rootwell, Ryker** | M3 is Toba's first appearance and the Rootwell's first mention. Their rows stay proposed in `m4-text.md` §6 and `m1-ridge-redesign-text.md` §10 (Q7: no canon change) | Not applied: still proposed |
 
 ---
 ---
