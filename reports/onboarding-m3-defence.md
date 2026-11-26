@@ -317,3 +317,13 @@ Pick-falls defeat (THJ decision, feature-side):
 Tests: full EditMode suite 2803 passed, 1 failed, 1 skipped (Explicit AI baseline). The failure, `GridToLevelCameraStartTests.Build_CameraLinePutsTheViewOnThatTile`, is an engine assertion (`m_LockCount == 0`) in `PrefabUtility.UnloadPrefabContents` during a grid-builder test, unrelated to these files; the whole class passed (17/17) when re-run alone, so it looks like an editor-state flake from the earlier menu runs. No Play run.
 
 Proposed commits: the 6.3 commit now also includes the review fix (unchanged files list). The pick-defeat belongs with the M3 level commit: `Features/Onboarding/PickFallenLOCondition.cs` (+ .meta), `MissionWiring.HoldTheYard.cs`, `M3DefenceTests.cs`, and the level prefab. Sequence/comment cleanups go with their existing commit.
+
+## Re-check (review fixes) — miso-reviewer, 2026-11-25 (pasted by the coordinator)
+
+**Verdict: FIX.**
+
+Must fix: `SistersTallyListener.Blast.cs:116` (used :57): the `CanPerform` check runs after the blast has started (`AEffectCompound.Apply` applies effects, then raises `onAbilityEffectPerformedOn`, `AEffectCompound.cs:161-167`; the mushroom's health decrease → `PerformMainEffect` → `onMainEffectPerformed` sets `CanPerform = false` before the 1.5 s delay), so no window ever opens and blast kills are never credited. Tests replace `IsBlastSource` (`SistersTallyTests.Blast.cs:35`), so they miss it. Fix: drop `CanPerform` (keep alive), or read "can blast" before the damage (e.g. `onMainEffectPerformed`); add a test with the default check on a real `HazardEntity`; update the class doc (:17).
+
+Deviation (b) (second turn end): reasoning sound, but the window spans the whole enemy turn: deaths outside abilities then (the other mushroom set off by an enemy, damage over time, hazard ticks, sequence damage) go to the sister; a blast landing while an enemy ability runs is lost. Low stakes for M3. Should fix (optional): tie the window to the blast's timing (blast delay + margin, injectable clock) or close at the first turn end unless the blast is pending; credit a death only to the window of the mushroom that just blew up.
+
+Pick-falls defeat: no issues (dead units deactivate, not destroy; pick seen at level start; sandbox safe; no statics; planner skips it; template group's meaning unchanged under Any; win checked before defeat). Should-fixes from the first review: done. Notes: the loss panel shows no reason when the pick falls (empty objective text) → a line like "{pick} fell" (6.4 text); re-run `GridToLevelCameraStartTests` before the commit.
