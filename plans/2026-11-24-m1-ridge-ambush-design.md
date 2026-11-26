@@ -2,7 +2,7 @@
 
 Size: M    Tier: 3 (level design)    Assigned to: miso-game-designer
 Branch: `thj/onboarding-demo`
-Status: **approved by THJ (2026-11-24), option A**; Q3 (M3) open with M3's paper level
+Status: **approved by THJ (2026-11-24), option A**; Q3 answered 2026-11-25 (D-688): the Masher goes in M3's yard, folded into the paper doc
 
 Inputs: THJ's change requests 2, 4, 5, 6 (`playtests/2026-11-24-m1-redesign-play-check.md`); the approved redesign (`plans/2026-11-24-m1-ridge-redesign.md`, D-662 to D-667) and its build (`plans/2026-11-24-m1-ridge-build-tech.md`, wiring `Features/Onboarding/Editor/MissionWiring.Ridge*.cs`); the text (`design/m1-ridge-redesign-text.md`); the M3 paper level (block `m3-defence` in `plans/2026-11-22-onboarding-d3-paper-levels.md`); the coordinator's HP investigation (section 6). Items 1 and 3 are not in this plan, except the ledge-tile robustness for item 1 (section 6).
 
@@ -12,7 +12,7 @@ Inputs: THJ's change requests 2, 4, 5, 6 (`playtests/2026-11-24-m1-redesign-play
 |---|---|---|
 | Q1 | **Option A**: keep the plateau sleepers and their fight, then "reach the clue together", then the ambush. THJ fears the walk would take too long and the level become too easy. Option B is **parked**: "if it got too long, we will replace them with one ambush" | Sections 3, 4, 10. B kept in section 3 with what switching takes |
 | Q2 | **Black Claw + 4 Dark Claws** | Fourth spawn on west path 3,4 (prefab 2,-1); distances recounted (section 4); grid `m1-ridge-3a` |
-| Q3 | Not answered (M3's paper level is still unapproved) | Section 11 stays as the recommendation, **parked** |
+| Q3 | **Answered 2026-11-25 (D-688): option (a), the Masher in M3's opening yard** (anchor 3,6, factor 0.45, Claws 7,7 and 5,6; w2 three Claws ×0.8; no Black Claw in M3) | Section 11 is **folded into** `plans/2026-11-22-onboarding-d3-paper-levels.md` (block `m3-defence`, M3 tables) |
 | Q4 | Not asked; the recommendation stands: **no turn fallback** on "reach the clue together" | Section 4 |
 | Q5 | **Raise their HP.** "The order of their movement can decide their positions relative to Linda. Even if the first Catch & Return did not kill, the second one can. Linda is there with 2 APs. Forcing Mark to reach there before Linda can take control will ensure that." | Pocket pair 0.75 (12 HP), ledge Claw 0.5 (8 HP), ledge stage also accepts prefab 7,-3; second catch checked (section 6) |
 | Item 5 | The potion page at the end of the ambush sequence, removed from the pocket-cleared sequence | Section 5 |
@@ -511,9 +511,11 @@ Rows checked against the read-back: every unit stands on a cell of `m1-ridge-thj
 
 ---
 
-## 11. The Masher in M3 (Q3: unanswered, parked with M3's paper level)
+## 11. The Masher in M3 (Q3: answered, option (a), D-688; folded into the paper doc)
 
-**Recommendation (a), parked until THJ reviews M3:** the Masher fits M3 only in the yard, not in a wave. M3's lanes have no 2 × 2 space (west: the mushroom on 1,1 and the gaps on row 3; east: the mushroom on 9,1 and the gaps on row 3; an anchor on 10,0 would reach x 11, off the map), and the necks 2,3 and 8,3 are one tile wide, so a 2 × 2 could never enter the yard. As a wave it would stand stuck in its lane: the thing THJ rejected in M1.
+**Folded in (2026-11-25).** THJ approved (a). The canonical block and tables are now in `plans/2026-11-22-onboarding-d3-paper-levels.md` (block `m3-defence`, M3 section); this section is kept as the reasoning and is not edited further. The "parked" wording below is history.
+
+**Recommendation (a), was parked until THJ reviewed M3:** the Masher fits M3 only in the yard, not in a wave. M3's lanes have no 2 × 2 space (west: the mushroom on 1,1 and the gaps on row 3; east: the mushroom on 9,1 and the gaps on row 3; an anchor on 10,0 would reach x 11, off the map), and the necks 2,3 and 8,3 are one tile wide, so a 2 × 2 could never enter the yard. As a wave it would stand stuck in its lane: the thing THJ rejected in M1.
 
 Change list for block `m3-defence` (M3 block coordinates; M3 isn't approved or built):
 
@@ -588,7 +590,7 @@ Sides as built: Mark Left, Linda Right. Under ~55 characters. Placeholders until
 
 ## 13. Questions for THJ
 
-All answered on 2026-11-24 except Q3; see "THJ's answers" at the top. Q3 (where the Masher goes in M3) waits for THJ's review of M3's paper level, with (a) the yard as the recommendation (section 11).
+All answered; see "THJ's answers" at the top. Q3 (where the Masher goes in M3) was answered 2026-11-25 (D-688): (a), the yard (section 11, folded into the paper doc).
 
 ## Risks
 
@@ -604,13 +606,13 @@ All answered on 2026-11-24 except Q3; see "THJ's answers" at the top. Q3 (where 
 
 ## Gates
 
-Design approved. The coordinator renders and checks four grids (gate 7): `m1-ridge-thj-1124` (also against the tool's read-back), `m1-ridge-3-ambush`, `m1-ridge-3a`, `m3-defence-2` (parked). Then: `miso-narrative` for section 12, a wiring chunk (editor tools and data, no core), review, THJ's play check from a cleared save.
+Design approved. The coordinator renders and checks four grids (gate 7): `m1-ridge-thj-1124` (also against the tool's read-back), `m1-ridge-3-ambush`, `m1-ridge-3a`, `m3-defence-2` (now carried by block `m3-defence` in the paper doc; render that one, D-688). Then: `miso-narrative` for section 12, a wiring chunk (editor tools and data, no core), review, THJ's play check from a cleared save.
 
 ## Docs to update (once built and played)
 
 - GDD `missions-structure.md`: the M1 row (the ambush, the Black Claw, the potion page's place). The M3 row only once Q3 is answered.
 - GDD `enemies.md`: no rule change. EN-10's "first appearance" note can name where each demo enemy is first met (Black Claw: M1), if THJ wants that tracked.
 - `plans/2026-11-24-m1-ridge-redesign.md`: a pointer from beat 9 to this plan (the ambush follows it).
-- `plans/2026-11-22-onboarding-d3-paper-levels.md`: block `m3-defence` → `m3-defence-2` only once Q3 is answered.
+- `plans/2026-11-22-onboarding-d3-paper-levels.md`: block `m3-defence` → `m3-defence-2` (done 2026-11-25, D-688; the id stays `m3-defence`).
 - `design/level-chunks.md`: a combination chunk "the bell at the top" (the Black Claw rung from beside Mark: Watch + Counter).
 - `design/m1-ridge-redesign-text.md`: section 12's lines (owner `miso-narrative`).

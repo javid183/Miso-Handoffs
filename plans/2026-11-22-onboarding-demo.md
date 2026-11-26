@@ -58,6 +58,7 @@ One writer in the Unity project at a time. Design work (paper levels, X-15, X-27
 | 1.7 | X-34 | Mark's avatar draws behind the HUD frame, not in front | 1 | Draw order |
 | 1.8 | X-36 | The selected-unit indicator (`SelectedUnitIndicator`) shows under the hero's feet in every level | 1 (2 if a core file) | Explore which levels fail and why (layer, sort order) first |
 | 1.9 | X-35 | The Whirl at the end of a Steer also hits the enemies the Steer passed through (rule change, D-648, reverses D-583) | 3, decided | Cyclone code and tests; designer updates GDD `lucy.md` LU-4/LU-6; check the damage in play (lever: a lighter graze on the pass) |
+| 1.10 | X-38 | The item pouch hides items with 0 uses from the start of a level (for example the FP potion) | 1 (2 if the HUD code changes) | Wider than H-06's memory-only `hideIfUsed` (D-610): every level, per item |
 
 ### Phase 2: the Hearth (narrative tech; M)
 
@@ -89,6 +90,10 @@ The designer also writes two short notes in the same pass: X-20 (where a Divine 
 | 3.2 | M2 | Same; the rush is a sequence (MoveUnitSequence), the player casts Shield Flare | 2 | |
 | 3.3 | M3, M3-06, M3-07 | Same, plus Toba's appearance and the Home beat after it (the house reacts to Toba, then the Linda–Lucy scene) | 3 for the story beats | Needs 3.0 |
 | 3.4 | M4 | Mission asset with 3 levels; roster Toba fixed + picks; the cleanse fight, the rest level, the boss and the end sequence | 3 (roster and story beat) | Changes C5a's roster and `M4SquadPickTests`; Toba now joins before M4, so the Bond Threads plan's demo section changes too |
+| 3.5a | M4-04 | Bug: after Toba's Wall stops the Queen's charge once, she never attacks again and only walks at random | 2 (fix; `BossGoblinQueen.cs`) | Explore the cause first; a covering test |
+| 3.5b | M4-05 | Her charge into Toba's Wall stops at it, stuns her and destroys the Wall | 3 (rule) | Designer proposes the stun length and what the family gets from it; GDD EN-6 and Toba TO (Wall) follow |
+| 3.5c | M4-06, M4-07 | Harder but shorter: lower HP (320 today; M10's 150 is the reference, D-613) and more threat. Options to compare: +1 AP (the Hungry Moon rule from `thj/home-test`, D-011), a Masher-style counter when hit (`MasherGoblinFactionRoleHandler`), more enemies in `Level3-C1`, poison pools (the Mountain Deev's) | 3 (design), then 2 (values) | `miso-game-designer` with a timed play of today's fight as the baseline |
+| 3.5d | M4-08 | Narrative during the fight: lines at its turning points (her first charge, a stun, low HP) | 2 (narrative tech; text by `miso-narrative`, then the writer) | Check for an HP-threshold sequence trigger; if none, use turns or stages, or ask before adding one |
 
 ### Phase 4: presentation and text
 
@@ -101,6 +106,8 @@ The designer also writes two short notes in the same pass: X-20 (where a Divine 
 | 4.5 | X-08 | Workshop: a quiver item for Linda in place of her ribbon | 2 (name and text by narrative) |
 | 4.7 | — | Narrative workbook in the shared repo: (1) create the empty sequences for new beats (Mary's hand-offs, the Hearth ending, Toba in M3, the house's reaction, M4's end) so the writer can add lines in place; (2) export with the existing **Tools > Dialogues > DialogueExcel** (no new tool); (3) fill its Notes column with the tweak doc's task IDs; (4) check Preview import accepts the file unchanged; (5) a Numbers round-trip check: open the export in Numbers, export back to `.xlsx`, and Preview import must accept it; (6) commit it to `Narrative/` at the shared repo's root and put a copy in THJ's Google Drive (D-655). Which copy the writer edits: the Drive one; the repo keeps each exported and each imported version. THJ may do the export himself before this chunk; then 4.7 covers only what is left. Tutorial pages, names and barks (not covered by the tool) go in a small sheet in the same style; barks can also be edited in their CSVs | 2 (uses the existing tool; shared-repo commit needs THJ's yes) |
 | 4.8 | X-37 | The world-space HP bar over playable units looks slightly different from the enemies' (frame, colour or shape), so they don't mix up when units stand close | 2 (visual values; 3 if it needs a new bar prefab) |
+| 4.9 | X-39 | Anticipation lines at Home: after the Hearth and before the River and the Ridge, the family hints at where they are and what they'll face; after both, the same for M3 | 2 (narrative tech; text by `miso-narrative`, then the writer) | Home sequences in `Resources/Sequences/HomeVisits/` (e.g. `Hearth_WorldMapRule`, the visits after the River and the Ridge); no new container if those sequences can take the lines |
+| 4.10 | X-40 | Khash's new Bonds / Family menu shows the demo's lock and unlock states | 2 (UI); Khash's code, so the coordinator checks with THJ first | Match the demo cap (Bond Threads plan §10) and Toba's gates after M3 (D-696) |
 | 4.6 | X-17 | Tutorial pages: draft screenshots captured in Play (check whether a page can play video) | 2 |
 
 Narrative runs alongside: `miso-narrative` writes each placeholder as its container is built; the narrative designer gets the doc's section 8 list (X-05 enemy names, X-16 ability descriptions in one voice, W-01, W-07, H-10 texts and the final lines).

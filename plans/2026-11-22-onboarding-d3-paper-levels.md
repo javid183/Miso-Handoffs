@@ -2,7 +2,7 @@
 
 Size: L    Tier: 3 (level content, story beats, roster; THJ approves each paper level before it's built)    Assigned to: miso-game-designer
 Branch: `thj/onboarding-demo` (D-604, reverses D-602's "build on `main`"), scope this branch
-Status: **M1 and M2 approved for building (D-631; M1 updated for D-632, D-633); M3 and M4 waiting on THJ's approval** (2026-11-23). Every question is answered: groundwork D-605 to D-608, D-612, D-613; Cleanse D-614; stations D-618; paper-level questions D-619, D-620, D-622 to D-626; build rule D-621 ([Answers](#answers)).
+Status: **M1 and M2 approved for building (D-631; M1 updated for D-632, D-633). M3 and M4 approved by THJ 2026-11-25 (D-688 to D-690): M3 with the Masher in the yard, built greybox first with open necks; M4 as written.** (First written 2026-11-23.) Every question is answered: groundwork D-605 to D-608, D-612, D-613; Cleanse D-614; stations D-618; paper-level questions D-619, D-620, D-622 to D-626; build rule D-621 ([Answers](#answers)).
 
 Parent plan: [`2026-11-22-onboarding-demo.md`](2026-11-22-onboarding-demo.md), Phase 3 (D3). Item source: [`design/demo-tweaks-snapshot.md`](../design/demo-tweaks-snapshot.md) (THJ's snapshot of the tweak doc, 2026-11-23), sections 1, 6 and 7. Worked example and history: [onboarding levels](onboarding/2026-10-26-onboarding-levels.md), [after-Hearth design](onboarding/2026-11-09-onboarding-after-hearth-design.md), [post-Hearth challenge](onboarding/2026-11-11-post-hearth-challenge-design.md), [Trail balance](2026-11-11-trail-balance-design.md).
 
@@ -14,7 +14,7 @@ Phase 3 builds four missions from paper levels (snapshot section 1, rows 7 to 11
 |---|---|---|
 | M1 · Linda & Mark (The Ridge) | Linda, Mark | A Masher Goblin; Catch & Return is the answer to it (M1-01 to M1-03, X-26) |
 | M2 · Lucy & John (The River) | Lucy, John | One level; Shield Flare; Dark Worms; ends on the Pile (M2-01 to M2-06) |
-| M3 · Defence (replaces The Trail) | Linda, Lucy + John or Mark | One level: barriers, enemy waves, exploding mushrooms, a Black Claw; ends with Toba (M3-01 to M3-07) |
+| M3 · Defence (replaces The Trail) | Linda, Lucy + John or Mark | One level: barriers (after the greybox, D-689), enemy waves, exploding mushrooms, the Masher (D-688; the snapshot said a Black Claw); ends with Toba (M3-01 to M3-07) |
 | M4 · 3 levels | Toba (fixed) + picks | An open cleanse fight with a Dark Shaman; a healing room; the boss and saving Ryker (M4-01 to M4-03) |
 
 ## Goal
@@ -28,7 +28,7 @@ Four paper levels that a builder can greybox without asking a design question, e
 - [x] Every distance a ★ relies on is counted on the grid in the text (not yet checked in a drawing: the coordinator renders, gate 7).
 - [x] New to-checks in one table; new tech marked **!**.
 - [x] X-20 and X-19 finalized against the snapshot.
-- [ ] THJ's approval per mission.
+- [x] THJ's approval per mission (M1, M2: D-631; M3, M4: 2026-11-25, D-688 to D-690).
 
 ## Scope
 
@@ -407,27 +407,37 @@ level hidden ring 8,4 10,4 8,2 10,2
 
 ### M3 · Defence: "Hold the yard" (new `GB_m3-defence`, in the `M2 - The Trail` mission asset)
 
-**Decided:** the stone moves by itself while the pusher stands at it (D-608); "Still counting?" plays here (D-607); roster as today: Lucy and Linda fixed, plus 1 pick (D-607). Snapshot M3-02: "the third member (John or Mark) rushes off ... pushes the stone off the cave that hides Toba's camp, for 3 turns to start"; M3-03 barriers (**!**); M3-04 the sisters compete with exploding mushrooms; M3-05 a Black Claw; M3-06 Toba appears and the family goes home.
+**Approved by THJ 2026-11-25 (D-688 to D-690).** The block below is the approved level: the Masher in the opening yard fight and no Black Claw (D-688, from the ambush design's section 11, grid `m3-defence-2`, folded in here under the id `m3-defence`). **Greybox first (D-689):** see the next section.
+
+**Greybox first: open necks, no barriers (D-689).** The first build has the necks 2,3 and 8,3 open and no barriers: no chunk 3.0, no `AIUnitBrain` change. Enemies walk straight into the yard through the necks, along the lanes. THJ plays it, then decides on barriers. Until then:
+
+- **Deferred (kept as written, not built):** the Barriers row, T-7 (barrier damage rules), chunk 3.0 and its New-tech row in section 6, the Risks line on barrier AI, the "breach" sentence in Distances, the barrier clause in the mushroom row, the "Both sisters on one side" clash in Answers (below), and the grid note `cells 2,3 8,3 note barrier (HP): chunk 3.0`.
+- **Still live:** the layout, the waves, the mushrooms, the Masher, the stone and the push, the end, the sword, the tally.
+- **One sentence that drops out for now:** the "they break walls" cue (barriers, Teaches and Cues rows). With open necks there is nothing to teach, and no arrival bark or caption mentions walls.
+- **What the paper claims under open necks** (checked, not changed): distances to the pusher hold; the lane-to-yard walks are 5 to the neck plus 6 to the pusher's side, about 3 enemy turns, so each wave still arrives in a later round. What changes is the hold's pressure: no barrier absorbs about four Claw hits per neck (about 1 turn per wave), so waves land together sooner. Suggested lever if the greybox is too hard: Claws at factor 0.65 in w1 to w3, before any barrier. Also open: with the necks open, "Cyclone on a lane's mouth (2,2 or 8,2)" and the mushroom blast become the only chokepoints, so they carry the hold (that is the thing to watch in the play).
+
+**Decided:** the stone moves by itself while the pusher stands at it (D-608); "Still counting?" plays here (D-607); roster as today: Lucy and Linda fixed, plus 1 pick (D-607). Snapshot M3-02: "the third member (John or Mark) rushes off ... pushes the stone off the cave that hides Toba's camp, for 3 turns to start"; M3-03 barriers (**!**); M3-04 the sisters compete with exploding mushrooms; M3-05 a Black Claw (D-688: the Masher instead; the Black Claw is met in M1's ambush); M3-06 Toba appears and the family goes home.
 
 **Who pushes: whoever is picked**, John or Mark (D-622). No roster change.
 
 ```grid id=m3-defence title="M3 · Defence: hold the yard"
 # # # # # T # # # # #
-# # # c . @ . c # # #
-# # . . . c . . . # #
+# # # O O @ . c # # #
+# # . O O c . . . # #
 # # . . . . . . . # #
 # . . . L . U . . . #
 # # . # # # # # . # #
 c . . # # # # # . . c
 . * # # # # # # # * c
-c c # # # # # # # c b
+c c # # # # # # # c c
 --
-cells 2,3 8,3 note barrier (HP): chunk 3.0
+cells 2,3 8,3 note necks: open in the greybox (D-689); barrier (HP) only if THJ decides after the play, chunk 3.0
 note 5,8 the stone; Toba hidden under it
 note 5,7 push tile
+note 3,6 Masher 3,6 (2 x 2, footprint 3..4 x 6..7)
 note 8,6 Heavenly Sword pickup
 cells 0,0 1,0 enemy hidden: w1
-cells 10,0 9,0 10,1 enemy hidden: w2 (Black Claw 10,0)
+cells 10,0 9,0 10,1 enemy hidden: w2 (three Dark Claws)
 cells 0,2 10,2 enemy hidden: w3
 arrow 1,4 1,1 linda dx=-8 bow into the mushroom
 arrow 9,4 9,1 lucy dx=8 the east mushroom
@@ -441,29 +451,35 @@ level hidden w2 10,0 9,0 10,1
 level hidden w3 0,2 10,2
 ```
 
+![m3-defence](2026-11-22-onboarding-d3-paper-levels/m3-defence.svg)
+
+*(The SVG must be re-rendered from this block: the file on disk is the pre-D-688 drawing.)*
+
 | Item | Plan |
 |---|---|
 | Source | **Big change: a new prefab `GB_m3-defence`** (new layout), dressed like the Trail (H-11's first pass). The four Trail prefabs leave the mission graph and are renamed, not overwritten (D-621); `SearchWiring.Trail` and `SearchTrailTests` either follow the renamed prefabs or are retired with them (coordinator's call). **Mission asset:** keep `M2 - The Trail.asset` and make its graph one node, this level. That keeps everything keyed to it: the Yard as its completion sequence, the Map Table clue scene, its Home state, the tally, and the station unlocks after M3 (D-618: Bookshelf, Training Field, Cooking Cabinet). **If a new mission asset is made instead, the station rows and the Yard gate must move to it** |
-| Teaches | Nothing new as a system: it's the sisters' exam and the first defence. New enemy rules: barriers (one sentence: "they break walls"), the Black Claw (met on the Trail before; now first here) |
+| Teaches | Nothing new as a system: it's the sisters' exam and the first defence. **The Masher: never stand next to it** (its first appearance in the demo; it is not in M1 any more). Barriers ("they break walls") are deferred until THJ decides after the greybox (D-689); the Black Claw is not in M3 (met in M1's ambush) |
 | Twist | The third member leaves the sisters to it; they compete for kills (M3-04) until the end, where they stop |
 | Squad | Linda 4,4, Lucy 6,4, the pick on the deploy slot 5,4 (John or Mark). Linda–Lucy Duo locked (D-470). No Cleanse |
-| Cells | The yard x 2..8, y 4..6, plus 1,4 and 9,4 (the bulges), y 7 x 3..7 with the push tile **5,7**, the stone's cell 5,8. Two necks 2,3 and 8,3 (the barriers). Lanes: west 0,0, 1,0, 0,1, 0,2, 1,2, 2,2; east mirrored (10,0, 9,0, 10,1, 10,2, 9,2, 8,2). Mushrooms on 1,1 and 9,1 (cells, they block walking) |
-| Enemies | **Opening** (alert, in the yard): Dark Claws 3,7, 7,7, 5,6, factor 0.8 (≈ 13). **Waves**, hidden groups in the lanes: **w1** west, Claws 0,0, 1,0; **w2** east, Black Claw 10,0 ×0.5 (≈ 20) + Claws 9,0, 10,1; **w3** one Claw each side, 0,2 and 10,2. Claws ×0.8. No pools: pools are the cleansable circles Cleanse answers in M4 (D-614), and the player can't cleanse here |
-| Barriers (**!**, chunk 3.0) | On 2,3 and 8,3: an object with HP that blocks walking; an enemy whose way is blocked attacks it (M3-03). Start value 20 HP (about four Claw hits at Early, 4.5 each). The only way into the yard is through them. Rules the paper assumes and 3.0 must settle: enemies target it only when blocked; family attacks don't hurt it (Linda's pierce, the mushroom's blast: T-7) |
-| The mushrooms (M3-04) | 1,1's blast covers 0,0, 1,0, 0,1, 0,2, 1,2, 2,2 (the west lane's mouth), not the barrier on 2,3 (2 away). Linda on the bulge **1,4** fires down column 1: across the gap 1,3, through a Claw on 1,2, into the mushroom on 1,1 (3 away, inside her 4), on to 1,0. Lucy on 1,4 reaches it with an ember (3). Mirror on the east (9,4 → 9,1). 7 to everything in the lane mouth + a bow hit (6) = 13, a kill: that's the tally race. Who gets credit for a blast kill: T-8. **Crossing the gap at 1,3 / 9,3 is not verified in code (T-15).** Fallback: make 1,3 and 9,3 present cells that block walking (a permanent untargetable blocker entity), never plain walkable cells, which would open a way into the yard around the barrier |
-| Stages | **S1** "Clear the yard." (the opening three dead). → sequence: the pick: "There's a cave behind that stone." (placeholder) + camera on the stone. **S2** "*{Pick}*: push the stone." = a Bergson on 5,7 (T-9: the deploy slot's unit as the condition, else any Bergson) → reveal w1, line "Keep them off him!". **S3a, S3b, S3c** "Hold them off (1/3)", "(2/3)", "(3/3)": each = **the pusher on 5,7 (Reevaluate) and 1 turn passed since the stage began** → on complete: the stone shifts one notch (a prop swap or a short move, T-10), reveal the next wave (w2 after S3a, w3 after S3b). After S3c: the stone rolls away (sequence). **S4** "Finish them." (defeat all) |
+| Cells | The yard x 2..8, y 4..6, plus 1,4 and 9,4 (the bulges), y 7 x 3..7 with the push tile **5,7**, the stone's cell 5,8. Two necks 2,3 and 8,3 (open in the greybox, D-689; barriers only if decided later). The Masher's 2 × 2 fits only in the yard (the lanes and necks are one tile wide). Lanes: west 0,0, 1,0, 0,1, 0,2, 1,2, 2,2; east mirrored (10,0, 9,0, 10,1, 10,2, 9,2, 8,2). Mushrooms on 1,1 and 9,1 (cells, they block walking) |
+| Enemies | **Opening** (alert, in the yard; D-688): **the Masher, anchor 3,6** (2 × 2, footprint 3..4 × 6..7, all cells exist), factor 0.45 (36 HP at Early), + Dark Claws 7,7 and 5,6, factor 0.8 (≈ 13 each). **Waves**, hidden groups in the lanes: **w1** west, Claws 0,0, 1,0; **w2** east, **three Dark Claws 10,0, 9,0, 10,1** (×0.8; no Black Claw in M3); **w3** one Claw each side, 0,2 and 10,2. Claws ×0.8. Cost of the Masher: the opening is harder (36 HP plus two Claws); lever: factor 0.35. No pools: pools are the cleansable circles Cleanse answers in M4 (D-614), and the player can't cleanse here |
+| Barriers (**!**, chunk 3.0) **(deferred, D-689: not in the greybox; the necks are open until THJ decides after playing it)** | On 2,3 and 8,3: an object with HP that blocks walking; an enemy whose way is blocked attacks it (M3-03). Start value 20 HP (about four Claw hits at Early, 4.5 each). The only way into the yard is through them. Rules the paper assumes and 3.0 must settle: enemies target it only when blocked; family attacks don't hurt it (Linda's pierce, the mushroom's blast: T-7) |
+| The mushrooms (M3-04) | 1,1's blast covers 0,0, 1,0, 0,1, 0,2, 1,2, 2,2 (the west lane's mouth), not the barrier on 2,3 (2 away; barrier clause deferred, D-689). Linda on the bulge **1,4** fires down column 1: across the gap 1,3, through a Claw on 1,2, into the mushroom on 1,1 (3 away, inside her 4), on to 1,0. Lucy on 1,4 reaches it with an ember (3). Mirror on the east (9,4 → 9,1). 7 to everything in the lane mouth + a bow hit (6) = 13, a kill: that's the tally race. Who gets credit for a blast kill: T-8. **Crossing the gap at 1,3 / 9,3 is not verified in code (T-15).** Fallback: make 1,3 and 9,3 present cells that block walking (a permanent untargetable blocker entity), never plain walkable cells, which would open a way into the yard around the barrier |
+| Stages | **S1** "Clear the yard." (the opening three dead: the Masher and two Claws, so the Masher is dead before anyone takes the push tile 5,7 beside its cell 4,7). → sequence: the pick: "There's a cave behind that stone." (placeholder) + camera on the stone. **S2** "*{Pick}*: push the stone." = a Bergson on 5,7 (T-9: the deploy slot's unit as the condition, else any Bergson) → reveal w1, line "Keep them off him!". **S3a, S3b, S3c** "Hold them off (1/3)", "(2/3)", "(3/3)": each = **the pusher on 5,7 (Reevaluate) and 1 turn passed since the stage began** → on complete: the stone shifts one notch (a prop swap or a short move, T-10), reveal the next wave (w2 after S3a, w3 after S3b). After S3c: the stone rolls away (sequence). **S4** "Finish them." (defeat all) |
 | How the push reads (D-608) | One sentence: "While he stands at the stone, it moves; if he leaves, it stops." The queued stages give one notch per turn at most and pause while he's off the tile. Data only; no new tech. The pusher can still act from 5,7 (attack what reaches him, John's Shield Up, Mark's Blitz). Lever if it's too easy: he gets no AP while pushing, **which needs new code (!)**: `TurnStartActionPointLimit` sets one turn per level, not "while on the tile" |
-| Distances | Breach to pusher: from the neck 2,3 to 5,7 is 7 steps, so a Claw that breaks a barrier needs two turns to reach him; the sisters on the bulges are 1 from the necks' yard side. From 5,4 (the deploy slot) to 5,7: 3, one Move |
-| The Black Claw (M3-05) | w2, east. Hitting it calls every Dark Claw within 5 onto the hitter (EN-1). ★ Ring it from a sister's bulge (9,4, through the gap down column 9) so its pack turns on her and away from the barrier and the pusher (chunk 18, "the bell as a shield"). ✗ The pusher rings it (its pack comes for the stone) |
-| Answers (the hold) | ★ Split the fronts: Linda on one bulge, Lucy on the other, each firing down her column into the lane and its mushroom. ★ Cyclone on a lane's mouth (2,2 or 8,2): its arms hold the lane and pull Claws into the mushroom's blast. ★ The bell, as above. ● Both sisters on one side: the other barrier falls a turn later and the pusher gets company |
+| Distances | **Masher (D-688):** Linda 4,4 to its nearest cell 4,6: 2; the pick 5,4 to 4,6: 3; Lucy 6,4 to 4,6: 4. Family first, so nobody starts next to it, and in the yard it has room to step. **Neck to pusher:** from the neck 2,3 to 5,7 is 7 steps (4-way), the sisters on the bulges are 1 from the necks' yard side, from 5,4 (the deploy slot) to 5,7 is 3, one Move. With open necks (greybox) a Claw from a lane walks through with no stop: a lane start to the neck is about 5, so a wave reveals and reaches the yard's edge in 1 to 2 turns and the pusher's side in about 3. **If barriers are added later:** a Claw that breaks one needs two more turns to reach him |
+| The Masher (M3-05, D-688) | In the opening yard fight, anchor 3,6 (2 × 2). Its close-up plays at M3's start (EN-10, name from X-05); the Masher's lines and caption are the narrative agent's. **Never stand next to it.** ★ Lucy's Cyclone hits it and never provokes its counter (EN-2; Lucy is fixed in M3). ● Shots from 2 or more tiles away (it walks 1 and slams only if it ends next to you). ✗ Ending a turn on 2,6, 3,5, 4,5 or 5,7 beside it. The Black Claw row is gone: no bell in M3, so chunk 18 ("the bell as a shield") is not used here |
+| Answers (the hold) | ★ Split the fronts: Linda on one bulge, Lucy on the other, each firing down her column into the lane and its mushroom. ★ Cyclone on a lane's mouth (2,2 or 8,2): its arms hold the lane and pull Claws into the mushroom's blast (in the greybox this is the chokepoint). ● Both sisters on one side: the other lane walks in unopposed (with barriers, later: the other barrier falls a turn later) and the pusher gets company |
 | End | S4 won → end sequence (D-624): the tally alone on screen, Linda: "Still counting?" · Lucy: "…No." (`SistersTally_FadeOut`, moved here from the Pile) → camera on the cave → reveal Toba (non-hostile, `toba` group, after the stone is gone) → his lines: he knows the way to the Rootwell and where Ryker is (M3-06, placeholders) → fade, home (M3-07 is chunk 3.3) |
-| Cues | Arrival barks and camera on each wave (the Trail's arrival pattern: input off, camera, reveal, bark, camera back); barks for the tally race (X-02/X-03 if built) |
+| Cues | **Level start: the Masher's close-up** (camera on it, its name from X-05, EN-10; the placeholder lines are the narrative agent's), then input. Arrival barks and camera on each wave (the Trail's arrival pattern: input off, camera, reveal, bark, camera back); barks for the tally race (X-02/X-03 if built). The "they break walls" cue is deferred with the barriers (D-689) |
 | Alert | All alert; waves come in alert |
 | FTP, items, clue | FTP full at start (`LevelStartFPFiller`). Items as the Trail (Potion 2, FP Potion 1). The clue is Toba. **The Heavenly Sword pickup on 8,6** (X-20, D-625): the yard's east corner, 2 steps off the hold line, so taking it costs a sister a move during the hold; 3 shared uses, a 3 × 3 of 10 × within 5, for the mission (PR-30 to PR-32). Placed by hand (the grid has no relic character) |
 | Fallback | No caps. If the pusher leaves the tile, the stone waits; if both barriers fall, the yard fight still wins. A loss is the whole mission (one level) |
 | Time | ~6 min (S1 2 rounds, hold 3, finish 1) |
 
 ### M4 · three levels
+
+**Approved by THJ 2026-11-25 (D-690), as written.**
 
 **Decided:** the Queen as built is the boss; seats Toba, Linda, Lucy fixed + 1 pick; the duel goes (D-613); Mithra's Gift becomes Mithra's Rest, a heal plus the relic (D-612); Cleanse only in level 1 (D-614).
 
@@ -562,7 +578,7 @@ The snapshot's candidates: an M1, M2 or M3 reward, or a Home visit. A relic last
 | T-4 | What Encore does with arrows locked under a living Masher | M1's ● | play |
 | T-5 | A `GuidedAbilityHint` condition "Mark on 7,0" | M1 fallback | implementer |
 | T-6 | Which embers flare off John's Shield Up (main only, or each) | M2's HP values | play (level-chunks to-check 3) |
-| T-7 | Barriers: do family attacks (pierce, mushroom blast, Cyclone) damage them? | M3, chunk 3.0 | 3.0 tech plan |
+| T-7 | **(Deferred, D-689)** Barriers: do family attacks (pierce, mushroom blast, Cyclone) damage them? | M3, chunk 3.0 | 3.0 tech plan |
 | T-8 | Who gets tally credit for a mushroom-blast kill (the sister whose hit set it off, or nobody)? | M3-04's race. If nobody, crediting it is new code (**!**) | implementer, read |
 | T-9 | An objective condition on the deploy slot's unit (the pick) rather than any Bergson | M3 S2 and S3 | implementer, read |
 | T-10 | The stone: a neutral GUnit on 5,8 (modelled on the Deer, Unmovable) removed or moved by sequence, or a prop over a cell another unit can't enter | M3 | implementer |
@@ -577,7 +593,7 @@ The snapshot's candidates: an M1, M2 or M3 reward, or a Home visit. A relic last
 
 | Item | Where | Size |
 |---|---|---|
-| **! Barriers** (an object with HP on the waves' path; a blocked enemy attacks it). Core: `AIUnitBrain` | M3 | Chunk 3.0: tech plan, review, full suite, its own commit; a branch if risky (D-602 exception, now off this branch) |
+| **! Barriers** (an object with HP on the waves' path; a blocked enemy attacks it). Core: `AIUnitBrain` | M3 | **Deferred (D-689): THJ plays the greybox with open necks, then decides.** Chunk 3.0: tech plan, review, full suite, its own commit; a branch if risky (D-602 exception, now off this branch) |
 | **! Pusher has no AP while on the tile** (only if the lever is needed) | M3 | Small, not core |
 | **! Tally credit for mushroom kills** (only if T-8 says nobody gets it) | M3 | Small, not core |
 | Stone (neutral GUnit or prop), the push stages, the notch swaps | M3 | Data / a prefab variant (~) |
@@ -608,7 +624,11 @@ All closed by THJ on 2026-11-23; folded into the levels above.
 | Q-N6 · X-20 | The Heavenly Sword pickup in M3 on 8,6 | D-625 |
 | Q-N7 · Mithra's Rest | 50% of max HP and FTP filled (against the 100% I recommended) | D-626 |
 
-No open questions. THJ's next step: approve each paper level.
+| M3 approved; the Masher in M3's opening yard | Masher at 3,6, w2 three Claws, no Black Claw | D-688 |
+| M3 greybox first | Necks open, no barriers; THJ plays, then decides on barriers (chunk 3.0) | D-689 |
+| M4 approved | As written | D-690 |
+
+No open questions. M1 to M4 are approved.
 
 ## Build rule per level (D-621)
 
@@ -618,7 +638,7 @@ THJ: "Do not override the previous levels if the changes are big, create a new o
 |---|---|---|---|
 | M1 The Ridge | Big (new layout) | New `GB_m1-ridge` (block `m1-ridge`); `MS2 - The Ridge` points at it | `GB_s2-ridge` renamed (suggested suffix `_legacy`), kept |
 | M2 The River | Big (new layout) | New `GB_m2-river` (block `m2-river`); `MS1 - The River` points at it | `GB_s1-river` renamed, kept |
-| M3 Defence | Big (new level) | New `GB_m3-defence`; `M2 - The Trail`'s graph becomes this one node | The four `GB_m2-*` Trail prefabs leave the graph and are renamed, kept. Their names also clash with the new `GB_m2-river`, a second reason to rename them |
+| M3 Defence | Big (new level; greybox first with open necks, D-689) | New `GB_m3-defence` (block `m3-defence`, Masher version); `M2 - The Trail`'s graph becomes this one node | The four `GB_m2-*` Trail prefabs leave the graph and are renamed, kept. Their names also clash with the new `GB_m2-river`, a second reason to rename them |
 | M4-1 The circles | New level | New `GB_m4-cleanse` | Nothing replaced in place; the old M4 levels (duel, C1-TArtEx, C2, C3-1, C3-2) just leave the graph, unchanged |
 | M4-2 Mithra's Rest | Small (components, a pickup, props, name, two values) | Edit `LevelDivineRelicRoom 1.prefab` in place | — |
 | M4-3 The Queen | Small (roster and end sequence) | Edit `Level3-C1.prefab` in place | — |
@@ -634,11 +654,13 @@ THJ: "Do not override the previous levels if the changes are big, create a new o
 
 ## Risks
 
-- The barrier AI (core) gates M3; until 3.0 lands, M3 can be greyboxed with the necks open.
+- **Barriers (deferred, D-689):** M3 is built greybox first with the necks open, so it no longer waits on the barrier AI (core). THJ decides on barriers after playing it.
+- **Open necks make the hold harder than drawn** (no barrier delay per wave): watch it in the greybox play; lever Claws ×0.65 before any barrier.
+- **The Masher's 36 HP plus two Claws in the opening** is the new hardest moment of M3; lever factor 0.35.
 - AI paths differ from paper (the pack's landing tiles in M1 and M2, the waves' targets in M3).
 - The Masher's plow (D-573) and Catch & Return's single answer are read in code, not played.
 - M3 is one level, so a loss replays the mission; there's no cap, so the risk is HP, not time.
 
 ## Gates
 
-Design only. The coordinator renders and checks the four new grids (gate 7): `m1-ridge`, `m2-river`, `m3-defence`, `m4-cleanse` (plus the twelve source grids, unchanged). THJ approves each mission before chunks 3.1 to 3.4; chunk 3.0 (barriers) has its own tech plan first.
+Design only. The coordinator renders and checks the four new grids (gate 7): `m1-ridge`, `m2-river`, `m3-defence`, `m4-cleanse` (plus the twelve source grids, unchanged). THJ approved M3 and M4 on 2026-11-25 (D-688 to D-690), so chunks 3.3 and 3.4 (M3 and M4) can start. **M3 is built greybox first with open necks (D-689); chunk 3.0 (barriers) is deferred** and gets its own tech plan only if THJ asks for barriers after playing it. Grid to render for gate 7: `m3-defence` (changed).

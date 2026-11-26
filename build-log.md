@@ -3031,3 +3031,25 @@ Plan `plans/2026-11-19-faster-loop-process.md`, decisions D-575 to D-579.
 **Not verified:** the same-side fallback in play (those duos are locked).
 **Findings:** the FR Image scale also sizes that character's solo and trio panels.
 **Status:** committed, not pushed. Frames for the two-corner layout still to come from the art team.
+
+## 2026-11-25 · M4 "The White Mothers": The circles, Mithra's Rest, the Queen (thj/onboarding-demo)
+
+**Built** (plan `plans/2026-11-25-onboarding-m4-build-tech.md`, report `reports/onboarding-m4-5-1-circles.md`; D-690 to D-698):
+- 5.1 `GB_m4-cleanse` "The circles (1/3)": new level from block `m4-cleanse`, cave dressing from `Level2-C1-TArtEx`, Dark Shaman + 5 Claws, 3 pools (spawner defaults: a Claw on rounds 3/7/11, one alive), one stage "Cleanse the circles." + "Defeat the dark claws.", Cleanse pulse turns 1–99, FP 99, Toba's placeholder line. Menus `Tools/Onboarding/The circles: Build Level` / `Apply Wiring`.
+- 5.2 Mission graph `GB_m4-cleanse` → Mithra's Rest (2/3) → Into the Rootwell (3/3); roster Linda, Lucy, Toba fixed + 1 pick; Toba's World Map select button opens after the Trail (rest of Toba's gates stay after M4, D-696); Mithra's Rest: Healing Room heal (0.5 HP) on the altar trigger once, FP 99, placeholder campfire lamps, relic on 10,-2 kept; Ryker, shrine and old Gift scenes removed (D-697); Cleanse locked in M4-2/M4-3. Menu `Tools/Onboarding/White Mothers: Apply Mission Wiring` (re-run safe after review fix).
+
+**Verified:** covering tests 51/51; full EditMode 2732/2733 (1 Explicit) before the review fixes; AI regression 46 (unchanged); gate 7 read-back matches `m4-cleanse`; review FIX → fixed, accepted. **THJ played M4 to the Queen: works (2026-11-25).**
+
+**Not verified / findings:** THJ saw the Goblin Queen stop attacking and wander (trace running; cause unknown, may predate this work); console error from `EntityInfoPanelUI.Show:176` via the info-panel input (likely the known Shift-queue error, D-658; being checked). Mithra's Rest has no altar art behind the relic now. 5.3 (lines, campfire scene, saving Ryker) waits on THJ's text answers. River level still has Cleanse unlocked.
+
+**Commits:** `8f24d0433` feat(onboarding) The circles; `4ed943758` feat(onboarding) M4 mission, roster, rest, Queen. Not pushed.
+
+**Status:** M4 built except 5.3. Next: Queen trace, then M3 greybox (D-695).
+
+## 2026-11-25: M1 rounds 4.3-4.5 committed; Encore cast, Blitz landing, Footrace bark (`thj/onboarding-demo`)
+
+**Built:** `5d9bbd8ea` CastAbilitySequence: Self casts + AP waiver (`IWaivableApCheck`, Linda's quiver honours it for Encore). `f9ae671ac` core: lethal dash waits up to 0.5 s for a dead/0 HP target to vacate (D-699). `4451ca714` core: Footrace damage listener removed from the right event (D-698). `802aced65` Footrace result bark on Linda's prefab (D-697). `934c8d6b3` M1 4.3+4.4: ledge single tile, turn reset after the ambush, Encore cast in the ambush, Footrace locked until the reunion + hint, pouch hint, defeat relaxed for the last fight, Neutral-Stranger Enemy, THJ's level tweaks incl. a sixth ambush Claw (prefab 1,1, factor 0.6, added to `AmbushClawTiles`), his HiddenLevelUnits toggle. `ae1b091d9` Black Claw damage factor 10 to 6 (THJ).
+**Verified:** full EditMode 2771: 2770 passed, 1 Explicit skipped; AI regression 46 (unchanged); M1 tests 46/46; THJ played 4.3-4.5 and asked to commit (D-700).
+**Not verified:** re-running the wiring menu after the sixth Claw (not needed; tests read the wiring's tile list).
+**Findings:** THJ's toggle button saved the ambush pack active in the prefab; set back to inactive (runtime hides them anyway). Wiring loose ends: the east ambush camera path is built from `AmbushClawTiles.Skip(1)` and now includes the west-side (1,1) (only on a re-wire); the bell line still says "Five" for a pack of six. A run of the suite before the fix showed two `M4WhiteMothersTests` failures (the mission's Circles node pointed at a fileID not in `GB_m4-cleanse.prefab`); they passed on the next full run, likely an import-order glitch, watch for it. Left uncommitted: `LevelM2-C1.prefab`, `miso.slnx` (not this work), unused `M1Ridge_Cleared_PotionPage.asset`.
+**Status:** committed, not pushed. Next proposed: 4.6, Linda can't act until Mark reaches the ledge (`Status.Inactive` skip tag).
