@@ -75,7 +75,7 @@ The pick falling loses the level at any point.
 - [ ] **Tests:** `M3DefenceTests` updated to the new block, stages, roster and loss. `OnboardingMissionGraphTests`, `SearchTrailTests` and `PickOnTilesLOConditionTests` go back to the free seat. Covering fixtures green.
 - [ ] **Report on:** T-P2 (the Masher's 2×2 reveal when a cell is taken), T-P4, T-P5 (Chained Assault range measured from Lucy), and whether enemies attack an Inactive unit. All from reading the code.
 
-**8.4 · M3 lines (sonnet)**: apply `design/m3-text.md` once THJ's revision is approved (D-749, D-750): the per-pick text option for John's push line, the level-start line and the west-wall pair, the countdown, "{pick} has fallen." (loss-panel plumbing if it's needed and stays in Onboarding/UI non-core; if it needs core, stop and report). Planned separately when 8.3 is in.
+**8.4 · M3 lines (sonnet)**: apply `design/m3-text.md` once THJ's revision is approved (D-749, D-750): the per-pick text option for John's push line, the level-start line, the west-wall pair fired when w1 reaches the west wall (D-753), the countdown, "{pick} has fallen." (loss-panel plumbing if it's needed and stays in Onboarding/UI non-core; if it needs core, stop and report). Planned separately when 8.3 is in.
 
 ## Risks
 
