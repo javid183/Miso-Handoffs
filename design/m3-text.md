@@ -1,6 +1,219 @@
 # M3 "Hold the yard": lines
 
 Owner: miso-narrative. Scope `all` (`main`).
+**Status: draft revision for the pick (awaiting THJ).** Written 2026-11-26 for D-739 and D-741 to D-745 and the plan `plans/2026-11-26-m3-pick-and-opening.md` (block `m3-defence-4`) › Text impact. Until THJ approves it, the **approved version (Mark on the stone, D-731 to D-735)** stays below under [Approved 2026-11-26 version](#approved-2026-11-26-version-mark-on-the-stone-parked), unchanged, as the record. Nothing in this draft goes into the game yet, and `glossary.md` is not touched until THJ approves (§9 lists the rows).
+
+The design in one paragraph (D-741 to D-745): the squad is **Linda, Lucy and the pick (John or Mark)**, chosen on the Trail's roster. The layout is the round-two one (barricades, two lanes, the Masher in the east lane). Stages: **S1 "Clear the yard."** (3 Dark Claws at the stone; w1 already at the west wall) → **S2 "{pick}: push the stone."** (the pick walks to the lit push tile; on arrival they are held, out of combat, and the Masher is revealed with its close-up) → **S3 to S5, a 3-turn hold** (notch 1 brings w2, notch 2 brings w3, notch 3 rolls the stone away and the pick rejoins) → **S6 "Finish them."**. The pick falling loses, from level start.
+
+## Changes against the approved version
+
+Every approved line that still fits is kept **word for word**; only its trigger or speaker slot moves. "Pick line" means the line is said by whoever the pick is (the pick's dialogue slot, `SpeakAsThePick`), so it has a Mark and a John version (see Q1 on whether the build can branch the text).
+
+| ID | Approved text (D-731 to D-735) | Draft | What changed and why |
+|---|---|---|---|
+| Header, cast, voice | Squad Linda and Lucy; Mark on the stone; `Who.Mark`; "No John line anywhere in M3" | Squad Linda, Lucy + the pick; pick lines through the pick slot; John's voice added | D-741 |
+| §0 order | Masher close-up at level start; Mark's lines at level start | Level start: the stone and its Claws, then w1 at the west wall. Mark's cave line moves to S1's end; the Masher close-up and the "can't push and fight" line move to S2's end | D-742, D-743 |
+| M3.0.1 Linda | Every hit brings that one a step closer. | **Same text.** Trigger: the Masher's reveal at the push | D-743 |
+| M3.0.2 Mark | A cave behind this stone. I'll shift it. | **Same text** (Mark). **New John version.** Trigger: S1 complete | Pick line |
+| M3.0.3 Mark | I can't push and fight. Keep them off me. | **Same text** (Mark). **New John version.** Trigger: S2 complete (the pick is held) | Pick line; it carries the "out of the fight" rule |
+| M3.0.4 Linda | Keep them off him, Lucy! | **Same text.** Trigger: S2 complete | "him" fits John and Mark |
+| M3.0.5 Lucy | And keep count, sister. | **Same text.** Trigger: S2 complete, optional | — |
+| M3.0.6 to M3.0.8 | none | **New:** level start, the Claws at the stone and w1 at the wall | The opening had no line (plan › Text impact) |
+| M3.1.1 Mark | It moves. | **Same text** (Mark), notch 1. **New John version** | Pick line |
+| M3.1.2 Mark | Halfway. Hold them. | **Dropped** | Notch 2 of 3 is not halfway |
+| M3.1.3 Mark | Nearly. Keep them off me. | **Same text** (Mark), **moved to notch 2**. **New John version** | Notch 2 is now the crisis turn (breachers one move from the held pick), which is what this line was written for |
+| M3.1.4 Mark | It's open! Now the big one! | **Same text** (Mark), **moved to notch 3** (the roll and the release). **New John version** | D-732 kept: always plays, no branch |
+| M3.2.1, M3.2.2 | w2 / w3 lines | **Same text, same notches** | Fit as written |
+| M3.3.1 Linda | A barricade's down! They're coming through! | **Same** | — |
+| M3.3.2 Lucy | Get away from him! | **Same text.** Trigger: first enemy attack on the held pick | "him" fits both |
+| M3.3.3 Mark | Still pushing. | **Same text** (Mark). **New John row** | Pick bark: one CSV row per character |
+| M3.4.1 to M3.4.4 | Tally barks | **Same** | — |
+| M3.5.1 to M3.5.8 | The end | **Same** (Toba's "You moved the stone. Thank you." fits either pick) | D-734 kept |
+| M3.5.9 Mark | We follow. Stay sharp. | **Same text for both picks**, now a pick line | Checked: it fits John, arguably better (the father decides, and warns his girls). No John-only version needed; one offered as an alternative |
+| M3.6.1 | Hold them off. 4 turns left. | **Dropped** | 3 hold stages (D-742) |
+| M3.6.2 to M3.6.4 | 3 turns left / 2 turns left / Last turn. | **Same text**, now S3, S4, S5 | — |
+| M3.6.5 | Finish them. | **Same**, now S6 | — |
+| M3.6.6 | Keep Mark standing. | **Keep {pick} standing.** | D-745 (rewords D-733) |
+| M3.6.7 | Mark has fallen. | **{pick} has fallen.** | D-745 |
+| M3.6.8 | Barricade | **Same** | D-731 |
+| M3.6.9, M3.6.10 | "Gone" | **Back:** "Clear the yard." (S1), "{pick}: push the stone." (S2) | D-742. Written `{pick}`, the variable `PickOnTilesLOCondition` exposes (the old draft wrote `{Pick}`) |
+| §7, §9 | Mark-placed line map; glossary rows | Rebuilt for the pick | — |
+
+How to paste: as before (dialogue without a tag; barks and on-screen text as written, since they'll be approved before anyone pastes them). `M3.x.y` IDs are design labels only; never in code comments or test names. Lines stay under about 55 characters. **Sides:** Linda Left, Lucy Right, Toba Right, the pick Right (suggested).
+
+**Cast.** **Linda, Lucy** (playable all level). **The pick, John or Mark** (playable in the opening and the finish; held at the stone during the hold, a voice and a target). **Toba** (the end only). The one not picked is not in M3 and has no line.
+
+**Voice.**
+- **Linda:** older sister, quick, proud, dry. **Lucy:** the youngest, fierce and open; short lines. A race, not a quarrel; it ends at "Still counting?" / "…No." (D-624).
+- **Mark:** calm, clipped, a dry streak. On the stone: effort, short lines.
+- **John:** the father; warm, steady, plain words; thinks of his girls first. On the stone his worry is that he can't shield them, not himself.
+- **Toba:** gentle, plain, unhurried; a stranger slowly trusted.
+
+**Terms** (glossary): Dark Claws, Masher Goblin (close-up shows the name only), Barricade (unit, D-731), "the wall" (speech only, D-735), the stone, Rootwell, Ryker (she). The rule the player must get: *while the pick pushes, they're out of the fight, and they can be hit* (said once, M3.0.3). Canon: nothing new claimed (M4 §5 questions stay open).
+
+---
+
+## D0. Level start (new)
+
+Order (plan › UX): input off → camera on the stone with the three Claws at it → **M3.0.6** → camera on the west lane (w1 at the wall) → **M3.0.7**, **M3.0.8** → camera on the yard → objective "Clear the yard." with the defeat line "Keep {pick} standing." → input on. The Masher is hidden; no close-up here.
+
+| ID | Speaker | Trigger | Rec. line | Alternatives / notes | Status |
+|---|---|---|---|---|---|
+| M3.0.6 | Linda | Camera on the Claws at the stone | Something's behind that stone. They want it. | A: Lucy "Why are they scratching at a rock?" (the youngest's curiosity; leaves the answer to the pick's cave line). B: Linda "Claws at the stone. Clear them off." (plain order; no hook). **Rec.** gives the stone a reason to matter before anyone pushes it (the plan's "goblins at Toba's door"), and sets up the pick's cave line. Staging only: it doesn't say what or who is inside | **(new)** |
+| M3.0.7 | Lucy | Camera on w1 at the west wall, optional | More at the west wall! | A: "More, outside the wall!" **Rec.** short, points | **(new)**, optional |
+| M3.0.8 | Linda | Same dialog, optional | It'll hold. For now. The yard first. | A: "Let them knock. The yard first." (drier, but undersells the clock). **Rec.** answers the likeliest misread ("must I kill w1 to clear the yard?") and plants "the wall is your clock" in three words | **(new)**, optional |
+
+Cut order: M3.0.7 and M3.0.8 together (the objective text still names the yard), then M3.0.6.
+
+```csharp
+Line(Who.Linda, Side.Left, "Something's behind that stone. They want it."), // M3.0.6
+Line(Who.Lucy, Side.Right, "More at the west wall!"),                        // M3.0.7, optional
+Line(Who.Linda, Side.Left, "It'll hold. For now. The yard first."),          // M3.0.8, optional
+```
+
+## D1. S1 complete: the cave (moved)
+
+Camera on the stone → the pick's line → 4,11 lights → objective "{pick}: push the stone.".
+
+| ID | Trigger | Mark (approved) | John (new) | If one text for both (Q1) | Notes |
+|---|---|---|---|---|---|
+| M3.0.2 | "Clear the yard." complete, camera on the stone | A cave behind this stone. I'll shift it. | There's a cave behind that stone. I'll move it. | Mark's line | John's is the old draft's Rec. (old 1.1 J), warmer and fuller than Mark's clipped one. "this stone" in Mark's line is kept word for word; the pick is 1 to 4 tiles away, so it still reads |
+
+## D2. S2 complete: the push, the Masher (moved)
+
+Order (plan › Stages S2): the pick reaches 4,11 and is held → input off → camera on the east lane → the Masher revealed, close-up → **M3.0.1** → camera on the pick at the stone → **M3.0.3** → **M3.0.4**, **M3.0.5** → camera back → objective "Hold them off. 3 turns left." → input on.
+
+| ID | Speaker | Trigger | Mark (approved) | John (new) | If one text for both (Q1) | Notes |
+|---|---|---|---|---|---|---|
+| M3.0.1 | Linda | Masher close-up | Every hit brings that one a step closer. | — | — | Kept word for word; Linda, not a pick line |
+| M3.0.3 | The pick | Camera on the pick at the stone | I can't push and fight. Keep them off me. | I can't push and shield you. Keep them off me. | Mark's line (works in John's mouth) | **John Rec.** names what he gives up, his shield: it answers the misread "is John still covering people?" (his zone is gone, D-744) and is the father's worry in one word. A: "Both hands on this. You'll have to cover me." (the role reversal: the father asks the daughters to cover him; warm, but doesn't say "can't fight") |
+| M3.0.4 | Linda | Same dialog | Keep them off him, Lucy! | — | — | Kept word for word |
+| M3.0.5 | Lucy | Same dialog, optional | And keep count, sister. | — | — | Kept word for word. The tally already runs in the opening; at the push the line reads as a jab ("keep up"), not a start, so it still fits |
+
+Cut order: M3.0.5, then M3.0.4. M3.0.3 is the last to cut (it is the rule).
+
+```csharp
+Line(Who.Linda, Side.Left, "Every hit brings that one a step closer."),  // M3.0.1, Masher close-up
+Line(Who.Narrator, Side.Right, "<pick line M3.0.3>"),                     // pick slot: Mark or John text
+Line(Who.Linda, Side.Left, "Keep them off him, Lucy!"),                   // M3.0.4
+Line(Who.Lucy, Side.Right, "And keep count, sister."),                    // M3.0.5, optional
+```
+
+## D3. The pick on each notch (changed: three notches)
+
+Each notch: camera on the stone → notch → the pick's line → (wave arrival, §D4, on notches 1 and 2) → camera back.
+
+| ID | Trigger | Mark (approved) | John (new) | If one text for both (Q1) | Notes |
+|---|---|---|---|---|---|
+| M3.1.1 | Notch 1 (P+1 start), before w2 | It moves. | It's giving. | Mark's line | John's is the old draft's notch-1 line, a little warmer |
+| ~~M3.1.2~~ | ~~Notch 2~~ | ~~Halfway. Hold them.~~ | — | — | **Dropped:** notch 2 of 3 is not halfway |
+| M3.1.3 | **Notch 2** (P+2 start), before w3: the crisis turn | Nearly. Keep them off me. | Nearly there. Keep them off me. | Mark's line | Moved from notch 3. The second and last time the pick asks for help, on the turn breachers are one move away. John A: "One more. Stay close, all of you." (protective, but drops "me", so less of a cue) |
+| M3.1.4 | **Notch 3** (P+3 start): the stone rolls away, the pick is released; **always**, Masher alive or dead (D-732) | It's open! Now the big one! | It's open! Leave the big one to me! | Mark's line | Moved from notch 4. Now also the pick rejoining. John's claims the front he's built for (Shield Up on its breach); with a dead Masher it's a slightly louder mismatch than Mark's, accepted as D-732 did. Then "Finish them." |
+
+```csharp
+// pick slot, Mark text / John text
+"It moves."                    / "It's giving."                        // M3.1.1, notch 1
+"Nearly. Keep them off me."    / "Nearly there. Keep them off me."     // M3.1.3, notch 2
+"It's open! Now the big one!"  / "It's open! Leave the big one to me!" // M3.1.4, notch 3, always
+```
+
+## D4. Wave arrivals (kept, word for word)
+
+w1 is at the west wall from level start. w2 on notch 1, w3 on notch 2, as in the approved version.
+
+```csharp
+Line(Who.Lucy, Side.Right, "More from the east! Mine!"),           // M3.2.1, w2, notch 1
+Line(Who.Linda, Side.Left, "Both lanes at once. Try to keep up."), // M3.2.2, w3, notch 2
+```
+
+## D5. Hold events: barks (M3.3.3 changed)
+
+Same rows, the tags renamed from Mark to the pick (tags are suggestions). M3.3.2 now fires on the first enemy attack on the **held pick**. M3.3.3 is one row per character; only the pick on the board can say it (if the bark system doesn't filter by who is present, that's the build's call).
+
+| ID | Speaker | Trigger | Line | Status |
+|---|---|---|---|---|
+| M3.3.1 | Linda | First barricade destroyed, once | A barricade's down! They're coming through! | **(kept)** |
+| M3.3.2 | Lucy | First enemy attack on the held pick, once, optional | Get away from him! | **(kept)**, trigger reworded |
+| M3.3.3 | Mark | Reply, optional | Still pushing. | **(kept)** |
+| M3.3.3 | John | Reply, optional | I'm fine. Keep going. | **(new)**: the father reassuring the girls (it was alt A of the approved row). "Still pushing." would also work for him |
+
+```csv
+Linda,1,TRUE,A barricade's down! They're coming through!,M3_BarricadeDown
+Lucy,1,TRUE,Get away from him!,M3_PickHit
+Mark,1,TRUE,Still pushing.,M3_PickHitReply
+John,1,TRUE,I'm fine. Keep going.,M3_PickHitReply
+```
+
+Tally barks M3.4.1 to M3.4.4: **kept word for word** (approved §4 below).
+
+## D6. End (kept; M3.5.9 becomes a pick line)
+
+M3.5.1 to M3.5.8 are kept word for word (approved §5 below). The stone already rolled away on notch 3.
+
+| ID | Trigger | Mark (approved) | John | If one text for both (Q1) | Notes |
+|---|---|---|---|---|---|
+| M3.5.9 | After Toba's last line, before the fade | We follow. Stay sharp. | **Same:** We follow. Stay sharp. | The same line | Checked for John: it fits. The father decides for the family and warns his girls; it accepts the help, not the man (Toba not yet family, D-048). John alt (only if THJ wants a John-only line): "Then lead on, Toba. Girls, stay close." (warmer; "girls" may grate on proud Linda) |
+
+## D7. On-screen text (changed)
+
+| ID | Where | Text | Status |
+|---|---|---|---|
+| M3.6.9 | Objective S1 | Clear the yard. | **(back)** |
+| M3.6.10 | Objective S2 (4,11 lit) | {pick}: push the stone. | **(back)**; `{pick}` = the pick's nickname, as `PickOnTilesLOCondition` exposes it |
+| ~~M3.6.1~~ | ~~Objective, 4 turns~~ | ~~Hold them off. 4 turns left.~~ | **Dropped** (3 hold stages) |
+| M3.6.2 | Objective S3 (on the push) | Hold them off. 3 turns left. | **(kept)** |
+| M3.6.3 | Objective S4 (notch 1) | Hold them off. 2 turns left. | **(kept)** |
+| M3.6.4 | Objective S5 (notch 2) | Hold them off. Last turn. | **(kept)** |
+| M3.6.5 | Objective S6 (notch 3) | Finish them. | **(kept)** |
+| M3.6.6 | Defeat group's objective text, shown from level start | Keep {pick} standing. | **(changed)**, D-745 |
+| M3.6.7 | Defeat group's defeat message | {pick} has fallen. | **(changed)**, D-745 |
+| M3.6.8 | Barricade unit title | Barricade | **(kept)**, D-731 |
+
+If a defeat objective can't show `{pick}` (plan T-P4), this comes back to THJ; the plan's fallback was "Keep the pusher standing." (not approved).
+
+## D8. Line map for the build (draft)
+
+Slot names are today's (`MissionWiring.HoldTheYard.Sequences.cs`, the Mark-placed 7.1 wiring); the tech plan will rename or replace them for the stages above.
+
+| Stage / slot | Today's text (7.1 placeholders) | Becomes |
+|---|---|---|
+| Start sequence (today: camera on the Masher, the east wall, Mark) | `MarkStartLine` "There's a cave behind that stone. I'll shift it." / `LindaStartLine` "Keep them off him!" | Camera on the stone and Claws → M3.0.6; west lane → M3.0.7, M3.0.8 (optional). No Masher, no pick line |
+| S1 complete (new) | none | M3.0.2 (pick line) |
+| S2 complete (new) | none | Masher close-up → M3.0.1; M3.0.3 (pick line); M3.0.4; M3.0.5 (optional) |
+| Notch 1 | none | M3.1.1 (pick line), then w2 → M3.2.1 (`Wave2Line`, "More from the east!") |
+| Notch 2 | none | M3.1.3 (pick line), then w3 → M3.2.2 (`Wave3Line`, "Both sides now!") |
+| Notch 3 (roll, release) | `Notch3Line` "It's moving... keep them off me!" | M3.1.4 (pick line). The old notch-3 text goes |
+| Notch 4 | `Notch4Line` "It's open! The big one's at the wall!" | **Gone** (no notch 4) |
+| Bark events | none | M3.3.1, M3.3.2, M3.3.3 (Mark and John rows); M3.4.1 to M3.4.4 (only if cheap) |
+| End | `StillCountingLine`, `NoLine`, `TobaLines` ("You held them. Good." / "I know the way to the Rootwell. And where Ryker is.") | M3.5.1 to M3.5.8 as approved; M3.5.9 in the pick slot (not `Who.Mark`) |
+| Objectives | "Hold them off (4)" … / "Finish them." | M3.6.9, M3.6.10, M3.6.2 to M3.6.5 |
+| Defeat group (the pick falls) | Mark's group | M3.6.6, M3.6.7 |
+| Barricade title | "Barricade" | M3.6.8 |
+
+## D9. Glossary rows (proposed; apply only after THJ approves)
+
+| Term | Proposed row |
+|---|---|
+| **the stone** | The rock on the cave mouth at 4,12. In M3 **the pick** (John or Mark) walks to the push tile below it and is held there, out of combat; it moves one notch at each family turn start for **3** turns, then rolls away and the pick rejoins. Written "the stone"; unit title "Stone" (placeholder). Not "Fallen Rock" (M1). (Replaces "Mark pushes… for 4 turns".) |
+| **the pick** (design word) | The free squad seat, John or Mark, chosen on the Trail's roster. **Back in M3:** the pick pushes the stone. On screen only as `{pick}` (the pick's nickname) in "{pick}: push the stone.", "Keep {pick} standing." and "{pick} has fallen.". Pick lines are said through the pick's dialogue slot. Still used in `m4-text.md` |
+| **Hold the yard** | Code name: mission asset still `M2 - The Trail`; level prefab `GB_m3-defence` (grid block `m3-defence-4`). The current row says `GB_m3-defence-3`, which is the old grid block's name, not a prefab: fix it |
+| **Masher Goblin** (M3 part of the Enemies row) | First appears in M3: hidden until the pick reaches the push tile, then revealed with its close-up at the bottom of the east lane. Counter taught as "every hit brings it a step closer" (M3.0.1) |
+| **Barricade**, **the wall** | Unchanged |
+
+## D10. Questions for THJ
+
+- **Q1 · Can a pick line have two texts?** Today the build gives the pick slot one string, whichever unit fills it. Options: **(a)** one text for both picks: Mark's approved lines everywhere (no branch; John says "I can't push and fight", "It moves." and so on, all of which fit him); **(b)** one text for both, except **M3.0.3**, which gets John's "I can't push and shield you. Keep them off me."; the John bark M3.3.3 comes free as its own CSV row; **(c)** a John text for every pick line (M3.0.2, M3.0.3, M3.1.1, M3.1.3, M3.1.4). **Rec. (b)** if the tech plan finds a per-pick text cheap, else (a). M3.0.3 is the line that teaches the rule, and for John "shield" is the word the player needs; the other John versions are colour.
+- **Q2 · The new level-start line.** Options: **(a)** Linda "Something's behind that stone. They want it." (rec.: gives the stone a stake and sets up the cave line); (b) Lucy "Why are they scratching at a rock?" (curious, lighter); (c) no line, the camera alone. And keep the optional west-wall pair M3.0.7/M3.0.8 ("More at the west wall!" / "It'll hold. For now. The yard first.")? **Rec.** yes: it heads off "must I kill w1?" and teaches the clock.
+- **Q3 · John's notch 3 line.** Options: **(a)** "It's open! Leave the big one to me!" (rec. if Q1 is (c): his role in his mouth); (b) Mark's "It's open! Now the big one!" for both (the D-732 line; the smaller mismatch if the Masher is dead). **Rec.** (b) unless Q1 is (c).
+
+---
+---
+
+# Approved 2026-11-26 version: Mark on the stone (parked)
+
+Parked by D-739 and D-741: kept as the record of what THJ approved (D-731 to D-735) until the draft above is approved. **Do not paste from this section**; the draft above says which of its lines carry over word for word.
+
+Owner: miso-narrative. Scope `all` (`main`).
 **Current text: the 2026-11-26 redesign** (plan `plans/2026-11-26-m3-redesign.md` › Text impact, level `m3-defence-3`; build tech plan `plans/2026-11-26-m3-redesign-build-tech.md`, chunk 7.2). THJ's decisions of 2026-11-26: the squad is **Linda and Lucy only**; Mark is placed on the stone, held, not playable, and can be attacked; the level is lost if he falls; the stone moves one notch at each family turn start for 4 turns; six barricades close two necks; the Masher comes up the east lane; the end stays.
 Status: **Approved by THJ 2026-11-26 (D-731 to D-735).** Every **Rec.** line in §0 to §6 is approved as written, with the answers folded in: the unit is **Barricade** (D-731); notch 4 has one line and no branch (D-732); the loss rule shows on screen, M3.6.6 and M3.6.7 (D-733); Toba opens with "You moved the stone. Thank you." and Mark closes with "We follow. Stay sharp." (D-734); "the wall" is speech only and Mark gives no push count (D-735). Alternatives stay in the tables as history; paste only the Rec. Kept as written: **"Still counting?" / "…No."** (D-624). Canon (Q7): nothing new is claimed; the M4 §5 questions stay open. §7 is the final line map for the build (chunk 7.2).
 The 2026-11-25 draft (yard opening, John or Mark as the pick, 3 notches) is kept as history under [Superseded](#superseded-2026-11-25-draft-old-level-m3-defence) at the end. Nothing below depends on it.
