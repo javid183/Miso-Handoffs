@@ -82,6 +82,65 @@ Tests after the fixes:
 
 Files touched by the fixes: `HoldUnitsUntilSignal.cs` (now 210 lines) and `HoldUnitsUntilSignalTests.cs` (now 302 lines). Both are LF with no BOM, and they belong to the same proposed commit.
 
+## THJ's tweaks folded in
+
+THJ play-checked 4.6 (all good) and then tuned the level and its sequences himself. His version is now the truth. This round makes the wiring and the tests match it, so running the menu again keeps his work.
+
+**His tweaks, and what the wiring does now**
+- **Two more rocks** on prefab tiles (2,1) and (3,3), in a new hidden group `ambush-rock`.
+  - Layout: `AmbushRockGroupId = "ambush-rock"`, `AmbushRockTiles = {(2,1),(3,3)}` (the group's own order).
+  - `EnsureAmbushRocks` reuses the rock already on each tile, or places one from the rock prefab, and hides it.
+  - `SetHiddenGroups` writes the fourth group. Before this change, a re-run would have dropped it, since the groups are written whole.
+- **Ambush units saved active.** THJ saved the Black Claw and all five ambush Dark Claws active (the six `m_IsActive` 0→1 changes from his hidden-group toggle button).
+  - The two new rocks also had no `m_IsActive` 0 override, so they would have been in play from the start. Their group membership and the reveal step say they are meant to be hidden.
+  - All eight are back to inactive. That diff is only `m_IsActive` changes: the six flipped back and two override entries added for the rocks.
+- **The ambush step list:** `M1Ridge_Rockfall_Shake` then `M1Ridge_Ambush_RevealRock` (group `ambush-rock`, waitAfterReveal 0.6, which is also the field's default) right after the discovery dialogue, before the west-path camera. `BuildAmbush` builds the same two steps in the same place.
+- **The cleared step list** no longer has the plateau camera and the plateau dialogue. `BuildCleared` no longer builds them, and its seed list matches.
+- **Lines** are now constants in `MissionWiring.Ridge.cs` and used in the seeds:
+  - `DiscoveryWarningLine = "Mark. Listen. Not again!"`
+  - `BellLine = "Six. Hit the big one only at my side."`
+  - The dialogue assets already held THJ's text and are seeded once, so they were not rewritten.
+
+**Re-run check.** Before running the menu I copied the prefab, the M1Ridge sequence folder, the mission and the rock prefab, then compared each with its copy afterwards.
+- No step-list warnings: the ambush and cleared seeds match THJ's lists.
+- Mission and rock prefab: unchanged.
+- Prefab: only the intended `m_IsActive` changes, plus the known reorder of the ambush unit list (same units). I put the list back in THJ's order by hand.
+- The two ambush camera assets gained (0.75, 0.75) again (the known loose end, not one of his tweaks). I restored them from the copies.
+- `level_to_grid.py` read-back: same cells, units and groups as THJ's version. The "listed but active" warnings for the six ambush units are gone.
+
+**Tests**
+- M1RidgeLayoutTests:
+  - `Rock()` now means the rock on the shared tile.
+  - The groups check lists `ambush-rock`.
+  - New `TheAmbushRocksWaitHiddenOnThePlateauPaths`: two rocks from the rock prefab, hidden, not on a Claw's tile or in the top zone, three rocks in all.
+  - `TheRockIsNeitherAnEnemyTargetNorCountedByClearingTheRidge` is renamed `NoRockIsAnEnemyTargetOrCountedByClearingTheRidge` and now checks all three rocks: Neutral faction, Neutral allied with Enemy, and clearing counts only the Enemy faction.
+  - `TheAmbushPackWaitsHiddenOnBothPathsAndStartsAlert` needed no change; it failed only because of the active flags.
+- M1RidgeTests:
+  - The ambush test now expects two reveals, the shake and the rock reveal right after the discovery dialogue, the discovery's last line equal to `DiscoveryWarningLine`, and the bell dialogue's first line equal to `BellLine`.
+  - `ThePocketClearedGivesTheReunionAndThePlateauButNoPotionPage` is renamed `ThePocketClearedGivesTheReunionWithTheCameraStayingOnTheFamilyAndNoPotionPage`: no camera step, and control comes back right after the top-up.
+- Results:
+  - HoldUnitsUntilSignalTests + M1RidgeTests + M1RidgeLayoutTests: 61/61.
+  - Full EditMode suite: 2862 total; 2856 passed, 5 failed, 1 skipped (the Explicit AI baseline).
+  - The 5 failures are all in `M3DefenceTests` (three `EachHoldStageIsThePickHoldingThePushTileForOneTurnStart` cases, `StageTwoIsThePickOnThePushTileLitAsAGoal...`, `TheLevelIsLostWhenNoBergsonStandsOrThePickFalls`). Confirmed cause: THJ's local `GB_m3-defence.prefab` change replaces five managed-reference ids with `-2` (null), so those objective conditions read as null. I did not touch that file.
+- AI regression not re-run: no AI graph, ability or unit prefab changed (the rocks reuse the existing rock prefab).
+
+**Assets now unused (not deleted):** `Resources/Sequences/M1Ridge/M1Ridge_Cleared_CameraToPlateau.asset` and `M1Ridge_Plateau_DialogNodeSequence.asset`, each with its `.meta`. Nothing references them.
+
+**Still open (unchanged):** a re-run still re-adds (0.75, 0.75) to `M1Ridge_Ambush_CameraOnEastPath` and `M1Ridge_Ambush_CameraOnFamily`, and reorders the ambush unit list, until those builders follow the hand-tuned assets.
+
+**Files touched this round**
+- Code: `MissionWiring.Ridge.Layout.Ambush.cs` (+9), `MissionWiring.Ridge.Layout.cs`, `MissionWiring.Ridge.Sequences.cs`, `MissionWiring.Ridge.cs` (constants and comments).
+- Tests: `M1RidgeLayoutTests.cs`, `M1RidgeTests.cs`.
+- Asset: `GB_m1-ridge.prefab` (`m_IsActive` only, on top of THJ's version).
+- THJ's own files belong in the same commit: his prefab edits, `M1Ridge_Ambush_RevealRock.asset` + `.meta`, `M1Ridge_Ambush_SequentialSequence.asset`, `M1Ridge_Cleared_SequentialSequence.asset`, and the two dialogue assets.
+- All code files are LF with no BOM.
+- Diff stat, tracked files in scope (THJ's edits and the 4.6 work included): 12 files, 322 insertions, 47 deletions.
+
+**Proposed commits, revised.** Commit 1 stays as listed. Add a second commit after it:
+- `feat(onboarding): The Ridge drops two more rocks as the ambush comes, recounts the pack and cuts the plateau camera`
+- Files: THJ's assets above, plus the layout, sequence and line changes and the two test files.
+- Some files carry hunks of both commits (the prefab, `MissionWiring.Ridge.cs`, `MissionWiring.Ridge.Sequences.cs`). If a split by hunk is too fiddly, the two commits can merge into one.
+
 ## Save reset
 
 No.

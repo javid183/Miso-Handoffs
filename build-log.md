@@ -3063,3 +3063,11 @@ Plan `plans/2026-11-19-faster-loop-process.md`, decisions D-575 to D-579.
 **Commits:** `c0d642766` pick conditions, `e3f6d00c7` M3 level + mission + Trail renames, `335d3b511` River Cleanse lock. `eb0839f55` tally blast credit (after its re-check APPROVE). Not pushed. Play check of the blast credit still owed.
 
 **Status:** greybox committed as played; redesign next session.
+
+## 2026-11-26: M1 round 4.6, Linda waits for the ledge (`thj/onboarding-demo`)
+
+**Built:** `40736dcd1` `HoldUnitsUntilSignal` (skip-turn tag `Status.Inactive` from the end of the enemies' opening turn; release gives back the AP the skip took; release before hold cancels it), release signal first in the Catch sequence (D-712). THJ's tweaks folded into the wiring: ambush shake + rocks (2,1)/(3,3) in `ambush-rock`, plateau camera and lines cut from the pocket-cleared sequence, two line changes. Plan `plans/2026-11-25-m1-ridge-4-6-tech.md`, report `reports/onboarding-4-6-linda-hold.md`.
+**Verified:** review APPROVE (turn-end race traced safe), should-fixes applied; M1 + hold tests 61/61; full EditMode 2856/2862 with only 5 `M3DefenceTests` failing from THJ's local `GB_m3-defence.prefab` noise (not this work); AI regression 46 at build time (no AI change after); THJ played and said all good.
+**Not verified:** Linda's barks are muted while held (low-HP line on turn 1 can be lost).
+**Findings:** wiring re-run side effects still open (ambush list order, camera offsets). `GB_m3-defence.prefab` needs restoring.
+**Status:** committed, not pushed.
