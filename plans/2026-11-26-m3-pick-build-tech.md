@@ -35,6 +35,7 @@ The pick falling loses the level at any point.
 - [ ] `Features/Levels/AbilityLock/LevelAbilityLock.cs` (not core): an additive runtime `Lock(...)` (unit nickname + presets) that raises `Changed`, the mirror of `Unlock`. `HiddenFromBar` then hides the partner's Duo button, as it does for an Awake lock (D-751).
 - [ ] `Features/Player/Mark/Scripts/ProjectileCatchAndReturn.cs` (not core): no catch and no catch preview while the catcher is turn-skipped (held). It must work for `TryCatch`, `CatchSweep` and `WouldCatch` (D-751).
 - [ ] `Features/Player/Lucy/Scripts/LucyPassiveAbility_PapasShelter.cs` (not core): re-enabling refreshes (`_set` reset or re-evaluated), so the shelter returns at release if Lucy still stands next to John (D-751).
+- [ ] `Features/UI/Panels/Scripts/UnitPanelUI.RoleBadge.cs` (not core): a suppressed role shows a not-ready badge state, never Ready (D-755).
 - [ ] New Onboarding component (for example `Features/Onboarding/HoldPickOutOfCombat.cs`), driven by `SignalAction` steps. It finds the pick at runtime (`PickOnTilesLOCondition.IsPick`, or the unit on the push tile).
   - **Hold():**
     - `HoldUnitsUntilSignal` on the pick. Add the component at hold time, or keep it disabled until then: the code read explains why an empty-list `Hold()` blocks later holds.
