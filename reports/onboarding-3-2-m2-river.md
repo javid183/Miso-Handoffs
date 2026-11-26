@@ -15,7 +15,7 @@ All paths are under `miso/Assets/_Project/`. New `.cs` files are LF with no BOM,
   - `Tools/Onboarding/The River: Build Level`: builds `GB_m2-river` from the embedded paper block with `GridToLevelBuilder`. It refuses to run if the prefab exists.
   - `Tools/Onboarding/The River: Apply Wiring`: re-runnable. It writes the turn order (Bergsons, Enemy, Neutral), the HP factors, the Cleanse lock (`MissionWiringWhiteMothers.LockCleanse`), the 3 stages, the reset call, the embers pulse and its switch, the Pile props, the intro and outro, and re-points the mission.
 - `Features/Onboarding/Editor/MissionWiring.River.Sequences.cs` (new partial): the intro, rush and outro sequences, the Lucy role page, the Pile props and the builders.
-- `Features/Onboarding/Editor/M2RiverTests.cs` (new): 28 tests.
+- `Features/Onboarding/Editor/M2RiverTests.cs` (new): 30 tests (28 in the first round, 2 added in the review fix round).
 - `Content/Levels/Greybox/GB_m2-river.prefab` (+ `.meta`, GUID `573f2525d038a6e42b8014b9d4876d95`): new. The builder made it (67 tiles, 10 units placed), then the wiring edited it.
 - `Content/Levels/MS1 - The River.asset`: one line. The graph node's `payload` now points at `GB_m2-river`. The node id, GUID, name, drops (Gold 20, Timber 1, Fabric 1), XP 30 and roster (John and Lucy fixed) are unchanged.
 - `Resources/Sequences/M2River/` (new folder + `.meta`): 19 assets, each with its `.meta`:
@@ -51,8 +51,8 @@ All paths are under `miso/Assets/_Project/`. New `.cs` files are LF with no BOM,
   4. `MoveUnitSequence` takes John to 9,2.
   5. `RevealUnitsSequence ring` (0.6 s).
   6. **The turn reset** (the LSB `reset` call, Bergsons only).
-  7. `CastAbilitySequence`: Shield Up on John (Self cast, `ignoreApCost` on, Family Roles off).
-  8. John "Lucy! At me!" and Lucy "At you?".
+  7. John "Lucy! At me!" and Lucy "At you?" (after the review fix round; they give the restart time to land).
+  8. `CastAbilitySequence`: Shield Up on John (Self cast, `ignoreApCost` on, Family Roles off).
   9. A signal switches on the pulse on Lucy's Fire Embers.
   10. Input and HUD on.
 
@@ -139,7 +139,7 @@ Kept from the first version (not new): Lucy "Ryker! Ryker!"; John "Stay by me.";
 1. **The turn reset runs before Shield Up, not after it** (paper order: cast → lines → reset).
    - The reset calls `CombatLevelRunHandler.ResetCurrentPhase` → `RestartTurn` and then `Tick()`. `Tick()` runs the family's phase tick. Shield Up's `Status.ShieldUp` tag (`lifeTurns` 1) and its DR modifiers (1 turn) expire on that tick.
    - So in the paper order, John would have lost his shield before the player gets control.
-   - With the reset first: the reset runs while no action is in progress, so the restart happens at that step. Then the cast lands after the tick, and the turn still starts with full AP.
+   - With the reset first, the cast lands after the tick and the turn still starts with full AP. The restart itself lands a frame or more after the reset step (`ResetCurrentPhase` defers it, and `LSBExecutionSequence` waits only for the action set), so since the review fix round John's call and Lucy's reply sit between the reset and the cast.
    - The restarted turn's introductions and its input hand-over wait until the sequence ends (`EnemyIntroductionController.PlayPending` waits on `SequenceInProgress`), so H-01 still holds.
    - The player sees the same thing; only the order of two invisible steps changed.
 2. **The embers pulse is switched on by the rush**, not started by turn or unlock.
@@ -220,8 +220,8 @@ Before you start: set `GlobalSettings` › `deactivateIntroOutroSequences` off. 
 3. **The rush** (when the last worm and Claw die on the family's turn):
    - "There, by the water. Fur."; the camera goes to the shallows; John walks through 7,2 to 9,2.
    - Four Claws appear on his diagonals and an Archer on 11,2.
-   - John raises Shield Up (check the shield pose stays).
-   - "Lucy! At me!" / "At you?"
+   - "Lucy! At me!" / "At you?", then John raises Shield Up.
+   - **When control returns, check Shield Up is still on John:** the shield pose, the Shield Up status on his unit panel, and Lucy's ember preview on him showing the diagonal copies. If it's gone, the turn restart landed after the cast: note it.
    - The Archer's card plays (new save), then control returns.
    - Check: every family member has full AP; the objective reads "Help John."; Lucy's Fire Embers button pulses when she's selected.
    - (Try once with Lucy standing on 9,2 before the last kill: John should stay put and the console should say the move was cancelled.)
@@ -230,6 +230,34 @@ Before you start: set `GlobalSettings` › `deactivateIntroOutroSequences` off. 
    - Fire: John taunts once per ember, and the copies hit the ring Claws. Note the damage per copy for T-6 and whether Shield Up is still on John.
 5. **Win:** kill the ring and the Archer ("Help John." done; "Clear the river." completes at once). The camera closes in on the Pile, then the five clue lines, the outro, and the drops (Gold 20, Timber 1, Fabric 1, XP 30). No "Still counting?".
 6. **Old level:** `Content/Levels/Greybox/GB_s1-river_v1.prefab` still opens. Nothing plays it.
+
+## Review fix round (miso-implementer, 2026-11-26)
+
+Editor not in Play mode. Both should-fixes from the review are done.
+
+### What changed
+
+1. **The lines now stand between the reset and the Shield Up cast.** The rush is now: ... reveal → reset → John "Lucy! At me!" / Lucy "At you?" → Shield Up → embers pulse signal → input and HUD on.
+   - `ResetCurrentPhase` restarts the turn in a deferred call (`ExecutionUtils.ExecuteWithDelay`, waiting while an action is in progress). `LSBExecutionSequence` only waits for the action set, not for the restart. The click-to-continue lines give the restart time to land before the cast.
+   - I found nothing sturdier among the existing pieces. There is no "wait seconds" or "wait for the phase restart" sequence (the common folder holds only input, HUD, grid fades and cutscenes). A sturdier option would be a small non-core sequence that waits for the turn restart; I didn't add it.
+   - `MissionWiring.River.Sequences.cs`: step order and comment changed.
+   - The rush's step-list asset already existed. The wiring keeps an existing list, and moving a dialogue step doesn't count as a structural change, so it wouldn't warn either. So I swapped the two steps once in `M2River_Rush_SequentialSequence.asset` with a one-off editor call, then re-ran `The River: Apply Wiring`, with no console warnings. A fresh build gets the new order from code.
+2. **New test `TheWiringRerunLeavesTheLevelUnchanged`.** It hashes `GB_m2-river.prefab`, `MS1 - The River.asset` and every `M2River/*.asset`, runs `MissionWiringRiver.Run()`, and asserts every hash is unchanged and no sequence asset was added.
+   - Also new: `TheLinesStandBetweenTheResetAndTheShield`.
+   - The order test is renamed `TheRushMovesJohnRevealsTheRingResetsTheTurnThenTheLinesThenHisShield` and now asserts the new order.
+
+### Tests
+
+- `M2RiverTests`: 30/30 passed.
+- Full EditMode suite: **2889 total: 2888 passed, 0 failed, 1 skipped** (`AIRegressionTest.Baseline_MatchesCurrentAI`, Explicit; not run, since no AI content changed).
+- `git status` after the suite shows the same file set as before. The rerun test changed nothing.
+
+### Files for the commits
+
+Commit 1 is unchanged. Commit 2's list is unchanged too; two of its files changed content in this round:
+- `miso/Assets/_Project/Features/Onboarding/Editor/MissionWiring.River.Sequences.cs`
+- `miso/Assets/_Project/Features/Onboarding/Editor/M2RiverTests.cs`
+- `miso/Assets/_Project/Resources/Sequences/M2River/M2River_Rush_SequentialSequence.asset` (step order)
 
 ## Resume from
 
