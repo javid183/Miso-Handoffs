@@ -19,10 +19,10 @@ Filled per chunk below; the feature-wide list is filled on the last chunk.
 ### Chunk 8.1: Core: per-unit Family Role suppression
 
 - Changed:
-  - `miso/Assets/_Project/Core/Systems/AbilitySystem/Abilities/Runtime/FactionRoleHandlerBase.cs` (UTF-8 BOM, LF kept)
-  - `miso/Assets/_Project/Core/Interactions/Runtime/PlayerController.cs` (no BOM, LF kept)
-  - `miso/Assets/_Project/Core/Interactions/Runtime/FactionControllerBase.cs` (UTF-8 BOM, LF kept; added after the coordinator's follow-up decision)
-  - `miso/Assets/_Project/Core/Systems/AbilitySystem/Abilities/Editor/FactionRoleSuppressionTests.cs` (new, BOM + LF like its neighbours)
+  - `miso/Assets/_Project/Core/Systems/AbilitySystem/Abilities/Runtime/FactionRoleHandlerBase.cs` (UTF-8 BOM, CRLF kept)
+  - `miso/Assets/_Project/Core/Interactions/Runtime/PlayerController.cs` (no BOM, CRLF kept)
+  - `miso/Assets/_Project/Core/Interactions/Runtime/FactionControllerBase.cs` (UTF-8 BOM, CRLF kept; added after the coordinator's follow-up decision)
+  - `miso/Assets/_Project/Core/Systems/AbilitySystem/Abilities/Editor/FactionRoleSuppressionTests.cs` (new, BOM + CRLF like its neighbours)
   - `miso/Assets/_Project/Core/Systems/AbilitySystem/Abilities/Editor/FactionRoleSuppressionTests.cs.meta` (new, Unity-generated)
 - API (on `FactionRoleHandlerBase`, reach it through `unit.AbilityOrchestrator.FactionRoleHandler`):
   - `public void SetSuppressed(object owner, bool on)`: owner-keyed claims (a private `List<object>`). The same owner twice counts once; two owners keep it suppressed until both release; releasing without a claim is a no-op; a null owner throws `ArgumentNullException`. Main thread.
@@ -45,7 +45,8 @@ Filled per chunk below; the feature-wide list is filled on the last chunk.
 
 ## Reviews and checks
 
-- (coordinator)
+- **8.1 core review (miso-reviewer): APPROVE**, nothing to fix. Additive confirmed (IsSilenced, SuperTimeUnits set, ActivateFactionSuperTimeIE, early returns after the has-role check; no serialized change). Owner claims sound; loose ends for 8.2: claims match by `Equals` (destroyed UnityEngine.Object owners compare equal) and there is no clear-all, so the hold component must release in `OnDisable`/`OnDestroy`. Don't change suppression during Family Super Time (a unit dropping out of `SuperTimeUnits` mid-Super-Time stops `SuperTimeInProgress` waiting on it). Worker-safe, no statics, CRLF/BOM kept (report wording corrected), no private IDs, tests real. AI baseline should not move.
+- 8.1 full EditMode suite (implementer): 2899, 2898 passed, 0 failed, 1 Explicit.
 
 ## Save reset
 
