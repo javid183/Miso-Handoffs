@@ -1,23 +1,34 @@
 # Report: M3 "Hold the yard" greybox build
 
 Plan: plans/2026-11-25-onboarding-m3-greybox-tech.md    Agent: miso-implementer    Branch: thj/onboarding-demo
-Outcome: partial (chunk 6.1 done; 6.2 to 6.4 are later runs)
+Outcome: partial (chunks 6.1 and 6.2 done; 6.3 and 6.4 are later runs)
 
 ## What changed
 
-Chunk 6.1 only (all new files; no tracked file modified):
+New:
 - `Features/Onboarding/PickOnTilesLOCondition.cs`: new objective condition, the squad's free pick on the tiles (fixed seats read from the mission roster); exposes `{pick_i}`.
 - `Features/Onboarding/PickHeldTilesLOCondition.cs`: new objective condition, the pick held the tiles at N family turn starts since the stage began.
 - `Features/Onboarding/Editor/PickOnTilesLOConditionTests.cs`, `PickHeldTilesLOConditionTests.cs`: their EditMode tests.
-- `Features/Onboarding/Editor/MissionWiring.HoldTheYard.cs`, `.Stone.cs`, `.Sequences.cs`: menus `Tools/Onboarding/Hold the Yard: Build Level` and `Hold the Yard: Apply Wiring`.
-- `Features/Onboarding/Editor/M3DefenceTests.cs`: level tests.
+- `Features/Onboarding/Editor/MissionWiring.HoldTheYard.cs`, `.Stone.cs`, `.Sequences.cs`, `.Mission.cs`: menus `Tools/Onboarding/Hold the Yard: Build Level` and `Hold the Yard: Apply Wiring` (the level; from 6.2 also the mission graph, the Trail renames and the pile's tally steps).
+- `Features/Onboarding/Editor/MissionWiring.RiverCleanseLock.cs`: menu `Tools/Onboarding/The River: Lock Cleanse`.
+- `Features/Onboarding/Editor/M3DefenceTests.cs`, `RiverCleanseLockTests.cs`: tests.
 - `Content/Levels/Greybox/GB_m3-defence.prefab` (+ .meta): built from block `m3-defence`, then wired.
 - `Features/NPCs/Rock/Prefabs/Unit_Rock_Stone0..3.prefab` (+ .meta): the stone variants.
-- `Resources/Sequences/M3Defence/` (+ folder .meta): 40 sequence assets (+ .meta).
+- `Resources/Sequences/M3Defence/` (+ folder .meta): sequence assets (+ .meta).
+
+Moved (guids and contents identical, checked with `cmp` against HEAD):
+- `Content/Levels/Greybox/GB_m2-trailhead|blood|tracks|pile.prefab` (+ .meta) → `GB_m2-*_legacy.prefab`.
+
+Modified (tracked):
+- `Content/Levels/M2 - The Trail.asset`: the graph is one node, `GB_m3-defence`.
+- `Content/Levels/Greybox/GB_s1-river.prefab`: a `LevelAbilityLock` with Cleanse locked for every hero (+31 lines).
+- `Resources/Sequences/Search/Trail/Trail_Pile_End_SequentialSequence.asset`: the two tally steps removed (−2 lines).
+- `Features/Onboarding/Editor/SearchWiring.Trail.cs`: legacy paths, no mission wiring, no tally steps at the pile.
+- `Features/Onboarding/Editor/SearchTrailTests.cs`: follows the move.
 
 ## Acceptance criteria
 
-See "Chunk 6.1" below; 6.2 to 6.4 not started.
+See the chunk sections below; 6.3 and 6.4 not started.
 
 ## Chunks
 
@@ -112,6 +123,64 @@ Tool notes: Level Defence; 45 tiles; Early; all alert. Objectives: Clear the yar
 
 **How to see it (6.1)**: see "How to see it" below.
 
+### Chunk 6.1 follow-ups (coordinator decision, built with 6.2)
+
+**(a) 5,7 lit as a goal tile.** S2 is now one shown objective with two conditions, both needed: `PickOnTilesLOCondition` (first, so `{pick_0}` still names the pick) and `TilesOccupiedLOCondition` Bergsons on 5,7. A sister on 5,7 makes only the second true, so S2 doesn't complete; the pick on 5,7 makes both true. **Deviation (same intent):** the brief said a *hidden* objective. The goal highlight (`CombatLevel.RefreshGoalHighlights`, core, read only) skips objectives with `visibleToUser` off, so a hidden one would never light 5,7. The extra condition therefore sits inside the shown objective; the stage text is unchanged. AI: S2 is the only stage with a `TilesOccupied` condition, and no enemy is alive while it runs (the opening is dead, `w1` comes in at its end), so the planner has nobody to steer. Re-run safe: the push objective is written in place with two condition slots, so a second run keeps both managed references (md5 unchanged). Test: `StageTwoIsThePickOnThePushTileLitAsAGoalAndItsEndBringsTheFirstWave`.
+
+**(b) The last stone stays through S4.** S3c's end now only moves the stone to its last notch (stone2 → stone3) and plays the pick's line. The outro hides stone3 (`M3Defence_End_HideLastStone`) right after the camera reaches the cave and before `toba` is revealed, so 5,8 is blocked until the win and free for Toba. `WiringSeed` keeps existing step lists on a re-run, so the wiring updates the two lists the first build wrote only when they are still exactly as written; a hand-edited list is left alone, with the usual warning. Tests: `EachHoldStageEndMovesTheStoneANotch` (no roll-away before the outro), `TheOutroFadesTheTallyThenBringsTobaOut` (roll-away after the fade, before Toba).
+- Loose end: `Resources/Sequences/M3Defence/M3Defence_Notch3_HideLastStone.asset` (+ .meta) is now unused. The permission check refused my attempt to delete it, so it is still on disk, untracked. Don't stage it; delete it in Unity.
+
+### Chunk 6.2: mission and the old Trail
+
+**Built.** `Hold the Yard: Apply Wiring` now also does three things (`MissionWiring.HoldTheYard.Mission.cs`):
+- It renames the four Trail prefabs to `GB_m2-*_legacy.prefab` with `AssetDatabase.MoveAsset`, only when the old path exists and the new one doesn't.
+- It sets the graph of `M2 - The Trail.asset` to one node. The existing start node is reused (same node guid, position 0,0) and pointed at `GB_m3-defence`; the other four nodes and five edges go. Nothing else in the asset changed: the diff is the payload line plus the removed nodes and edges. The name, roster, items, Yard completion sequence, Map Table initiation sequence and Home state are untouched. The station unlocks and Toba's select button read the mission asset, so they still wait for it.
+- It removes the two tally steps (`SistersTally_ShowAlone`, `SistersTally_FadeOut`) from the old pile's end step list, matched by type. The other six steps keep their order.
+
+`SearchWiring.Trail` follows the new paths and no longer touches the mission. Its `WireMission` is gone, and a summary comment says why: the mission plays Hold the yard, and `MissionWiringHoldTheYard` owns its graph. The menu still wires the kept levels for reference. Its pile end no longer lists the tally steps, so a re-run of the Trail menu doesn't warn about the edited list.
+
+New criterion: the River level. `Tools/Onboarding/The River: Lock Cleanse` adds a `LevelAbilityLock` to `GB_s1-river` with Cleanse locked for every hero. It reuses `MissionWiringWhiteMothers.LockCleanse` and saves only when something changed. `Wire Search: River` doesn't touch locks, so re-running it keeps this. A rebuild of the River with the grid tool would drop the lock; re-run the menu then.
+
+**Re-run check:** both menus were run twice. After the second run these are byte-identical: `GB_m3-defence.prefab`, `M2 - The Trail.asset`, `GB_s1-river.prefab`, the M3 End and Notch3 step lists, and the pile end list.
+
+**Diff stat (tracked)**, `git diff --stat -- miso/Assets` (paths shortened):
+```
+ Content/Levels/Greybox/GB_m2-blood.prefab            | 4904 ---   (moved, see below)
+ Content/Levels/Greybox/GB_m2-blood.prefab.meta       |    7 -
+ Content/Levels/Greybox/GB_m2-pile.prefab             | 5228 ---
+ Content/Levels/Greybox/GB_m2-pile.prefab.meta        |    7 -
+ Content/Levels/Greybox/GB_m2-tracks.prefab           | 4490 ---
+ Content/Levels/Greybox/GB_m2-tracks.prefab.meta      |    7 -
+ Content/Levels/Greybox/GB_m2-trailhead.prefab        | 3079 ---
+ Content/Levels/Greybox/GB_m2-trailhead.prefab.meta   |    7 -
+ Content/Levels/Greybox/GB_s1-river.prefab            |   31 +
+ Content/Levels/M2 - The Trail.asset                  |   59 +-
+ Features/Onboarding/Editor/SearchTrailTests.cs       |   80 +-
+ Features/Onboarding/Editor/SearchWiring.Trail.cs     |   99 +-
+ Resources/Sequences/Search/Trail/Trail_Pile_End_SequentialSequence.asset | 2 -
+```
+The four "deleted" prefabs and metas reappear untracked as `_legacy`, identical byte for byte (checked with `cmp` against HEAD), so git shows them as renames once both sides are staged. `LevelM2-C1.prefab` and `PreloadScreen.unity` also show in the diff; they are THJ's uncommitted changes, untouched.
+
+**Criteria**
+- [x] The graph is one node, `GB_m3-defence`, and everything keyed to the mission stays. Test: `M3DefenceTests.TheTrailMissionPlaysThisLevelAlone`. These pass unchanged: `HomeVisitsTests` (Yard chain, clue scene, home state, station and Family tab unlocks), `OnboardingMissionGraphTests` (mission order and roster), `M4WhiteMothersTests` (Toba's button gate) and `BondSourcesTests` (sisters in the Trail).
+- [x] The four Trail prefabs are renamed `_legacy` with guids kept, and are out of the graph. `SearchWiring.Trail` and `SearchTrailTests` follow the new paths and pass, and a comment says why the menu no longer wires a level the mission plays. Tests: `M3DefenceTests.TheTrailsOldLevelsAreKeptUnderLegacyNames`, `SearchTrailTests.TheMissionNoLongerPlaysTheseLevels`.
+- [x] The River level locks Cleanse for every hero. Test: `RiverCleanseLockTests.CleanseIsLockedForEveryHero`.
+- [x] `SistersTally_FadeOut` plays at M3's end only. Tests: `SearchTrailTests.ThePileOutroNoLongerShowsOrFadesTheTally`, `M3DefenceTests.TheOutroFadesTheTallyThenBringsTobaOut`. Decision: `SistersTally_ShowAlone` left the pile too. It pins the counter alone for the fade, and without the fade it has nothing to pair with, so the whole tally beat now lives in M3's end. The pile's other steps are unchanged.
+- [x] `OnboardingMissionGraphTests`, the Home tests that read the Trail mission, and the tally tests pass.
+
+**Tests that pinned the old Trail graph** (rewritten in `SearchTrailTests`):
+- `TheGraphRunsTrailheadToEitherRouteToThePileThroughAnOrJoin` (5 nodes, OR join, 5 edges): replaced by `TheMissionNoLongerPlaysTheseLevels`.
+- `TheRouteMapOffersBothRoutesThenOnlyThePile` (route map over that graph): removed, since a one-node mission has no route map.
+- `ThePileOutroShowsTheTallyAloneForLindasLineThenFadesItBeforeLucyAnswers`: replaced by `ThePileOutroNoLongerShowsOrFadesTheTally`.
+No other test pinned the graph.
+
+**Tests run:** every test under `MISO.Core.Features.Onboarding.*` and `MISO.Core.Levels.*`, plus `BondSourcesTests`: **772/772 pass**. That covers `M3DefenceTests` (27), the condition tests, `SearchTrailTests`, `SearchRiverTests`, `RiverCleanseLockTests`, `OnboardingMissionGraphTests`, the `SistersTally*` tests, `HomeVisitsTests`, `M4WhiteMothersTests` and `OnboardingOpeningSetupTests`. The AI regression was not re-run: 6.2 changed no AI graph, AI ability or unit prefab (still 50 failures against 46, from 6.1).
+
+**Decisions (6.2)**
+- The mission graph, the renames and the pile's tally steps sit in `Hold the Yard: Apply Wiring`, one menu for M3. Each step is safe to re-run.
+- The River's lock has its own small menu. Putting it in `Wire Search: River` would re-save the River's clue props and sequences on every run.
+- The mission's items stay as they are in the asset (2 Health Potions, 1 FP Potion; `SearchTrailTests` still checks them). Nothing writes them now.
+
 ## Reviews and checks
 
 - (coordinator)
@@ -125,7 +194,9 @@ No.
 - Stone notches shown by shifting each variant's art 0.1 to the right; start stone revealed at level start (Tier 1, same behaviour).
 - With no fixed seat in the active mission (a level played on its own from the toolbar), every family member counts as the pick (documented in the condition).
 - Neutral listed last in the turn order; FP filler lists only the sisters.
-- The last stone hides at S3c's end, as the plan says (not at the outro).
+- (6.1) The last stone hid at S3c's end. The coordinator's follow-up changed that: it now hides in the outro, before Toba comes out.
+- (6.1 follow-up) The goal-tile condition sits inside S2's shown objective, because the goal highlight skips hidden objectives.
+- (6.2) `SistersTally_ShowAlone` leaves the pile along with the fade. The mission graph, the renames and the pile edit live in the Hold the yard menu. The River lock has its own menu.
 
 ## Needs THJ
 
@@ -134,24 +205,34 @@ none
 ## Docs to update
 
 - `tech/level-tools.md` "Built so far": `GB_m3-defence` (coordinator).
+- `tech/onboarding-merge.md` M3 rows: the Trail's four levels renamed `_legacy`, the mission graph down to one node, the River's Cleanse lock (coordinator).
 - `reward-tools`' `guidmap.json` (for `level_to_grid.py`): add `Unit_Rock_Stone0..3` if the read-back should name them.
 
 ## Risks and loose ends
 
-- **Sandbox play:** from the level toolbar's Play the mission has no fixed seat, so Linda or Lucy on 5,7 also pushes. Through the M3 mission (after 6.2) only the pick does.
-- **5,7 isn't lit as a goal tile:** the goal highlight (`CombatLevel`, core) knows only `TilesOccupied` and `UnitTileOccupied`. A hidden companion `TilesOccupied` (Bergsons on 5,7) in S2 would light it at no AI cost, since no enemy is alive during S2. Not done (outside the plan); coordinator's call.
-- **5,8 is open during S4:** after the stone rolls away, anyone can step into the cave tile. If someone stands there at the win, Toba comes out on the nearest free cell. Alternative: hide the last stone in the outro, just before Toba.
-- **Turn-start count can slip** if a death or new-stage wait spans the family turn start (To check 2).
+- **Sandbox play:** from the level toolbar's Play the mission has no fixed seat, so Linda or Lucy on 5,7 also pushes. Through the M3 mission only the pick does.
+- **Turn-start count can slip** if a death or new-stage wait spans the family turn start (6.1 To check 2).
 - **Revealed stone**: the start stone comes in through the normal reveal (initialize, "born"), so it may play a spawn effect at level start. Look at it in the play check.
-- The mission still plays the Trail until 6.2: `GB_m3-defence` is reachable only through the level toolbar for now.
-- `HelpBox` text on the two conditions mentions `{pick}`, `{held}`, `{needed}`; S3's texts don't use `{held_0}` (they follow the plan's fixed "(1/3)" wording).
+- **Unused asset:** `Resources/Sequences/M3Defence/M3Defence_Notch3_HideLastStone.asset` (+ .meta). Delete it in Unity; don't stage it.
+- **River lock and the grid tool:** rebuilding `GB_s1-river` with the grid tool drops the lock; re-run `The River: Lock Cleanse` after a rebuild.
+- **Saves that played the old Trail:** use a cleared save for the M3 play check.
+- The `HelpBox` text on the two conditions mentions `{pick}`, `{held}` and `{needed}`. S3's texts don't use `{held_0}`; they follow the plan's fixed "(1/3)" wording.
 
 ## Proposed commits
 
 1. `feat(onboarding): objective conditions for the squad pick on a tile`: `Features/Onboarding/PickOnTilesLOCondition.cs`, `Features/Onboarding/PickHeldTilesLOCondition.cs`, `Features/Onboarding/Editor/PickOnTilesLOConditionTests.cs`, `Features/Onboarding/Editor/PickHeldTilesLOConditionTests.cs` (+ their .meta) (plain)
-2. `feat(onboarding): M3 becomes Hold the yard` (6.1 part): `Content/Levels/Greybox/GB_m3-defence.prefab`, `Features/NPCs/Rock/Prefabs/Unit_Rock_Stone0..3.prefab`, `Resources/Sequences/M3Defence.meta` + `Resources/Sequences/M3Defence/` (40 assets), `Features/Onboarding/Editor/MissionWiring.HoldTheYard.cs`, `.Stone.cs`, `.Sequences.cs`, `Features/Onboarding/Editor/M3DefenceTests.cs` (+ every .meta) (plain; depends on 1)
+2. `feat(onboarding): M3 becomes Hold the yard and the Trail's levels leave the mission`:
+   - the level and stone: `Content/Levels/Greybox/GB_m3-defence.prefab`, `Features/NPCs/Rock/Prefabs/Unit_Rock_Stone0..3.prefab`;
+   - the sequences: `Resources/Sequences/M3Defence.meta` + `Resources/Sequences/M3Defence/` (every asset except `M3Defence_Notch3_HideLastStone.asset`);
+   - the wiring and tests: `Features/Onboarding/Editor/MissionWiring.HoldTheYard.cs`, `.Stone.cs`, `.Sequences.cs`, `.Mission.cs`, `Features/Onboarding/Editor/M3DefenceTests.cs`;
+   - the mission and the old Trail: `Content/Levels/M2 - The Trail.asset`, the four `GB_m2-*.prefab` (+ .meta) removed and the four `GB_m2-*_legacy.prefab` (+ .meta) added (renames), `Resources/Sequences/Search/Trail/Trail_Pile_End_SequentialSequence.asset`, `Features/Onboarding/Editor/SearchWiring.Trail.cs`, `Features/Onboarding/Editor/SearchTrailTests.cs`;
+   - every .meta goes with its file.
+   (plain; depends on 1)
 
-Not to stage: THJ's `LevelM2-C1.prefab`, `PreloadScreen.unity`, `ProjectSettings/*`, `Content/FamilySuperTime/DUO/Inserts/`.
+   The plan proposed two commits here (the level, then the Trail leaving the mission). They can't be split cleanly: `MissionWiring.HoldTheYard.Mission.cs` uses the `_legacy` paths defined in `SearchWiring.Trail.cs`, and `M3DefenceTests` checks the mission graph and the renames. A split commit 2 would fail to compile or fail its tests. A split is possible only if the `.Mission.cs` part and its two tests move into the second commit; coordinator's call.
+3. `feat(onboarding): Cleanse is locked in The River`: `Content/Levels/Greybox/GB_s1-river.prefab`, `Features/Onboarding/Editor/MissionWiring.RiverCleanseLock.cs`, `Features/Onboarding/Editor/RiverCleanseLockTests.cs` (+ .meta) (plain; independent of 1 and 2)
+
+Not to stage: THJ's `LevelM2-C1.prefab`, `PreloadScreen.unity`, `ProjectSettings/*`, `Content/FamilySuperTime/DUO/Inserts/`; and the unused `M3Defence_Notch3_HideLastStone.asset` (+ .meta).
 
 ## Other branches
 
@@ -159,11 +240,20 @@ none
 
 ## How to see it
 
-1. In Unity (Play stopped), the level is already built and wired. To re-apply: **Tools › Onboarding › Hold the Yard: Apply Wiring** (safe to re-run; changes nothing on a wired level).
-2. Level toolbar dropdown → `GB_m3-defence` → **Play** (sandbox; pick John or Mark for the deploy slot).
-3. At the start the stone sits on the top tile (5,8) and the Masher's close-up plays. Kill the Masher and the two Claws: "Clear the yard." strikes, the camera goes to the stone, the pick's line plays.
-4. Walk the pick to 5,7 (below the stone): the west wave (two Claws) comes in, Linda's bark plays. The objective reads "Hold them off (1/3)".
-5. End the turn with the pick on 5,7: at the next family turn start the stone moves a notch and the east wave (three Claws) comes in, before you get input. Step off for a turn and the stone waits.
-6. Two more turn starts on 5,7: the third wave (one Claw per lane), then the stone rolls away. "Finish them.": kill the rest.
-7. The win: the tally alone, "Still counting?", it fades, "…No.", the camera on the cave, Toba comes out and speaks, the outro.
-8. Also try: Linda on 1,4 shooting down column 1 across the gap at 1,3 into the mushroom on 1,1; Lucy's ember the same.
+1. In Unity (Play stopped), everything is already applied. To re-apply, run **Tools › Onboarding › Hold the Yard: Apply Wiring** and **Tools › Onboarding › The River: Lock Cleanse**. Both are safe to re-run and change nothing on data that is already applied.
+2. Open `M2 - The Trail.asset`: its level graph shows one node, `GB_m3-defence`.
+3. Play it one of two ways:
+   - Through the mission: from a cleared save, play up to the Trail.
+   - Quicker: in the level toolbar dropdown pick `GB_m3-defence`, then **Play**. This is a sandbox run; pick John or Mark for the deploy slot.
+4. At the start the stone sits on the top tile (5,8) and the Masher's close-up plays. Kill the Masher and the two Claws: "Clear the yard." strikes, the camera goes to the stone and the pick's line plays. The tile 5,7, below the stone, is lit as a goal.
+5. Walk the pick to 5,7: the west wave (two Claws) comes in and Linda's bark plays. The objective reads "Hold them off (1/3)". Through the mission, a sister alone on 5,7 does nothing.
+6. End the turn with the pick on 5,7. At the next family turn start, before you get input, the stone moves a notch and the east wave (three Claws) comes in. Step off for a turn and the stone waits.
+7. Hold 5,7 for two more turn starts: the third wave comes in (one Claw per lane), then the stone takes its last notch. It still blocks 5,8. "Finish them.": kill the rest.
+8. The win plays in this order:
+   - the tally alone on screen, Linda's "Still counting?";
+   - the tally fades, Lucy's "…No.";
+   - the camera on the cave, the stone rolls away;
+   - Toba comes out on 5,8 and speaks;
+   - the outro, then the Yard at Home as before.
+9. Play The River: Cleanse is missing from every hero's bar.
+10. Also try: Linda on 1,4 shooting down column 1, across the gap at 1,3, into the mushroom on 1,1. Then Lucy's ember the same way.
