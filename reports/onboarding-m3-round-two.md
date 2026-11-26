@@ -343,3 +343,14 @@ none (`thj/onboarding-demo` is merged into `main`)
 8. Check that Mark's Role never fires when a Claw hits a sister near him, and that enemies attack him if they reach him.
 9. Kill every goblin. The win plays the tally alone and "Still counting?", the fade, "…No.", the camera on the cave, Toba, his lines, then home.
 10. To see the loss: let Mark fall. The loss panel lists "Keep Mark standing" as failed.
+
+## Review (miso-reviewer, 7.1, pasted by the coordinator; the reviewer is read-only)
+
+**Verdict: APPROVE.** Must fix: none. Should fix: none.
+
+- `holdFromLevelStart`: off = M1 unchanged; on = the hold is in `Start`, before `levelStarted` and the first `StartTurn`; guarded so the tag goes on once; the tag survives `GUnit.Initialize`; worker-thread guard on the new handler; the listener is removed in `OnDisable`; no new statics. The 7 option tests check behavior.
+- Relations: every turn-order faction has an "enemies" entry (tested on a runtime copy). Deviation from the plan: Neutral–Stranger is Enemy (needed for Stranger's enemy list); Stranger is last in the turn order. Play console check for `KeyNotFoundException` at the stone reveal is left to play.
+- Stages: `turn = 1` per stage is right (relative count); stages complete at turns 2–5. Gap: the test checks data only; the behavior is left to the play check.
+- Asset refs: only the Trail points at the new GUID; the old GUID lives only in `_v1`.
+- LF / no BOM, no private IDs, no core files, commit grouping sound.
+- Carried risks: Masher counter-push has no tag filter (can push Mark); both defeat groups draw enemies to Mark; `WireHold` deletes any other hold in the level (fine now).
