@@ -294,3 +294,26 @@ Should fix:
 2. `MissionWiring.HoldTheYard.Sequences.cs:135-138, 187-189, 192-198`: remove the first-build migration code (`EarlierLastStoneHideName`, the `earlier` lists, `StepListUpgrading`'s upgrade branch); a plain `BuildSequential` is enough.
 
 Notes: **the pick dying softlocks S2/S3** (only the pick completes them; only defeat is "no Bergson standing"); a dead pick before S2 shows a raw `{pick_0}` → design decision for THJ. Pick-held condition resets on every level load; early-count edge case harmless; the faction-identity check is play-check only. Sandbox: every family member counts as the pick (documented). Stone order tested. Menus guarded, re-run safe. AI 50 accepted (D-701).
+
+## Review fixes (6.1–6.3), implementer
+
+Must-fix 1 (mushroom window, `SistersTallyListener.Blast.cs`, + one line in `SistersTallyListener.cs`):
+- (a) A window opens only for a hazard that is alive and `CanPerform`.
+- (b) Windows age on `turnEnded`. **Deviation from the review text:** a window closes at the *second* turn end after it opened, not the first. The blast lands ~1.5 s after the touch, and the player's turn can end inside that gap, so closing at the first end would lose the credit. The other close paths stay (dispose, destroy, level end, new level, disconnect). Say if you want the strict first-end version.
+- (c) `RecordBlastDeath` ignores deaths while any ability is in progress (`_inProgress.Count > 0`).
+- Arrow + blast once, both orders, in tests: blast lands while the arrow's ability runs -> ignored by the blast, counted once by the arrow's lethal report (the blast damage is in the health it measures); blast lands after the ability ended -> counted once by the blast, and the arrow's late effect report on the corpse adds nothing.
+- New tests (SistersTallyTests.Blast.cs, 23 total): later Lucy kill stays Lucy's with the mushroom still armed; a pick kill after a Linda-set blast counts for no one; enemy-side death during an ability counts for no one; window closed by the next turn end; mushroom that cannot blast opens nothing; the two arrow-order tests.
+
+Should-fix 1: stage-label comments in `MissionWiring.HoldTheYard.cs` are plain words.
+Should-fix 2: `MissionWiring.HoldTheYard.Sequences.cs`: `EarlierLastStoneHideName`, `StepListUpgrading` and both `earlier` lists removed; `BuildSequential` called directly. Hold the Yard menu re-run (twice): all 41 files under `Resources/Sequences/M3Defence` byte-identical (md5) to before; the level prefab changed once (the defeat group below) and then stayed identical on the second run.
+
+Pick-falls defeat (THJ decision, feature-side):
+- New `Features/Onboarding/PickFallenLOCondition.cs` (+ .meta): the pick is the first unit of the family faction on the board whose nickname is not a fixed roster seat (same rule as `PickOnTilesLOCondition`); once seen it is watched, and the condition is true when it is no longer alive. A destroyed object (level teardown) is not a fall.
+- Sandbox choice: with no fixed seat in the active mission there is no pick and it never triggers; likewise before a pick is seen.
+- Wiring (`MissionWiring.HoldTheYard.cs`, `WireDefeatOnPickFalling`): the template's defeat group stays as is; a second defeat group holds the new condition (invisible objective); the level's defeat aggregation is set to Any so either group loses. Re-run safe (checked).
+- Tests in `M3DefenceTests`: wiring (two defeat groups, Any, template kept, condition and faction); pick dies -> true, sister dies -> false; no fixed seat -> never; only fixed seats on board -> no pick yet.
+- Play check: lose with the pick (John/Mark) dead from the start; a sister dying does not lose by itself.
+
+Tests: full EditMode suite 2803 passed, 1 failed, 1 skipped (Explicit AI baseline). The failure, `GridToLevelCameraStartTests.Build_CameraLinePutsTheViewOnThatTile`, is an engine assertion (`m_LockCount == 0`) in `PrefabUtility.UnloadPrefabContents` during a grid-builder test, unrelated to these files; the whole class passed (17/17) when re-run alone, so it looks like an editor-state flake from the earlier menu runs. No Play run.
+
+Proposed commits: the 6.3 commit now also includes the review fix (unchanged files list). The pick-defeat belongs with the M3 level commit: `Features/Onboarding/PickFallenLOCondition.cs` (+ .meta), `MissionWiring.HoldTheYard.cs`, `M3DefenceTests.cs`, and the level prefab. Sequence/comment cleanups go with their existing commit.
