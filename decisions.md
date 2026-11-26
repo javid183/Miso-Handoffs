@@ -6,6 +6,9 @@ Rows D-001 to D-011 were carried over on 2026-10-15 from the Home handoff and pr
 
 | Date | ID | Tier | Scope | Decided by | Decision | Why | Affects |
 | --- | --- | --- | --- | --- | --- | --- | --- |
+| 2026-11-26 | D-738 | 2 | all | coordinator | M3: Mark's level instance carries `EntityState.IgnoreObjective`, so the template defeat still fires when both sisters fall (Mark's own defeat group stays) | Without it the held Mark counts as standing and a lost level drags on; within D-725's "defeat when Mark falls, plus the template" | GB_m3-defence; MissionWiring.HoldTheYard.Mark |
+| 2026-11-26 | D-737 | 2 | all | coordinator | M3: Mark's Duos with Linda and Lucy are locked on his level instance | A Duo would move him off 4,11; D-725 has him held and Unmovable all level; data only, revert by unticking | GB_m3-defence; MissionWiring.HoldTheYard.Mark |
+| 2026-11-26 | D-736 | 2 | all | coordinator | M3: Mark's Family Role is switched off on his level instance (answers no phase, zone hidden), because `Status.Inactive` doesn't stop a Role (T-M1) | Carries out D-725's "Family Role off" with data; no core change | GB_m3-defence; MissionWiring.HoldTheYard.Mark |
 | 2026-11-26 | D-735 | 2 | all | coordinator | M3 text Q2/Q3: "the wall" stays a spoken word only for a row of barricades; Mark doesn't say a push count (the objective carries it). Narrative's defaults | Text in the established voice; keeps lines independent of the hold-length lever | design/m3-text.md; chunk 7.2 |
 | 2026-11-26 | D-734 | 3 | all | THJ | Toba's first M3 line becomes "You moved the stone. Thank you."; Mark takes the closing "We follow. Stay sharp." | Recommended (John not in M3) | design/m3-text.md; chunk 7.2 |
 | 2026-11-26 | D-733 | 3 | all | THJ | M3 shows the loss rule: objective "Keep Mark standing." and defeat line "Mark has fallen." (two text keys) | Recommended | design/m3-text.md; chunk 7.2; defeat group text |
