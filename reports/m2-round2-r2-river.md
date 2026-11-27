@@ -417,3 +417,38 @@ THJ played round 3, tweaked `GB_m2-river.prefab` again (saved 17:22) and asked f
    - The Archer (if alive, wherever it stands) walks to 14,7 and fades; with it dead the walk and fade are skipped.
    - Then the horn and the rest as before.
    - The wave worm takes a free tile next to 10,2 if a ring Claw is still standing there.
+
+### Round 4 review fixes
+
+- **The Archer on 12,2 is passive until the ambush** (THJ's answer). Previously it was alert from turn 1 and could walk west into John's rush path.
+  - New non-core component `Features/Onboarding/KeepUnitsPassive.cs` (+ `.meta`) on `River Switches`, listing only that Archer.
+  - On the bus's `levelStarted` (after the intro, before the first turn) it gives the Archer the `Status.Unaware` tag. `AIController.prefab`'s skip-turn query lists that tag (with Stunned), so the AI never moves or attacks with it.
+  - Under `level alert all` the enemy alert tracker keeps no Unaware units of its own. It only ever wakes units it put in its own list (`WakeOne`/`Wake`/`SetAlerted` check `_unaware`), so nothing wakes this one: not sight, not noise, not hits.
+  - **What I chose:** it stays passive regardless, even when the player attacks it. It can still be targeted, hit and killed.
+  - The tag is hidden in game (`ShowInGame` off), and the tracker draws Unaware markers only for its own units, so there's no marker or pop. Nothing else reads `Status.Unaware`: the only asset that references it is the AI controller's skip query.
+  - It doesn't drop out of anything that matters:
+    - stage 1 already leaves it out;
+    - it isn't in stage 2;
+    - for stage 3 the ambush takes it off the board first, or it's dead;
+    - the objective-ignore query doesn't list the tag.
+  - The ambush still walks it out (`MoveUnitSequence` moves it whatever the AI does) and takes it off the board.
+  - No core change.
+- **Should-fixes:**
+  - The wiring log line now says "Cleanse locked and the John-Lucy Duo open, Lucy held until John's first action, the shallows' Archer kept passive".
+  - The `M2RiverTests` header now says the Duo is open.
+  - `BlockDocument` is commented as the original paper block, kept only as the first build's input and no longer the layout (diagonal ring and Flare arrows out of date). The block itself is unchanged, since the builder never runs again.
+  - The class summary says the Archer stands still.
+- **Tests:**
+  - New `TheShallowsArcherIsKeptPassiveUntilTheAmbush`: the component sits on the switches child and lists only the Archer, and the AI controller's skip-turn query contains the tag it adds.
+  - The existing `EnemyAlertDataTests` already check that this query skips a unit with the tag.
+  - That the Archer actually stays put through the turns, also when hit, can't run in edit mode: **THJ's check**.
+  - River wiring re-run with a clean console.
+  - `M2RiverTests` (45), `RiverRushAndHoldStepsTests`, `OnboardingHealthPotionPageTests`, `RiverCleanseLockTests`, `EnemyAlertDataTests`: 70/70.
+  - Full EditMode suite **2956 total: 2955 passed, 0 failed, 1 skipped** (`AIRegressionTest`, Explicit).
+  - One wiring run hit the previous build while a missing `using` stopped the compile. I fixed it, recompiled, and re-ran the wiring; the results above are from the fixed build.
+- **Commit 3 (The River)** also takes `miso/Assets/_Project/Features/Onboarding/KeepUnitsPassive.cs` + `.meta`.
+- **THJ checks in play:**
+  - The Archer on 12,2 never moves or shoots during the enemy turns of the clearing and of the ring fight, even when John or Lucy attacks it.
+  - Its info panel shows no Unaware marker or pop.
+  - John's rush to 9,2 is never blocked by it.
+  - At the ambush it walks to 14,7 and fades.
