@@ -2,7 +2,7 @@
 
 Size: S    Tier: 2 inside THJ's approval (D-783; demo tweak H-16)    Assigned to: miso-implementer (sonnet)
 Branch: all (THJ is on `main`)
-Status: approved, building
+Status: built and verified (review APPROVE, full suite 3071/3072 with 1 Explicit); waiting on THJ's play check
 
 ## Goal
 

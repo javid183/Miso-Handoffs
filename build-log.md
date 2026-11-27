@@ -3113,3 +3113,10 @@ Plan `plans/2026-11-19-faster-loop-process.md`, decisions D-575 to D-579.
 
 ## 2026-11-26 Commits on main (M3 pick, part 2): M3 done
 `af733a9c7` fix(onboarding): wiring seeds a new dialogue before saving it (D-782) · `4fc778e9d` feat(onboarding): a pick line per character and a trigger when units reach tiles (8.4) · `1fbcda42c` feat(onboarding): Hold the yard round two (7.1 + 8.3 + 8.4). Check before commit: compile clean, M3 + lines + River rerun tests 70/70 (full suite last green at 3055/3056 before the small follow-up). Not pushed. Open: M3 barks (D-780, backlog); AI prediction for big units (backlog); THJ's line checks (west-wall pair, "{pick} has fallen.", John's push line).
+
+## 2026-11-27 Memory 3: only John's Family Role works (main)
+**Built:** new Onboarding level component `LevelFamilyRoleSuppression` (suppresses the listed units' Family Roles from level start to level end through the core `SetSuppressed`, waits out Family Super Time, lets go on disable, destroy and level end) and `LevelRoleZoneHidden` (own `IRoleZoneVisibility`); `HearthMemoryWiring.John.cs` adds it with Linda and Lucy; `GB_m3-john.prefab` +18 lines (the component only). No core change. D-783, plan `plans/2026-11-27-memory3-john-only-role.md`, report `reports/memory3-john-only-role.md`.
+**Verified:** review APPROVE (two test should-fixes done); covering 41/41; full EditMode 3072: 3071 passed, 0 failed, 1 Explicit (`reports/memory3-john-only-role-verify.md`); prefab diff checked by the coordinator.
+**Not verified:** THJ's play of Memory 3 (no Watch or follow-up prompt, sisters' zones hidden, John's Shield works; Family Super Time with John alone, if reachable). AI regression not run (no AI content changed). Wiring re-run idempotence taken from the implementer.
+**Findings:** at the component's `Start` the units aren't alive yet, so the real switch-off happens on `levelStarted`; covered by a test. Full suite ~120 s through the MCP.
+**Status:** uncommitted in the shared repo; THJ plays Memory 3, then one commit `feat(hearth): only John's Family Role works in his memory`.
