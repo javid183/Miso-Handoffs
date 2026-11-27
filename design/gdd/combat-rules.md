@@ -152,7 +152,7 @@ Source: `Core/Interactions/Runtime/QTEProfile.cs`, `QTEBehavior.cs`, `QuickTimeE
 
 ## Items
 
-- **CR-30.** Each mission gives the family a shared stock of two items that any member can use on themselves: the Health Potion (heals 10 × `Stat_HPP`, so 10 to 25 HP; not at full HP) and the Family Trinket (+5 FTP; not when FTP is full). Both are free but need 1 AP left. Counts are set per mission ([Missions and structure](missions-structure.md)). *Built* (the trinket's potency stat does nothing: [Progression and economy](progression-economy.md) Q10)
+- **CR-30.** Each mission gives the family a shared stock of two items that any member can use: the Health Potion (heals 10 × `Stat_HPP`, so 10 to 25 HP) and the Family Trinket (+5 FTP on its user; not when FTP is full). The Health Potion goes to any ally unit, the holder included, at any range; only an ally below full HP can be picked, and a target at 0 AP can be healed. The holder spends the use. Both items cost no AP, but the holder needs 1 AP left to act. Counts are set per mission ([Missions and structure](missions-structure.md)). An item with 0 uses left has no pouch button, from the start of every level. The hover preview of the heal still shows on the holder. *Built* (the trinket's potency stat does nothing: [Progression and economy](progression-economy.md) Q10)
 - **CR-31.** Restarting a level gives back the items used in it. *Built*
 
 Source: `Features/Player/Shared/Items/HealthPotion/Bergsons_Ability_HealthPotion.asset`, `Items/FPPotion/Bergsons_Ability_FPPotion.asset`, `Core/Units/Runtime/Factions/FactionTracker.cs` (`ItemTracker`), `Content/Levels/M*.asset` (`initialItemsAvailability`).

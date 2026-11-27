@@ -1,8 +1,8 @@
 # Memory 3 Shield Dash on turn 2, Memory 2 Claw fade fix (build)
 
-Size: S    Tier: 2 inside THJ's requests (D-785, D-786)    Assigned to: miso-implementer (sonnet)
+Size: S    Tier: 2 inside THJ's requests (D-795, D-796)    Assigned to: miso-implementer (sonnet)
 Branch: all (THJ is on `main`)
-Status: built and verified (review APPROVE, full suite 3078/3079 with 1 Explicit); waiting on THJ's play check
+Status: done, THJ played; committed b379e85e0, d8d273083, e91e2cded, a7ab72434, 673e82ac7 (not pushed)
 
 THJ hand-tweaked both levels (uncommitted). His layouts stay. Reads: Memory 3 tweak read and hooks, Memory 2 trace (this session; summarised below).
 
@@ -32,7 +32,7 @@ Cause: THJ shifted every hidden Claw one column left and deleted column 10; `Mem
 
 ## Out of scope
 
-`Unit_John.prefab` (THJ's Shield factor 1, D-784): don't touch. Memory 3 role suppression (done).
+`Unit_John.prefab` (THJ's Shield factor 1, D-794): don't touch. Memory 3 role suppression (done).
 
 ## Test plan
 

@@ -5,14 +5,14 @@ Outcome: done (play check by THJ / verifier still open)
 
 ## What changed
 
-Part A (Memory 3 Shield Dash, D-786)
+Part A (Memory 3 Shield Dash, D-796)
 - `Features/Onboarding/TurnStartAbilityUnlock.cs` (+ `.meta`, new): level component; at one faction's turn N start (once) calls `LevelAbilityLock.Unlock(nickname, presets)`. Same shape as `TurnStartActionPointLimit` (bus subscription with the 600-frame wait, unsubscribes on disable, no statics). Testable core `TryApply(startedFaction, turn, lock)` and static `Matches`.
 - `Features/Onboarding/Editor/TurnStartAbilityUnlockTests.cs` (+ `.meta`, new): 6 tests.
 - `Features/Onboarding/Editor/HearthMemoryWiring.John.cs`: `ShieldDashPath`, `ShieldDashTurn = 2`; John's lock entry gets Shield Dash; new `WireShieldDashUnlock` (Bergsons, turn 2, John's nickname, Shield Dash); new `WireHints` uses `GetComponents<GuidedAbilityHint>()` and claims each hint by its preset (Shield Up = Turn mode turn 1; Shield Dash = WhenUnlocked), reusing a stray hint or removing extras. Class summary updated. NOTE: this file also carries the earlier, uncommitted role-suppression hunks (`RoleSuppressedUnitNames`, `WireRoleSuppression` and its call); my hunks are the ones above.
 - `Features/Onboarding/Editor/HearthMemoryJohnTests.cs`: Claw tiles follow THJ's layout ((4,5) TO 2, (4,6) TO 4 replace (7,4) and (1,4)); Shield Up hint found by preset and checked as Turn mode 1..1; John's lock expectation includes Shield Dash; new `ShieldDashIsLockedForJohnUntilTheSecondTurnAndPulsesWhenItOpens`.
 - `Content/Levels/Greybox/GB_m3-john.prefab`: re-wired by "Tools/Onboarding/Wire Memory 3 (John)" (diff below).
 
-Part B (Memory 2 Claws, D-785)
+Part B (Memory 2 Claws, D-795)
 - `Features/Onboarding/Editor/HearthMemoryWiring.Lucy.Claws.cs`: `KeptTiles` (8,3),(8,1); `FadingTiles` (5,1)(5,3)(6,1)(6,2)(6,3)(7,1)(7,2)(7,3); `FourTiles` (9,2),(9,3). Same order as the units already listed in THJ's hidden groups, so the group lists did not reorder.
 - `Content/Levels/Greybox/GB_m2-lucy.prefab`: the 12 hidden Claws saved inactive again (diff below).
 - `Resources/Sequences/Hearth/Memory2Lucy/Memory2Lucy_Interruption_FadeOut.asset`: keep tiles (9,3),(9,1) -> (8,3),(8,1).
