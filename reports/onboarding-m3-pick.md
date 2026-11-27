@@ -218,6 +218,18 @@ Against block `m3-defence-4`: `#` reads `_`; `c@` on 4,11 reads `c` (the `@` is 
 7. Next three family turn starts: notch + w2, notch + w3, then the stone rolls away, the pick is released with a full turn, "Finish them.". Enemies should be able to hit the held pick.
 8. Let the pick fall at any point: the level is lost and the loss panel lists "Keep John standing" as failed.
 
+#### Should-fix follow-up (after the 8.2+8.3 review)
+
+- Pick fallback guard: `HoldPickOutOfCombat.FindPick`'s fallback now goes through a new `public static GUnit FirstPick(IEnumerable<GUnit> units, ICollection<string> fixedSeats)`. It returns null when there is no fixed seat (or none given), the same guard `PickFallenLOCondition.FindPick` has, so a level played without a mission holds nobody instead of the first unit. The `pushTile` path is unchanged. The `pushTile` tooltip says so. Tests: `HoldPickOutOfCombatTests.FirstPick_NoFixedSeat_IsNobody`, `FirstPick_IsTheFirstLivingUnitOutsideTheFixedSeats`.
+- Behaviour tests:
+  - `WouldCatch`: `CatchHeldCatcherTests.WouldCatch_IsFalseWhileTheCatcherIsHeld_AndTrueOnceBack`. Full rig: Mark at 0,3 and Linda at 0,0 on grid cells, the same faction, the catch unlocked through the faction tracker, a QTE binding, a real `PlayerController` skip query. Unheld it returns true (the control), held false, true again once the inactive tag goes.
+  - `TryCatch`: not rigged. Past the held check it needs a live `Projectile` (owner, prefab source, direction), then it freezes the arrow and runs the return-hit count. A held-only test would pass without the gate too, so I didn't add one. It uses the same `IsCatcherHeld` check as its third line, before any arrow check. Left for the play check: Linda shoots through a held Mark, and the arrow flies on.
+  - Papa's Shelter: `PapasShelterReenableTests.SwitchingBackOn_NextToJohn_ShelterComesBack`. Lucy's cell lists John's as adjacent, and both units are in a real `PlayerController`'s faction. Sheltered on enable, the `Status.Sheltered` tag gone on disable, back at once on re-enable with nobody moving.
+- Files: no new files. Changed again: `HoldPickOutOfCombat.cs`, `HoldPickOutOfCombatTests.cs`, `CatchHeldCatcherTests.cs`, `PapasShelterReenableTests.cs`. The commit 2/3 file lists stay as they are.
+- Runs (THJ's editor, Test Runner through MCP):
+  - Covering fixtures `MISO.Core.Features.Onboarding` + `MISO.Core.Features.Bergsons.EditorTests` (Mark, Lucy) + `MISO.Content.Levels.EditorTests` (AbilityLock): 1688 tests, 1687 passed. The 1 failure was the new shelter test using an unregistered tag id; switched to the real `Status.Sheltered`.
+  - Full EditMode suite after that fix: 2929 total, 2928 passed, 0 failed, 1 skipped (`AIRegressionTest.Baseline_MatchesCurrentAI`, Explicit). Previous run: 2925 (+4 new tests).
+
 ## Reviews and checks
 
 - **8.1 core review (miso-reviewer): APPROVE**, nothing to fix. Additive confirmed (IsSilenced, SuperTimeUnits set, ActivateFactionSuperTimeIE, early returns after the has-role check; no serialized change). Owner claims sound; loose ends for 8.2: claims match by `Equals` (destroyed UnityEngine.Object owners compare equal) and there is no clear-all, so the hold component must release in `OnDisable`/`OnDestroy`. Don't change suppression during Family Super Time (a unit dropping out of `SuperTimeUnits` mid-Super-Time stops `SuperTimeInProgress` waiting on it). Worker-safe, no statics, CRLF/BOM kept (report wording corrected), no private IDs, tests real. AI baseline should not move.
@@ -315,7 +327,7 @@ none
 
 1. Nothing visible yet: no game code calls the API until 8.2's hold component.
 2. Window > General > Test Runner > EditMode, filter `FactionRoleSuppressionTests`, Run Selected: 17 green.
-3. 8.2: nothing visible in a level until 8.3 wires `HoldPickOutOfCombat` into M3. Test Runner > EditMode, filter `HoldPickOutOfCombatTests` (15), `LevelAbilityLockRuntimeTests` (5), `CatchHeldCatcherTests` (4), `PapasShelterReenableTests` (3), `RoleBadgeRulesTests`, `AbilityLockTests`: all green.
+3. 8.2: nothing visible in a level until 8.3 wires `HoldPickOutOfCombat` into M3. Test Runner > EditMode, filter `HoldPickOutOfCombatTests` (17), `LevelAbilityLockRuntimeTests` (5), `CatchHeldCatcherTests` (5), `PapasShelterReenableTests` (4), `RoleBadgeRulesTests`, `AbilityLockTests`: all green.
 
 ## Verification (8.1–8.3)
 
