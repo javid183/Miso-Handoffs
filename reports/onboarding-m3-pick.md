@@ -492,3 +492,15 @@ Should fix:
 2. Same file: save as LF with BOM like the folder (`.gitattributes` resolves `eol=lf`).
 
 Notes: 1×1 path is the old statement word for word; worker-safe, no statics, `GridCell.cs` BOM+LF kept, 13/1 hunk. Destination legal end to end (BFS/straight, `FindPath`, `MoveEntity`, `JumpEntity`, `CanEndOn`, `IsLegalAbilityTarget`, selection pre-filters). Correction: the Masher walk and Queen walk/jump are **PathWalkable**, not SelfWalkable. The surrounding-effect concern doesn't happen (filtered downstream; only the debug list sees it). Other changes acceptable: a player big unit could pick its own cells (no-op; none exist); Mark's Command on the Queen now offers her north anchor (intended); latent `allowRangedReach` + big-unit walk range keeps diagonal footprint cells (no such ability). The AI prediction gap predates the fix (backlog). AI regression will move; compare with 51.
+
+## Review (8.4 lines + M3 wiring, miso-reviewer; pasted by the coordinator)
+
+**Verdict: APPROVE.** Must fix: none.
+
+Should fix (coordinator: all four go in a follow-up, D-782):
+1. `UnitsReachTilesSequenceTrigger` (55-60): don't fire after the level ends (`CombatLevelRunHandler.Instance.IsLevelEnded`). A stage completing while the pair plays could overlap it (`SequencePlayer.Play` has no busy check, core): unlikely because the AI waits on `SequenceInProgress`; play check.
+2. Empty dialogues, likely cause: `CreateAsset` writes the empty object before the lines are seeded; a reload/refresh/recompile/exception before `SaveAssets` leaves the file empty, and seeding runs once. Fix order in `BuildPushRule` and `WiringSeed` (seed, then `CreateAsset`, or `SaveAssetIfDirty` after seeding); optionally re-seed a zero-node dialogue. Assets on disk today are all full.
+3. `EveryDialogueInTheYardFolderSaysAnApprovedLine` passes on an empty dialogue: assert non-empty.
+4. `.Sequences.cs` header still says stand-in lines: reword.
+
+Notes: per-pick text, the west-wall trigger and `{pickline_0}` all check out (main thread, order right; standalone shows the placeholder). Every line, speaker and side matches `m3-text.md` word for word. No core, no private IDs, LF/no BOM. The split builds: commit A = `PickLineDialogSequence.cs`, `UnitsReachTilesSequenceTrigger.cs`, `Editor/PickLineDialogSequenceTests.cs` (+ metas); commit B = the M3 level/wiring/lines. Commit B's list is stale: M3Yard now has 55 assets + 55 metas (+ `M3Yard.meta`), and add `Editor/M3DefenceTests.Lines.cs`, `Editor/MissionWiring.HoldTheYard.Lines.cs`, `Editor/PickFallenLOConditionTests.cs` (+ metas). Play check: the pair when the first Claws reach the west wall; lose with the pick ("Mark has fallen."); pick John for his push line.
