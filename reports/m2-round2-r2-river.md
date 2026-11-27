@@ -452,3 +452,63 @@ THJ played round 3, tweaked `GB_m2-river.prefab` again (saved 17:22) and asked f
   - Its info panel shows no Unaware marker or pop.
   - John's rush to 9,2 is never blocked by it.
   - At the ambush it walks to 14,7 and fades.
+
+## Round 5 (miso-implementer, 2026-11-26)
+
+THJ played round 4 ("ok, great") and asked for one change: **the John–Lucy Duo is locked from the level start and unlocks at the ambush**, after the Shield Flare beat, with a HUD pulse and a bark. No core change. I didn't touch the files the coordinator is committing (`Unit_John.prefab`, the shared potion page and M1 swap, the old River rename).
+
+### What changed
+
+- **Lock:** the wiring locks the Duo again for John and Lucy (`LockDuo`, merged next to Cleanse; it replaces round 4's `UnlockDuo`). Cleanse stays locked all level; nothing in the level unlocks it.
+- **Unlock:** `M2River_Ambush_UnlockDuo`, an existing `UnlockAbilitiesSequence` (`unlockAll` off, only the Duo preset), as The Ridge unlocks Family Footrace. `LevelAbilityLock.Unlock` opens the preset for every unit, and the bar hides a Duo only while it or its partner is locked, so it shows for both John and Lucy once unlocked.
+- **HUD pulse:** a second `GuidedAbilityHint` on `River Switches`, on the Duo preset, in `WhenUnlocked` mode, as The Ridge hints its Duo. It waits for the level lock to unlock the Duo and pulses its button until the Duo is used. The embers pulse stays first and switched off until the rush. The HUD is hidden during the ambush, so the pulse shows when input and the HUD come back.
+- **Bark:** new non-core step `Features/Onboarding/UnitBarkSequence.cs` (asset `M2River_Ambush_DuoBark`).
+  - It shows one line over a unit's head in the same floating popup as the arrow hand-back and Family Footrace barks (`DamageNumberManager.ShowText`), then waits while it shows (1.8 s).
+  - It strips the placeholder tag like those barks, respects `silenceBarks`, and does nothing if the speaker isn't alive.
+  - Speaker: John.
+- **Ambush order:** … corridor Archers walk → wave comes in → **Duo unlocks → John's bark** → potion page (once per save) → input and HUD on. The Duo beat comes before the potion page, so it never depends on the page; a save that has seen the page skips only the page.
+- The kept ambush step list was updated once with a one-off editor call (unlock and bark inserted after the wave reveal). Re-running the wiring then logged nothing.
+
+### Found and kept: THJ's hand edits in the rush
+
+The kept rush assets differed from round 4's code. As before, I kept THJ's version and changed the code to match:
+- **Order:** reset → "They were waiting for us!" → Shield Up → **Lucy runs to 7,2 → "Lucy! Fire at me!" / "At you?"** → embers hint. Lucy now runs before John's call; the click line between the reset and the cast is still there.
+- **Text:** John's call is now **"Lucy! Fire at me!"** (was "Lucy! At me!"). The constant `AtMeLine` now matches, so a fresh build writes his line.
+
+**Coordinator:** both look intentional (THJ played and approved round 4).
+
+### Text (placeholders)
+
+- New bark, John: "Together, Lucy, like we practised!" (the asset holds it with the `[PLACEHOLDER] ` tag, which the bark popup strips on screen, as the other barks do).
+- Changed by THJ in the asset (now the code's text too): John "Lucy! Fire at me!".
+
+### Tests
+
+- `M2RiverTests` has 46 tests:
+  - `TheJohnLucyDuoIsLockedAtTheStartForBothAndCleanseStaysLocked` (Duo locked for both at start; exactly one unlock in the level, the ambush's, Duo only, Cleanse never unlocked);
+  - new `ThePulseOnTheDuoStartsWhenTheAmbushUnlocksIt`;
+  - embers pulse test now expects two pulses, embers first;
+  - ambush test: unlock right after the wave, bark right after the unlock, both before the potion page, bark speaker, tag and shown text;
+  - rush test renamed `TheRushEndsLucysCycloneMovesJohnRevealsTheRingResetsTheTurnThenJohnsSurpriseShieldLucysRunAndCall` for THJ's order and line.
+- `RiverRushAndHoldStepsTests` has 6 tests: new `Shown_StripsThePlaceholderTagOnly`.
+- The River wiring re-run left a clean console. Rerun test green.
+- `M2RiverTests`, `RiverRushAndHoldStepsTests`, `OnboardingHealthPotionPageTests`, `RiverCleanseLockTests`, `GuidedAbilityHintTests`: 70/70.
+- Full EditMode suite: **2958 total: 2957 passed, 0 failed, 1 skipped** (`AIRegressionTest`, Explicit).
+- Two group runs failed against THJ's newer rush assets (his order and his line) before I matched the code. The results above are after that, from the final build.
+
+### Commits (updated)
+
+- **Commit 3 (The River)** also takes `miso/Assets/_Project/Features/Onboarding/UnitBarkSequence.cs` + `.meta`.
+- Its M2River folder is now **35 assets + 35 `.meta`**: added `M2River_Ambush_UnlockDuo` and `M2River_Ambush_DuoBark`.
+- The rest is as in Round 4 and the Round 4 review fixes, minus what the coordinator commits separately.
+
+### What THJ checks in play
+
+1. **Start to the ring fight:** the John–Lucy Duo button is on neither bar; Cleanse isn't either.
+2. **Ambush:**
+   - After the corridor Archers and the wave come in: "Together, Lucy, like we practised!" floats over John for about 2 s.
+   - Then the potion page, only if this save hasn't seen it; then control returns.
+3. **After the ambush:**
+   - The Duo button is on John's and Lucy's bars and pulses when either is selected, until the Duo is used.
+   - Cleanse stays hidden.
+4. With barks silenced in settings, the bark is skipped and the Duo still unlocks and pulses.
