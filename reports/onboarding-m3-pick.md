@@ -352,3 +352,35 @@ Should fix:
 Notes: the hold releases on disable/destroy/level end with a stable owner, tracks only what it added, idempotent, release gives a full turn (order checked in `SwitchTurnIE`); forced teardown may change suppression during Super Time (acceptable); John-pick teardown may briefly re-enable the shelter (harmless). `LevelAbilityLock` unchanged for existing callers; `Lock` raises `Changed` (bar rebuild; `GuidedAbilityHint` unaffected). Catch paths all covered. Badge stale until the next panel refresh. M3 wiring checked: S2 end = input off → hold signal → Masher camera/reveal; notch 3 = notch → roll-away → release → line; S1 lists only the opening Claws; defeat Any with `PickFallenLOCondition` alone; free seat 1; 47 M3Yard assets referenced; no Stone4/holdFromLevelStart left. Stale overrides in the level YAML harmless (optional cleanup). No core beyond 8.1, no private IDs, LF/no BOM, no mutable statics. Commits 2→3→4 build in order, no 8.1 file in them.
 
 Left to play: Super Time deferral, the Masher 2×2 slide, John's tether hidden?, the Masher close-up vs the S2 camera, the pick greying at once when held in its own turn.
+
+## Play-check fix 1
+
+Changed: `Features/Onboarding/HoldPickOutOfCombat.cs`, `Features/Onboarding/Editor/HoldPickOutOfCombatTests.cs`. No core files.
+
+**Cause 1 (the crash).** `DuoPresetsOf` read `ability.EffectSetLevel` for every ability of every family unit. A locked or run-unlockable ability has upgrade level -1, so `GetEffectSetLevel` indexed `higherLevels[-2]` and threw. It threw before `Hold(pick, presets)` ran, so nothing was held.
+
+**Fix 1.**
+- New `CoOpTriggersOf(preset)` scans the preset's base level and every higher level for `AEffectCoOpTrigger`, so a Duo is found even when the partner's trigger ability is locked. `DuoPresetsOf` uses it and no longer touches `EffectSetLevel`.
+- `Hold()` (the signal entry) now wraps the Duo collection in try/catch. On failure it logs a warning and still holds the pick, locking no Duos.
+
+**Cause 2 ("Mark can still move and act after the stone").** This is mostly the same crash. Reading the code also showed a second gap for a hold applied mid-turn:
+- The inactive tag only takes effect where the controller reads it. `PhaseData.ToPlayUnits` (the predicate is live), `IsSelectableUnitCell` and `UnitSelectionState.ApplyCondition` do read it, so the pick can't be auto-selected, switched to or clicked.
+- A pick that is the current `ActiveUnit` (ActionSelection state) is not re-checked. `TakeActionState.GetNextState` returns ActionSelection again whenever `ActiveUnitActionPoints > 0`, so a still-selected pick with AP left keeps moving and acting.
+- `PlayerController` has no public deselect. `GoBackToPreviousState` is protected, and `TrySelectUnit(other)` is deferred while an action is in progress, so it can't be relied on.
+
+**Fix 2.** When the hold starts during the pick's own faction turn, `StartTurnHold` now:
+- calls `Hold()` first, then `NotifyTurnStarted(true)`;
+- consumes the pick's AP with `APConsumptionType.Closure`.
+
+With 0 AP its abilities and walk are inactive (`Active` needs `CanConsume`), and the turn flow moves on to the next unit or ends the turn. Because `HeldAtOwnTurnStart` is now true, a release during the same turn restores the pick's AP (`ResetToInitial`). That is what the class doc already promised. Before this change the restore never fired, because the turn start was noted before the hold began. Nothing in core was needed.
+
+**Limits.**
+- AP mode is PerUnit in `GlobalSettings.asset`. In Shared mode `Closure` does nothing to the pool, so a still-selected pick could keep acting. This was deliberate: draining the shared pool would take the other units' AP.
+- The selection highlight stays on the pick until the next selection change (cosmetic).
+- The mid-turn drain needs `CombatLevelRunHandler`, so it has no EditMode test. It needs the verifier's play check: hold Mark at the end of S2 while he is selected with AP left, then confirm he can't move or act, the turn goes on, and a release in the same turn gives him his AP back.
+
+**Tests (EditMode, all pass).**
+- `DuoPresetsOf_AnAbilityAtUpgradeLevelMinusOne_DoesNotThrow`: a partner with abilities at level -1 and level 5 on a controller with a cooperation handler. It threw before the fix.
+- `CoOpTriggersOf_FindsTriggersInTheBaseLevelAndEveryUpgrade`.
+- The rig can't build a full cooperation entry with a valid partner, so "Duo found while locked" is covered by the trigger scan test only.
+- `HoldPickOutOfCombatTests`: 19/19 pass. Full EditMode suite: 2931 total, 2930 passed, 0 failed, 1 Explicit (`AIRegressionTest` baseline). The Onboarding fixtures ran as part of it.
