@@ -136,7 +136,7 @@ Narrative runs alongside: `miso-narrative` writes each placeholder as its contai
 | 6.3 | X-14 | Final balance after a full play-through on `main` | 2 (values) |
 | 6.4 | X-46 | SFX pass: add missing sounds, improve sound and music | 2 (hooking up); sounds by the sound designer | Claude lists every ability, UI and level moment with no sound or a placeholder first, as a sheet the sound designer works from |
 | 6.5 | X-47 | VFX pass: improve existing effects and add new ones | 2 (hooking up); effects by art | Same: Claude lists effects that are missing or placeholder first |
-| 6.6 | X-48 | Better hit effect | 3 (game feel) | Options for THJ: flash, hit-stop, shake, a number pop; THJ picks in play |
+| 6.6 | X-48 | Better hit and death effects | 3 (game feel) | Options for THJ: hit (flash, hit-stop, shake, a number pop) and death (a beat before removal, a fade or dissolve, a burst); THJ picks in play |
 | 6.7 | — | A cold playtest with a new player; docs and the Claude Docs mirror synced | — |
 
 ### Order

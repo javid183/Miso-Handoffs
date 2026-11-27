@@ -228,7 +228,7 @@ Today's M4 is 7 levels: Toba's duel, two Whitemother levels, the escort, the rel
 | X-33 | Final check of the combat log: it includes everything in the demo | Tech | Claude | ✓ Every ability, Synergy, Duo and Family Role, plus the new pieces (barriers, the new Duo resource) |
 | X-46 | SFX pass: missing sounds, better sound and music | Sound, Tech | Sound designer, Claude | Claude lists the gaps first |
 | X-47 | VFX pass: improve existing effects, add new ones | Art, Tech | Art, Claude | Claude lists the gaps first |
-| X-48 | Better hit effect | Tech, Art | Claude, THJ | Game feel; THJ picks in play |
+| X-48 | Better hit and death effects | Tech, Art | Claude, THJ | Game feel; THJ picks in play |
 
 ## 8. For the narrative designer
 
