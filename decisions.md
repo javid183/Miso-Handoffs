@@ -6,6 +6,7 @@ Rows D-001 to D-011 were carried over on 2026-10-15 from the Home handoff and pr
 
 | Date | ID | Tier | Scope | Decided by | Decision | Why | Affects |
 | --- | --- | --- | --- | --- | --- | --- | --- |
+| 2026-11-27 | D-790 | 3 | all | THJ | The River rush's scripted Cyclone end (`EndCycloneSequence`) refunds Lucy's cast cooldown like any early end; its code summary is corrected (folded into P1-3) | THJ chose the recommendation: one rule everywhere | plan P1-1/P1-3; M2 pacing |
 | 2026-11-27 | D-789 | 2 | all | coordinator | Phase 1 data choices: 1.10 turns on the existing `hideIfUsed` on each hero prefab's item entries (no change to core `RuntimeItem`); 1.19 swaps only the Down child of Mark's `Command` blend tree to `Mark-ItemUse-Down.anim` (the whip stays for side and up); the Duo tutorial page drops "1 AP from the activating Bergson" (new wording in the page's voice) | Data-only, no core edit; smallest interim fixes | chunks P1-2, P1-3 of `plans/2026-11-27-onboarding-p1-tweaks-tech.md` |
 | 2026-11-27 | D-788 | 2 | all | coordinator | 1.16 (hide move tiles during a move) parks with 1.13: the fix found uses the same busy state, and where THJ saw the tiles is still unknown | Building it alone would pre-empt the 1.13 discussion | `reports/2026-11-27-act-twice-findings.md` |
 | 2026-11-27 | D-787 | 3 | all | THJ | Duos and Divine Relics stay free but still need 1 AP left to start (GDD DU-1 unchanged); only the Mark–Lucy partner presets (1 AP) and the Duo tutorial text change | THJ chose the recommendation | plan P1-2; GDD `family-systems.md` |
