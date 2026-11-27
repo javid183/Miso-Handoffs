@@ -99,6 +99,8 @@ Owner: coordinator. Every item has a scope: `all` or a branch. Started 2026-10-1
 
 ## Inbox
 
+- 2026-11-27 **`onboarding-demo-p1-tweaks`** (scope `all`, on `main`; bug + feature; M overall, items S): THJ picked the Phase 1 code fixes as the next batch (D-783). Order: 1.13+1.16 (act twice when playing fast + hide move tiles during a move; core, Explore first), 1.17+1.18 (Duos and Divine Relics cost no AP, D-778/D-779), 1.10 (pouch hides 0-use items), 1.11 (Cyclone destroyed early refunds cooldown), 1.12 (health potion on any ally), 1.19 (Mark's Move animation). **Frame:** three read-only Explore sweeps running (A: 1.13/1.16 input race and move highlight; B: 1.17/1.18 Duo and relic AP charge; C: 1.10/1.11/1.12/1.19). Then tech plan `plans/2026-11-27-onboarding-p1-tweaks-tech.md`, one implementer at a time, batched play check. Unity MCP down at session start (THJ to reconnect before the verifier).
+
 - 2026-11-26 **For the Sunday review (THJ, M3 8.4):** process too heavy for text/data work: a review, a follow-up round on optional fixes and several full-suite runs for dialogue lines. Proposed rule: text and data chunks run covering tests only plus one full run before the commit; no second verifier pass when the implementer ran the suite; should-fix items on text/data are listed, not sent back, unless THJ asks.
 
 - 2026-11-26 `onboarding-demo` four more from THJ (plan 1.16 to 1.19; tweak doc X-49 to X-52): hide movement tiles during a move; Duos and Divine Relics don't cost AP (D-778, D-779); Mark's Move animation is a Lucy placeholder.
