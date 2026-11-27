@@ -3093,3 +3093,10 @@ Plan `plans/2026-11-19-faster-loop-process.md`, decisions D-575 to D-579.
 **Not verified:** play-through with John and with Mark (THJ); Super Time deferral; Masher 2×2 slide; John's tether while held; Masher close-up vs S2 camera.
 **Findings:** Chained Assault range is 5 (from the starter), not 4; enemies do attack an Inactive unit; badge stale until the next panel refresh; stale overrides in the level YAML (harmless).
 **Status:** uncommitted in the shared repo; should-fix follow-up running; then THJ's play check.
+
+## 2026-11-26 M3 play-check fixes: the hold crash and the stuck Masher (main)
+**Built:** play-check fix 1 (`HoldPickOutOfCombat`: Duo scan over every preset level, hold survives a failed scan, AP closed when held in its own turn; D-757). Chunk 8.5 core (D-758): `GridCell.GetRangeCells` removes only the anchor for multi-cell walkers, so the Masher and the Queen can step N/E. Report `reports/onboarding-m3-pick.md`; cause `reports/2026-11-26-masher-stuck-code-read.md`.
+**Verified:** 8.5 core review APPROVE; `MultiCellWalkRangeTests` 8/8; full EditMode 2939: 2938 passed, 0 failed, 1 Explicit; AI regression by name 51 (unchanged; the existing fatal NRE in `HandleLivingUnitsCondition` stops the run before later checks).
+**Not verified:** THJ's replay of M3 (the Masher walking); M1's Masher.
+**Findings:** the AI next-targets prediction still ranges big units per footprint cell (backlog).
+**Status:** uncommitted; THJ replays M3.
