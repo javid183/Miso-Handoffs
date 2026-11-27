@@ -76,6 +76,15 @@ The pick falling loses the level at any point.
 - [ ] **Tests:** `M3DefenceTests` updated to the new block, stages, roster and loss. `OnboardingMissionGraphTests`, `SearchTrailTests` and `PickOnTilesLOConditionTests` go back to the free seat. Covering fixtures green.
 - [ ] **Report on:** T-P2 (the Masher's 2×2 reveal when a cell is taken), T-P4, T-P5 (Chained Assault range measured from Lucy), and whether enemies attack an Inactive unit. All from reading the code.
 
+**8.5 · Core: big units can walk north and east (opus; own review; full suite; AI regression by name)** (D-758, from THJ's play check; `reports/2026-11-26-masher-stuck-code-read.md`)
+- [ ] `GridCell.GetRangeCells`: for walk modes (PathWalkable/SelfWalkable) with a multi-cell source and `includeSelf` off, remove only the anchor cell, not every occupied cell. The Unconstrained branch (attack ranges) is unchanged. Behavior for 1×1 units is identical.
+- [ ] A destination overlapping the mover's own footprint is accepted end to end: `IsLegalAbilityTarget`/`OccupantIntersects`, the transporter's `FindPath(mover)`, and the AI `CanEndOn`.
+- [ ] The AI next-targets prediction (`AIUnitBrain.cs:291-318`) agrees with the live range for a 2×2 unit, or the gap is reported.
+- [ ] EditMode tests: a 2×2 radius-1 unit reaches its N, E, S and W anchors where the cells are free; a 1×2 unit likewise; 1×1 is unchanged.
+- [ ] Full suite green. AI regression by name compared with 51 (it may move: the Masher's and Queen's walks change; no re-baseline).
+- [ ] `tech/core-systems.md` line (coordinator).
+- [ ] Commit unit: core only, before commit 4.
+
 **8.4 · M3 lines (sonnet)**: apply `design/m3-text.md` once THJ's revision is approved (D-749, D-750): the per-pick text option for John's push line, the level-start line, the west-wall pair fired when w1 reaches the west wall (D-753), the countdown, "{pick} has fallen." (loss-panel plumbing if it's needed and stays in Onboarding/UI non-core; if it needs core, stop and report). Planned separately when 8.3 is in.
 
 ## Risks
