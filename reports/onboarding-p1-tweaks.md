@@ -1,15 +1,15 @@
 # Report: Onboarding demo Phase 1 tweaks (Cyclone refund, free Duos, pouch, health potion, Mark's Command clip)
 
 Plan: plans/2026-11-27-onboarding-p1-tweaks-tech.md    Agent: miso-implementer    Branch: main (scope all)
-Outcome: partial (P1-1 and P1-2 done; P1-3 to come in a later run)
+Outcome: done (P1-1, P1-2, P1-3 built; full EditMode suite 3086 passed, 0 failed; play checks pending)
 
 ## What changed
 
-(Filled for the whole feature on the last chunk. P1-1 files are listed under Chunks.)
+Files per chunk are listed under Chunks. P1-3 added: the two Health Potion assets, `ItemEffectPreview.cs`, `AbilitiesBarHUDUI.cs`, `EndCycloneSequence.cs` (comment), `HealthPotionTargetingTests.cs`.
 
 ## Acceptance criteria
 
-(Per chunk below; the whole-feature list is filled on the last chunk.)
+Per chunk below; all met, with the play checks listed in How to see it.
 
 ## Chunks
 
@@ -60,6 +60,30 @@ Outcome: partial (P1-1 and P1-2 done; P1-3 to come in a later run)
 - Evidence (Unity MCP, THJ's open editor, 2026-11-27): compile clean (no errors; only existing warnings). New tests 3/3 passed. **Full EditMode suite: 3081 total, 3080 passed, 0 failed, 1 skipped (`AIRegressionTest.Baseline_MatchesCurrentAI`, Explicit)**; this includes the Cooperation/Duo, Onboarding memory-rule/item and Hearth memory fixtures. **AI regression by name** (`MISO.Core.Systems.AI.EditorTests.AIRegressionTest.Baseline_MatchesCurrentAI`): CHECKS 738, FAILURES 51, same as the last recorded 51 (not fixed, not re-baselined). The only Duo-related line in it is `abilities.evaluator Mark_Lucy_MARK_Duo_Ability: was 'Generic_MeleeAttack...', now 'Mark_Primary...'`, which is an evaluator reference this chunk did not touch (existing drift).
 - Deviations: none from the plan. The pouch edit is on each hero prefab's item overrides (not core `RuntimeItem`), as decided.
 
+### Chunk P1-3: health potion on any ally (1.12, X-42), plus the Cyclone-end comment (D-790)
+
+- Changed (paths under `miso/Assets/_Project/`; YAML diffs show only the intended lines, LF kept):
+  - `Features/Player/Shared/Items/HealthPotion/Bergsons_Ability_HealthPotion.asset`: `radiusV.constantValue` 0 to 99; `targetSelectCustomCall` empty to `'!CheckIfHealthFull'`; `targetType` 1 to 2 (CellOccupant); `applyMode` 2 to 0 (Targeted); `targetFactionRelation` 0 to 1 (Ally); `includeSelf` 0 to 1. Enum values confirmed in `AbilityEnums.cs` (`AbilityTargetType.CellOccupant = 1<<1`, `AbilityApplyMode.Targeted = 0`) and `FactionsEnums.cs` (`Ally = 1<<0`). `cellApplyWalkabilityMode` is already 0 (Unconstrained), so radius 99 reaches the whole board without `allowRangedReach`.
+  - `Features/Player/Shared/Items/HealthPotion/HealthPotionAttributeModifierEffect.asset`: `activationFeasibilityCheckFunction` `'!CheckIfHealthFull'` cleared (1 line). Heal factor untouched.
+  - `Core/Systems/AbilitySystem/Abilities/Runtime/ItemEffectPreview.cs` (not core-listed): new overload `GetHealthIncrease(item, owner, target)`; the old two-argument form calls it with no target, so callers and numbers are unchanged. With a target it previews on the target.
+  - `Features/UI/Panels/Scripts/AbilitiesBarHUDUI.cs` (not core-listed): the per-button completion hook is now taken off before a new one is added (see "Consumes once" below). 9 lines, LF.
+  - `Features/Onboarding/EndCycloneSequence.cs`: summary comment only. Now: "Ends the Cyclone a hero has on the board early (its own Dispose: ...). Like any early end, that gives the cast cooldown back to the caster, and the caster keeps what is left of it." No ID, no code change.
+  - New test: `Core/Systems/AbilitySystem/Abilities/Editor/HealthPotionTargetingTests.cs` (+ `.meta`), LF.
+- Criteria:
+  - [x] Targeted at any ally unit, user included, any range, valid only below full HP: the six preset lines above. `IsTargetedAtAnAllyUnit_TheHolderIncluded`, `ReachesAnyRange_WithoutWalkingConstraints`, `TheUnitAnswersTheHealthFullCallThePresetUses` (the `GUnit.CheckIfHealthFull` method the call name resolves to exists) pass.
+  - [x] Full-HP ally is not a legal target, a hurt one is: `AFullHealthAllyIsNotATarget_AHurtOneIs` runs the asset's own `CheckTargetSelectByCall` on a stand-in entity that answers `CheckIfHealthFull` (full true/false). The distance part is the radius-99 + Unconstrained test; a real board range check needs the controller fixture and is for the play check.
+  - [x] A full-HP user can still give it: the effect's feasibility check is cleared; `TheEffectHasNoCheckOnTheHoldersOwnHealth` passes (a full-health stand-in still returns feasible). The button is therefore never greyed by health (it was before, for a full-HP holder).
+  - [x] Heal lands on the target, amount unchanged: `AEffectAttributeModifier` applies to the target of a Targeted ability (same as other targeted items); factor untouched. Read from code; play check to see it.
+  - [x] Preview: the overload previews on the hovered target. What it does in play now: hovering the pouch button has no target, so it still previews on the holder's bar (as before: nothing if the holder is at full HP). Nothing in the non-core UI path hovers an ally while the item is selected; that preview runs through core `PlayerController.ShowDamagePreview` / `AbilityDamagePreview`, which I did not touch, so a heal preview on a hovered ally is not added. For the coordinator to decide.
+  - [x] Pouch bob (`UnitPanelUI.LowHealth.HoldsHealingItem`): unchanged and not broken. It still asks "does the newly selected low unit hold an item that would heal that unit": a low-HP holder bobs the pouch. A hurt ally who holds no potion, or a hurt ally when only a full-HP teammate holds the potion, does not bob (items belong to a unit's own pouch). Left as instructed; a possible follow-up if THJ wants the bob when any ally holds a potion.
+  - [x] No ally below full HP: the potion button can still be selected (nothing greys it now). Selecting enters ordinary target selection, the cells in range show as usual, and a click on a full-HP ally is refused by `IsLegalAbilityTarget` (`CheckTargetSelectByCall`), so nothing is used. Read from code, not played; needs the play check.
+  - [x] EditMode tests: 6 new, all pass (the five above plus `IsAnItemWithNoCooldown_AndTheAbilityCostStaysWhatItWas`).
+- Consumes once: `RuntimeItem.Consume()` is only reached from the completion hook that `AbilitiesBarHUDUI.AddAbilityButton` adds to `ability.OnCompletionPerRun`, which fires once in `OnCompletionShared` and then sets itself to null. Found a real risk: the hook is only cleared when it fires or at the next phase start, so with a targeted item a cancel and a second pick (or picking another ability and coming back) added a second hook and the use would drop twice. Fixed in that file by removing the button's previous hook before adding the new one (a captured delegate per button). Not covered by an EditMode test (UI prefab dependent); play check: pick the potion, cancel, pick again, heal, and the pouch count drops by exactly 1.
+- AP: the potion preset's `apConsumptionType` is 0 (Ineffective), so it has always cost no AP; "the user pays the AP" holds as before (the holder's action is the one used). I did not change it. For the coordinator or THJ: if the potion should cost 1 AP, that is one more line (`apConsumptionType: 1`) plus the 0-AP holder question. A 0-AP target can be healed (the target's AP is never read).
+- `Unit_TobaEnemy` carries the same preset: no enemy item uses, the AI never uses items; no effect.
+- Evidence (Unity MCP, editor open, 2026-11-27): compile clean. `HealthPotionTargetingTests` 6/6 pass. **Full EditMode suite: 3087 total, 3086 passed, 0 failed, 1 skipped (`AIRegressionTest.Baseline_MatchesCurrentAI`, Explicit).** No AI regression run (no AI graph, ability or unit prefab changed in this chunk). Console errors after the suite are the tests' own expected log lines.
+- Deviations: the `AbilitiesBarHUDUI` hook fix is outside the plan's literal steps (it follows from "confirm a targeted item consumes exactly one use"); same intended behavior, not a core file.
+
 ## Reviews and checks
 
 - P1-1: (written by the coordinator)
@@ -99,7 +123,8 @@ none
 4. `tweak(items): pouch hides items with no uses in every level`: the five hero prefabs `Unit_John`, `Unit_Linda`, `Unit_Lucy`, `Unit_Mark` (Features/Player/<Hero>/Prefabs/) and `Features/Player/Dom/Prefabs/Unit_Toba.prefab`, `miso/Assets/_Project/Features/Onboarding/Editor/HeroItemPouchTests.cs` + `.meta`
 5. `fix(mark): Command facing down uses Mark's own frames`: `miso/Assets/_Project/Features/Player/Mark/Arts/Animations/AC_Playable_Mark.controller`
 
-(P1-3 commit is added in its chunk.)
+6. `feat(items): the Health Potion can be given to any ally at any range`: `miso/Assets/_Project/Features/Player/Shared/Items/HealthPotion/Bergsons_Ability_HealthPotion.asset`, `HealthPotionAttributeModifierEffect.asset`, `miso/Assets/_Project/Core/Systems/AbilitySystem/Abilities/Runtime/ItemEffectPreview.cs`, `miso/Assets/_Project/Features/UI/Panels/Scripts/AbilitiesBarHUDUI.cs`, `miso/Assets/_Project/Core/Systems/AbilitySystem/Abilities/Editor/HealthPotionTargetingTests.cs` + `.meta` (plain, no core file)
+7. The `EndCycloneSequence.cs` comment (`miso/Assets/_Project/Features/Onboarding/EndCycloneSequence.cs`): suggest joining commit 2 (the Cyclone early-end refund), since it documents that behavior.
 
 ## Other branches
 
@@ -110,3 +135,4 @@ none
 1. P1-1: Open a level with Lucy and a Masher (e.g. Hold the yard round two). Cast the Cyclone in the Masher's path and end the turn. When the Masher walks through and bursts it, Lucy's Cyclone button is the cast again at the next family turn, and it is ready (not greyed with 3 turns left).
 2. P1-1: Cast a Cyclone where no heavy reaches it. It fades as round 4 starts, and the cast is ready one turn later, as before.
 3. P1-2: Start a Mark–Lucy Duo with a hero who has 1 AP: it runs and both keep their AP (FP is spent). Open the Duo tutorial page: it says Duos cost FP and no AP. In The River or The Ridge (only a Health Potion handed out) the pouch shows no FP potion button from the start. Use Mark's Command facing down: it shows Mark's own frames.
+4. P1-3: In a level with a Health Potion, hurt one ally (not the holder), select the holder, open the pouch and pick the potion: any ally below full HP can be picked at any distance; a full-HP ally is refused. Heal the hurt ally: their HP rises by the usual amount, the holder's does not, and the pouch count drops by exactly 1. Cancel and pick again before healing: still only 1 use drops. Give it to the holder when hurt, and when at full HP (the button is not greyed). With everyone at full HP, pick the potion and click an ally: nothing happens and no use is spent. Hover the potion button on a hurt holder: the holder's bar previews the heal.
