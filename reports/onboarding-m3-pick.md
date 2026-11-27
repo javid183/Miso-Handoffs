@@ -1,7 +1,7 @@
 # Report: M3 pick, hold and opening (build)
 
 Plan: plans/2026-11-26-m3-pick-build-tech.md    Agent: miso-implementer    Branch: main
-Outcome: partial (chunks 8.1 and 8.2 done; 8.3–8.4 to come)
+Outcome: partial (chunks 8.1, 8.2 and 8.3 done; 8.4 to come)
 
 ## What changed
 
@@ -78,6 +78,142 @@ Filled per chunk below; the feature-wide list is filled on the last chunk.
   - `MISO.Core.Features.Bergsons.EditorTests` (every Mark and Lucy feature test, the fixed fixture included): 973 total, 973 passed.
   - Full suite not run (not required for this chunk). `AIRegressionTest` not run (no AI graph, AI ability or unit prefab change).
 - Decisions and loose ends: see "Decisions I made" and "Risks and loose ends" (the 8.2 items).
+
+### Chunk 8.3: M3 rewired to `m3-defence-4`
+
+Paths under `miso/Assets/_Project/`. Every `.cs` file is LF with no BOM, like the rest of `Features/Onboarding` (checked with `file`). Worked in THJ's open editor through Unity MCP; no Play session. Play mode was off throughout; the active scene (`PreloadScreen.unity`) was not touched and is not dirty.
+
+**Changed (code):**
+- `Features/Onboarding/Editor/MissionWiring.HoldTheYard.cs`: class comment, `BlockId` `m3-defence-4`, `BlockDocument` (the approved block, `level deploy 4,8`, `level hidden masher 6,1`), constants (`DeployTile`, `PushTile`, `OpeningClawTiles`, `MasherGroupId`, `DeploySlotName`, `StageCount` 6, `HoldStageCount` 3, the objective texts), `WireLevel` (no Mark; `WirePickHold`), six stages, `Destroyed` on Enemy, the sisters' level-start lock is the Linda–Lucy Duo only, a `UnitOn` helper. Gone: `MarkTile`, `NoJohnTile`, `MarkObjective`, the Mark Duo paths, `WireDefeatWhenMarkFalls`.
+- `Features/Onboarding/Editor/MissionWiring.HoldTheYard.Pick.cs` (+ `.meta`, new): the `HoldPickOutOfCombat` on its own object "The pick at the stone" under the level (`pushTile` 4,11, `abilityLock` the level's), two `SignalAction` listeners (`M3Yard_HoldPick` → `Hold()`, `M3Yard_ReleasePick` → `Release()`), the push stage (`PickOnTilesLOCondition` + `TilesOccupiedLOCondition` on 4,11, as the old greybox's S2), and the defeat when the pick falls.
+- `Features/Onboarding/Editor/MissionWiring.HoldTheYard.Sequences.cs`: the level-start tour (stone and Claws → west lane → yard), the cave (S1 end), the push (S2 end), notches 1 and 2 unchanged, notch 3 (roll away + release), the end unchanged. Pick lines go through the pick's dialogue slot (`GenericCharacter_1`, as the Trail's `SpeakAsThePick`).
+- `Features/Onboarding/Editor/MissionWiring.HoldTheYard.Stone.cs`: `StoneCount` 4 (start + three notches).
+- `Features/Onboarding/Editor/MissionWiring.HoldTheYard.Mission.cs`: writes one free seat (`FreeSeats` = 1) instead of none.
+- `Features/Onboarding/Editor/M3DefenceTests.cs`: updated (see Tests).
+
+**Reverted to HEAD** (written back with `git show HEAD:<path> > <path>`, no git write; `git status` shows them clean):
+- `Features/Onboarding/HoldUnitsUntilSignal.cs` (drops `holdFromLevelStart`; 8.2 doesn't need a change to it) and `Features/Onboarding/Editor/HoldUnitsUntilSignalTests.cs` (the `partial`).
+- `Core/Levels/Editor/OnboardingMissionGraphTests.cs`, `Features/Onboarding/Editor/SearchTrailTests.cs`, `Features/Onboarding/Editor/PickOnTilesLOConditionTests.cs` (back to the free seat).
+- `Content/Levels/Greybox/GB_m1-ridge.prefab`: its only change was 7.1's `holdFromLevelStart: 0` line, written by Unity for the field that is now gone. Not in the brief's file list; reverting it is the field's removal, nothing else.
+
+**Removed (7.1 files, untracked, never committed):**
+- `Features/Onboarding/HoldUnitsUntilSignalTests.LevelStart.cs` (+ `.meta`), the 7 option tests.
+- `Features/Onboarding/Editor/MissionWiring.HoldTheYard.Mark.cs` (+ `.meta`).
+- `Features/NPCs/Rock/Prefabs/Unit_Rock_Stone4.prefab` (+ `.meta`): three notches use stone0..3; the level's instance and its `stone4` group were removed first.
+- `Resources/Sequences/M3Yard/`: 14 assets (+ `.meta`) with no slot left: `M3Yard_Start_CameraOnMasher`, `_CameraOnEastWall`, `_CameraOnMark`, `M3Yard_Start_Mark_DialogNodeSequence`, `M3Yard_Notch3_Mark_DialogNodeSequence`, all seven `M3Yard_Notch4_*`; and the two step lists whose structure changed (`M3Yard_Start_SequentialSequence`, `M3Yard_Notch3_SequentialSequence`), which the wiring then re-created (it never rewrites an existing step list).
+
+**Assets (written by a one-off script, then by `Apply Wiring`):**
+- `Content/Levels/Greybox/GB_m3-defence.prefab`: edited in place, not rebuilt. One-off editor script (run once through MCP `execute_code`, not kept in the repo): removed `Unit_Mark` and his "Mark on the stone" hold object (all his instance data goes with him: tags, the switched-off role, the hold); removed the `Unit_Rock_Stone4` instance and the `stone4` group; placed three `Unit_DarkClaw` on 3,11, 4,11, 5,11 and `Unit_Placeholder` on 4,8 exactly as the grid-to-level builder places them (under the cell's occupant root at its centre; the slot faces right; the Claws on columns 3 and 4 face right, as the builder's facing rule gives with the family's centre at column 4.5); switched the Masher off and listed it in a new group `masher` (after `toba`, the block's order); took `Mark_Linda_Duo_Ability` and `Mark_Lucy_Duo_Ability` out of the sisters' level lock entries. Then `Apply Wiring` (stages, defeat, hold, sequences, factors). `git diff --numstat`: +5984 / −2866 against HEAD (the path is reused by the 7.1 rebuild).
+- `Content/Levels/M2 - The Trail.asset`: against HEAD, only the graph payload line (the new level's GUID). `freeSlotsCount` is back to 1.
+- `Resources/Sequences/M3Yard/`: 47 assets now (new: `M3Yard_Start_CameraOnStone`, `_CameraOnWestLane`, the four `M3Yard_Cave_*`, the seven `M3Yard_Push_*`, `M3Yard_Notch3_RollAway`, `_ReleasePick`, `_Pick_DialogNodeSequence`).
+
+**Criteria**
+- [x] **Layout kept.** Not rebuilt: the one-off edit changes only what the block changes. Opening Claws on 3,11 4,11 5,11 in play; deploy slot on 4,8; no Mark; the Masher hidden at 6,1 in `masher`. Barricades, w1 in play, w2/w3 hidden, mushrooms, the Sword, the Stranger stone on 4,12 and Toba hidden are as built. Tests: `TheTilesAndUnitsMatchThePaperBlock` (now with `P` for the slot), `ThreeClawsStandAtTheStoneInPlay`, `TheSistersStandOnTheirTilesWithOneDeploySlotForThePick`, `NeitherPickIsPlacedInTheLevel`, `TheMasherWaitsHiddenAtTheBottomOfTheEastLane`, `TheBuildBlockParsesCleanWithTheLevelLines`, plus the unchanged barricade, wave, mushroom, stone, Toba, relation and sword tests. Read-back below.
+- [x] **Roster:** one free seat, fixed Linda and Lucy. Tests: `TheRosterIsTheTwoSistersAndOneFreeSeatForThePick`; HEAD's `OnboardingMissionGraphTests`, `SearchTrailTests.TheRosterIsTheSistersPlusOneFreePickAndTheItemsArePacked`, `PickOnTilesLOConditionTests` ("a free seat for the pick") pass again.
+- [x] **Mark's 7.1 instance data is gone;** `holdFromLevelStart` and its tests dropped; `HoldUnitsUntilSignal.cs` is HEAD's. Test: `NeitherPickIsPlacedInTheLevel` (no Mark, no level-start hold).
+- [x] **Stages** (all queued, six):
+  - S1 "Clear the yard.": `EntitiesDestroyed` (Enemy, All) on the three opening Claws; w1 isn't listed. End: input off, camera on the stone, the pick's line, camera back, input on. Test: `StageOneIsTheThreeClawsAtTheStoneDeadAndItsEndShowsTheStone`.
+  - S2 "{pick_0}: push the stone.": one shown objective, `PickOnTilesLOCondition` (4,11) then `TilesOccupiedLOCondition` (Bergsons, 4,11), All, so 4,11 lights as a goal and only the pick completes it. End: input off, **`M3Yard_HoldPick` signal first**, camera on the east lane, the Masher revealed (`masher`), camera on the pick at the stone, the dialog (pick, then Linda), camera back, input on. Tests: `StageTwoIsThePickOnThePushTileLitAsAGoal`, `StageTwosEndHoldsThePickThenBringsTheMasher`.
+  - S3–S5: `TurnReachedLOCondition` (Bergsons, `turn = 1`) each, as 7.1; texts "Hold them off. 3 turns left.", "Hold them off. 2 turns left.", "Hold them off. Last turn.". Ends: notch 1 + w2, notch 2 + w3, notch 3 + roll away (stone3 hides) + **`M3Yard_ReleasePick` signal** + the pick's line. Tests: `EachHoldStageIsOneFamilyTurnStart` (×3), `EachHoldStageEndMovesTheStoneANotch` (×3; the release comes after the roll-away, and no signal on notches 1 and 2).
+  - S6 "Finish them.": living Enemy ≤ 0. Outro as built. Tests: `TheLastStageIsEveryEnemyDead`, `TheOutroFadesTheTallyThenBringsTobaOut`.
+  - The hold component: one, on "The pick at the stone", wired to both signals. Test: `ThePicksHoldListensForTheHoldAndTheReleaseSignals`.
+- [x] **Loss:** second defeat group from level start, Any with the template's. Its objective "Keep {pick_0} standing." is shown and **names the pick** (see T-P4 and Decisions). Test: `TheLevelIsLostWhenNoBergsonStandsOrThePickFalls`; `PickFallenLOConditionTests` (moved by 7.1) cover the fall itself. The template defeat ignores the held pick through 8.2's runtime `IgnoreObjective`. "{pick} has fallen." is 8.4's.
+- [x] **Stone notches:** 3. Variants used: `Unit_Rock_Stone0` (start), `Stone1` (notch 1), `Stone2` (notch 2), `Stone3` (notch 3, then rolls away). `Unit_Rock_Stone4` is no longer needed and is deleted. Tests: `TheStoneVariantsAreNeutralRocksTitledStoneEachFurtherToTheSide` (4), `EachStoneWaitsHiddenOnTheStoneTileInItsOwnGroupInTheStonesFaction` (also: no fifth prefab, no `stone4` group).
+- [x] **Idempotent:** `Apply Wiring` run twice after the final state; md5 of all 104 written files identical (the level, `_v1`, the mission, every rock/barricade prefab, all 47 M3Yard assets + metas, the pile's end list). The second run logged no warning and no mission change. The covering run and the full suite left them md5-identical too.
+- [x] **Tests:** see below.
+- [x] **Report on T-P2, T-P4, T-P5, Inactive targets:** Findings below.
+
+**Tests** (THJ's open editor, MCP test jobs; both started and finished cleanly this time):
+- Covering fixtures, `MISO.Core.Features.Onboarding.*` + `MISO.Core.Levels.*` + `BondSourcesTests`: **856 total, 856 passed**, 0 failed. Includes `M3DefenceTests` (42 cases), `HoldPickOutOfCombatTests`, `HoldUnitsUntilSignalTests` (HEAD's 14), the pick-condition classes, `OnboardingMissionGraphTests`, `SearchTrailTests`, `HomeVisitsTests`, `M4WhiteMothersTests`, the M1 Ridge tests.
+- **Full EditMode suite: 2923 total, 2922 passed, 0 failed, 1 skipped** (`AIRegressionTest.Baseline_MatchesCurrentAI`, Explicit). Last recorded 2899 (8.1); the difference is 8.2's new tests plus this chunk's changes (−7 option tests, M3 tests reshaped).
+- `AIRegressionTest` not run (the verifier's). Expect one line fewer than 7.1's 52: `units.unexpected Unit_Rock_Stone4.prefab` should drop out; `Unit_Barricade` stays.
+
+**`M3DefenceTests` changes:** removed the five Mark tests, `JohnsDrawnTileIsPlainFloor`, `NothingOfTheSquadPickIsLeftInTheLevel`, `FiveQueuedStages…`; added `NeitherPickIsPlacedInTheLevel`, `TheSistersStandOnTheirTilesWithOneDeploySlotForThePick`, `TheRosterIsTheTwoSistersAndOneFreeSeatForThePick`, `TheMasherWaitsHiddenAtTheBottomOfTheEastLane`, `ThreeClawsStandAtTheStoneInPlay`, `SixQueuedStagesFromTheYardToTheLastClaw`, `StageOneIs…`, `StageTwoIs…`, `StageTwosEndHoldsThePickThenBringsTheMasher`, `ThePicksHoldListensForTheHoldAndTheReleaseSignals`; reshaped the block, level-start, stone, lock, hold-stage, notch and defeat tests. The lock test now also checks that Mark's Duos are **not** locked for the sisters at level start.
+
+**Read-back** (`python claude-handoff/tools/level_to_grid.py Content/Levels/Greybox/GB_m3-defence.prefab`):
+
+```grid id=src-gb_m3-defence title="Source: GB_m3-defence (offset x+0, y+0)"
+_ _ _ _ T _ _ _ _
+_ _ _ c c c _ _ _
+. . . . . . . . .
+. . . . . . . . .
+. . L . . . . U .
+. . . . . . . . .
+. . . _ _ _ . . .
+. . . _ _ _ . . .
+. * . _ _ _ . . *
+. . . _ _ _ . . .
+. . . _ _ _ O O c
+c c c _ _ _ O O c
+c . c _ _ _ . . c
+--
+note 0,6 Unit_Barricade
+note 1,6 Unit_Barricade
+note 2,6 Unit_Barricade
+note 4,12 Unit_Rock_Stone0
+note 4,12 Unit_Rock_Stone1
+note 4,12 Unit_Rock_Stone2
+note 4,12 Unit_Rock_Stone3
+note 4,8 deploy slot
+note 6,6 Unit_Barricade
+note 7,6 Unit_Barricade
+note 8,10 DR_PickUp_HeavenlySword
+note 8,6 Unit_Barricade
+level hidden toba 4,12
+level hidden masher 6,1
+level hidden w2 8,0 8,1
+level hidden w3 0,0 2,0 8,2
+```
+
+Tool notes: Defence, 82 tiles, Early, all alert. Objectives: Clear the yard. / {pick_0}: push the stone. / Hold them off. 3 turns left. / 2 turns left. / Last turn. / Finish them. / Keep {pick_0} standing. Placed: 11 Dark Claws, Linda, Lucy, the Masher, `Unit_Placeholder`, Toba, stone0..3, 6 barricades, 2 mushrooms, the sword pickup. The stone groups read as "a listed unit that is not a placed unit" (the tool's known gap with the stone variants, as in 7.1).
+
+Against block `m3-defence-4`: `#` reads `_`; `c@` on 4,11 reads `c` (the `@` is a drawing aid); the deploy slot is a note, not a glyph; barricades and stones are notes. Tiles, units, hidden groups (`toba`, `masher`, `w2`, `w3`) and the deploy tile match. No difference otherwise.
+
+**Placeholder lines** (seeded once into new dialogue assets; 8.4 replaces them; texts carried over from 7.1, none new):
+- Level start (`M3Yard_Start_Linda_DialogNodeSequence`, kept from 7.1, Linda): "Keep them off him!" — the slot for M3.0.6; the text is 7.1's and doesn't fit the level start yet.
+- S1 end (`M3Yard_Cave_Pick_DialogNodeSequence`, pick slot): "There's a cave behind that stone. I'll shift it." (7.1's `MarkStartLine`) — slot for M3.0.2.
+- S2 end (`M3Yard_Push_DialogNodeSequence`): pick slot "It's moving... keep them off me!" (7.1's notch-3 line), Linda "Keep them off him!" — slots for M3.0.3 (per-pick text is 8.4's) and M3.0.4; M3.0.1 (Linda on the Masher) and M3.0.5 need nodes added by 8.4.
+- Notch 1 / 2 barks: kept (Lucy "More from the east!", Linda "Both sides now!"). No pick notch line on notches 1–2 yet (M3.1.1, M3.1.3 are new slots for 8.4).
+- Notch 3 (`M3Yard_Notch3_Pick_DialogNodeSequence`, pick slot): "It's open! The big one's at the wall!" (7.1's notch-4 line) — slot for M3.1.4.
+- End: kept.
+- Objectives (final, from `design/m3-text.md`): "Clear the yard.", "{pick}: push the stone.", "Hold them off. 3 turns left.", "Hold them off. 2 turns left.", "Hold them off. Last turn.", "Finish them.", "Keep {pick} standing." (written `{pick_0}`, the key the conditions expose).
+
+**Findings (all from reading the code; nothing played)**
+
+- **T-P2: the Masher's 2×2 reveal when a footprint cell is taken.** `HiddenLevelUnits.RevealUnit` switches the unit on, initializes it and calls `GridCell.PlugEntity` on its anchor 6,1. `PlugEntityInternal` checks the whole footprint (`TryGetFootprintCells` + `GridPluggableEntity.CanOccupy`: every cell of 6..7 × 1..2 must exist and have no other occupant). If any is taken, `GetNearestPluggableCell` walks breadth-first over adjacent cells from 6,1 and takes the first anchor whose full 2×2 exists and is free, and the Masher slides there (`translateToPosition`). In this lane the likely fallbacks are 6,0, 7,0/7,1 (8,x is a tile) or 6,2–6,3; never column 5 or lower (no tiles at 3..5 below row 7, so the footprint fails). If no anchor fits anywhere, it is switched off again with a warning and never comes in (the stage still completes; nothing waits on it). Family units can walk through the barricades into the lane, so a sister standing in 6..7 × 1..2 at the push shifts the Masher one or two cells. Not fixed, as asked. Hidden units (w2 on 8,0/8,1) don't block it: they are inactive and not plugged.
+- **T-P4: can `{pick}` show in a defeat objective?** `PickFallenLOCondition` does not override `ExposeVariables`, so on its own **no**: "Keep {pick_0} standing." would show the key literally. `LevelObjective.UpdateDisplayText` replaces the variables of **every** condition of the objective (`{key_<condition index>}`), and defeat objectives go through the same path. So I gave the objective a first condition that exposes the name: a `PickOnTilesLOCondition` (Bergsons) with an **empty tile list**, which is never true (no tile to stand on), followed by `PickFallenLOCondition`, with the objective's aggregation **Any**. The objective is satisfied exactly when the pick has fallen, and its text reads "Keep John standing." / "Keep Mark standing.". No code change, no core change. The AI planner skips both custom condition types (no handler), so it adds no pull. Edge: a level played on its own from the toolbar (no mission, so no fixed seats) has every family member counting as "the pick" for the name (the first living Bergson), as the old greybox's S2 text already did; the fall never triggers there. **Coordinator: confirm this, or say if you'd rather have a one-line `ExposeVariables` on `PickFallenLOCondition` (not in my file list).** The loss panel still shows the satisfied defeat objective's first sentence as the failed row ("Keep John standing"); "{pick} has fallen." is 8.4's.
+- **T-P5: Chained Assault range.** The target pick is the trigger preset `Mark_Lucy_Duo_Ability` (both `Unit_Lucy` and `Unit_Mark` carry it), `radiusV` constant **5** (not 4), selecting cells around **the unit that starts the Duo** (the caster of the trigger). If Lucy starts it from her bar, the range is measured from Lucy; if Mark starts it, from Mark. `Mark_Lucy_Duo_TargetAdjust` then hands the collected targets to both sides; Mark's ghost blitz (`ActivateMarkLucyBlitz`) hits each in turn by distance from Mark, with no range check of its own (his side's 2 × RANGE radius isn't applied to the handed-over targets). So the design's "Lucy on 4,9 has all three within 4" holds with margin (5). The cell count is capped by `_controller.TargetCellCount` and the trigger's `RequiredTargetCount`.
+- **Do enemies attack an Inactive unit? Yes.** Nothing filters a turn-skipped (`Status.Inactive`) or objective-ignored unit out of enemy targeting: targets go by faction relation. `IsUnitTurnSkipped` is read by the AI only for its **own** units' turn order (`AIFactionBrain.UpcomingTurnOrder`), by the Masher's counter/preview for the Masher itself, by Catch & Return (8.2) and by the player controller. `IsUnitIgnoredForObjectives` is read by `LivingUnitsLOCondition` only. So a held pick is attacked and shown in next-targets like any family member; the template defeat's `LivingUnits` influence still makes every living Bergson (the held pick included) an AI pull, as in every level. `PickFallenLOCondition` and the naming `PickOnTilesLOCondition` add no pull (no planner handler).
+
+**Decisions (8.3)**
+- **The prefab edit as a one-off script, not as wiring.** `BlockDocument` is now `m3-defence-4`, so `Build Level` (only for a missing prefab) would build the same layout; the wiring keeps owning what it owned. The edit placed units the way the builder does, so a rebuild and this edit agree. Same behaviour as "edit only what the block changes".
+- **The defeat names the pick through a never-true `PickOnTilesLOCondition` (no tiles), aggregation Any** (T-P4). Gives the approved text with no code change; easy to swap for an `ExposeVariables` override later.
+- **The hold signal is the first step of S2's end, right after input goes off,** before the Masher camera, so the pick is out of combat before anything else happens. The release comes after the roll-away and before the pick's line on notch 3.
+- **Sequence slots:** level-start Linda dialog kept (slot for M3.0.6); new pick-slot dialogs for S1, S2 and notch 3, seeded with 7.1's placeholder texts, not new lines. 7.1 dialogs with no slot (Mark start line, notch 3/4 Mark lines) deleted rather than reused, because their speaker is `Who.Mark` and a seed never changes on an existing asset. `design/m3-text.md` §D8 lets the tech plan rename slots.
+- The Linda–Lucy Duo stays the only level-start Duo lock; the 7.1 Mark Duo locks were removed from the asset once by the one-off script (the wiring only adds locks, never removes them).
+- `MissionWiring.HoldTheYard.Mission.cs` now writes one free seat, so a re-run puts it back if someone changes it; same asset value as HEAD.
+- Kept `PickFallenLOConditionTests.cs` (7.1 moved HEAD's three fall tests there) rather than moving them back into `M3DefenceTests`.
+
+**Risks and loose ends (8.3)**
+- **The Masher close-up** (EN-10) is expected to play on first sight when `masher` is revealed in S2's end, inside the sequence with input off. Not checked: whether `EnemyIntroductionController` fires for a unit revealed mid-sequence, and whether it overlaps the camera step. Play check.
+- **S2 completes during the family turn the pick ends its move on 4,11.** The hold then runs during the pick's own open turn; 8.2 handles that (`NotifyTurnStarted(true)`, leftover AP not drained but unusable). Play check that the pick greys out at once.
+- **Hold during the S2 sequence vs. Family Super Time:** if Super Time is running at that moment, 8.2 defers the role suppression until it ends. Unlikely at a stage end. Play check.
+- **The pick on 4,11 before the yard clears** (the design's "parks on 4,11"): S2 is first evaluated right after S1's sequence, completes at once, and the hold follows. Fine by design.
+- **Standalone play from the level toolbar** (no mission): `{pick_0}` names the first living Bergson and the fall never triggers; the deploy slot has no roster to fill it. Use the Trail from a save for the play check.
+- **Placeholders that don't fit yet** (level start "Keep them off him!", the push line) until 8.4.
+- **Editor note:** deleting `M3Yard_Start_SequentialSequence` / `M3Yard_Notch3_SequentialSequence` on disk and re-creating them in the same session left two empty step lists the first time (Unity reused the stale in-memory objects). I deleted them again after a refresh and re-ran the wiring; they are filled now and tested. If anyone deletes and re-creates a wired step list, refresh in between.
+- Not staged/touched: THJ's `LevelM2-C1.prefab`, `PreloadScreen.unity`, `ProjectSettings/*`, `Content/FamilySuperTime/DUO/Inserts/`, the TMP fallback font, `M3Defence_Notch3_HideLastStone.asset` (+ .meta). 8.1/8.2 files untouched (no bug found in them).
+- Save reset: no.
+
+**How to see it (8.3)**
+1. Play stopped. Everything is applied. To re-apply: **Tools › Onboarding › Hold the Yard: Apply Wiring** (safe to re-run; changes nothing on applied data).
+2. Open `Content/Levels/Greybox/GB_m3-defence.prefab`: three Claws in the alcove (3,11 4,11 5,11), the `Unit_Placeholder` on 4,8, Linda 2,8, Lucy 7,8, no Mark; the Masher at the bottom of the east lane switched off (listed in `HiddenLevelUnits` › `masher`); the object "The pick at the stone" with `HoldPickOutOfCombat` (push tile 4,11) and two `SignalAction`s.
+3. From a cleared save, play to the Trail; the roster screen offers one free seat: pick John or Mark.
+4. Level start: the camera shows the Claws at the stone, the west lane (w1 walking), the yard; objectives "Clear the yard." and "Keep John standing." (or Mark).
+5. Kill the three alcove Claws (w1 doesn't count): camera on the stone, the pick's line, 4,11 lights, "John: push the stone.".
+6. Walk the pick onto 4,11: input off, the pick greys out at once (no Role zone, Duos with the pick gone from the sisters' bars, Papa's Shelter off for John), the camera goes to the east lane and the Masher comes in with its close-up, the lines, "Hold them off. 3 turns left.".
+7. Next three family turn starts: notch + w2, notch + w3, then the stone rolls away, the pick is released with a full turn, "Finish them.". Enemies should be able to hit the held pick.
+8. Let the pick fall at any point: the level is lost and the loss panel lists "Keep John standing" as failed.
 
 ## Reviews and checks
 
@@ -156,6 +292,16 @@ none
    - `miso/Assets/_Project/Features/Onboarding/HoldRoleZoneHidden.cs.meta`
    - `miso/Assets/_Project/Features/Onboarding/Editor/HoldPickOutOfCombatTests.cs`
    - `miso/Assets/_Project/Features/Onboarding/Editor/HoldPickOutOfCombatTests.cs.meta`
+4. `feat(onboarding): Hold the yard round two: barricades, lanes, the Masher in the east lane, the pick held on the stone` (7.1 + 8.3 assets and wiring; after 3, since the wiring and the level use `HoldPickOutOfCombat`). Replaces 7.1's proposed commits 1 and 2 (`reports/onboarding-m3-round-two.md`): the level-start hold option is gone, so there is no separate commit for it.
+   - the levels: `miso/Assets/_Project/Content/Levels/Greybox/GB_m3-defence.prefab`, `GB_m3-defence.prefab.meta`, `GB_m3-defence_v1.prefab`, `GB_m3-defence_v1.prefab.meta` (git sees a rename plus a new file once both sides are staged)
+   - the mission: `miso/Assets/_Project/Content/Levels/M2 - The Trail.asset` (one line: the graph payload)
+   - the barricade: `miso/Assets/_Project/Features/NPCs/Rock/Prefabs/Unit_Barricade.prefab`, `Unit_Barricade.prefab.meta`
+   - the sequences: `miso/Assets/_Project/Resources/Sequences/M3Yard.meta` and everything in `miso/Assets/_Project/Resources/Sequences/M3Yard/` (47 assets + 47 `.meta`)
+   - the wiring: `miso/Assets/_Project/Features/Onboarding/Editor/MissionWiring.HoldTheYard.cs`, `MissionWiring.HoldTheYard.Stone.cs`, `MissionWiring.HoldTheYard.Sequences.cs`, `MissionWiring.HoldTheYard.Mission.cs`, `MissionWiring.HoldTheYard.Barricades.cs` (+ `.meta`), `MissionWiring.HoldTheYard.Pick.cs` (+ `.meta`)
+   - the tests: `miso/Assets/_Project/Features/Onboarding/Editor/M3DefenceTests.cs`, `miso/Assets/_Project/Features/Onboarding/Editor/PickFallenLOConditionTests.cs` (+ `.meta`)
+   - Not in it (back at HEAD, nothing to stage): `HoldUnitsUntilSignal.cs`, `HoldUnitsUntilSignalTests.cs`, `OnboardingMissionGraphTests.cs`, `SearchTrailTests.cs`, `PickOnTilesLOConditionTests.cs`, `GB_m1-ridge.prefab`. Deleted untracked 7.1 files (nothing to stage): `HoldUnitsUntilSignalTests.LevelStart.cs`, `MissionWiring.HoldTheYard.Mark.cs`, `Unit_Rock_Stone4.prefab` (+ metas).
+   - Not to stage: THJ's `LevelM2-C1.prefab`, `PreloadScreen.unity`, `ProjectSettings/*`, `Content/FamilySuperTime/DUO/Inserts/`, the TMP fallback font, `Resources/Sequences/M3Defence/M3Defence_Notch3_HideLastStone.asset` (+ .meta).
+5. `feat(onboarding): M3 lines` (8.4)
 
 ## Other branches
 
