@@ -1,7 +1,7 @@
 # Report: Onboarding demo Phase 1 tweaks (Cyclone refund, free Duos, pouch, health potion, Mark's Command clip)
 
 Plan: plans/2026-11-27-onboarding-p1-tweaks-tech.md    Agent: miso-implementer    Branch: main (scope all)
-Outcome: partial (P1-1 done; P1-2 and P1-3 to come in later runs)
+Outcome: partial (P1-1 and P1-2 done; P1-3 to come in a later run)
 
 ## What changed
 
@@ -40,6 +40,26 @@ Outcome: partial (P1-1 done; P1-2 and P1-3 to come in later runs)
 - Evidence (run through the Unity MCP in THJ's open editor, 2026-11-27): compile clean (no console errors after refresh). `MISO.Core.Features.Bergsons.EditorTests` (all Cyclone/Lucy fixtures): 1031/1031 passed, the new 21 among them. **Full EditMode suite: 3078 total, 3077 passed, 0 failed, 1 skipped (`AIRegressionTest.Baseline_MatchesCurrentAI`, Explicit).** The AI regression was not run by name: no AI graph, AI ability or unit prefab changed.
 - Decisions and loose ends: see below.
 
+### Chunk P1-2: free Duos, pouch, Mark's Command clip (1.17, 1.18, 1.10, 1.19; D-787, D-789)
+
+- Changed (all paths under `miso/Assets/_Project/`; every YAML diff shows only the intended lines, line endings kept, all LF):
+  - `Resources/Abilities/Cooperation/Mark_Lucy/Mark/Mark_Lucy_MARK_Duo_Ability.asset` and `.../Lucy/Mark_Lucy_LUCY_Duo_Ability.asset`: `apConsumptionType: 1` to `0` (1 line each).
+  - `Resources/Tutorials/Tutorial_Duo_Abilities.asset`: Duo page text (2 lines, see below).
+  - `Features/Player/{John,Linda,Lucy,Mark}/Prefabs/Unit_<Hero>.prefab` (+8 lines each) and `Features/Player/Dom/Prefabs/Unit_Toba.prefab` (+4 lines): added prefab-instance overrides `abilityOrchestrator.items.Array.data[N].hideIfUsed: 1`, same style and same target fileID as the existing stale `remainingUses` overrides (and as the memory levels). Toba has one item entry (`items.Array.size` 1), so only data[0].
+  - `Features/Player/Mark/Arts/Animations/AC_Playable_Mark.controller`: one line, the `Command` blend tree (named `ItemUse` in the file) Down child (threshold -1) motion guid `8c025ca7...` (`Mark-Pull-Down.anim`) to `163351e6...` (`ItemUse/Mark-ItemUse-Down.anim`). Side/Up untouched; `Mark-Pull-Down.anim` and its `.meta` not touched.
+  - New tests: `Core/Systems/AbilitySystem/Abilities/Editor/DuoApWiringTests.cs` (+ `.meta`), `Features/Onboarding/Editor/HeroItemPouchTests.cs` (+ `.meta`). LF, no BOM, like the neighbours.
+- Tutorial text (`Tutorial_Duo_Abilities.asset`, page "Duo Abilities"):
+  - Before: `• Duos consume FP in addition to 1 AP from the activating Bergson.`
+  - After: `• Duos cost FP from both Bergsons and no AP, but the one who starts a Duo needs 1 AP left.`
+- Criteria:
+  - [x] Both Mark-Lucy partner presets are `apConsumptionType: 0`; no core change. Covered by `DuoApWiringTests.EveryDuoEntryChargesNoApToAnyone`. "Charges no AP in play, activator needs 1 AP left" is the existing activation rule (unchanged); needs the play check.
+  - [x] Wiring test: every `UnitsCooperationHandler.entries` entry on `PlayerController.prefab` has `allConsumeAP` false, trigger preset and every partner preset at `Ineffective` (7 entries); `DivineRelicAbilitiesChargeNoAp` covers `DR_Ability_HeavenlySword` and `DR_Ability_BlackDespair`. Both tests pass (they would have failed on the Mark-Lucy partners before the edit).
+  - [x] Tutorial no longer says Duos cost AP (text above; "FP" kept).
+  - [x] Every hero item entry has `hideIfUsed: 1` (John, Linda, Lucy, Mark: data[0] and [1]; Toba: data[0]). `HeroItemPouchTests.EveryHeroItemIsHiddenOnceItHasNoUseLeft` reads John, Linda, Lucy, Mark, Toba and Toba_Ally through `SerializedObject` (effective values) and passes. Stale `remainingUses` overrides and `GB_m1..m4` overrides untouched. Note `Unit_Toba_Ally.prefab` has no item entries at all (items array is the base's empty one), so there is nothing to set there and the test passes with zero entries for it.
+  - [x] Mark's Command Down child now uses `Mark-ItemUse-Down.anim` (line diff above). No automated test; the verifier or THJ checks Command facing down in play.
+- Evidence (Unity MCP, THJ's open editor, 2026-11-27): compile clean (no errors; only existing warnings). New tests 3/3 passed. **Full EditMode suite: 3081 total, 3080 passed, 0 failed, 1 skipped (`AIRegressionTest.Baseline_MatchesCurrentAI`, Explicit)**; this includes the Cooperation/Duo, Onboarding memory-rule/item and Hearth memory fixtures. **AI regression by name** (`MISO.Core.Systems.AI.EditorTests.AIRegressionTest.Baseline_MatchesCurrentAI`): CHECKS 738, FAILURES 51, same as the last recorded 51 (not fixed, not re-baselined). The only Duo-related line in it is `abilities.evaluator Mark_Lucy_MARK_Duo_Ability: was 'Generic_MeleeAttack...', now 'Mark_Primary...'`, which is an evaluator reference this chunk did not touch (existing drift).
+- Deviations: none from the plan. The pouch edit is on each hero prefab's item overrides (not core `RuntimeItem`), as decided.
+
 ## Reviews and checks
 
 - P1-1: (written by the coordinator)
@@ -75,7 +95,11 @@ none
 1. `feat(core): set an ability's remaining cooldown`: `miso/Assets/_Project/Core/Systems/AbilitySystem/Abilities/Runtime/RuntimeAbility.RemainingCooldownSetter.cs` + `.meta` (core, own commit)
 2. `feat(lucy): a Cyclone ended early gives back the cast cooldown as if it faded`: `miso/Assets/_Project/Features/Player/Lucy/Scripts/Cyclone/CycloneEntity.cs`, `CycloneEntity.CooldownRefund.cs` + `.meta`, `CycloneRules.CooldownRefund.cs` + `.meta`, `miso/Assets/_Project/Features/Player/Lucy/Scripts/Editor/CycloneCooldownRefundTests.cs` + `.meta` (plain; depends on 1)
 
-(P1-2 and P1-3 commits are added in their chunks.)
+3. `tweak(duos): Mark-Lucy Duo costs no AP; tutorial text`: `miso/Assets/_Project/Resources/Abilities/Cooperation/Mark_Lucy/Mark/Mark_Lucy_MARK_Duo_Ability.asset`, `.../Mark_Lucy/Lucy/Mark_Lucy_LUCY_Duo_Ability.asset`, `miso/Assets/_Project/Resources/Tutorials/Tutorial_Duo_Abilities.asset`, `miso/Assets/_Project/Core/Systems/AbilitySystem/Abilities/Editor/DuoApWiringTests.cs` + `.meta`
+4. `tweak(items): pouch hides items with no uses in every level`: the five hero prefabs `Unit_John`, `Unit_Linda`, `Unit_Lucy`, `Unit_Mark` (Features/Player/<Hero>/Prefabs/) and `Features/Player/Dom/Prefabs/Unit_Toba.prefab`, `miso/Assets/_Project/Features/Onboarding/Editor/HeroItemPouchTests.cs` + `.meta`
+5. `fix(mark): Command facing down uses Mark's own frames`: `miso/Assets/_Project/Features/Player/Mark/Arts/Animations/AC_Playable_Mark.controller`
+
+(P1-3 commit is added in its chunk.)
 
 ## Other branches
 
@@ -85,3 +109,4 @@ none
 
 1. P1-1: Open a level with Lucy and a Masher (e.g. Hold the yard round two). Cast the Cyclone in the Masher's path and end the turn. When the Masher walks through and bursts it, Lucy's Cyclone button is the cast again at the next family turn, and it is ready (not greyed with 3 turns left).
 2. P1-1: Cast a Cyclone where no heavy reaches it. It fades as round 4 starts, and the cast is ready one turn later, as before.
+3. P1-2: Start a Mark–Lucy Duo with a hero who has 1 AP: it runs and both keep their AP (FP is spent). Open the Duo tutorial page: it says Duos cost FP and no AP. In The River or The Ridge (only a Health Potion handed out) the pouch shows no FP potion button from the start. Use Mark's Command facing down: it shows Mark's own frames.
