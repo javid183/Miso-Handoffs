@@ -6,6 +6,8 @@ Rows D-001 to D-011 were carried over on 2026-10-15 from the Home handoff and pr
 
 | Date | ID | Tier | Scope | Decided by | Decision | Why | Affects |
 | --- | --- | --- | --- | --- | --- | --- | --- |
+| 2026-11-26 | D-780 | 3 | all | THJ | M3 barks (M3.3.1–3.3.3 hit barks, M3.4.1–3.4.4 tally barks) get their own chunk later (new bark events and graphs, maybe a tally lead-change event; Tier 3 if core); M3 commits without them | Against the recommendation (drop for the demo) | design/m3-text.md; backlog |
+| 2026-11-26 | D-781 | 2 | all | coordinator | Handoff merge from Miso-Handoffs finished at THJ's request: build-log kept both sides; status Inbox took the renumbered side (D-759..D-776); decision IDs checked (no new collisions; my next ID D-780) | THJ: "You resolve it" | build-log.md, status.md |
 | 2026-11-26 | D-779 | 3 | all | THJ | Divine Relics don't cost AP | THJ's demo tweak X-51 | plan `2026-11-22-onboarding-demo.md` chunk 1.18 |
 | 2026-11-26 | D-778 | 3 | all | THJ | Duos don't cost AP; their FTP (later the new Duo resource, X-27) cost stays | THJ's demo tweak X-50 | plan `2026-11-22-onboarding-demo.md` chunk 1.17; X-27 |
 | 2026-11-26 | D-777 | 1 | all | coordinator | Handoff merge with the other device: both used D-724 to D-741. This device's D-724 to D-758 keep their numbers; the other device's D-724 to D-741 (M2 the River, rounds 2 to 5) become D-759 to D-776 here and in the files it added. Commit messages in the shared repo keep the old numbers | Fewer renumbers (18 against 35); same rule as D-721, other side | decisions.md, status.md, plans and reports from the M2 round |
