@@ -7,7 +7,7 @@ The family fights as a family through four systems. Family Roles react on their 
 | System | Player chooses it? | Designed cost and limit | On `main` today | Status |
 | --- | --- | --- | --- | --- |
 | Family Role | No: it triggers, the player presses a QTE | Free, a limit per round (D-036, D-042) | 1 FTP per use, no limit | Built, differs |
-| Duo | Yes | 0 AP + 2 FTP (D-219, amends D-035) | 2 FTP (1 per partner; the check before use tests only 1). The activator pays 0 AP, or 1 in Mark–Lucy | Built, differs |
+| Duo | Yes | 0 AP + 2 FTP (D-219, amends D-035) | 2 FTP (1 per partner; the check before use tests only 1). The activator pays 0 AP in every Duo (D-787) | Built, differs |
 | Synergy | No: automatic | Free | Free | Built |
 | Pass-by | Yes, through the move path | Free; fills FTP | Free; fills FTP | Built |
 
@@ -68,7 +68,7 @@ Source: `Unit_<Name>.prefab` (role handler: `roleZoneSprite`, `roleZoneSlot`, `r
 
 ## Duos
 
-- **DU-1.** A Duo is a deliberate paired ability started by one partner, who needs at least 1 AP left. Every Duo costs the activator 0 AP: FTP only (D-219, amending D-035). As wired, the activator pays its partner preset's cost: 0 AP in six Duos, 1 AP in Mark–Lucy. The cooldown applies to both partners (`cooldownForAll` on). *Built, differs* (Mark–Lucy drops to 0)
+- **DU-1.** A Duo is a deliberate paired ability started by one partner, who needs at least 1 AP left. Every Duo costs the activator 0 AP: FTP only (D-219, amending D-035). As wired, the activator pays its partner preset's cost, and all seven are 0 AP (Mark–Lucy was 1 until D-787). The cooldown applies to both partners (`cooldownForAll` on). *Built*
 - **DU-2.** A Duo costs 2 FTP (D-035). *Built, differs:* each partner pays its entry's `fPCost` of 1, so 2 in all, but the check before use tests only 1 per partner (a known bug, [`plans/2026-10-16-ap-points-model.md`](../../plans/2026-10-16-ap-points-model.md)).
 - **DU-3.** A Duo is offered only when both partners are in the squad. *Built*
 - **DU-4.** Some partners get a QTE. A mash QTE scales the effect between ×0.7 and ×1.5; a time-window QTE adds one extra (a decoy, a turn of Vulnerable). *Built* **On `main` (merged 2026-11-22 from `thj/duo-insert`; test, Mark–Lucy only):** the QTE comes first on a framed comic card, then a full-screen comic insert (diagonal split, 1.4 s, 0.6 s on later uses in a combat, skippable after 0.3 s), then the Duo acts with the QTE result; the sliding panels don't show. Other Duos unchanged. Design: [`design/duo-insert-shot.md`](../../design/duo-insert-shot.md). *Built, not play-checked*
