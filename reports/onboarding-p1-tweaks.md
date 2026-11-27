@@ -5,7 +5,7 @@ Outcome: done (P1-1, P1-2, P1-3 built; full EditMode suite 3086 passed, 0 failed
 
 ## What changed
 
-Files per chunk are listed under Chunks. P1-3 added: the two Health Potion assets, `ItemEffectPreview.cs`, `AbilitiesBarHUDUI.cs`, `EndCycloneSequence.cs` (comment), `HealthPotionTargetingTests.cs`.
+Files per chunk are listed under Chunks. P1-3 added: the two Health Potion assets, `AbilitiesBarHUDUI.cs` + `ItemCompletionHooks.cs` (+ test), `EndCycloneSequence.cs` (comment), `HealthPotionTargetingTests.cs`; fix round also touched `HeroItemPouchTests.cs`.
 
 ## Acceptance criteria
 
@@ -84,6 +84,17 @@ Per chunk below; all met, with the play checks listed in How to see it.
 - Evidence (Unity MCP, editor open, 2026-11-27): compile clean. `HealthPotionTargetingTests` 6/6 pass. **Full EditMode suite: 3087 total, 3086 passed, 0 failed, 1 skipped (`AIRegressionTest.Baseline_MatchesCurrentAI`, Explicit).** No AI regression run (no AI graph, ability or unit prefab changed in this chunk). Console errors after the suite are the tests' own expected log lines.
 - Deviations: the `AbilitiesBarHUDUI` hook fix is outside the plan's literal steps (it follows from "confirm a targeted item consumes exactly one use"); same intended behavior, not a core file.
 
+### P1-3 fix round (reviewer FIX)
+
+- Must fix 1, hook survives a bar rebuild: the per-button `pendingCompletion` local is gone. New `Features/UI/Panels/Scripts/ItemCompletionHooks.cs` (instance, no statics) keeps one pending completion hook per `RuntimeAbility`: `Set` takes the stored delegate off `ability.OnCompletionPerRun` before adding the new one, stores it, and the hook removes its own entry when it fires. `AbilitiesBarHUDUI` holds one instance (`_completionHooks`, not unhooked in `Clear()`, so a rebuild mid-action, e.g. the Cyclone swap, keeps its consume) and calls `_completionHooks.Set(ability, ...)` where it used to add the closure. Other subscribers on the ability are left alone. `AbilitiesBarHUDUI.cs` diff: 1 field, `+= () =>` becomes `Set(ability, () =>`, closing `};` becomes `});`.
+- Test: `Features/UI/Panels/Scripts/Editor/ItemCompletionHooksTests.cs` (+ `.meta`), 4 tests: two picks from rebuilt bars spend one use; a new pick after completion spends again; a hook cleared by the phase start is replaced cleanly; other subscribers are untouched. The test drives the hooks class on a real `RuntimeAbility` (two `Set` calls stand for two populated bars); the `AbilitiesBarHUDUI` itself is not instantiated (prefab-dependent), so the wiring of the class into the bar is for the play check (pick potion, select another unit, come back, pick, heal: pouch count drops by 1).
+- Should fix 2: the 3-argument `ItemEffectPreview.GetHealthIncrease` overload is removed; `ItemEffectPreview.cs` is back to HEAD (`git diff --stat` empty). The "previews on the hovered target" criterion is **not met** (needs core `PlayerController`/`AbilityDamagePreview`); hovering the pouch button still previews on the holder's bar.
+- Should fix 3: `EndCycloneSequence.cs` summary re-wrapped; it now says the early end lowers the cast's cooldown to what it would be after a fade (one turn left today), never higher than it already was. The "caster keeps what is left of it" wording is gone.
+- Should fix 4: `HealthPotionTargetingTests.cs` header now says "The holder spends the use (the potion costs no AP)".
+- Should fix 5: `HeroItemPouchTests.cs` uses `prefab.GetComponentInChildren<GUnit>(true)` alone.
+- Results (Unity MCP, 2026-11-27): compile clean. Covering tests: `ItemCompletionHooksTests` 4, `HealthPotionTargetingTests` 6, `HeroItemPouchTests` 1, `DuoApWiringTests` 2, all 13 pass. **Full EditMode suite: 3091 total, 3090 passed, 0 failed, 1 skipped (`AIRegressionTest.Baseline_MatchesCurrentAI`, Explicit).** **AI regression by name: CHECKS 738, FAILURES 51, the same as the last recorded 51** (not fixed, not re-baselined; the potion preset on `Unit_TobaEnemy` changed nothing there).
+- Note: I ran one stray `git checkout --version` by mistake; git rejected it as an unknown option and changed nothing (no write happened).
+
 ## Reviews and checks
 
 - P1-1: (written by the coordinator)
@@ -123,8 +134,9 @@ none
 4. `tweak(items): pouch hides items with no uses in every level`: the five hero prefabs `Unit_John`, `Unit_Linda`, `Unit_Lucy`, `Unit_Mark` (Features/Player/<Hero>/Prefabs/) and `Features/Player/Dom/Prefabs/Unit_Toba.prefab`, `miso/Assets/_Project/Features/Onboarding/Editor/HeroItemPouchTests.cs` + `.meta`
 5. `fix(mark): Command facing down uses Mark's own frames`: `miso/Assets/_Project/Features/Player/Mark/Arts/Animations/AC_Playable_Mark.controller`
 
-6. `feat(items): the Health Potion can be given to any ally at any range`: `miso/Assets/_Project/Features/Player/Shared/Items/HealthPotion/Bergsons_Ability_HealthPotion.asset`, `HealthPotionAttributeModifierEffect.asset`, `miso/Assets/_Project/Core/Systems/AbilitySystem/Abilities/Runtime/ItemEffectPreview.cs`, `miso/Assets/_Project/Features/UI/Panels/Scripts/AbilitiesBarHUDUI.cs`, `miso/Assets/_Project/Core/Systems/AbilitySystem/Abilities/Editor/HealthPotionTargetingTests.cs` + `.meta` (plain, no core file)
-7. The `EndCycloneSequence.cs` comment (`miso/Assets/_Project/Features/Onboarding/EndCycloneSequence.cs`): suggest joining commit 2 (the Cyclone early-end refund), since it documents that behavior.
+6. `fix(ui): an item button adds one completion hook per pick`: `miso/Assets/_Project/Features/UI/Panels/Scripts/AbilitiesBarHUDUI.cs`, `miso/Assets/_Project/Features/UI/Panels/Scripts/ItemCompletionHooks.cs` + `.meta`, `miso/Assets/_Project/Features/UI/Panels/Scripts/Editor/ItemCompletionHooksTests.cs` + `.meta` (own commit, before 7)
+7. `feat(items): the Health Potion can be given to any ally at any range`: `miso/Assets/_Project/Features/Player/Shared/Items/HealthPotion/Bergsons_Ability_HealthPotion.asset`, `HealthPotionAttributeModifierEffect.asset`, `miso/Assets/_Project/Core/Systems/AbilitySystem/Abilities/Editor/HealthPotionTargetingTests.cs` + `.meta` (plain, no core file; `ItemEffectPreview.cs` is no longer changed)
+8. Join `miso/Assets/_Project/Features/Onboarding/EndCycloneSequence.cs` (comment only) to commit 2, the Cyclone early-end refund.
 
 ## Other branches
 
@@ -136,3 +148,10 @@ none
 2. P1-1: Cast a Cyclone where no heavy reaches it. It fades as round 4 starts, and the cast is ready one turn later, as before.
 3. P1-2: Start a Mark–Lucy Duo with a hero who has 1 AP: it runs and both keep their AP (FP is spent). Open the Duo tutorial page: it says Duos cost FP and no AP. In The River or The Ridge (only a Health Potion handed out) the pouch shows no FP potion button from the start. Use Mark's Command facing down: it shows Mark's own frames.
 4. P1-3: In a level with a Health Potion, hurt one ally (not the holder), select the holder, open the pouch and pick the potion: any ally below full HP can be picked at any distance; a full-HP ally is refused. Heal the hurt ally: their HP rises by the usual amount, the holder's does not, and the pouch count drops by exactly 1. Cancel and pick again before healing: still only 1 use drops. Give it to the holder when hurt, and when at full HP (the button is not greyed). With everyone at full HP, pick the potion and click an ally: nothing happens and no use is spent. Hover the potion button on a hurt holder: the holder's bar previews the heal.
+
+## Reviews (coordinator)
+
+- **P1-1 review: APPROVE** (2026-11-27, core). No must- or should-fixes. Notes: the setter throws on a locked ability like `SetCoolDown` (only caller skips locked abilities; worth a `core-systems.md` line); `EndCycloneSequence` summary corrected in P1-3 (D-790); burst on the enemy turn of round 3 makes the cast ready one family turn earlier than a fade (as decided, GDD LU-7 note).
+- **P1-2 + P1-3 review: FIX** (2026-11-27). Must: the pouch completion-hook fix failed across a HUD rebuild. Should: HUD fix as its own commit; drop the unused `ItemEffectPreview` overload; `EndCycloneSequence` comment wording; potion test header; `HeroItemPouchTests` Unity-null lookup. All done in the fix round (D-792). Coordinator read the new `ItemCompletionHooks` + `AbilitiesBarHUDUI` diff and accepted it (per-ability map on the bar instance, survives `Clear()`, self-removing hook). Full suite 3090/3091 (1 Explicit), AI regression 51 unchanged.
+- Open for THJ at the play check: the potion costs no AP (unchanged, `apConsumptionType` 0): holder needs 1 AP left, spends none. Hover preview stays on the holder (target preview needs core code).
+- Additional play step for the fix: pick the potion, select another unit, come back, pick again, heal → exactly 1 use drops.
