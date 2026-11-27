@@ -517,3 +517,7 @@ Branch `main`. No play session. Editor open, Unity MCP.
 - **AIRegressionTest:** not run, as asked.
 - **Editor state at end:** scene `PreloadScreen` (`Assets/_Project/Scenes/PreloadScreen.unity`), not dirty, Play mode off (tests ran in EditMode). Nothing saved or edited under `miso/`. Save reset: no.
 - **Editor checks corrections:** a full MCP run took 484 s and 198 s here; `get_test_job` disconnected during domain reloads and needed retries (as already noted).
+
+## 8.4 follow-up: stopped by THJ (2026-11-26)
+
+THJ said "stop" mid-run. The implementer finished its in-flight edits and stopped; nothing is mid-edit. Edited (all `Features/Onboarding/`): `UnitsReachTilesSequenceTrigger.cs` (no fire after level end, `ShouldCheck`), `Editor/PickLineDialogSequenceTests.cs` (+1 test), `Editor/WiringSeed.cs` (shared, tracked: seed before `CreateAsset`, re-seed zero-node dialogues), `Editor/MissionWiring.HoldTheYard.Lines.cs` (`BuildPushRule` order), `Editor/M3DefenceTests.Lines.cs` (non-empty assert), `Editor/MissionWiring.HoldTheYard.Sequences.cs` (header reworded; reflow untidy). A recompile was requested; **not compiled-checked, not tested, Apply Wiring not rerun, no other-mission rerun check.** No assets edited, no menus run after the stop.
