@@ -2,7 +2,7 @@
 
 Size: M    Tier: 3 (decided)    Assigned to: miso-implementer (one chunk at a time)
 Branch: all (built on `main`)
-Status: approved (D-783 to D-789)
+Status: done (D-783 to D-792)
 
 ## Why
 
@@ -86,3 +86,4 @@ Unity MCP was down at planning time and the editor is open (`miso/Temp` exists):
 ## Log
 
 - 2026-11-27 written by the coordinator from three Explore sweeps; THJ's answers D-784 to D-787.
+- 2026-11-27 P1-1 built, review APPROVE. P1-2, P1-3 built; feature review FIX → fixed (D-792). Full suite 3090/3091 (1 Explicit), AI 51. THJ played: all work. Commits: `68c3b20ee`, `b67b5a273`, `c57015652`, `92ce2a9a5`, `5690b0a7f`, `05546c8b4`, `9e76224bd` (the EndCycloneSequence comment went into `b67b5a273`; 7 commits, not 8). Status: done; designer GDD updates owed.
