@@ -316,3 +316,27 @@ none
 1. Nothing visible yet: no game code calls the API until 8.2's hold component.
 2. Window > General > Test Runner > EditMode, filter `FactionRoleSuppressionTests`, Run Selected: 17 green.
 3. 8.2: nothing visible in a level until 8.3 wires `HoldPickOutOfCombat` into M3. Test Runner > EditMode, filter `HoldPickOutOfCombatTests` (15), `LevelAbilityLockRuntimeTests` (5), `CatchHeldCatcherTests` (4), `PapasShelterReenableTests` (3), `RoleBadgeRulesTests`, `AbilityLockTests`: all green.
+
+## Verification (8.1–8.3)
+
+Verifier: miso-verifier, 2026-11-26. Branch `main`. Unity MCP in THJ's open editor. Quiet checks only, no play session. Save reset: no. No file under `miso/` edited.
+
+- **Result:** PASS (play-only criteria Not run: THJ plays M3 himself).
+- **Gate 1, compile:** forced refresh plus compile request. The assets were already compiled (`CompileScripts: 1 ms`, one domain reload, no new errors). The last `error CS` lines in `Editor.log` (`MissionWiring.HoldTheYard.Pick.cs` CS1022) sit before the previous reload, from earlier in the session, and the console has no `error CS` entry now. Console warnings and errors: 18 entries, all "Serialization depth limit 10 exceeded" for existing types (`StatBackedValueBase`, `GTag.subTags`, `RuntimeAbility._owner` cycles), none from the changed files. `warning CS` lines in the log naming the role and controller files (`MarkFactionRoleHandler.cs(66)` CS8509, `JohnFactionRoleHandler._isActive` CS0414, `PlayerController.showFamilyRoleDialogVisual` CS0414) are unused-field and non-exhaustive-switch warnings on lines this feature did not add. No warning from `Features/Onboarding`, `Levels/AbilityLock`, `Player/Lucy` or `UI/Panels`.
+- **Gate 2, full EditMode suite:** 2925 total, 2924 passed, 0 failed, 1 skipped (`AIRegressionTest.Baseline_MatchesCurrentAI`, Explicit). 192 s. Same as the implementer's last run.
+- **AIRegressionTest.Baseline_MatchesCurrentAI (by name):** fails as expected. `CHECKS: 738  FAILURES: 51` against 52 (7.1): the `Unit_Rock_Stone4.prefab` `units.unexpected` line is gone, `Unit_Barricade.prefab` stays, and the checks count drops by one. The rest is the existing set: graph count, node, edge and fingerprint lines, the `abilities.unexpected` and `abilities.count` lines, `units.count` (21 expected, 29 found), `units.missing Unit_Placeholder.prefab`, the other `units.unexpected` lines (the stone variants 0..3, `Unit_Rock`, `Unit_DarkClaw_StartsAlert`, `Unit_DarkClaw_Hearth`, `StuntCamActorSet`), the `units.ability` lines, and the final `fatal` NullReferenceException in `AIStrategyPlanner.HandleLivingUnitsCondition`. No new line type. Family Roles and Super Time: the only role line is `units.ability Unit_Lucy/Lucy_Ability_FactionRole: ability missing from prefab`. I could not diff it against 7.1's full list (7.1 recorded only the count and "no new line type"); that report and `reports/lucy-role-wrong-target.md` mention the same ability, so it reads as a known set member. No `FactionRoleHandlerBase`, `PlayerController` or Super Time line. Not fixed, not re-baselined.
+- **Editor state:** open scene `PreloadScreen` (`Assets/_Project/Scenes/PreloadScreen.unity`), not dirty, Play mode off. Nothing saved.
+- **Not run (needs a play session):** the play checks listed under "How to see it (8.3)" and the 8.2 loose items (pick lookup, Super Time deferral, Masher reveal footprint, grey badge, Duo from another bar).
+- **Editor checks corrections:** none. Confirmed: `refresh_unity` with compile returns at once; a run through `get_test_job` with `include_failed_tests` saves the large result to a file (the failure text is in `results[0].message`), and the first poll after starting the AI test hit a one-off "plugin session disconnected" and worked on retry.
+
+## Review (8.2 + 8.3 feature pass, miso-reviewer; pasted by the coordinator)
+
+**Verdict: APPROVE.** Must fix: none.
+
+Should fix:
+1. `HoldPickOutOfCombat.FindPick` fallback: add the "no fixed seats → null" guard that `PickFallenLOCondition.FindPick` has (standalone toolbar play could hold a sister if 4,11 is empty; unreachable in M3).
+2. Behavior tests: `TryCatch`/`WouldCatch` return false while held (today only `IsCatcherHeld` is tested); Papa's Shelter comes back on re-enable when Lucy is next to John (only the stale-on → off direction is tested). Add if the rig allows, else leave to the play check.
+
+Notes: the hold releases on disable/destroy/level end with a stable owner, tracks only what it added, idempotent, release gives a full turn (order checked in `SwitchTurnIE`); forced teardown may change suppression during Super Time (acceptable); John-pick teardown may briefly re-enable the shelter (harmless). `LevelAbilityLock` unchanged for existing callers; `Lock` raises `Changed` (bar rebuild; `GuidedAbilityHint` unaffected). Catch paths all covered. Badge stale until the next panel refresh. M3 wiring checked: S2 end = input off → hold signal → Masher camera/reveal; notch 3 = notch → roll-away → release → line; S1 lists only the opening Claws; defeat Any with `PickFallenLOCondition` alone; free seat 1; 47 M3Yard assets referenced; no Stone4/holdFromLevelStart left. Stale overrides in the level YAML harmless (optional cleanup). No core beyond 8.1, no private IDs, LF/no BOM, no mutable statics. Commits 2→3→4 build in order, no 8.1 file in them.
+
+Left to play: Super Time deferral, the Masher 2×2 slide, John's tether hidden?, the Masher close-up vs the S2 camera, the pick greying at once when held in its own turn.
