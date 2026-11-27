@@ -423,3 +423,13 @@ With 0 AP its abilities and walk are inactive (`Active` needs `CanConsume`), and
 - `CoOpTriggersOf_FindsTriggersInTheBaseLevelAndEveryUpgrade`.
 - The rig can't build a full cooperation entry with a valid partner, so "Duo found while locked" is covered by the trigger scan test only.
 - `HoldPickOutOfCombatTests`: 19/19 pass. Full EditMode suite: 2931 total, 2930 passed, 0 failed, 1 Explicit (`AIRegressionTest` baseline). The Onboarding fixtures ran as part of it.
+
+## Review (8.5 core, miso-reviewer; pasted by the coordinator)
+
+**Verdict: APPROVE** (from reading; conditional on the tests passing once the bridge is back). Must fix: none.
+
+Should fix:
+1. `MultiCellWalkRangeTests.AIWalkCandidates` (~217-224): the Masher's radius 1 comes from the light setup by accident; add `Assert.GreaterOrEqual(ability.Parameters.radius, 1, ...)` so a radius-0 setup fails clearly.
+2. Same file: save as LF with BOM like the folder (`.gitattributes` resolves `eol=lf`).
+
+Notes: 1×1 path is the old statement word for word; worker-safe, no statics, `GridCell.cs` BOM+LF kept, 13/1 hunk. Destination legal end to end (BFS/straight, `FindPath`, `MoveEntity`, `JumpEntity`, `CanEndOn`, `IsLegalAbilityTarget`, selection pre-filters). Correction: the Masher walk and Queen walk/jump are **PathWalkable**, not SelfWalkable. The surrounding-effect concern doesn't happen (filtered downstream; only the debug list sees it). Other changes acceptable: a player big unit could pick its own cells (no-op; none exist); Mark's Command on the Queen now offers her north anchor (intended); latent `allowRangedReach` + big-unit walk range keeps diagonal footprint cells (no such ability). The AI prediction gap predates the fix (backlog). AI regression will move; compare with 51.

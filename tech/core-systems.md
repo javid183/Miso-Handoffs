@@ -66,7 +66,7 @@ There is no damage-info type: a hit is a modifier on the target's HP attribute.
 
 | System | Main files | Why it's core |
 | --- | --- | --- |
-| Grid | `Core/Systems/GridSystem/Runtime/GridCell.cs`, `GridManager.cs`, `GridActions.cs`, `GridPluggableEntity.cs` | Pathfinding, occupancy (thread-sensitive) |
+| Grid | `Core/Systems/GridSystem/Runtime/GridCell.cs`, `GridManager.cs`, `GridActions.cs`, `GridPluggableEntity.cs` | Pathfinding, occupancy (thread-sensitive). Since 2026-11-26 (D-758, uncommitted until THJ's M3 play check): `GridCell.GetRangeCells` with `includeSelf` off and a multi-cell source removes only the anchor cell for walk modes (PathWalkable/SelfWalkable), so big units (Masher 2×2, Goblin Queen 1×2 walk and jump) can step N/E onto cells their footprint covers; 1×1 and Unconstrained (attack) ranges unchanged. Known gap: the AI next-targets prediction (`AIUnitBrain` sim path) still ranges a big unit from each footprint cell (backlog) |
 
 ## AI
 
