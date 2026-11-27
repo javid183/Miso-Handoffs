@@ -3100,3 +3100,6 @@ Plan `plans/2026-11-19-faster-loop-process.md`, decisions D-575 to D-579.
 **Not verified:** THJ's replay of M3 (the Masher walking); M1's Masher.
 **Findings:** the AI next-targets prediction still ranges big units per footprint cell (backlog).
 **Status:** uncommitted; THJ replays M3.
+
+## 2026-11-26 Commits on main (M3 pick, part 1)
+`d36324b85` feat(core): a unit's Family Role can be suppressed at runtime (8.1, D-748/D-754) · `d9e18739a` fix(core): big units can walk onto tiles their own footprint covers (8.5, D-758) · `676089010` feat: a held unit doesn't catch, shelter or join Duos (8.2, D-751/D-755) · `5028b7f94` feat(onboarding): hold the pick out of combat (8.2 + fix D-757). Not pushed. Still to commit: the M3 level/wiring (7.1+8.3) and the lines (8.4, running).
