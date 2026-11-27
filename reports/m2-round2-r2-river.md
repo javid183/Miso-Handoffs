@@ -295,3 +295,12 @@ The split is unchanged. Commit 3 (The River) still takes `MoveGroupUnitSequence.
    - Then the wave, the potion page (if not yet seen on this save), and control back.
 3. **Health:** the corridor Archers die a bit sooner than a full Archer (×0.75).
 4. **Edge case (optional):** stand John or Lucy on a corridor end before the last ring Claw dies. That Archer comes in on a free tile nearby and still walks to its stop; the hero isn't moved.
+
+### Round 3 review fixes (`MoveGroupUnitSequence.cs`)
+
+- **A walk that ends without the end-of-move event no longer holds the cutscene for 15 s.** From the frame after its start, a walk is over once its unit stands plugged (`PluggedProperly`) on a cell other than its start tile while the shared move effect isn't moving. A walker is unplugged between steps, so a moving unit never counts. This covers the move-block-tag stop mid-path. Only a walk that never leaves its start tile and raises no event still waits for the 15 s cap; the remarks say so.
+  - New test `WalkOver_StoppedMidPathWithoutTheEvent_IsOverOnceStandingOffItsStartAndTheEffectStopped`.
+  - `WalkOver` now takes the start cell, the frame count and the effect's moving flag.
+- **The final animation stop skips units that died on the way**, so their death animation plays.
+- **The remarks add a condition:** walking together is only safe when the walkers' paths and stop tiles don't cross, because the core walk still places a mover on a taken stop tile.
+- **Tests:** `M2RiverTests` + `MoveGroupUnitSequenceTests` 48/48 (6 group-move tests). Full EditMode suite **2948 total: 2947 passed, 0 failed, 1 skipped** (`AIRegressionTest`, Explicit). Edits and runs waited until THJ left Play mode. No asset changed, so no re-wire was needed. File stays LF.
