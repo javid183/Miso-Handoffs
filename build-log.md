@@ -3086,3 +3086,10 @@ Plan `plans/2026-11-19-faster-loop-process.md`, decisions D-575 to D-579.
 **Not verified:** play-through (THJ's play check pending).
 **Findings:** all enemies are drawn to Mark (defeat group); Masher counter-push can move Mark; Claw 4 / slam 6 damage, two hits per barricade; "Mark has fallen." needs loss-panel plumbing (7.2).
 **Status:** uncommitted in the shared repo, waiting on THJ's play check.
+
+## 2026-11-26 M3 the pick and the opening, chunks 8.1–8.3 (main)
+**Built:** 8.1 core: additive per-unit Family Role suppression (`FactionRoleHandlerBase.SetSuppressed`, Super Time skip, reactive interrupt and direct play refuse). 8.2: `HoldPickOutOfCombat` (+ `HoldRoleZoneHidden`), runtime `LevelAbilityLock.Lock`/per-unit `Unlock`, Catch & Return off while held, Papa's Shelter refresh, Suppressed role badge. 8.3: M3 on block `m3-defence-4` (round-two layout kept): 3 opening Claws, pick seat on 4,8, Masher hidden until the push, 6 stages, 3-turn hold, pick-falls defeat (`PickFallenLOCondition` exposes `{pick_i}`), Mark instance data and `holdFromLevelStart` dropped, `Unit_Rock_Stone4` deleted. Report `reports/onboarding-m3-pick.md`.
+**Verified:** 8.1 core review APPROVE; 8.2+8.3 review APPROVE; full EditMode 2925: 2924 passed, 0 failed, 1 Explicit; AI regression by name 51 (was 52); gate 7 read-back matches `m3-defence-4`.
+**Not verified:** play-through with John and with Mark (THJ); Super Time deferral; Masher 2×2 slide; John's tether while held; Masher close-up vs S2 camera.
+**Findings:** Chained Assault range is 5 (from the starter), not 4; enemies do attack an Inactive unit; badge stale until the next panel refresh; stale overrides in the level YAML (harmless).
+**Status:** uncommitted in the shared repo; should-fix follow-up running; then THJ's play check.
