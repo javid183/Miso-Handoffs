@@ -512,3 +512,51 @@ The kept rush assets differed from round 4's code. As before, I kept THJ's versi
    - The Duo button is on John's and Lucy's bars and pulses when either is selected, until the Duo is used.
    - Cleanse stays hidden.
 4. With barks silenced in settings, the bark is skipped and the Duo still unlocks and pulses.
+
+## Final alignment (miso-implementer, 2026-11-26)
+
+THJ tweaked round 5 himself and said "All good. Commit". The wiring code and tests now match his version, and his assets are the master.
+
+### Changes
+
+1. **Ambush bark:** `DuoBarkLine` = `"[PLACEHOLDER] Lucy, lets play hide and seek!"` (THJ's text, verbatim). The test checks the shown text "Lucy, lets play hide and seek!".
+2. **Intro:** `M2River_Intro_CameraBack` is dropped from the wiring's intro list: call → camera to the Pile → Lucy's Role page → Shelter page → Role lines. The asset (untracked, unreferenced) is deleted. The intro test expects one camera step, `M2River_Intro_CameraToPile`.
+3. **Ambush:** THJ's new step `M2River_Ambush_LucyRuns` (`MoveUnitSequence`, by nickname "Lucy", destination 9,1) is now built by the wiring (`AmbushLucyTile` = 9,1), at THJ's place: after `M2River_Ambush_RevealArchers`, before `M2River_Ambush_CorridorArchersRun`. The ambush test checks the step, its unit and tile, and that the Archers' group walk follows it.
+
+### THJ's edits to `GB_m2-river.prefab` and `M2River_Intro_CameraToPile.asset` may be lost
+
+**Needs the coordinator and THJ.**
+
+- A River wiring run at **19:27:36**, before this round, rewrote every asset the wiring owns, all within the same second: `GB_m2-river.prefab`, `M2River_Intro_CameraToPile`, `M2River_Intro_CameraBack`, the bark, the panels, the Shared potion assets and more. Not mine: I ran nothing between round 5 and this message. It's most likely the `TheWiringRerunLeavesTheLevelUnchanged` test inside the full suite that showed the 3 failures; that test calls `MissionWiringRiver.Run()`.
+- That run reset the bark's line to the old "Together, Lucy, like we practised!", which is why the coordinator's text was needed. It would also have reset any of THJ's changes to wiring-owned values in the prefab (unit states, groups, health factors, locks, stages, switches, Pile props) and in the camera asset (focus points, duration, wait).
+- What I can tell:
+  - The current `M2River_Intro_CameraToPile` is exactly what the wiring writes: from Lucy and John to the Pile, wait 0.8.
+  - My wiring run left the prefab and the camera byte-identical (md5 before and after), so they hold the wiring's values now.
+  - THJ's step-list edits and his new `M2River_Ambush_LucyRuns` survived (the wiring keeps step lists), and stayed byte-identical through my run.
+  - The bark is back to THJ's text, written by the wiring from the new constant.
+- I can't rebuild THJ's lost edits: the files are untracked and nothing kept an earlier copy.
+- **THJ:** please check the River intro camera and anything you changed on the level prefab before committing. Tell us what you'd changed so the wiring can carry it.
+- **Risk:** the rerun test overwrites hand edits to wiring-owned values on the real assets whenever the suite runs. Until the wiring carries them, keep hand edits to those values out of the River assets, or decide to make that test non-destructive.
+
+### Tests
+
+- River wiring re-run left a clean console; THJ's intro list, ambush list and `M2River_Ambush_LucyRuns` stayed byte-identical.
+- `M2RiverTests` (46), `RiverRushAndHoldStepsTests`, `OnboardingHealthPotionPageTests`, `RiverCleanseLockTests`, `MoveGroupUnitSequenceTests`: 65/65.
+- Full EditMode suite: **2958 total: 2957 passed, 0 failed, 1 skipped** (`AIRegressionTest`, Explicit).
+
+### File list for the River commit
+
+All under `miso/Assets/_Project/`, each with its `.meta` where it has one:
+
+- **Level and mission:** `Content/Levels/Greybox/GB_m2-river.prefab` + `.meta`; `Content/Levels/MS1 - The River.asset` (modified).
+- **Wiring:** `Features/Onboarding/Editor/MissionWiring.River.cs`, `MissionWiring.River.Sequences.cs`, `MissionWiring.River.Ambush.cs` (+ `.meta` each); `Features/Onboarding/Editor/MissionWiring.RiverCleanseLock.cs` (modified).
+- **Steps and components:** `Features/Onboarding/MoveGroupUnitSequence.cs`, `EndCycloneSequence.cs`, `HideNamedUnitSequence.cs`, `HoldUntilFirstAction.cs`, `KeepUnitsPassive.cs`, `LivingUnitsExceptLOCondition.cs`, `UnitBarkSequence.cs` (+ `.meta` each).
+- **Tests:** `Features/Onboarding/Editor/M2RiverTests.cs`, `MoveGroupUnitSequenceTests.cs`, `RiverRushAndHoldStepsTests.cs`, `OnboardingHealthPotionPageTests.cs` (+ `.meta` each). The last one checks both ambushes, so it goes with The River.
+- **Sequences:** `Resources/Sequences/M2River.meta` and `Resources/Sequences/M2River/`, **35 assets + 35 `.meta`**:
+  - **Ambush:** `M2River_Ambush_CorridorArchersRun`, `_DuoBark`, `_Horn`, `_Horn_DialogNodeSequence`, `_LucyRuns`, `_RevealArchers`, `_RevealWave`, `_RunnerLeaves`, `_RunnerLeavesRun`, `_SequentialSequence`, `_Shake`, `_UnlockDuo`.
+  - **Intro:** `M2River_Intro_Call_DialogNodeSequence`, `_CameraToPile`, `_LucyRolePage`, `_Roles_DialogNodeSequence`, `_SequentialSequence`, `_ShelterPage`.
+  - **Panels:** `M2River_LucyRole_Panels`, `M2River_Shelter_Panels`.
+  - **Outro:** `M2River_Outro_CameraOnPile`, `_Clue_DialogNodeSequence`, `_SequentialSequence`.
+  - **Rush:** `M2River_Rush_AtMe_DialogNodeSequence`, `_CameraToShallows`, `_EndLucysCyclone`, `_FlareHint`, `_JohnRushes`, `_JohnShieldUp`, `_LucyRuns`, `_ResetTurn`, `_RevealRing`, `_SequentialSequence`, `_Sighting_DialogNodeSequence`, `_Surprised_DialogNodeSequence`.
+
+Not to stage: `miso/miso.slnx`, `.mcp.json`, `powershell.exe`, `claude-handoff/`. Already committed by the coordinator: `Unit_John.prefab`, the shared potion page and M1 swap, and the old River rename.
