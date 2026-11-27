@@ -200,6 +200,10 @@ Today's M4 is 7 levels: Toba's duel, two Whitemother levels, the escort, the rel
 | X-43 | Bug: playing quickly lets you act twice in a row (auto-move, auto-attack move or attack with the previously selected character) | Tech | Claude | Lock input while an action resolves |
 | X-44 | Dark Worm: HP and splitting don't match (splits on 1 damage, only the last children have real HP, yet every stage shows HP and a damage preview) | Design, Tech | Game designer, Claude | One rule; HP bar and preview follow it |
 | X-45 | Retry mission after a defeat, beside Return home | Tech, UI | Claude | Restarts the mission from its start |
+| X-49 | Hide the selected unit's green movement tiles while a move plays out | Tech | Claude | With X-43 |
+| X-50 | Duos don't cost AP | Design, Tech | Claude | Decided (D-778); the FTP or new-resource cost stays |
+| X-51 | Divine Relics don't cost AP | Design, Tech | Claude | Decided (D-779) |
+| X-52 | Mark's Move command animation is a placeholder that turns him into Lucy | Tech, Art | Claude, Art | Interim: one of Mark's own animations |
 
 ### Final passes, presentation and open design work
 

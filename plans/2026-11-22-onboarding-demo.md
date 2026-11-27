@@ -64,6 +64,10 @@ One writer in the Unity project at a time. Design work (paper levels, X-15, X-27
 | 1.13 | X-43 | Bug: playing quickly lets you act twice in a row; with auto-move and auto-attack the previously selected character moves or attacks when you meant the next one, and it is unclear whose turn it is | 2 (combat input; core) | Explore the race first: input must be locked while an action resolves, and selection must change before the next input is read; covering test |
 | 1.14 | X-44 | Dark Worm: its HP and splitting don't match. Every stage splits on 1 damage and only the last stage's children have real HP, yet every stage shows an HP bar and the attack preview predicts damage it won't do | 3 (how it works), then 2 | Explore first (`Core/Entities/Runtime/DarkWorm/`); D-762 keeps the worm's 3 built sizes (3 split hits, ends as 4 small worms of 4 HP) and M2 is built on it. Then the designer proposes one rule for THJ: each stage has real HP and splits on death, or stages split on any hit and show "splits" instead of an HP bar and damage preview. HP bar, preview and the rule must agree |
 | 1.15 | X-45 | After a defeat, offer Retry mission beside Return home | 2 (flow and UI) | Retry restarts the mission from its start with the same roster; check what the defeat path saves first (`CombatLevelRunHandler`) |
+| 1.16 | X-49 | While a unit's move plays out, the selected unit's green movement-range tiles are hidden | 1 (2 if the highlight code is core) | Same "an action is resolving" state as X-43; build them together if it is one place |
+| 1.17 | X-50 | Duos don't cost AP (D-778) | 3, decided | Explore what a Duo charges today (initiator, both partners, FTP); the FTP or new-resource cost stays (X-27). AI and the preview follow; combat log entry (X-33) |
+| 1.18 | X-51 | Divine Relics don't cost AP (D-779) | 3, decided | Same checks as 1.17; the relic tutorial page text if it mentions AP |
+| 1.19 | X-52 | Mark's Move command plays a placeholder animation that turns him into Lucy | 1 (data) | Interim: one of Mark's own animations; the real one goes to art |
 
 ### Phase 2: the Hearth (narrative tech; M)
 
