@@ -504,3 +504,16 @@ Should fix (coordinator: all four go in a follow-up, D-782):
 4. `.Sequences.cs` header still says stand-in lines: reword.
 
 Notes: per-pick text, the west-wall trigger and `{pickline_0}` all check out (main thread, order right; standalone shows the placeholder). Every line, speaker and side matches `m3-text.md` word for word. No core, no private IDs, LF/no BOM. The split builds: commit A = `PickLineDialogSequence.cs`, `UnitsReachTilesSequenceTrigger.cs`, `Editor/PickLineDialogSequenceTests.cs` (+ metas); commit B = the M3 level/wiring/lines. Commit B's list is stale: M3Yard now has 55 assets + 55 metas (+ `M3Yard.meta`), and add `Editor/M3DefenceTests.Lines.cs`, `Editor/MissionWiring.HoldTheYard.Lines.cs`, `Editor/PickFallenLOConditionTests.cs` (+ metas). Play check: the pair when the first Claws reach the west wall; lose with the pick ("Mark has fallen."); pick John for his push line.
+
+## Verification (8.4)
+
+Branch `main`. No play session. Editor open, Unity MCP.
+
+- **Compile:** recompile requested; console has 0 errors. Only warnings are "Serialization depth limit 10 exceeded" (GTag.subTags, StatBackedValueBase), not new.
+- **Tests:** run 1: 3056 total, 3055 passed, 0 failed, 1 skipped (Explicit AIRegressionTest), 484 s. Run 2: 3056 total, 3055 passed, 0 failed, 1 skipped, 198 s. Note 3056 total vs the implementer's 2960: the suite is bigger than in the 8.4 run.
+- **The two earlier failures** (`BondNodeGateTests.RealTrees_...`, `SilentUnlockableLockTests.AllowList_...`) passed in both runs. Not reproduced.
+- **Likely cause (not proven):** `Mission.cs:139` is `OnEnable() => UpdateLevelsInMission()`, which calls `levelDependencyGraph.GetPayloads<LevelBase>()` (the field is `[SerializeField, HideInInspector]`, initialised `new()`). A null there means the Mission asset was being deserialised or reimported while the implementer was deleting and recreating assets (editor-only code path). `M2 - The Trail.asset` is uncommitted with one payload reference changed (a level node pointing to a different level asset, guid 156db430...), so a mid-run reimport of it, or of the level it points to, could trigger OnEnable on a half-loaded Mission. Both tests load assets through `AssetDatabase.LoadAssetAtPath`/real trees. No recent commit touches Mission.cs (last: 4d755661b). `Resources/Sequences/M3Yard/` is untracked and holds Sequence assets, not Missions. With the assets stable, the failure does not occur.
+- **M3Yard dialogue:** `M3DefenceTests.EveryDialogueInTheYardFolderSaysAnApprovedLine` and the `.Lines` tests are part of the full suite and passed in both runs.
+- **AIRegressionTest:** not run, as asked.
+- **Editor state at end:** scene `PreloadScreen` (`Assets/_Project/Scenes/PreloadScreen.unity`), not dirty, Play mode off (tests ran in EditMode). Nothing saved or edited under `miso/`. Save reset: no.
+- **Editor checks corrections:** a full MCP run took 484 s and 198 s here; `get_test_job` disconnected during domain reloads and needed retries (as already noted).
