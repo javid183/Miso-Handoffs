@@ -230,6 +230,45 @@ Against block `m3-defence-4`: `#` reads `_`; `c@` on 4,11 reads `c` (the `@` is 
   - Covering fixtures `MISO.Core.Features.Onboarding` + `MISO.Core.Features.Bergsons.EditorTests` (Mark, Lucy) + `MISO.Content.Levels.EditorTests` (AbilityLock): 1688 tests, 1687 passed. The 1 failure was the new shelter test using an unregistered tag id; switched to the real `Status.Sheltered`.
   - Full EditMode suite after that fix: 2929 total, 2928 passed, 0 failed, 1 skipped (`AIRegressionTest.Baseline_MatchesCurrentAI`, Explicit). Previous run: 2925 (+4 new tests).
 
+### Chunk 8.5: Core: big units can walk north and east
+
+Status: **code done and compiled; tests written but NOT RUN** (the Unity MCP bridge kept dropping its session after the recompile: every `run_tests`, `get_test_job` and `read_console` call answered "ping not answered" or "session disconnected", while the editor itself sat idle and responsive). Core change (grid): Tier 2 bugfix inside a core system, approved by THJ (D-758).
+
+**The change** (`Core/Systems/GridSystem/Runtime/GridCell.cs`, `GetRangeCells`, the `!includeSelf` exit after the BFS/straight/ranged-reach pass): when the source's `EffectivePlacementSize` is bigger than 1x1, only the anchor (`source.CurrentCell`, compared with `ReferenceEquals`, worker-safe) is removed; a 1x1 source still removes `source.Occupies` exactly as before. The Unconstrained branch (attack ranges from every footprint cell) returns earlier and is untouched. File stays UTF-8 with BOM, LF (as it was). No new statics, no Unity-object API added.
+
+**End-to-end check (code read; nothing else needed changing):**
+- BFS and straight ranges already step over the mover's own cells: `PassesPathWalk` → `IsFootprintWalkable` and `PassesEmptyFilter` → `IsFootprintEmpty` skip cells the mover occupies. The final `RemoveAll(source.Occupies)` was the only thing taking N/E away.
+- `FindPath(mover)`: the goal check is `mover.IsFootprintEmpty(goal)` (own cells skipped), so a path to the N/E anchor is one step, cost 1. The transporter's walk loop unplugs before each step and re-checks `IsFootprintEmpty`/`IsFootprintWalkable`, then `PlugEntity` on the new anchor: fine.
+- AI `CanEndOn`: `IsFootprintEmpty` (+ the clearing guard): accepts it. `GetAbilityCandidateTargets`' relation pre-filter keeps a self-occupied cell when the walk's `ignoreRelationOnSelection` is 0 (Masher and Queen walks both 0). `FactionControllerBase.FilterSelectableCells` likewise.
+- `IsLegalAbilityTarget` / the target-selection apply condition: `OccupantIntersects(range)` is true for the N/E anchor (the cell itself is in range).
+- Who moves: only `Unit_MasherGoblin` (2x2) and `Unit_GoblinQueen` (1x2) are bigger than 1x1. Both walks (`MasherGoblin_Ability_Walk`, `GoblinQueen_Ability_Walk`) and the Queen's jump (`GoblinQueen_Ability_Jump`) are SelfWalkable targeted ranges, so the Masher's walk and the Queen's walk and jump now also offer the N (and for the Masher E) anchor. Threat previews (`UnitThreatAnalysis.GetReachableCells`, includeSelf on) were already showing footprint cells and are unchanged.
+
+**AI next-targets prediction (`AIUnitBrain.cs:291-318`, `sim != null`): does NOT agree; gap reported, not fixed.** It ranges from each footprint cell as if 1x1 with no source, unions, and removes the footprint. For a 2x2 at (0,0), radius 1, it offers (-1,0), (0,-1), (-1,1), (0,2), (1,-1), (2,0), (1,2), (2,1) as anchors; the live range is (-1,0), (0,-1), (1,0), (0,1). So it misses N/E and offers diagonal and two-step anchors (CanEndOn then filters by footprint, not by reach). It is not the same small rule: a correct fix needs a source-aware range from a virtual origin (`GetRangeCells(source:)` uses the live `CurrentCell`, and `IsFootprintEmpty` skips cells occupied at the live position, not at the simulated one). Suggest a separate small core task.
+
+**Tests** (new `Core/Systems/GridSystem/Editor/MultiCellWalkRangeTests.cs`, + `.meta` made by Unity; BOM + CRLF; hand-built grid, no level):
+- `ATwoByTwoUnit_RadiusOne_ReachesItsFourAnchors_ButNotItsOwn` (PathWalkable)
+- `ATwoByTwoUnit_SelfWalkableAndStraightRanges_AlsoReachNorthAndEast`
+- `AOneByTwoUnit_RadiusOne_ReachesItsFourAnchors_ButNotItsOwn`
+- `AOneCellUnit_RangeIsUnchanged` (radius 1 and 2 with a blocker; own cell never offered)
+- `ATwoByTwoUnit_AnOccupiedCellUnderTheNewFootprint_StillBlocksThatAnchor`
+- `ATwoByTwoUnit_FindsAOneStepPath_ToAnAnchorUnderItsOwnFootprint` (`FindPath(mover)`, length 2, cost 1)
+- `TheMashersWalk_OffersTheAINorthAndEast` and `TheQueensWalk_OffersTheAINorth`: the real prefabs (isolated copies, light ability setup), `ComputeTargetSelectionCells` + the brain's `CanEndMoveOn`, as the Cyclone heavy tests do.
+
+**Runs: not done** (bridge down, see Status). Compile: clean (Editor.log after the 18:40 reload has no `error CS`; Unity generated the test's `.meta`). Still to run, in this order: the fixture `MISO.Core.Systems.GridSystem.EditorTests.MultiCellWalkRangeTests` (8), the full EditMode suite (expect 2939 = 2931 + 8, 1 Explicit), then `AIRegressionTest.Baseline_MatchesCurrentAI` by name against 51. Possible failures to watch: the two prefab tests depend on the light setup giving the walks radius ≥ 1 (the Queen's does, per the Cyclone tests; the Masher's radius is `Stat_SPD`); any older test that asserted a big unit could not step N/E (none found by grep).
+
+**Loose ends:**
+- `OccupantIntersects` now also passes the mover's own anchor and any footprint cell when its footprint touches the range, so a *player-controlled* big unit could pick "walk to my own cell" (the transporter then does nothing: cost 0). No big unit is player-controlled today; the AI never offers it (the anchor is not in its range).
+- A walk preset with `ignoreRelationOnSelection` including Ally would still drop the self-occupied N/E anchors (AI pre-filter and `FilterSelectableCells`). Masher and Queen are 0.
+- `AEffectCompound.GatherSurrounding` passes a multi-cell `src` with the effect's walk mode; such an effect would now include the big unit's non-anchor footprint cells. No Masher/Queen compound uses a walk mode (all Unconstrained), and the walk-mode compounds in the project are summons/spawners around 1x1 owners.
+- The plans' "the Masher steps to 6,3" note needs the timing fix the code read mentions (coordinator/designer).
+
+**Draft line for `tech/core-systems.md` (Grid row):** Since 2026-11-26 (D-758, uncommitted until THJ's M3 play check): `GridCell.GetRangeCells` with `includeSelf` off and a source bigger than 1x1 removes only the anchor (`source.CurrentCell`) on the walk path (PathWalkable/SelfWalkable), not every occupied cell, so the Masher (2x2) and the Goblin Queen (1x2) can walk or jump one step north/east onto anchors under their own footprint. 1x1 sources and the Unconstrained branch (attack ranges) unchanged. The AI's simulated next-targets range (`AIUnitBrain.GetAbilityRangeCells`, sim path) still treats the footprint as 1x1 starts: open item.
+
+**Proposed commit** (core only, its own commit, before commit 4): `fix(core): big units can walk onto tiles their own footprint covers`
+- `miso/Assets/_Project/Core/Systems/GridSystem/Runtime/GridCell.cs`
+- `miso/Assets/_Project/Core/Systems/GridSystem/Editor/MultiCellWalkRangeTests.cs`
+- `miso/Assets/_Project/Core/Systems/GridSystem/Editor/MultiCellWalkRangeTests.cs.meta`
+
 ## Reviews and checks
 
 - **8.1 core review (miso-reviewer): APPROVE**, nothing to fix. Additive confirmed (IsSilenced, SuperTimeUnits set, ActivateFactionSuperTimeIE, early returns after the has-role check; no serialized change). Owner claims sound; loose ends for 8.2: claims match by `Equals` (destroyed UnityEngine.Object owners compare equal) and there is no clear-all, so the hold component must release in `OnDisable`/`OnDestroy`. Don't change suppression during Family Super Time (a unit dropping out of `SuperTimeUnits` mid-Super-Time stops `SuperTimeInProgress` waiting on it). Worker-safe, no statics, CRLF/BOM kept (report wording corrected), no private IDs, tests real. AI baseline should not move.
