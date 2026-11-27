@@ -272,6 +272,62 @@ Status: **done; core review APPROVE** (two should-fixes in the test file, applie
 - `miso/Assets/_Project/Core/Systems/GridSystem/Editor/MultiCellWalkRangeTests.cs`
 - `miso/Assets/_Project/Core/Systems/GridSystem/Editor/MultiCellWalkRangeTests.cs.meta`
 
+### Chunk 8.4: the approved M3 lines
+
+Paths under `miso/Assets/_Project/`. New `.cs` files LF, no BOM, like the rest of `Features/Onboarding`. Worked in THJ's open editor through Unity MCP; no Play session; Play mode off throughout.
+
+**Changed / new (code):**
+- `Features/Onboarding/PickLineDialogSequence.cs` (+ `.meta`, new): the per-pick text option. A `DialogNodeSequence` whose own lines are the default; `entries` (nickname to dialogue) override it for that pick; the pick is read from the mission's generic dialogue slot (`MissionTracker`, slot 1 by default) at play time, nothing in an asset is mutated. Static `Choose(entries, nickname)` is the tested part. Being a `DialogNodeSequence`, a step list's skip still fast-forwards it.
+- `Features/Onboarding/UnitsReachTilesSequenceTrigger.cs` (+ `.meta`, new): the west-wall trigger (below).
+- `Features/Onboarding/PickFallenLOCondition.cs`: two serialized lines (`standingLine`, `fallenLine`) and a `{pickline_i}` variable (standing line until the pick has fallen, fallen line after; `{pick}` inside a line becomes the nickname). Empty lines expose nothing new, so the old behaviour is unchanged.
+- `Features/Onboarding/Editor/MissionWiring.HoldTheYard.Lines.cs` (+ `.meta`, new): every line constant, `BuildPickLine`, `BuildPushRule`, `BuildWestWall`, `WireWestWallWatch`.
+- `Features/Onboarding/Editor/MissionWiring.HoldTheYard.Sequences.cs`: old stand-in constants removed; level start is stone + Linda's line + back; cave, push (Masher line, push rule, sisters), notch pick lines, end talk with per-node speakers (`SpeakAsToba` takes the node list), west-wall sequence added.
+- `Features/Onboarding/Editor/MissionWiring.HoldTheYard.cs` (`PickObjective` is now `{pickline_0}`; the watch is wired) and `...Pick.cs` (the defeat condition gets the two lines).
+- Tests: `Editor/M3DefenceTests.cs` (now `partial`, updated), `Editor/M3DefenceTests.Lines.cs` (+ `.meta`, new), `Editor/PickLineDialogSequenceTests.cs` (+ `.meta`, new), `Editor/PickFallenLOConditionTests.cs` (+4).
+
+**Assets:** `Content/Levels/Greybox/GB_m3-defence.prefab` (the "West wall watch" object; the defeat condition's lines) and `Resources/Sequences/M3Yard/` (dialogues and step lists recreated; `M3Yard_Start_CameraOnWestLane` removed; new `M3Yard_Push_Masher_*`, `M3Yard_Push_Rule_PickLineDialogSequence` (+ its `_John_` entry dialogue), `M3Yard_Notch1/2_Pick_*`, `M3Yard_WestWall_*`). Dialogues are seeded once, so I deleted every M3Yard dialogue and step list (all untracked, still placeholders, no hand edits to keep) with the Unity asset-delete tool and ran `Apply Wiring`, as 8.3 did. Sides follow the text file: Linda left; Lucy, Toba and the pick right.
+
+**Line ID to slot** (all asserted word for word in `M3DefenceTests.Lines.cs`: `TheLineTextsAreTheApprovedOnes` plus the slot tests):
+
+| ID | Slot (asset in `Resources/Sequences/M3Yard/`) | Test |
+|---|---|---|
+| M3.0.6 Linda | level start, `M3Yard_Start_Linda_DialogNodeSequence` | `TheLevelStartHasOnlyLindasLine` |
+| M3.0.7 Lucy, M3.0.8 Linda | `M3Yard_WestWall_DialogNodeSequence`, played by the west-wall trigger | `TheWestWallPairPlaysWhen...`, `TheWestWallPairIsInNoStageAndNotAtTheLevelStart` |
+| M3.0.2 pick | S1 end, `M3Yard_Cave_Pick_DialogNodeSequence` | `TheYardClearedGivesThePickTheCaveLine` |
+| M3.0.1 Linda | S2 end, after the Masher reveal, `M3Yard_Push_Masher_DialogNodeSequence` | `ThePushPlaysLindaThenThePicksRuleThenTheSisters` |
+| M3.0.3 pick (Mark text default, John entry) | S2 end, `M3Yard_Push_Rule_PickLineDialogSequence` | `ThePushLineHasAJohnTextAndMarkIsTheDefault` |
+| M3.0.4 Linda, M3.0.5 Lucy | S2 end, `M3Yard_Push_DialogNodeSequence` | same as M3.0.1 |
+| M3.1.1 pick | notch 1, `M3Yard_Notch1_Pick_*`, between the stone move and w2 | `TheNotchesGiveThePickItsLines...`, `EachHoldStageEndMovesTheStoneANotch` |
+| M3.2.1 Lucy | notch 1 wave bark, `M3Yard_Notch1_Bark_*` | same |
+| M3.1.3 pick, M3.2.2 Linda | notch 2, `M3Yard_Notch2_Pick_*`, `_Bark_*` | same |
+| M3.1.4 pick | notch 3, `M3Yard_Notch3_Pick_*` (always plays) | same |
+| M3.5.1, M3.5.2 | end, `M3Yard_End_StillCounting_*`, `_No_*` (around the tally fade) | `TheOutroFadesTheTallyThenBringsTobaOut` |
+| M3.5.3 to M3.5.9 | one dialogue `M3Yard_End_Toba_*`: Toba, Linda, Toba, Toba, Lucy, Toba, pick (M3.5.9 through the pick slot, not a named hero) | `TheOutroFades...`, `TheEndTalkSpeakersFollowTheLineMap` |
+| M3.6.9, 6.10, 6.2 to 6.5 (objectives) | unchanged from 8.3, checked against the text | `TheObjectiveTextsAreTheApprovedOnes` |
+| M3.6.6, M3.6.7 | defeat objective, see below | `TheLevelIsLostWhenNoBergsonStandsOrThePickFalls`, `PickFallenLOConditionTests` |
+| M3.6.8 Barricade | unchanged title | `TheObjectiveTextsAreTheApprovedOnes` |
+| M3.3.x, M3.4.x barks | **not wired**, see below | |
+
+`EveryDialogueInTheYardFolderSaysAnApprovedLine` fails if any other text is left in a dialogue.
+
+**The west-wall trigger.** New small Onboarding component `UnitsReachTilesSequenceTrigger` on an object "West wall watch" under the level: every 0.25 s, when a living Enemy unit stands on 0,5 / 1,5 / 2,5 (the tiles just north of the barricades on 0,6 to 2,6) and the level's sequence player is free, it plays the pair once (camera on the wall, Lucy, Linda, camera back). It waits rather than cut off a stage sequence, and it switches no input, because it plays on the enemies' turn. No core: the stages run one after another, so a hidden stage objective could not run beside them; a side component was the least invasive. w3's west Claws also pass these tiles, but the trigger fires once, on w1 (first to arrive). The turn flow already waits for a playing sequence (`IsTurnSwitchBlocked`); the AI keeps acting while the pair shows, as with any stage-end sequence on an enemy turn. Play check: the pair appears when the first Claws reach the west wall, not before.
+
+**The defeat line.** Shown with no core change. The loss panel lists the failed objective's text (first sentence), so the defeat objective's text is now `{pickline_0}`, and `PickFallenLOCondition` exposes the standing line ("Keep {pick} standing.") while the pick stands and the fallen line ("{pick} has fallen.") once it has. On the HUD the objective reads "Keep Mark standing."; after the fall it, and the loss panel's row, read "Mark has fallen" (the panel cuts at the first full stop). Unit tests cover the line switch; the on-screen result needs the verifier's play check (lose with the pick).
+
+**Tally and bark lines (M3.3.1 to M3.3.3, M3.4.1 to M3.4.4): not wired.** The text file allows dropping a row whose trigger isn't cheap. Each needs a new bark event (first barricade destroyed, first attack on the held pick, mushroom blast, tally lead change) plus a bark graph; a bark graph can only be made by editing graph text (see the Ridge's low-health bark), and the tally has no lead-change event. That is a feature of its own, not wiring. Needs a decision: a later chunk, or drop for the demo.
+
+**Tests.** Covering fixtures (`MISO.Core.Features.Onboarding` + `MISO.Core.Levels`): 853 total, 853 passed. (A first attempt had 14 M3 tests failing because the recreated dialogues were saved empty; after deleting and re-wiring once more they were filled; cause not found, probably my first delete/apply overlapped a recompile. The final state is checked on disk and by the tests.) Full EditMode suite: 2960 total, 2957 passed, 1 Explicit (`AIRegressionTest.Baseline_MatchesCurrentAI`), 2 failed on the first full run: `BondNodeGateTests.RealTrees_MarksSistersAndTempestBloomAndRivalry_AreLockedFamilyNodes` and `SilentUnlockableLockTests.AllowList_HoldsOnlyEntriesThatAreStillSilent`, both an unhandled NullReferenceException in `Mission.OnEnable` (`Mission.cs:139`, a null level in a mission while the asset loads, a core file I did not touch). Both pass when run alone straight after (2 of 2), so they look order or editor-state dependent; worth a look by the coordinator, not caused by this chunk as far as I can tell. Last recorded 2939/2938; the +21 are this chunk's new tests.
+Idempotent: `Apply Wiring` twice, md5 of the level, the Trail asset and every file in `M3Yard/` identical (112 files).
+AIRegressionTest not run (no AI content touched). Save not reset.
+
+**Decisions (8.4).**
+- Per-pick text: the push line is a `PickLineDialogSequence` with Mark's text as its own lines and John as an entry (general: any nickname, fallback = own lines).
+- The pick's lines sit on the Right side (the text file's suggestion); the 8.3 placeholders were Left.
+- Level start: the west-lane camera step is dropped (the pair moved out); `CameraBack` now frames from the Claws.
+- The new pick lines on notches 1 and 2 play after the stone moves and before the wave arrives, per the text's order.
+
+**Proposed commit: `feat(onboarding): M3 lines`.** It cannot be separated by file from commit 4: the level prefab, the `M3Yard` assets, `MissionWiring.HoldTheYard*.cs`, `M3DefenceTests.cs` and `PickFallenLOCondition.cs` are new or modified-uncommitted in 4 and carry the 8.4 changes in the same files. Fold it into commit 4. The only clean split is a small commit before 4 for the two new runtime classes and their tests: `Features/Onboarding/PickLineDialogSequence.cs`, `UnitsReachTilesSequenceTrigger.cs`, `Editor/PickLineDialogSequenceTests.cs` (each with its `.meta`). Commit 4 then also holds `Editor/M3DefenceTests.Lines.cs` and `Editor/MissionWiring.HoldTheYard.Lines.cs` (+ `.meta`) and the in-place changes above, and the "Proposed commits" entry 5 above is folded into it.
+
 ## Reviews and checks
 
 - **8.1 core review (miso-reviewer): APPROVE**, nothing to fix. Additive confirmed (IsSilenced, SuperTimeUnits set, ActivateFactionSuperTimeIE, early returns after the has-role check; no serialized change). Owner claims sound; loose ends for 8.2: claims match by `Equals` (destroyed UnityEngine.Object owners compare equal) and there is no clear-all, so the hold component must release in `OnDisable`/`OnDestroy`. Don't change suppression during Family Super Time (a unit dropping out of `SuperTimeUnits` mid-Super-Time stops `SuperTimeInProgress` waiting on it). Worker-safe, no statics, CRLF/BOM kept (report wording corrected), no private IDs, tests real. AI baseline should not move.

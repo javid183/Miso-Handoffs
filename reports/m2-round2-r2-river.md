@@ -560,3 +560,68 @@ All under `miso/Assets/_Project/`, each with its `.meta` where it has one:
   - **Rush:** `M2River_Rush_AtMe_DialogNodeSequence`, `_CameraToShallows`, `_EndLucysCyclone`, `_FlareHint`, `_JohnRushes`, `_JohnShieldUp`, `_LucyRuns`, `_ResetTurn`, `_RevealRing`, `_SequentialSequence`, `_Sighting_DialogNodeSequence`, `_Surprised_DialogNodeSequence`.
 
 Not to stage: `miso/miso.slnx`, `.mcp.json`, `powershell.exe`, `claude-handoff/`. Already committed by the coordinator: `Unit_John.prefab`, the shared potion page and M1 swap, and the old River rename.
+
+## Protecting hand edits (miso-implementer, 2026-11-26)
+
+THJ redid his camera edits (`M2River_Intro_CameraToPile` 19:58, `M2River_Rush_CameraToShallows` 19:57) and asked that they not be reverted.
+
+- **Before starting**, the live files matched the backups in `claude-handoff/backups/2026-11-26-m2-river-thj-cameras/`, all 7 (both cameras, the prefab, the intro and ambush step lists, `M2River_Ambush_LucyRuns`, `M2River_Ambush_DuoBark`).
+- I didn't run the wiring on the real assets this round, and I didn't change any of THJ's files.
+
+### 1. The rerun test no longer writes to real assets
+
+`TheWiringRerunLeavesTheLevelUnchanged` is replaced by `TheWiringRerunWouldChangeNothing`:
+- It copies the level, the mission and every `M2River/` asset into a scratch folder (`Assets/M2RiverRerunTests_Temp`). These are plain file copies, each imported with a new GUID.
+- It points the copies at each other, then runs the wiring against the copies only, through a new `MissionWiringRiver.RunAgainst(level, mission, folder, potionStep)`. In that mode every path the wiring writes goes to the copies; the shared potion step is used as it is, never rewritten.
+- It then checks:
+  - each copy comes out byte for byte the real file, once the copies' GUIDs are read back as the real ones;
+  - no asset is added;
+  - no warning or error is logged;
+  - every real file (level, mission, `M2River/*`, the shared `Onboarding_HealthPotion_*`) has the same hash **and the same modification time** afterwards.
+- The scratch folder is deleted in `finally`.
+
+Two write paths turned up on the way and are closed:
+- The wiring's global `AssetDatabase.SaveAssets()` saved any asset marked changed. `Mission.OnValidate` marks the real mission dirty after every recompile, so it was saved with identical bytes. A redirected run now saves only its copies (`SaveRun`); a real run still saves all.
+- `AssetDatabase.CopyAsset` saves a dirty source before copying. The test now copies with `File.Copy`.
+
+The run target is an editor-only static, set and cleared in `RunAgainst`'s `finally`, so it never outlives the run.
+
+**Other tests found** (Onboarding, River, M1 and level suites) that call a wiring `Run`/`Apply`/`Build` or create assets on real paths:
+- `M2RiverTests.TheBuildNeverReplacesTheLevel`, `M3DefenceTests.TheBuildNeverReplacesTheLevel` and `M4CirclesTests.TheBuildNeverReplacesTheLevel` call their level's `Build()`. Each `Build()` refuses before writing when the level exists (`File.Exists` guard) and the test checks the hash. They don't write. Left as they are.
+- `WiringSeedTests` creates assets only in its own temp folder (`Assets/WiringSeedTests_Temp`).
+- No M1 test calls `MissionWiringRidge.Run()` or the layout's `Apply()`.
+
+So there's nothing else to fix and nothing in M1 to ask about.
+
+### 2. The wiring carries THJ's camera values
+
+- `M2River_Intro_CameraToPile`: from the Pile (start, 1.2 s) to Lucy's tile (end, 1 s), wait 1.2. Previously it went from Lucy and John to the Pile, both 1.2 s, wait 0.8.
+- `M2River_Rush_CameraToShallows`: start and end both frame the ring, the Archer and the rush tile (start 1 s, end 0 s), wait 0. Previously it went from the clearing to the ring, both 1.2 s.
+- `BuildFraming` takes start and end durations for this. The other cameras keep 1.2 s.
+- The clearing camera points, now unused, are removed.
+- The new test confirms the wiring's output equals all real River files byte for byte, including THJ's prefab, both cameras, the step lists, `M2River_Ambush_LucyRuns` and the bark. A real rerun would write the same bytes.
+
+### 3. Hashes (md5), before and after the new test, the River covering tests and the full suite
+
+| File | md5 (same before and after; same as the backups) |
+|---|---|
+| `GB_m2-river.prefab` | `b64d8726af12ce4406bf1baedc942645` |
+| `M2River_Intro_CameraToPile.asset` | `4c4d4b77853978ab98ea84bbcc5ce1c7` |
+| `M2River_Rush_CameraToShallows.asset` | `f7a92762966d325f8e643b237feb4309` |
+| `M2River_Intro_SequentialSequence.asset` | `7f41067ed7072fbb8536ab98e87a6b44` |
+| `M2River_Ambush_SequentialSequence.asset` | `e7cebf5c6a51a4b6b1827200394a7821` |
+| `M2River_Ambush_LucyRuns.asset` | `7511e79797999340eb31a296156b00f1` |
+| `M2River_Ambush_DuoBark.asset` | `11a9a1f9d18a508e678d616b4a80df48` |
+
+- All 42 River files (level, mission, 35 `M2River/` assets, 5 shared potion assets): unchanged (`md5sum -c`).
+- All 7 backups still match the live files.
+
+### Tests
+
+- `TheWiringRerunWouldChangeNothing`: passed (first attempts failed only on the mission's modification time; fixed as above, and its content never changed).
+- `M2RiverTests` (46), `RiverRushAndHoldStepsTests`, `OnboardingHealthPotionPageTests`, `RiverCleanseLockTests`, `MoveGroupUnitSequenceTests`: 65/65.
+- Full EditMode suite: **2958 total: 2957 passed, 0 failed, 1 skipped** (`AIRegressionTest`, Explicit).
+
+### River commit file list
+
+Unchanged from the Final alignment list. This round changed the contents of `MissionWiring.River.cs`, `MissionWiring.River.Sequences.cs` and `M2RiverTests.cs`, all already on it, and added no file.

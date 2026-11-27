@@ -2,7 +2,7 @@
 
 Size: M    Tier: 2 (THJ approved the Tier 3 points: core fix D-764, layout and ambush D-763, horn D-765, Shelter D-766, potion D-767)    Assigned to: `miso-implementer` (opus), two chunks, one at a time
 Branch: all (on `main`)
-Status: approved (THJ's answers 2026-11-26); R1 dispatched
+Status: done (committed 2026-11-26: `8679d9129`, `94e59a702`, `f025c271d`, `b08fa609a`; rounds 3 to 5 in `reports/m2-round2-r2-river.md`)
 
 ## Why
 

@@ -1,0 +1,48 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e0d77f703c525cd46a9dac5c6d0cc442, type: 3}
+  m_Name: M2River_Intro_CameraToPile
+  m_EditorClassIdentifier: Assembly-CSharp::CameraSequence
+  PlayJustOnce: 0
+  sequenceStartFocus:
+    focusTransforms: []
+    focusPoints:
+    - {x: 7.75, y: 1.25}
+    focusOffset: {x: 0, y: 0}
+    duration: 1.2
+    overrideEase: 0
+    ease:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    priority: 0
+    minimal: 0
+    focusAreaMargin: -1
+  sequenceEndFocus:
+    focusTransforms: []
+    focusPoints:
+    - {x: 1.25, y: 1.25}
+    focusOffset: {x: 0, y: 0}
+    duration: 1
+    overrideEase: 0
+    ease:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    priority: 0
+    minimal: 0
+    focusAreaMargin: -1
+  waitTimeBetweenSequences: 1.2
