@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 050fcb5d40e3ef54e87aa6115368229b, type: 3}
+  m_Name: M2River_Ambush_SequentialSequence
+  m_EditorClassIdentifier: Assembly-CSharp::SequentialSequence
+  PlayJustOnce: 0
+  sequenceList:
+  - {fileID: 11400000, guid: 90aaf851fb2510d499b2276e6b7f536e, type: 2}
+  - {fileID: 11400000, guid: 33a54d1668271364c983f36e40720ecd, type: 2}
+  - {fileID: 11400000, guid: a3714c6527aa8654db9ba02e4b5eb1be, type: 2}
+  - {fileID: 11400000, guid: 9a2191f16b0852641b9b568d9981c889, type: 2}
+  - {fileID: 11400000, guid: 37f1a7cb4734d364db6148bcda1765f7, type: 2}
+  - {fileID: 11400000, guid: 7ae8403a28b23774c8eeb8537b8f6494, type: 2}
+  - {fileID: 11400000, guid: 5a3627b4cd11c684a91ab5af1dd9f7cb, type: 2}
+  - {fileID: 11400000, guid: b44415ba361859740b958bb24947d994, type: 2}
+  - {fileID: 11400000, guid: 369c54f58d202244da0e39dbd51d9bda, type: 2}
+  - {fileID: 11400000, guid: 04a4b989fce555a49a5773aad970b1c5, type: 2}
+  - {fileID: 11400000, guid: 291a26595e420cd46a0823e14207bf79, type: 2}
+  - {fileID: 11400000, guid: 2d82416308c11634782d5fbbc6b68d38, type: 2}
+  - {fileID: 11400000, guid: 9fa94342863194746add8008e6e0081b, type: 2}
+  - {fileID: 11400000, guid: 51eadb88496df85449bc78876710e7b2, type: 2}
+  - {fileID: 11400000, guid: 1e8a3694e3c861b4eaf398f1b4feaf45, type: 2}
+  - {fileID: 11400000, guid: 9f8f2e59abd0add47a34cde314e15536, type: 2}
