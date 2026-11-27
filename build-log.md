@@ -3120,3 +3120,10 @@ Plan `plans/2026-11-19-faster-loop-process.md`, decisions D-575 to D-579.
 **Not verified:** the potion heal preview on the hovered target (needs core code; stays on the holder).
 **Findings:** acting twice when playing fast (1.13) + move tiles during a move (1.16) parked for a design talk (`reports/2026-11-27-act-twice-findings.md`); the potion costs no AP (always did; THJ didn't ask to change it); Duo FTP pre-check tests 1 per partner, charges 2 (known DU-2).
 **Status:** committed, not pushed: `68c3b20ee` feat(core) setter · `b67b5a273` feat(lucy) refund · `c57015652` tweak(duos) · `92ce2a9a5` tweak(items) pouch · `5690b0a7f` fix(mark) · `05546c8b4` fix(ui) hook · `9e76224bd` feat(items) potion.
+
+## 2026-11-27: QTE card stripped; white outline cut from three panel masks (branch `thj/onboarding-demo`)
+
+**Built:** `7c9d743af` `DuoInsertCanvas.prefab`: card's Ink, Panel, Portrait and Title hidden; Card at (0,0) and Slot centred, so the QTE group sits at screen centre over the dimmer (code still fills portrait/title; they stay hidden). `624ae9de9` John, Linda and Lucy masks eroded 6 px (13x13 min filter on alpha) to cut the clips' light edge; Mark unchanged.
+**Verified:** full EditMode 3091: 3090 passed, 1 Explicit skipped. THJ played both and asked to commit.
+**Not verified:** nothing outstanding.
+**Status:** committed, not pushed.
