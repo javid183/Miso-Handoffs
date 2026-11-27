@@ -304,3 +304,116 @@ The split is unchanged. Commit 3 (The River) still takes `MoveGroupUnitSequence.
 - **The final animation stop skips units that died on the way**, so their death animation plays.
 - **The remarks add a condition:** walking together is only safe when the walkers' paths and stop tiles don't cross, because the core walk still places a mover on a taken stop tile.
 - **Tests:** `M2RiverTests` + `MoveGroupUnitSequenceTests` 48/48 (6 group-move tests). Full EditMode suite **2948 total: 2947 passed, 0 failed, 1 skipped** (`AIRegressionTest`, Explicit). Edits and runs waited until THJ left Play mode. No asset changed, so no re-wire was needed. File stays LF.
+
+## Round 4 (miso-implementer, 2026-11-26)
+
+THJ played round 3, tweaked `GB_m2-river.prefab` again (saved 17:22) and asked for five changes. All are wired on his prefab. No core change. I didn't touch M1, R1's files or THJ's `Unit_John.prefab`.
+
+### THJ's prefab, as read
+
+- 75 cells; the old 0,2 cell is gone.
+- John is on 1,2 and Lucy on 2,2.
+- Clearing: worm 5,2, Claws 6,3 and 6,1.
+- `ring`: Claws on 9,3 · 10,2 · 8,2 · 9,1 (John's straight neighbours on 9,2), plus the Archer on 12,2. All five were saved active.
+- `ambush`: Archers on 6,7 · 15,7 · 6,-3 · 15,-3. `wave`: worm 10,2, Claws 11,3 and 11,1.
+- The ring Claw and the wave worm both stand on 10,2. When the wave comes in, the worm takes the nearest free tile if the Claw is still there.
+
+### What changed
+
+1. **Lucy's Cyclone ends at the start of the rush.**
+   - New non-core step `Features/Onboarding/EndCycloneSequence.cs` (asset `M2River_Rush_EndLucysCyclone`), right after input/HUD off and before John's move.
+   - It finds Lucy's live Cyclone through `CycloneRegistry.LiveFor` and ends it with `CycloneEntity.Dispose()`, the game's own end path (the same one used when its last pip goes). A Whirl, Steer or burst in progress finishes first; then it leaves its cell.
+   - The step waits until the Cyclone is gone, at most 5 s. With no Cyclone out, nothing happens. Cyclone code isn't core.
+2. **Potion page:** no change. Skipped because THJ's save already has it played, as designed.
+3. **John acts first.**
+   - The existing `HoldUnitsUntilSignal` on the `River Switches` child holds Lucy (`Status.Inactive`: she can't be selected and gets no AP at turn start).
+   - New non-core component `Features/Onboarding/HoldUntilFirstAction.cs` beside it:
+     - it starts the hold on the bus's `levelStarted`, which fires after the intro and before the first family turn starts;
+     - it releases her on John's first `abilityPerformed`, the event the faction controller raises when an action completes. Lucy's own actions and enemies' actions don't release her.
+   - The release during the family's turn gives back the AP the hold took (`HoldUnitsUntilSignal` already does this), so she can act at once.
+   - **Her follow-up while held, checked in code:**
+     - Family Roles never look at the skip-turn tags: only the Masher's handler calls `IsUnitTurnSkipped`.
+     - `Lucy_Ability_FactionRole` has an empty activation tag query and `apConsumptionType` Ineffective (no AP needed).
+     - So her follow-up still answers John's first hit. **Play check.**
+   - No new cue: the intro already says it ("Stay by me." / "Hit them first, Dad. My embers will be right behind.").
+4. **The Archer on 12,2 is in play from the start.**
+   - It's out of every hidden group and saved active. It plays alert from turn 1 (the level starts every enemy alert) and keeps ×0.45.
+   - Stage 1 can no longer be "every enemy dead", or the clearing would wait for the Archer. New non-core objective condition `Features/Onboarding/LivingUnitsExceptLOCondition.cs`: living enemies other than the listed units ≤ 0, listing only that Archer. Worm halves still count.
+   - Stage 2 is still the four ring Claws.
+   - Its escape at the ambush: the run is unchanged (`M2River_Ambush_RunnerLeavesRun`, by nickname). It's taken off the board by the new non-core step `Features/Onboarding/HideNamedUnitSequence.cs` (asset `M2River_Ambush_RunnerLeaves`): the one unit in play with that nickname, fade, then `UnitOutOfPlay.TakeOut`. No death, no XP.
+   - Dead, or two Archers in play: nothing happens. At that point the corridor Archers are still hidden.
+   - The old `M2River_Ambush_ArcherLeaves` (untracked, unreferenced) is deleted.
+5. **The John–Lucy Duo is unlocked.** The wiring removes it from every lock entry (`UnlockDuo`); Cleanse stays locked.
+
+**Rush on the new ring:**
+- John walks 7,2 → 8,2 → 9,2 while the ring is hidden; hidden units don't hold their tiles.
+- The reveal puts a Claw whose tile is taken on the nearest free tile.
+- Lucy's run to 7,2 is unchanged.
+
+### Decisions I made
+
+1. **Rush order kept as THJ hand-edited it.**
+   - The kept rush step list had Lucy's run after "Lucy! At me!" / "At you?". My round-3 order put it right after the reveal, so THJ moved it by hand.
+   - The wiring keeps hand-edited lists, so I changed the code to his order: reveal → reset → "They were waiting for us!" → Shield Up → "Lucy! At me!" / "At you?" → Lucy runs to 7,2 → embers hint.
+   - The click line between the reset and the cast is still there. Tests assert this order. **Coordinator:** tell me if that move wasn't intended.
+2. **The Archer isn't in a group revealed at level start.** `HiddenLevelUnits` switches off any listed unit that is active and warns, and a reveal before the first turn is refused. So it's in no group, and the leave step finds it by nickname.
+3. **Stage 1 uses a new condition** rather than "≤ 1 living enemy". The count would complete the clearing early if the Archer died first while a worm half was still alive.
+4. **The hold starts on `levelStarted`**, not on `HoldUnitsUntilSignal`'s own trigger (the first end of another faction's turn). The family moves first here, so that trigger would come too late.
+
+### Loose ends
+
+- If the player ends turn 1 without acting with John, Lucy stays held until John's first action. That could be his guard on the enemies' turn, or his first action on turn 2.
+- The release comes from the first completed action of any kind, a move included.
+- THJ's Shield Flare change (`JohnShieldRelay` `pattern` 1, straight) is in his `Unit_John.prefab`; the ring now matches it. Comments and tests no longer mention diagonals.
+
+### Tests
+
+- `M2RiverTests` has 44 tests:
+  - new layout block (wave units left out of the drawing because of the shared 10,2 tile);
+  - ring on the straight neighbours, only Claws;
+  - new `TheShallowsArcherIsInPlayFromTheStartInNoHiddenGroup`;
+  - in-play set includes the Archer;
+  - new `StageOneIsNoEnemyLeftStandingButTheShallowsArcherAndHidden`;
+  - new `TheJohnLucyDuoIsOpenAndCleanseStaysLocked`;
+  - new `LucyIsHeldUntilJohnsFirstAction`;
+  - rush test renamed `TheRushEndsLucysCycloneMovesJohnRevealsTheRingResetsTheTurnThenJohnsSurpriseShieldCallAndLucysRun`;
+  - ambush test with the named leave step.
+- New `RiverRushAndHoldStepsTests` (5): the release rule; hold at level start and release on John's first action only; `EndLive` ends only the caster's Cyclone; `PickOnly` (hidden, dead, two in play); `CountLiving` (listed, dead, ignored).
+- The River wiring re-run left a clean console. Rerun test green.
+- `M2RiverTests`, `RiverRushAndHoldStepsTests`, `MoveGroupUnitSequenceTests`, `OnboardingHealthPotionPageTests`, `RiverCleanseLockTests`, `HoldUnitsUntilSignalTests`: 76/76.
+- Full EditMode suite: **2955 total: 2954 passed, 0 failed, 1 skipped** (`AIRegressionTest`, Explicit; not run, no AI content or unit prefab changed by us).
+- One group run hit the previous build while a compile error (a duplicated `[Test]`) was pending. I fixed it, recompiled, and every result above is from the fixed build.
+- M1's diff is unchanged.
+
+### Commits (updated)
+
+- **THJ's own, separate commit:** `miso/Assets/_Project/Features/Player/John/Prefabs/Unit_John.prefab` (Shield Flare straight). Not ours; it goes in before or with the River commit, since the ring is laid out for it.
+- **Commit 3 (The River)** now also takes, each with its `.meta`:
+  - `Features/Onboarding/EndCycloneSequence.cs`
+  - `Features/Onboarding/HoldUntilFirstAction.cs`
+  - `Features/Onboarding/HideNamedUnitSequence.cs`
+  - `Features/Onboarding/LivingUnitsExceptLOCondition.cs`
+  - `Features/Onboarding/Editor/RiverRushAndHoldStepsTests.cs`
+
+  The M2River folder is now **33 assets + 33 `.meta`**: added `M2River_Rush_EndLucysCyclone` and `M2River_Ambush_RunnerLeaves`, removed `M2River_Ambush_ArcherLeaves`. Commits 1 and 2 are unchanged.
+
+### What THJ checks in play
+
+1. **Start:**
+   - Lucy (2,2) can't be selected; John can.
+   - John hits the worm or a Claw: Lucy's follow-up prompt appears (she's still held), and her ember fires on the key.
+   - After John's action Lucy is selectable with her full AP.
+   - The Archer on 12,2 is on the board and alert from turn 1.
+2. **Duo:** the John–Lucy Duo button is on both bars. Cleanse isn't.
+3. **Clearing:**
+   - Killing the worm, its halves and the two Claws starts the rush even with the Archer alive.
+   - Killing the Archer first doesn't.
+4. **Rush:**
+   - Cast Lucy's Cyclone on 7,2 before the last kill: at the rush it fades first, then John walks 7,2 → 8,2 → 9,2.
+   - The four Claws come in on 9,3 · 10,2 · 8,2 · 9,1.
+   - Then the reset, "They were waiting for us!", Shield Up, "Lucy! At me!" / "At you?", Lucy runs to 7,2, the hint.
+   - Shield Flare copies fly straight into the ring.
+5. **Ambush:**
+   - The Archer (if alive, wherever it stands) walks to 14,7 and fades; with it dead the walk and fade are skipped.
+   - Then the horn and the rest as before.
+   - The wave worm takes a free tile next to 10,2 if a ring Claw is still standing there.
