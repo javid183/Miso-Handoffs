@@ -129,13 +129,13 @@ Commit: its own: the rename plus the old tool trimmed, then the new level, tool 
    - **Start sequence:** the call line, the camera, the Role cue lines (M2-06), no input or HUD at the end.
    - **The clearing stage** (Lucy's follow-up, John's guard).
    - **The rush (M2-03):**
-     1. `MoveUnitSequence` takes John to 9,3 (T-13: path and blockers from wherever he stands).
-     2. `RevealUnitsSequence` reveals group `ring` (3 Claws and 1 worm on his diagonals).
+     1. `MoveUnitSequence` takes John to 9,2 (T-13: path and blockers from wherever he stands). Coordinates follow the 2026-11-26 revision (D-759: 15 × 5, worm in the clearing, Archer on 11,2).
+     2. `RevealUnitsSequence` reveals group `ring` (4 Claws on his diagonals, plus the Archer if D-759's open point keeps it in the ring).
      3. `CastAbilitySequence` casts Shield Up on John. Check the preset fits the step's Cell-target rule. If it doesn't, stop and report the options (Tier 2: a variant step, not core).
      4. The turn resets (the Lucy memory pattern).
      5. The player casts Lucy's embers on John. The fallback is a `GuidedAbilityHint` pulse on Lucy's ember for that turn window, plus the aim preview.
    - **Shield Flare dialogue:** placeholders (M2-02).
-   - **Ending (M2-04):** the Pile as a **clue only**. Pile props in the zone the paper level marks (15,2 to 16,4, props with no cells), then the camera, the clue dialogue and the outro. **Not** the sisters' tally or "Still counting?". That stays with the Trail (D-607), so don't move or change the Trail's tally wiring.
+   - **Ending (M2-04):** the Pile as a **clue only**. Pile props just past the east edge (x 15..16 × 1..3, no cells), then the camera, the clue dialogue and the outro. **Not** the sisters' tally or "Still counting?". That stays with the Trail (D-607), so don't move or change the Trail's tally wiring.
    - **Mission (`MS1 - The River.asset`):** re-point to `GB_m2-river`. Keep its GUID, name and drops.
 4. **To-checks:**
    - T-16: does a worm split on its first damage? If the code splits only on death, report it with the smallest fix. Don't fix it: it touches every worm.

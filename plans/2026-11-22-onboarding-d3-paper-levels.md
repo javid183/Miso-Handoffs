@@ -358,52 +358,52 @@ The block has 5 rows, so y runs 0..4 (bottom row y = 0).
 
 ### M2 · Lucy & John: "At me!" (new `GB_m2-river`)
 
-**Decided:** one level (M2-01); John rushes in, is surrounded, and the player casts Shield Flare (M2-03: a `MoveUnitSequence` moves him, Lucy's embers on him are the play); Dark Worms (M2-05); the Pile at the end is Ryker's clue only (D-607). The ford Archers go: they were the old Shield Flare lesson, and the ring replaces them.
+**Decided:** one level (M2-01); John rushes in, is surrounded, and the player casts Shield Flare (M2-03: a `MoveUnitSequence` moves him, Lucy's embers on him are the play); Dark Worms (M2-05); the Pile at the end is Ryker's clue only (D-607). The ford's island Archers go: they were the old Shield Flare lesson, and the ring replaces them.
+
+**Revised 2026-11-26 (THJ, D-759):** the two east columns (rock and the Pile's prop cells) and the top and bottom rows are cut, so the level is 15 × 5 and every y below is one less than in the first draft; the worm and the clearing's middle Claw swap places (the worm opens the level in the clearing, the ring is four Claws); an Archer Goblin stands on 11,2.
 
 ```grid id=m2-river title="M2 · The River: at me!"
-# # . . . . # # # # # # # # # # #
-# . . . . . . # . . . . . . . # #
-# . . . . . c # c . c . . . . # #
-U J . . . c . . . . . . . . . # #
-# . . . . . c # c . w . . . . # #
-# . . . . . . # . . . . . . . # #
-# # . . . . # # # # # # # # # # #
+# . . . . . . # . . . . . . .
+# . . . . . c # c . c . . . .
+U J . . . w . . . . . a . . .
+# . . . . . c # c . c . . . .
+# . . . . . . # . . . . . . .
 --
-cells 8,4 10,4 8,2 10,2 enemy hidden: ring
-step 9,3 1
-note 9,3 John rushes here
-arrow 7,3 9,3 lucy ember John
-arrow 9,3 8,4 lucy dy=-6 Flare
-arrow 9,3 10,4 lucy
-arrow 9,3 8,2 lucy
-arrow 9,3 10,2 lucy
-zone 15,2 16,4 note the Pile (props, no cells)
+cells 8,3 10,3 8,1 10,1 11,2 enemy hidden: ring
+step 9,2 1
+note 9,2 John rushes here
+note 14,2 the Pile: props past this edge
+arrow 7,2 9,2 lucy ember John
+arrow 9,2 8,3 lucy dy=-6 Flare
+arrow 9,2 10,3 lucy
+arrow 9,2 8,1 lucy
+arrow 9,2 10,1 lucy
 level name The River
 level tier early
 level alert all
-level hidden ring 8,4 10,4 8,2 10,2
+level hidden ring 8,3 10,3 8,1 10,1 11,2
 ```
 
 | Item | Plan |
 |---|---|
-| Source | **Big change: a new prefab `GB_m2-river`** from this block; the old `GB_s1-river` is renamed (D-621) and `MS1 - The River` points at the new one. The clearing's cells as built; the islands and Archers go; the ford becomes open shallows x 8..14, y 1..5, joined to the clearing by 7,3; the far bank holds the Pile (props on missing cells 15..16 × 2..4, as the Trail's Pile was drawn). `SearchWiring.River` updated |
+| Source | **Big change: a new prefab `GB_m2-river`** from this block; the old `GB_s1-river` is renamed `GB_s1-river_v1` (D-621) and `MS1 - The River` points at the new one. The clearing is the old one less its top and bottom rows; the islands and Archers go; the ford becomes open shallows x 8..14, y 0..4, joined to the clearing by 7,2; the Pile is props just past the east edge (x 15..16 × 1..3, no cells). New wiring tool `MissionWiring.River.cs` (as M1's `MissionWiring.Ridge.cs`); `SearchWiring.River` keeps the old prefab and loses the mission step |
 | Teaches | **Shield Flare** (M2-02, M2-03), after **Lucy's follow-up and John's guard** in the opening fight (M2-06) |
-| Twist | John charges ahead and is surrounded; the worm in the ring splits around him |
-| Squad | Lucy 0,3, John 1,3 (Papa's Shelter at start, as built). No Cleanse |
-| Enemies | **Clearing** (alert): Dark Claws 5,3, 6,4, 6,2, factor 0.8 (≈ 13). **Hidden `ring`** (revealed around John): Dark Claws 8,4, 10,4, 8,2, factor 0.45 (≈ 7); **Dark Worm** 10,2, no HP override (its HP doesn't matter: it splits on the first damage, D-623), splitting around its cell down to 8 worms of 4 HP (section 2) |
-| Beat 1: the clearing (Roles) | Family first. 5,3 is 5 from Lucy. ★ John strikes a Claw within 3 of Lucy: **her follow-up** fires (2 × 3 on it, LU-5). Enemy turn: a Claw that targets Lucy within 2 of John **is taken by John's guard** (×0.5). ★ Lucy's Cyclone in the clearing's mouth (the arms pull and block, LU-3, LU-4). ● Sword and embers one by one |
-| Stage 1 → 2 (M2-03) | Clearing dead → sequence: John "There, by the water. Fur." (he sees the clue) → `MoveUnitSequence` John to **9,3** → reveal `ring` (the four diagonal neighbours of 9,3) → `CastAbilitySequence` John's Shield Up → John "Lucy! At me!" · Lucy "*At* you?" (M2-02, placeholders) → **turn reset** (LSB `reset`, Memory 4's Hold pattern: a fresh family turn with AP) → `GuidedAbilityHint` on Lucy's Fire Embers until used → input on. Objective **"Help John."** (the ring dead) |
-| Beat 2: the Flare (distances on the grid) | John on 9,3 under Shield Up. Each ring unit sits on a diagonal of 9,3, 1 away: Shield Flare's copies fly along the four diagonals and hit the first enemy within 2 (SY table), so **one Flare hits all four**. Lucy needs John within her embers' 3: **7,3** is 2 from John (inside his guard's 2, so a ring hit on her goes to John) and reachable in one Move from anywhere in the clearing at x ≥ 4; **8,3** is next to John (Papa's Shelter: one more ember, so one more Flare) but beside 8,4 and 8,2. ★ Lucy to 7,3 or 8,3, embers on John: the aim preview shows the four copies (CR-56). Damage: 4 a copy from the main ember (7 if every ember flares, T-6): two Flares, or one Flare + John's Sword, clear the Claws; the first Flare copy splits the worm beside John, and each later copy, follow-up or sword hit splits a child, until the 4 HP worms die to any hit: a swarm the Flare's four copies and Lucy's two sidewinders are made for. ● Embers on each ring unit directly (slower; each split needs its own hit). ✗ John walks out of the ring (gives up the Shield Up turn, the ring follows) |
-| Stage 3 | "Clear the river." (defeat all, the worm's children included) |
+| Twist | The opening fight is a worm swarm; then John charges ahead and is surrounded |
+| Squad | Lucy 0,2, John 1,2 (Papa's Shelter at start, as built). No Cleanse (the level gets its own Cleanse lock, D-614, D-713) |
+| Enemies | **Clearing** (alert): **Dark Worm** 5,2, no HP override (it splits on the first damage, D-623, D-630), splitting down to 4 worms of 4 HP (D-762); Dark Claws 6,3, 6,1, factor 0.8 (≈ 13). **Hidden `ring`** (revealed around John): Dark Claws 8,3, 10,3, 8,1, 10,1, factor 0.45 (≈ 7); **Archer Goblin** 11,2 (`Unit_ArcherGoblin`), hidden in the `ring` and part of its objective (D-760), factor 0.45 |
+| Beat 1: the clearing (Roles) | Family first. The worm on 5,2 is 5 from Lucy. ★ John strikes within 3 of Lucy: **her follow-up** fires (2 × 3, LU-5), and on the worm each hit is a split. Enemy turn: a Claw or worm that targets Lucy within 2 of John **is taken by John's guard** (×0.5). ★ Lucy's Cyclone in the clearing's mouth against the swarm (worms move 1). ● Sword and embers one by one (each split needs its own hit) |
+| Stage 1 → 2 (M2-03) | Clearing dead (the worm's children included) → sequence: John "There, by the water. Fur." (he sees the clue) → `MoveUnitSequence` John to **9,2** → reveal `ring` (the four diagonal neighbours of 9,2, plus the Archer) → `CastAbilitySequence` John's Shield Up → John "Lucy! At me!" · Lucy "*At* you?" (M2-02, placeholders) → **turn reset** (LSB `reset`, Memory 4's Hold pattern: a fresh family turn with AP) → `GuidedAbilityHint` on Lucy's Fire Embers until used → input on. Objective **"Help John."** (the ring dead) |
+| Beat 2: the Flare (distances on the grid) | John on 9,2 under Shield Up. Each ring Claw sits on a diagonal of 9,2, 1 away: Shield Flare's copies fly along the four diagonals and hit the first enemy within 2 (SY table), so **one Flare hits all four Claws**. The Archer on 11,2 is 2 east of John, off every diagonal: it shoots (range 3) at John or at Lucy on 8,2, and needs its own answer (Lucy's embers from 8,2 reach it, 3; John's Sword after a step). Lucy needs John within her embers' 3: **7,2** is 2 from John (inside his guard's 2, so a ring hit on her goes to John) and reachable in one Move from anywhere in the clearing at x ≥ 4; **8,2** is next to John (Papa's Shelter: one more ember, so one more Flare) but beside 8,3 and 8,1 and in the Archer's 3. ★ Lucy to 7,2 or 8,2, embers on John: the aim preview shows the four copies (CR-56). Damage: 4 a copy from the main ember (7 if every ember flares, T-6): two Flares, or one Flare + John's Sword, clear the Claws. ● Embers on each ring unit directly (slower). ✗ John walks out of the ring (gives up the Shield Up turn, the ring follows) |
+| Stage 3 | "Clear the river." (defeat all) |
 | Win / loss | Stage 1 the clearing dead (hidden); stage 2 the ring units dead; stage 3 defeat all. Loss: default |
-| End (M2-04) | The Pile: camera to the far bank, the Pile close-up, Ryker's clue (prints, white fur, the axe-killed Claws of R7-4/5), John and Lucy's lines (placeholders). **No tally beat here** (Linda is absent; D-607) |
+| End (M2-04) | The Pile: camera to the props past the east edge, the Pile close-up, Ryker's clue (prints, white fur, the axe-killed Claws of R7-4/5), John and Lucy's lines (placeholders). **No tally beat here** (Linda is absent; D-607) |
 | Cues | Level start: John "Stay by me." (built) and one Lucy line about her follow-up (M2-06, placeholder). Stage 2 as above |
 | Alert | All alert (the ring comes in alert) |
 | FTP, clue | Full at start (John 5 + Lucy 3 = 8). Clue as above. Rewards as built |
 | Fallback | The pulse on Fire Embers and the preview; if the player still doesn't ember John, the ring dies slower and John (24 HP, Shield Up 60%) takes it |
-| Time | ~5 min |
+| Time | ~5 min (the swarm now sits in beat 1; watch it in play) |
 
-**The worm (D-623, as built).** One worm, in the Flare's reach. Its cost is hits, not HP: 7 split hits (1 + 2 + 4), then 8 small worms of 4 HP that any hit kills. Lever if the swarm runs long in play: the worm out of the ring.
+**The worm (D-623, D-630; moved to the clearing by D-759).** One worm, opening the level. Its cost is hits, not HP: 3 split hits (1 + 2), then 4 small worms of 4 HP that any hit kills (the prefab has 3 sizes; kept by D-762, the first draft's 7 and 8 were wrong). It now tests the Roles fight (follow-up, guard, Cyclone) rather than the Flare. Lever if beat 1 runs long in play: Claws 6,3 / 6,1 to ×0.6, or one Claw out.
 
 ### M3 · Defence: "Hold the yard" (new `GB_m3-defence`, in the `M2 - The Trail` mission asset)
 
