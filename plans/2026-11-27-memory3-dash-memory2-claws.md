@@ -2,7 +2,7 @@
 
 Size: S    Tier: 2 inside THJ's requests (D-785, D-786)    Assigned to: miso-implementer (sonnet)
 Branch: all (THJ is on `main`)
-Status: approved, building
+Status: built and verified (review APPROVE, full suite 3078/3079 with 1 Explicit); waiting on THJ's play check
 
 THJ hand-tweaked both levels (uncommitted). His layouts stay. Reads: Memory 3 tweak read and hooks, Memory 2 trace (this session; summarised below).
 
