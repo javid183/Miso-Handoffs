@@ -6,6 +6,7 @@ Rows D-001 to D-011 were carried over on 2026-10-15 from the Home handoff and pr
 
 | Date | ID | Tier | Scope | Decided by | Decision | Why | Affects |
 | --- | --- | --- | --- | --- | --- | --- | --- |
+| 2026-11-26 | D-741 | 3 | all | THJ | M2 round 4 play check passed. Round 5: the John–Lucy Duo is locked from level start and unlocks when the ambush arrives (after the Shield Flare beat), with a HUD pulse on it and a bark hinting it (placeholder) | THJ: "ok, great, now, lock the duo until after the shield flare and ambush" | round 5 |
 | 2026-11-26 | D-740 | 3 | all | THJ | M2's Archer on 12,2 is visible but passive (no moves, no attacks) until the ambush, then walks out as before; an alert Archer would walk into John's rush path | Round 4 review ESCALATE; THJ chose passive over fighting + clearing it in the rush | round 4 fixes |
 | 2026-11-26 | D-739 | 3 | all | THJ | M2 rush order: Lucy runs to 7,2 after John's "Lucy! At me!" / "At you?" (THJ's hand edit, kept): Cyclone end → John walks → ring → reset → "They were waiting for us!" → Shield Up → the call → Lucy runs → embers hint | THJ: "Yes, keep it" | round 4 |
 | 2026-11-26 | D-738 | 3 | all | THJ | Shield Flare's copies fly straight (four directions, range 2), not diagonally: THJ's change to `Unit_John.prefab` (`JohnShieldRelay` pattern 0 → 1), global. M2's ring moves to John's straight neighbours (9,3 · 10,2 · 8,2 · 9,1) | THJ: "I also changed the flare to be straight" | GDD `family-systems.md` SY row, `john.md` JO-3, `combat-rules.md`; M2 |
