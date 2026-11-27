@@ -1,8 +1,8 @@
 # M2 The River, round 2: THJ's play-check fixes and the corridor ambush
 
-Size: M    Tier: 2 (THJ approved the Tier 3 points: core fix D-729, layout and ambush D-728, horn D-730, Shelter D-731, potion D-732)    Assigned to: `miso-implementer` (opus), two chunks, one at a time
+Size: M    Tier: 2 (THJ approved the Tier 3 points: core fix D-764, layout and ambush D-763, horn D-765, Shelter D-766, potion D-767)    Assigned to: `miso-implementer` (opus), two chunks, one at a time
 Branch: all (on `main`)
-Status: approved (THJ's answers 2026-11-26); R1 dispatched
+Status: done (committed 2026-11-26: `8679d9129`, `94e59a702`, `f025c271d`, `b08fa609a`; rounds 3 to 5 in `reports/m2-round2-r2-river.md`)
 
 ## Why
 
@@ -29,7 +29,7 @@ Lucy's follow-up hits a split worm's child; M2 plays THJ's tweaked layout with t
 ## Scope
 
 In: R1 Lucy's follow-up retarget; R2 M2 wiring on THJ's prefab, the shared potion page in M1 and M2.
-Out: a real horn clip (THJ later), final text (`miso-narrative`), X-38 pouch work, a fourth worm size (D-727), any other role.
+Out: a real horn clip (THJ later), final text (`miso-narrative`), X-38 pouch work, a fourth worm size (D-762), any other role.
 
 ## Facts (Explore 2026-11-26; verify before relying)
 
@@ -66,7 +66,7 @@ Only `LucyFactionRoleHandler.cs` (plus tests). No change to `FactionRoleHandlerB
 
 ## Risks
 
-- **Core (R1):** Family Roles is core; THJ approved the change in Lucy's handler only (D-729). Event subscription must be removed on every exit (fire, skip, abort, unit death, level end). No statics expected; if one appears, `PlayModeStaticReset` hook.
+- **Core (R1):** Family Roles is core; THJ approved the change in Lucy's handler only (D-764). Event subscription must be removed on every exit (fire, skip, abort, unit death, level end). No statics expected; if one appears, `PlayModeStaticReset` hook.
 - **THJ's prefab is the master now:** any builder step that rewrites the prefab from the block would lose his tweak. Wiring edits only.
 - **M1 touched again** (shared potion page): M1 is committed and played; keep its other beats byte-identical, run its tests, and THJ replays M1's ambush.
 - **Saved data:** none new (the tracker already saves by asset name). The shared page's asset name is the save key: never rename it after it ships.

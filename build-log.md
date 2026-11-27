@@ -3079,3 +3079,31 @@ Plan `plans/2026-11-19-faster-loop-process.md`, decisions D-575 to D-579.
 **Not verified:** play-through on `main` (Khash's menu changes against the onboarding flow); AI regression baseline (no AI changes in the merge).
 **Findings:** untracked `M3Defence_Notch3_HideLastStone.asset` is unreferenced (orphan).
 **Status:** merged, not pushed (52 ahead of `origin/main`).
+
+## 2026-11-26 M3 "Hold the yard" round two, chunk 7.1 (main)
+**Built:** new `GB_m3-defence.prefab` from block `m3-defence-3` (old level kept as `GB_m3-defence_v1`); `HoldUnitsUntilSignal.holdFromLevelStart`; `Unit_Barricade` (Unit_Rock variant, 8 HP) ×6; `Unit_Rock_Stone4`; stone in Stranger; Mark held on 4,11 (Unmovable, Unable to Swap, Role off, Duos locked, IgnoreObjective); waves w1/w2/w3 and the Masher; five stages + Mark defeat group; Trail free seats 0; sequences in `Resources/Sequences/M3Yard`. Report `reports/onboarding-m3-round-two.md`.
+**Verified:** compile clean; full EditMode 2882: 2881 passed, 0 failed, 1 Explicit; AI regression by name 52 (was 50, +2 expected unexpected-unit lines); review APPROVE; gate 7 read-back matches the paper block.
+**Not verified:** play-through (THJ's play check pending).
+**Findings:** all enemies are drawn to Mark (defeat group); Masher counter-push can move Mark; Claw 4 / slam 6 damage, two hits per barricade; "Mark has fallen." needs loss-panel plumbing (7.2).
+**Status:** uncommitted in the shared repo, waiting on THJ's play check.
+
+## 2026-11-26 M3 the pick and the opening, chunks 8.1–8.3 (main)
+**Built:** 8.1 core: additive per-unit Family Role suppression (`FactionRoleHandlerBase.SetSuppressed`, Super Time skip, reactive interrupt and direct play refuse). 8.2: `HoldPickOutOfCombat` (+ `HoldRoleZoneHidden`), runtime `LevelAbilityLock.Lock`/per-unit `Unlock`, Catch & Return off while held, Papa's Shelter refresh, Suppressed role badge. 8.3: M3 on block `m3-defence-4` (round-two layout kept): 3 opening Claws, pick seat on 4,8, Masher hidden until the push, 6 stages, 3-turn hold, pick-falls defeat (`PickFallenLOCondition` exposes `{pick_i}`), Mark instance data and `holdFromLevelStart` dropped, `Unit_Rock_Stone4` deleted. Report `reports/onboarding-m3-pick.md`.
+**Verified:** 8.1 core review APPROVE; 8.2+8.3 review APPROVE; full EditMode 2925: 2924 passed, 0 failed, 1 Explicit; AI regression by name 51 (was 52); gate 7 read-back matches `m3-defence-4`.
+**Not verified:** play-through with John and with Mark (THJ); Super Time deferral; Masher 2×2 slide; John's tether while held; Masher close-up vs S2 camera.
+**Findings:** Chained Assault range is 5 (from the starter), not 4; enemies do attack an Inactive unit; badge stale until the next panel refresh; stale overrides in the level YAML (harmless).
+**Status:** uncommitted in the shared repo; should-fix follow-up running; then THJ's play check.
+
+## 2026-11-26 M3 play-check fixes: the hold crash and the stuck Masher (main)
+**Built:** play-check fix 1 (`HoldPickOutOfCombat`: Duo scan over every preset level, hold survives a failed scan, AP closed when held in its own turn; D-757). Chunk 8.5 core (D-758): `GridCell.GetRangeCells` removes only the anchor for multi-cell walkers, so the Masher and the Queen can step N/E. Report `reports/onboarding-m3-pick.md`; cause `reports/2026-11-26-masher-stuck-code-read.md`.
+**Verified:** 8.5 core review APPROVE; `MultiCellWalkRangeTests` 8/8; full EditMode 2939: 2938 passed, 0 failed, 1 Explicit; AI regression by name 51 (unchanged; the existing fatal NRE in `HandleLivingUnitsCondition` stops the run before later checks).
+**Not verified:** THJ's replay of M3 (the Masher walking); M1's Masher.
+**Findings:** the AI next-targets prediction still ranges big units per footprint cell (backlog).
+**Status:** uncommitted; THJ replays M3.
+
+## 2026-11-26 M2 "The River": chunk 3.2 and rounds 2 to 5 (main)
+**Built:** new `GB_m2-river` on THJ's hand-tweaked layout (old level kept as `GB_s1-river_v1`, GUID kept); wiring `MissionWiring.River*.cs` (intro with Lucy's Role and Shelter pages; John acts first, Lucy held until his first action; passive shallows Archer; clearing → rush: Cyclone ended, John to 9,2, ring on his straight neighbours, reset, "They were waiting for us!", Shield Up, Lucy runs, "Lucy! Fire at me!", embers hint → ambush: runner Archer leaves, stand-in horn + "Horn Sounding", four corridor Archers walk in together (×0.75), wave, John–Lucy Duo unlocks with a pulse and a bark, shared potion page → "Clear the river." → the Pile clue); one Health Potion on the mission; Cleanse locked. New non-core Onboarding steps: EndCyclone, HideNamedUnit, HoldUntilFirstAction, KeepUnitsPassive, LivingUnitsExceptLOCondition, MoveGroupUnitSequence (group walks, together), UnitBark, PlayOncePerSave (shared potion page with M1). Core: Lucy's follow-up retargets to a split worm's child (`LucyFactionRoleHandler.cs`, D-729). THJ's own change: Shield Flare flies straight (D-738).
+**Verified:** reviews APPROVE (R1 core; R2 after a FIX round; rounds 3, 4 after an ESCALATE answered by THJ); full EditMode 2958: 2957 passed, 0 failed, 1 Explicit; THJ played rounds 2 to 5 ("All good. Commit").
+**Not verified:** AI regression by name (no AI content changed); M1's ambush after the shared-page swap beyond THJ's round 2 play.
+**Findings:** the old rerun test ran the wiring on the real assets and overwrote THJ's untracked hand edits once (he redid them); it now runs on copies (`TheWiringRerunWouldChangeNothing`), and the wiring carries his camera values. The worm has 3 sizes (D-727). M1's wiring drifts from its committed cameras/group order on rerun (loose end). Horn clip is a stand-in (`Goblin Queen Charge.wav`). Placeholder lines listed in `reports/m2-round2-r2-river.md`.
+**Status:** committed, not pushed: `8679d9129` fix(lucy), `6662645ba` tweak(john), `94e59a702` shared potion page + M1, `f025c271d` River rename, `b08fa609a` The River.

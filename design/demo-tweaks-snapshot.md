@@ -198,6 +198,12 @@ Today's M4 is 7 levels: Toba's duel, two Whitemother levels, the escort, the rel
 | X-41 | Cyclone destroyed early (Masher, Queen, anything) gets its cooldown back as if it had run its course | Tech | Claude | Too unforgiving today |
 | X-42 | Health potion targets any ally at any range; a character with 0 AP can't drink one today | Tech | Claude | The target must be below full HP, not the user |
 | X-43 | Bug: playing quickly lets you act twice in a row (auto-move, auto-attack move or attack with the previously selected character) | Tech | Claude | Lock input while an action resolves |
+| X-44 | Dark Worm: HP and splitting don't match (splits on 1 damage, only the last children have real HP, yet every stage shows HP and a damage preview) | Design, Tech | Game designer, Claude | One rule; HP bar and preview follow it |
+| X-45 | Retry mission after a defeat, beside Return home | Tech, UI | Claude | Restarts the mission from its start |
+| X-49 | Hide the selected unit's green movement tiles while a move plays out | Tech | Claude | With X-43 |
+| X-50 | Duos don't cost AP | Design, Tech | Claude | Decided (D-778); the FTP or new-resource cost stays |
+| X-51 | Divine Relics don't cost AP | Design, Tech | Claude | Decided (D-779) |
+| X-52 | Mark's Move command animation is a placeholder that turns him into Lucy | Tech, Art | Claude, Art | Interim: one of Mark's own animations |
 
 ### Final passes, presentation and open design work
 
@@ -224,6 +230,9 @@ Today's M4 is 7 levels: Toba's duel, two Whitemother levels, the escort, the rel
 | X-31 | Tweak and adjust the Home stat upgrades                                                                                                            | Design, Tech         | Game designer, Claude      | ✓ Together with X-24 (the stations that don't open or give no feedback) and X-14 (balance)                                                                                 |
 | X-32 | On game start, check the save data on the player's machine and delete it if it's from long ago | Tech | Claude | ~ Deletes player data, so Tier 3. To decide: "too old" by a save version the build stamps (recommended) or by date, and whether the player is told first |
 | X-33 | Final check of the combat log: it includes everything in the demo | Tech | Claude | ✓ Every ability, Synergy, Duo and Family Role, plus the new pieces (barriers, the new Duo resource) |
+| X-46 | SFX pass: missing sounds, better sound and music | Sound, Tech | Sound designer, Claude | Claude lists the gaps first |
+| X-47 | VFX pass: improve existing effects, add new ones | Art, Tech | Art, Claude | Claude lists the gaps first |
+| X-48 | Better hit and death effects | Tech, Art | Claude, THJ | Game feel; THJ picks in play |
 
 ## 8. For the narrative designer
 

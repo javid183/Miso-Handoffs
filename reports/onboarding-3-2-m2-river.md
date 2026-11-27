@@ -1,6 +1,6 @@
 # Report: Onboarding demo 3.2, M2 "The River" on the new `GB_m2-river`
 
-Plan: plans/2026-11-23-onboarding-m1-m2-build-tech.md (chunk 3.2; paper level: plans/2026-11-22-onboarding-d3-paper-levels.md, block `m2-river` as revised by D-724/D-725)    Agent: miso-implementer    Branch: main
+Plan: plans/2026-11-23-onboarding-m1-m2-build-tech.md (chunk 3.2; paper level: plans/2026-11-22-onboarding-d3-paper-levels.md, block `m2-river` as revised by D-759/D-760)    Agent: miso-implementer    Branch: main
 Outcome: done. Built, wired, tested; the full EditMode suite is green. Not played (THJ's play check). Four points need the coordinator: the turn-reset order (decision 1), the placeholder-tag conflict (decision 4), T-16's worm count, and one edge-case risk (the clearing dying on the enemies' turn).
 
 ## What changed

@@ -129,8 +129,8 @@ Commit: its own: the rename plus the old tool trimmed, then the new level, tool 
    - **Start sequence:** the call line, the camera, the Role cue lines (M2-06), no input or HUD at the end.
    - **The clearing stage** (Lucy's follow-up, John's guard).
    - **The rush (M2-03):**
-     1. `MoveUnitSequence` takes John to 9,2 (T-13: path and blockers from wherever he stands). Coordinates follow the 2026-11-26 revision (D-724: 15 × 5, worm in the clearing, Archer on 11,2).
-     2. `RevealUnitsSequence` reveals group `ring` (4 Claws on his diagonals, plus the Archer if D-724's open point keeps it in the ring).
+     1. `MoveUnitSequence` takes John to 9,2 (T-13: path and blockers from wherever he stands). Coordinates follow the 2026-11-26 revision (D-759: 15 × 5, worm in the clearing, Archer on 11,2).
+     2. `RevealUnitsSequence` reveals group `ring` (4 Claws on his diagonals, plus the Archer if D-759's open point keeps it in the ring).
      3. `CastAbilitySequence` casts Shield Up on John. Check the preset fits the step's Cell-target rule. If it doesn't, stop and report the options (Tier 2: a variant step, not core).
      4. The turn resets (the Lucy memory pattern).
      5. The player casts Lucy's embers on John. The fallback is a `GuidedAbilityHint` pulse on Lucy's ember for that turn window, plus the aim preview.

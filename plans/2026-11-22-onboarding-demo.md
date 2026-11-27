@@ -62,6 +62,12 @@ One writer in the Unity project at a time. Design work (paper levels, X-15, X-27
 | 1.11 | X-41 | Lucy's Cyclone destroyed before its lifetime ends (by the Masher, the Queen or anything else) gets its cooldown back as if it had run its course, not the full penalty | 2 (rule tweak THJ asked for) | Explore first: does the cooldown count from the cast or from the end? Early destruction takes the same end path as expiry; covering test |
 | 1.12 | X-42 | The health potion targets any ally at any range; the one who uses it pays the AP, so a character with 0 AP can still be healed. The target, not the user, must be below full HP | 2 (pouch targeting) | Reuse the ability targeting flow; allies at full HP are not valid targets |
 | 1.13 | X-43 | Bug: playing quickly lets you act twice in a row; with auto-move and auto-attack the previously selected character moves or attacks when you meant the next one, and it is unclear whose turn it is | 2 (combat input; core) | Explore the race first: input must be locked while an action resolves, and selection must change before the next input is read; covering test |
+| 1.14 | X-44 | Dark Worm: its HP and splitting don't match. Every stage splits on 1 damage and only the last stage's children have real HP, yet every stage shows an HP bar and the attack preview predicts damage it won't do | 3 (how it works), then 2 | Explore first (`Core/Entities/Runtime/DarkWorm/`); D-762 keeps the worm's 3 built sizes (3 split hits, ends as 4 small worms of 4 HP) and M2 is built on it. Then the designer proposes one rule for THJ: each stage has real HP and splits on death, or stages split on any hit and show "splits" instead of an HP bar and damage preview. HP bar, preview and the rule must agree |
+| 1.15 | X-45 | After a defeat, offer Retry mission beside Return home | 2 (flow and UI) | Retry restarts the mission from its start with the same roster; check what the defeat path saves first (`CombatLevelRunHandler`) |
+| 1.16 | X-49 | While a unit's move plays out, the selected unit's green movement-range tiles are hidden | 1 (2 if the highlight code is core) | Same "an action is resolving" state as X-43; build them together if it is one place |
+| 1.17 | X-50 | Duos don't cost AP (D-778) | 3, decided | Explore what a Duo charges today (initiator, both partners, FTP); the FTP or new-resource cost stays (X-27). AI and the preview follow; combat log entry (X-33) |
+| 1.18 | X-51 | Divine Relics don't cost AP (D-779) | 3, decided | Same checks as 1.17; the relic tutorial page text if it mentions AP |
+| 1.19 | X-52 | Mark's Move command plays a placeholder animation that turns him into Lucy | 1 (data) | Interim: one of Mark's own animations; the real one goes to art |
 
 ### Phase 2: the Hearth (narrative tech; M)
 
@@ -132,7 +138,10 @@ Narrative runs alongside: `miso-narrative` writes each placeholder as its contai
 | 6.1 | X-32 | On game start, check the save data on the player's machine and delete it if it's too old for the demo, so an old save can't break the onboarding | 3 (deletes player data; can't be undone) |
 | 6.2 | X-33 | Final check of the combat log: every ability, Synergy, Duo, Family Role and new piece in the demo (Cyclone, barriers, the new Duo resource) writes its lines | 1 |
 | 6.3 | X-14 | Final balance after a full play-through on `main` | 2 (values) |
-| 6.4 | — | A cold playtest with a new player; docs and the Claude Docs mirror synced | — |
+| 6.4 | X-46 | SFX pass: add missing sounds, improve sound and music | 2 (hooking up); sounds by the sound designer | Claude lists every ability, UI and level moment with no sound or a placeholder first, as a sheet the sound designer works from |
+| 6.5 | X-47 | VFX pass: improve existing effects and add new ones | 2 (hooking up); effects by art | Same: Claude lists effects that are missing or placeholder first |
+| 6.6 | X-48 | Better hit and death effects | 3 (game feel) | Options for THJ: hit (flash, hit-stop, shake, a number pop) and death (a beat before removal, a fade or dissolve, a burst); THJ picks in play |
+| 6.7 | — | A cold playtest with a new player; docs and the Claude Docs mirror synced | — |
 
 ### Order
 

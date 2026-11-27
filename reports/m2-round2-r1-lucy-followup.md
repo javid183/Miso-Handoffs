@@ -5,7 +5,7 @@ Outcome: done (play check pending)
 
 ## What changed
 
-- `miso/Assets/_Project/Features/Player/Lucy/Scripts/LucyFactionRoleHandler.cs` (core, approved D-729; LF, no BOM, kept): +195/-1.
+- `miso/Assets/_Project/Features/Player/Lucy/Scripts/LucyFactionRoleHandler.cs` (core, approved D-764; LF, no BOM, kept): +195/-1.
   - :64-65 `PrepareTargets` stops any watch left from an earlier check.
   - :78 reads the action's per-enemy tile reading (`_cellAtActionStart`).
   - :105-120 case (b): an enemy with no HP reading from the action's start that stands on the tile of an enemy from that reading which is no longer living inherits it: `hurt = true`; named/distance 0 if the parent was named in the action's targets; hit-by-this-action if the parent was in `_hitsByAction`. Ranking (`LucyRoleTargetRanking`) unchanged.
