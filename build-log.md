@@ -3144,3 +3144,20 @@ Plan `plans/2026-11-19-faster-loop-process.md`, decisions D-575 to D-579.
 
 ## 2026-11-27 Commits on main (Memories 2 and 3)
 THJ played both memories: works. `b379e85e0` feat(onboarding): turn-start ability unlock · `d8d273083` feat(hearth): John's memory, only his Family Role + Shield Dash on turn 2 (with THJ's layout) · `e91e2cded` fix(hearth): Lucy's memory keeps four Claws (with THJ's layout) · `a7ab72434` tweak(john): Shield role takes the full hit (D-794) · `673e82ac7` feat(onboarding): hidden units select button, editor only. Not pushed. `miso.slnx` left unstaged.
+
+## 2026-11-27 Hold the yard round three (main)
+**Built:** THJ's hand layout kept; row 7 removed, lower part up one (108 tiles). Start at the east corridor's far end (deploy 14,8); enemies held still until a hero stops in the yard, then the three walk together to 2,8 / 4,8 / 6,8 (new `KeepUnitsPassiveUntilSignal`, `MoveUnitsTogetherSequence`; `UnitsReachTilesSequenceTrigger` gets an off-by-default "after the walk stops" option). Shrine art off-grid on 10,10 over the sword on 10,9. West Masher + Archer asleep until the yard is cleared. Wave 2 + Worm + the two east-corridor archers (walk to 9,8/9,9); wave 3 + two Worms, east Claw a Black Claw. Five stages, last hold turn wins; outro: pick released, stone rolls away, Toba out and a placeholder call line, four walk into the cave and fade, closed stone back, tally lines, Toba talk. Ten unused M3Yard assets deleted (in git). D-798..D-801. Report `reports/m3-yard-round-three.md`.
+**Verified:** full EditMode 3150: 3149 passed, 0 failed, 1 Explicit; AI regression by name 51 (unchanged); wiring re-run byte-identical; no core files.
+**Not verified:** no Play run. Review and verifier wait for THJ's play check (his call).
+**Findings:** west Masher kept at factor 1 (the old wiring would have set every Masher to 0.6), THJ to confirm; Toba's call line is a placeholder; Worms on 6,1/7,1 can split only once neighbours move; a boxed-in sister fades without walking into the cave; enemies hit before the walk-in stay asleep. Unity re-saved `LevelM2-C1.prefab` and `PreloadScreen.unity` (don't stage).
+**Status:** uncommitted; THJ plays.
+
+## 2026-11-27 Hold the yard round three: play check and commits (main)
+THJ played: six findings logged, not fixed (`playtests/2026-11-27-m3-yard-round-three-play.md`). Committed at THJ's request before review: `003aa6189` feat(onboarding) together-walk, enemies held until a signal, settled tile trigger · `edf2e9b81` feat(level) Hold the yard round three. West Masher 0.6 (D-802; M3DefenceTests 62/62). Not pushed. Review and verifier not run.
+
+## 2026-11-27 Solo Family Role shows the on-screen avatar with the act (main)
+**Built:** `517fdf36f` `OnScreenAvatarVisual`: `ShowBriefly(unit)` (slide in from the right + fade 0.2 s, hold 0.5 s, slide out 0.2 s; real time; hides itself), optional per-character backdrop list (empty in the scene, so everyone keeps John's backdrop), fades on real time; Show switches on its root (inactive in the scene). Scene: THJ's avatar position/scale tweaks + backdrop wiring. `d408aa903` core: `GlobalSettingsSO.soloFamilyRoleUsesOnScreenAvatar` (default on); `CombatLevelUIManager.SoloFamilyRoleUsesAvatar`, `ShowFactionRoleActVisual()`; in avatar mode the press shows nothing and the 0.8 s wait before the act is 0, and the avatar shows right before `base.ActivateFactionRole`. Off = the old solo panel and wait. Duos, trios and Revenge unchanged.
+**Verified:** full EditMode 3113: 3112 passed, 0 failed, 1 Explicit. THJ played and asked to commit.
+**Not verified:** nothing outstanding.
+**Findings:** John's role runs at time scale 0, so a scaled-time tween never played (fixed with real-time tweens). The `<Name>FamilyRole_BG` sprites are panel backgrounds and look wrong in the avatar's flipped, stretched frame; per-character avatar backdrops would need new art. Unity's scene save re-rolls an embedded gradient texture (noise, dropped from the commit).
+**Status:** committed, not pushed.

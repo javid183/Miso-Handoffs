@@ -68,16 +68,16 @@ One writer in the Unity project at a time. Design work (paper levels, X-15, X-27
 | 1.17 | X-50 | Duos don't cost AP (D-778) | 3, decided | Explore what a Duo charges today (initiator, both partners, FTP); the FTP or new-resource cost stays (X-27). AI and the preview follow; combat log entry (X-33) |
 | 1.18 | X-51 | Divine Relics don't cost AP (D-779) | 3, decided | Same checks as 1.17; the relic tutorial page text if it mentions AP |
 | 1.19 | X-52 | Mark's Move command plays a placeholder animation that turns him into Lucy | 1 (data) | Interim: one of Mark's own animations; the real one goes to art |
-| 1.20 | X-53 | Encore costs 1 AP (D-798, reverses D-609's 2 AP) | 3, decided | The greyed-out-below-2-AP check and its "needs 2 AP" text follow; tooltip and combat log |
+| 1.20 | X-53 | Encore costs 1 AP (D-803, reverses D-609's 2 AP) | 3, decided | The greyed-out-below-2-AP check and its "needs 2 AP" text follow; tooltip and combat log |
 | 1.21 | X-55 | End Turn is disabled while a sequence plays | 2 | Same "something is resolving" family as 1.13 and 1.16 (parked, D-784, D-788); see whether one lock covers all three |
 | 1.22 | X-59 | The Family Role prompt stays up longer than the window in which it accepts input | 2 (core if the prompt timer is) | Prompt and input window share one timer. Listed in `reports/2026-11-27-act-twice-findings.md` (parked action after a role prompt): goes with the 1.13 design discussion |
-| 1.23 | X-61 | Catch & Return: with no enemy anywhere (before or after Mark), Mark catches and returns Linda's arrow automatically, with no prompt (D-799, D-801; D-560 stands) | 3, decided | Feature folder (`plans/2026-11-17-catch-return-offer-tech.md` C1 code); the catch plays without the QTE; preview shows the return |
-| 1.24 | X-63 | Remove the FP potion from every demo level (D-800) | 1 (data) | Level and Mission assets only; X-38 (1.10) still hides other 0-use items |
+| 1.23 | X-61 | Catch & Return: with no enemy anywhere (before or after Mark), Mark catches and returns Linda's arrow automatically, with no prompt (D-804, D-806; D-560 stands) | 3, decided | Feature folder (`plans/2026-11-17-catch-return-offer-tech.md` C1 code); the catch plays without the QTE; preview shows the return |
+| 1.24 | X-63 | Remove the FP potion from every demo level (D-805) | 1 (data) | Level and Mission assets only; X-38 (1.10) still hides other 0-use items |
 | 1.25 | X-56 | Linda's Family Role avatar is too big | 1 (art or UI values) | Compare with the other Roles' avatars; same panel as X-22's FamilyRoleLeft |
 | 1.26 | X-54 | Pan the camera with the mouse (drag) | 2 (camera input) | Keep it off during sequences and stunt cams; edge or key pan stays |
 | 1.27 | H-23 | Memory 4: an arrow fired into the Cyclone comes back to Linda, but nothing shows it, so a player read it as "firing at the Cyclone costs no arrows". Show the return: the arrow flies back to her and her quiver count ticks up | 2 (feedback) | Reuse Encore's return visual if it fits; check the other places an arrow returns (H-08, X-61) use the same cue |
 | 1.28 | X-65 | An explosive mushroom targeted by an attack previews its explosion (blast area and who it hits) | 2 (preview; core if the preview code is) | Same preview whether an ability hits it directly or in an area |
-| 1.29 | X-67 | Lucy's Cyclone sets off explosive mushrooms (D-802): moving through one, carrying it or its Whirl | 3, decided | Cyclone code and tests; X-65's preview shows it on the Cyclone path; the sisters' tally credits Lucy (D-694) |
+| 1.29 | X-67 | Lucy's Cyclone sets off explosive mushrooms (D-807): moving through one, carrying it or its Whirl | 3, decided | Cyclone code and tests; X-65's preview shows it on the Cyclone path; the sisters' tally credits Lucy (D-694) |
 
 ### Phase 2: the Hearth (narrative tech; M)
 

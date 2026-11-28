@@ -205,7 +205,7 @@ Today's M4 is 7 levels: Toba's duel, two Whitemother levels, the escort, the rel
 | X-50 | Duos don't cost AP | Design, Tech | Claude | Decided (D-778); the FTP or new-resource cost stays |
 | X-51 | Divine Relics don't cost AP | Design, Tech | Claude | Decided (D-779) |
 | X-52 | Mark's Move command animation is a placeholder that turns him into Lucy | Tech, Art | Claude, Art | Interim: one of Mark's own animations |
-| X-53 | Encore costs 1 AP | Design, Tech | Claude | Decided (D-798) |
+| X-53 | Encore costs 1 AP | Design, Tech | Claude | Decided (D-803) |
 | X-54 | Pan the camera with the mouse | Tech | Claude | |
 | X-55 | Disable End Turn while a sequence plays | Tech | Claude | |
 | X-56 | Linda's Family Role avatar is too big | UI, Art | Claude | |
@@ -213,13 +213,13 @@ Today's M4 is 7 levels: Toba's duel, two Whitemother levels, the escort, the rel
 | X-58 | Squad selection menu: clearer; when no one can be picked, say why and only Continue works | UI | Claude (check with Khash) | |
 | X-59 | The Family Role prompt outlasts its input window | Tech | Claude | With the act-twice discussion |
 | X-60 | Show buffs on the HUD | UI | Claude (check with Khash) | |
-| X-61 | Catch & Return: with no enemy anywhere, Mark catches and returns Linda's arrow automatically, no prompt | Design, Tech | Claude | Decided (D-799, D-801) |
+| X-61 | Catch & Return: with no enemy anywhere, Mark catches and returns Linda's arrow automatically, no prompt | Design, Tech | Claude | Decided (D-804, D-806) |
 | X-62 | Show the enemies' next targets | Design, Tech | Game designer, Claude | Phase 5; core AI |
-| X-63 | Remove the FP potion from all levels | Tech | Claude | Decided (D-800) |
+| X-63 | Remove the FP potion from all levels | Tech | Claude | Decided (D-805) |
 | X-64 | Lucy's Family Role readability: a cue on her that it will fire | Design, Tech | Game designer, Claude | |
 | X-65 | An explosive mushroom targeted by an attack previews its explosion | Tech | Claude | |
 | X-66 | A picked-up Divine Relic flies to the pouch, which pulses or glows while it holds one | UI | Claude | |
-| X-67 | Lucy's Cyclone sets off explosive mushrooms | Design, Tech | Claude | Decided (D-802); tally credits Lucy |
+| X-67 | Lucy's Cyclone sets off explosive mushrooms | Design, Tech | Claude | Decided (D-807); tally credits Lucy |
 
 ### Final passes, presentation and open design work
 
