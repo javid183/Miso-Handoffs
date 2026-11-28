@@ -217,6 +217,9 @@ Today's M4 is 7 levels: Toba's duel, two Whitemother levels, the escort, the rel
 | X-62 | Show the enemies' next targets | Design, Tech | Game designer, Claude | Phase 5; core AI |
 | X-63 | Remove the FP potion from all levels | Tech | Claude | Decided (D-800) |
 | X-64 | Lucy's Family Role readability: a cue on her that it will fire | Design, Tech | Game designer, Claude | |
+| X-65 | An explosive mushroom targeted by an attack previews its explosion | Tech | Claude | |
+| X-66 | A picked-up Divine Relic flies to the pouch, which pulses or glows while it holds one | UI | Claude | |
+| X-67 | Lucy's Cyclone sets off explosive mushrooms | Design, Tech | Claude | Decided (D-802); tally credits Lucy |
 
 ### Final passes, presentation and open design work
 

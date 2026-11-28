@@ -76,6 +76,8 @@ One writer in the Unity project at a time. Design work (paper levels, X-15, X-27
 | 1.25 | X-56 | Linda's Family Role avatar is too big | 1 (art or UI values) | Compare with the other Roles' avatars; same panel as X-22's FamilyRoleLeft |
 | 1.26 | X-54 | Pan the camera with the mouse (drag) | 2 (camera input) | Keep it off during sequences and stunt cams; edge or key pan stays |
 | 1.27 | H-23 | Memory 4: an arrow fired into the Cyclone comes back to Linda, but nothing shows it, so a player read it as "firing at the Cyclone costs no arrows". Show the return: the arrow flies back to her and her quiver count ticks up | 2 (feedback) | Reuse Encore's return visual if it fits; check the other places an arrow returns (H-08, X-61) use the same cue |
+| 1.28 | X-65 | An explosive mushroom targeted by an attack previews its explosion (blast area and who it hits) | 2 (preview; core if the preview code is) | Same preview whether an ability hits it directly or in an area |
+| 1.29 | X-67 | Lucy's Cyclone sets off explosive mushrooms (D-802): moving through one, carrying it or its Whirl | 3, decided | Cyclone code and tests; X-65's preview shows it on the Cyclone path; the sisters' tally credits Lucy (D-694) |
 
 ### Phase 2: the Hearth (narrative tech; M)
 
@@ -130,6 +132,7 @@ The designer also writes two short notes in the same pass: X-20 (where a Divine 
 | 4.12 | X-58 | The squad selection menu is confusing; when no one can be picked it says why and only Continue works | 2 (UI); Khash's area (W-05), so the coordinator checks with him first | A short pass on what each state shows |
 | 4.13 | X-60 | Show buffs (and debuffs) on the HUD | 2 (UI); check with Khash (unit panel) | Icons with turns left; tooltip on hover |
 | 4.14 | X-64 | Lucy's Family Role readability: a cue on her that it will fire | 3 (feel) | Designer proposes the cue; same idea may help the other Roles |
+| 4.15 | X-66 | A picked-up Divine Relic flies to the item pouch, and the pouch pulses or glows while it holds a relic | 2 (UI, feedback) | Reuse the pouch's existing pulse if there is one; the X-20 walk-on pickup is the first case |
 | 4.6 | X-17 | Tutorial pages: draft screenshots captured in Play (check whether a page can play video) | 2 |
 
 Narrative runs alongside: `miso-narrative` writes each placeholder as its container is built; the narrative designer gets the doc's section 8 list (X-05 enemy names, X-16 ability descriptions in one voice, W-01, W-07, H-10 texts and the final lines).
