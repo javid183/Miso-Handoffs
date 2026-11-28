@@ -138,14 +138,14 @@ No.
 - **The rush.** Walks: Toba 4,15, Linda 3,15, Lucy 5,15, the pick 4,14. They all start together on distinct stop tiles, and their paths cross through allies only (the family walks through allies). All four then fade out and leave the board, including any whose path was blocked. The pick hold is released first, because the held pick carries Unmovable.
 - **Closing the cave.** A second instance of the start stone, in its own group (a group can be revealed only once).
 - **Wave order and archer walks.** Wave group order is fixed so the archers' walk can name them by place (members 3 and 4 of w2). Units already of the right kind on a wave tile are kept. The Dark Claw on 8,3 was replaced by a Black Claw.
-- **Health factors.** The west-corridor Masher keeps its prefab's factor (1). The old "every Masher 0.6" rule would have changed THJ's unit, so the 0.6 now applies only to the east-lane Masher. The first run had already written 0.6 on the west Masher; I reverted that override. Question below.
+- **Health factors.** First built with the west Masher at its prefab factor (1); THJ then chose 0.6 for both Mashers (see Follow-up below).
 - **Camera start.** Set by the existing `CameraStartTool` with the tile override 11,9.
 - **Arrival trigger tiles.** All 27 yard tiles (x 0..8, y 8..10).
 - **Linda's line.** It reuses the old level-start dialogue asset (`M3Yard_Start_Linda_DialogNodeSequence`), so anything written in it in Unity is kept.
 
 ## Needs THJ
 
-1. **West Masher health.** It now has full prefab health (factor 1). The east Masher is at 0.6. Keep it, or 0.6 like the east one? Leaving it is the safe choice; the waves are meant to be harder.
+1. ~~West Masher health~~: answered by THJ, 0.6 like the east one (see Follow-up below).
 2. **Toba's call line** before the rush is a placeholder for narrative: "Inside, quickly. The stone will hold them back." (Toba). Keep, reword, or drop?
 
 ## Docs to update
@@ -206,3 +206,14 @@ None (THJ is on `main`; the working tree here is `master` with the same base).
    - The stone moves and rolls away, and Toba comes out and calls.
    - Toba, Linda, Lucy and the pick walk into the cave together and fade out, and the stone comes back.
    - Then the tally, "Still counting?" / "…No.", the talk with Toba, and the outro.
+
+## Follow-up: west Masher 0.6
+
+THJ's decision (via the coordinator): the west-corridor Masher also takes health factor 0.6, like the east one.
+
+- `MissionWiring.HoldTheYard.cs`: `SetHealthFactors` sets `MasherHealthFactor` (0.6) on every Masher again, west and east (the east-lane-only condition is removed); the class summary says so.
+- `M3DefenceTests.Arrival.cs`: `TheWestCorridorPairSleepsUntilTheYardIsCleared` now pins the west Masher at 0.6 (`MasherHealthFactor`); `TheMasherWaitsHiddenAtTheBottomOfTheEastLane` still pins the east one at 0.6.
+- "Hold the Yard: Apply Wiring" run twice: the first run wrote the 0.6 override on the west Masher (the only prefab change); the second left the prefab byte-identical.
+- `M3DefenceTests*`: 62/62 passed. Full suite not re-run (data-only change, as agreed).
+- Commits: no change to the proposal; both files stay in commit 2.
+
