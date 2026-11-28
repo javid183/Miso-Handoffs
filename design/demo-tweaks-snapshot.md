@@ -91,6 +91,7 @@ The demo runs from a new game to the end of M4's last sequence. This is the flow
 | H-18 | At the start Linda can't move: she only shoots, until the Cyclone part                                                 | Tech           | Claude            | ✓                                                                                                                                                                                                                                                                                                                                                                                                                                        |
 | H-19 | After Mark's entrance, the first act locks all his abilities but his primary attack, or a "click me" hint points at it | Tech           | Claude            | ~ Locking from level start and unlocking chosen abilities later are built (LevelAbilityLock, UnlockAbilitiesSequence with unlockAll off, as the Mark–Lucy Duo does). Nothing fires when an ability is used, so "one action only" needs a small new trigger ("ability used → play a sequence", S, not core). Built-only: the earliest unlock is the Hold sequence (end of stage 2). The pulse on his primary (GuidedAbilityHint) is built |
 | H-20 | John says a line or a bark while he holds the den mouth                                                                | Narrative tech | Claude, Narrative | ✓                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| H-23 | Linda's arrow falls before the Cyclone and goes back to Linda | Tech | Claude | ? What should happen (THJ) |
 
 ## 4. The Hearth ending (back at Home)
 
@@ -204,6 +205,18 @@ Today's M4 is 7 levels: Toba's duel, two Whitemother levels, the escort, the rel
 | X-50 | Duos don't cost AP | Design, Tech | Claude | Decided (D-778); the FTP or new-resource cost stays |
 | X-51 | Divine Relics don't cost AP | Design, Tech | Claude | Decided (D-779) |
 | X-52 | Mark's Move command animation is a placeholder that turns him into Lucy | Tech, Art | Claude, Art | Interim: one of Mark's own animations |
+| X-53 | Encore costs 1 AP | Design, Tech | Claude | Decided (D-798) |
+| X-54 | Pan the camera with the mouse | Tech | Claude | |
+| X-55 | Disable End Turn while a sequence plays | Tech | Claude | |
+| X-56 | Linda's Family Role avatar is too big | UI, Art | Claude | |
+| X-57 | QTE: "click me" cue outside the tutorial, good and bad result feedback, bigger | Design, Tech | Claude, THJ | Game feel |
+| X-58 | Squad selection menu: clearer; when no one can be picked, say why and only Continue works | UI | Claude (check with Khash) | |
+| X-59 | The Family Role prompt outlasts its input window | Tech | Claude | With the act-twice discussion |
+| X-60 | Show buffs on the HUD | UI | Claude (check with Khash) | |
+| X-61 | Catch & Return returns the arrow to Linda when no enemy is before or after Mark | Design, Tech | Claude | Decided (D-799) |
+| X-62 | Show the enemies' next targets | Design, Tech | Game designer, Claude | Phase 5; core AI |
+| X-63 | Remove the FP potion from all levels | Tech | Claude | Decided (D-800) |
+| X-64 | Lucy's Family Role readability: a cue on her that it will fire | Design, Tech | Game designer, Claude | |
 
 ### Final passes, presentation and open design work
 

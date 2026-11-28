@@ -68,6 +68,14 @@ One writer in the Unity project at a time. Design work (paper levels, X-15, X-27
 | 1.17 | X-50 | Duos don't cost AP (D-778) | 3, decided | Explore what a Duo charges today (initiator, both partners, FTP); the FTP or new-resource cost stays (X-27). AI and the preview follow; combat log entry (X-33) |
 | 1.18 | X-51 | Divine Relics don't cost AP (D-779) | 3, decided | Same checks as 1.17; the relic tutorial page text if it mentions AP |
 | 1.19 | X-52 | Mark's Move command plays a placeholder animation that turns him into Lucy | 1 (data) | Interim: one of Mark's own animations; the real one goes to art |
+| 1.20 | X-53 | Encore costs 1 AP (D-798, reverses D-609's 2 AP) | 3, decided | The greyed-out-below-2-AP check and its "needs 2 AP" text follow; tooltip and combat log |
+| 1.21 | X-55 | End Turn is disabled while a sequence plays | 2 | Same "something is resolving" family as 1.13 and 1.16 (parked, D-784, D-788); see whether one lock covers all three |
+| 1.22 | X-59 | The Family Role prompt stays up longer than the window in which it accepts input | 2 (core if the prompt timer is) | Prompt and input window share one timer. Listed in `reports/2026-11-27-act-twice-findings.md` (parked action after a role prompt): goes with the 1.13 design discussion |
+| 1.23 | X-61 | Catch & Return: with no enemy before or after Mark, the arrow still comes back to Linda (D-799; no QTE then, D-560 stands) | 3, decided | Feature folder (`plans/2026-11-17-catch-return-offer-tech.md` C1 code); preview shows the return |
+| 1.24 | X-63 | Remove the FP potion from every demo level (D-800) | 1 (data) | Level and Mission assets only; X-38 (1.10) still hides other 0-use items |
+| 1.25 | X-56 | Linda's Family Role avatar is too big | 1 (art or UI values) | Compare with the other Roles' avatars; same panel as X-22's FamilyRoleLeft |
+| 1.26 | X-54 | Pan the camera with the mouse (drag) | 2 (camera input) | Keep it off during sequences and stunt cams; edge or key pan stays |
+| 1.27 | H-23 | Memory 4: Linda's arrow falls before the Cyclone and goes back to Linda | 1 or 2 | **Needs THJ's words first** (what should happen) |
 
 ### Phase 2: the Hearth (narrative tech; M)
 
@@ -118,6 +126,10 @@ The designer also writes two short notes in the same pass: X-20 (where a Divine 
 | 4.8 | X-37 | The world-space HP bar over playable units looks slightly different from the enemies' (frame, colour or shape), so they don't mix up when units stand close | 2 (visual values; 3 if it needs a new bar prefab) |
 | 4.9 | X-39 | Anticipation lines at Home: after the Hearth and before the River and the Ridge, the family hints at where they are and what they'll face; after both, the same for M3 | 2 (narrative tech; text by `miso-narrative`, then the writer) | Home sequences in `Resources/Sequences/HomeVisits/` (e.g. `Hearth_WorldMapRule`, the visits after the River and the Ridge); no new container if those sequences can take the lines |
 | 4.10 | X-40 | Khash's new Bonds / Family menu shows the demo's lock and unlock states | 2 (UI); Khash's code, so the coordinator checks with THJ first | Match the demo cap (Bond Threads plan §10) and Toba's gates after M3 (D-696) |
+| 4.11 | X-57 | QTE: a "click me" cue outside the tutorial, clear feedback for a good and a bad result, and a bigger prompt | 3 (game feel), then 2 | Options laid out for THJ; D-785 keeps the click rules as they are |
+| 4.12 | X-58 | The squad selection menu is confusing; when no one can be picked it says why and only Continue works | 2 (UI); Khash's area (W-05), so the coordinator checks with him first | A short pass on what each state shows |
+| 4.13 | X-60 | Show buffs (and debuffs) on the HUD | 2 (UI); check with Khash (unit panel) | Icons with turns left; tooltip on hover |
+| 4.14 | X-64 | Lucy's Family Role readability: a cue on her that it will fire | 3 (feel) | Designer proposes the cue; same idea may help the other Roles |
 | 4.6 | X-17 | Tutorial pages: draft screenshots captured in Play (check whether a page can play video) | 2 |
 
 Narrative runs alongside: `miso-narrative` writes each placeholder as its container is built; the narrative designer gets the doc's section 8 list (X-05 enemy names, X-16 ability descriptions in one voice, W-01, W-07, H-10 texts and the final lines).
@@ -130,6 +142,7 @@ Narrative runs alongside: `miso-narrative` writes each placeholder as its contai
 | New Duo resource | X-27, then X-28, X-29, X-30 | After X-15. Design plan with critics, then a tech plan (core), likely on its own branch. X-28 is a sweep over every demo level's FTP fill and its tutorial pages; X-29 rides the first Duo (memory 4); X-30 only if FTP goes |
 | Skill trees | X-13, X-26 | With the Bond Threads decision (plan `2026-11-18-bond-threads-design.md`, waiting on THJ) |
 | Home stat upgrades | X-31 | With X-24 and X-30 |
+| Enemy intent | X-62 | Show each enemy's next target. Design first (what is shown, how sure it is, big units), then a tech plan; the AI's prediction (`PredictAllTargets`) is the base and core. After X-15 |
 
 ### Phase 6: balance and the full play-through
 
