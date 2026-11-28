@@ -3151,3 +3151,6 @@ THJ played both memories: works. `b379e85e0` feat(onboarding): turn-start abilit
 **Not verified:** no Play run. Review and verifier wait for THJ's play check (his call).
 **Findings:** west Masher kept at factor 1 (the old wiring would have set every Masher to 0.6), THJ to confirm; Toba's call line is a placeholder; Worms on 6,1/7,1 can split only once neighbours move; a boxed-in sister fades without walking into the cave; enemies hit before the walk-in stay asleep. Unity re-saved `LevelM2-C1.prefab` and `PreloadScreen.unity` (don't stage).
 **Status:** uncommitted; THJ plays.
+
+## 2026-11-27 Hold the yard round three: play check and commits (main)
+THJ played: six findings logged, not fixed (`playtests/2026-11-27-m3-yard-round-three-play.md`). Committed at THJ's request before review: `003aa6189` feat(onboarding) together-walk, enemies held until a signal, settled tile trigger · `edf2e9b81` feat(level) Hold the yard round three. West Masher 0.6 (D-802; M3DefenceTests 62/62). Not pushed. Review and verifier not run.
