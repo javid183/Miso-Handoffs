@@ -2,7 +2,7 @@
 
 Size: M    Tier: 2 inside THJ's requests (2026-11-27)    Assigned to: miso-implementer (opus) after THJ's answers
 Branch: all (THJ is on `main`)
-Status: approved by THJ 2026-11-27 (D-798..D-801); building
+Status: built 2026-11-27, waiting on THJ's play check
 
 Level `Content/Levels/Greybox/GB_m3-defence.prefab`, wiring `Features/Onboarding/Editor/MissionWiring.HoldTheYard*.cs`, tests `M3DefenceTests*.cs`.
 
