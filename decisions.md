@@ -6,6 +6,7 @@ Rows D-001 to D-011 were carried over on 2026-10-15 from the Home handoff and pr
 
 | Date | ID | Tier | Scope | Decided by | Decision | Why | Affects |
 | --- | --- | --- | --- | --- | --- | --- | --- |
+| 2026-11-27 | D-801 | 3 | all | THJ | Catch & Return with no enemy anywhere (before or after Mark): the catch happens automatically, with no prompt, and Linda's arrow returns to her; refines D-799 | THJ, X-61 | chunk 1.23 |
 | 2026-11-27 | D-800 | 3 | all | THJ | The FP potion is removed from every demo level | THJ's demo tweak X-63 | plan `2026-11-22-onboarding-demo.md` chunk 1.24 |
 | 2026-11-27 | D-799 | 3 | all | THJ | Catch & Return: with no enemy before or after Mark, the arrow still returns to Linda; still no QTE then (D-560 stands) | THJ's demo tweak X-61 | chunk 1.23; `plans/2026-11-17-catch-return-offer-tech.md` |
 | 2026-11-27 | D-798 | 3 | all | THJ | Encore costs 1 AP; reverses D-609's 2 AP | THJ's demo tweak X-53 | chunk 1.20; Linda's quiver, tooltip |
