@@ -75,7 +75,7 @@ The demo runs from a new game to the end of M4's last sequence. This is the flow
 | ID   | Tweak                                                                                                     | Type                 | Owner             | Can it be done? / notes                                                                                                              |
 |------|-----------------------------------------------------------------------------------------------------------|----------------------|-------------------|--------------------------------------------------------------------------------------------------------------------------------------|
 | H-15 | Show Ryker's mother's body first in this level                                                            | Tech, Art            | Claude            | ✓ Memory 2 is small: place the body in the opening camera's view; add a camera move only if it doesn't fit (THJ, Nov 20)             |
-| H-21 | A Cyclone tutorial page in the second beat of Lucy's memory, explaining how to cast and steer it | Narrative tech, Tech | Claude, Narrative | ✓ Plays when beat 2 starts (THJ, Nov 27); no new trigger needed |
+| H-21 | A separate Cyclone tutorial page, shown right after Lucy's first Cyclone cast, explaining how to steer it | Narrative tech, Tech | Claude, Narrative | ~ Tutorial pages are built. "After her first cast" needs the same new "ability used → play a sequence" trigger as H-19 (S, not core) |
 
 ### Memory 3 · John
 
